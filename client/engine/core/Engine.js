@@ -7,13 +7,15 @@ export class Engine extends BaseEngine {
     this.id = options.id || 'engine'
 
     registerCoreBehaviors()
-    this.context.behaviors = behaviorRegistry
+    this.context.behaviorRegistry = behaviorRegistry
+   
 
-    for (const module of options.modules ?? []) {
+    for (const ModuleClass of options.modules ?? []) {
+      const instance = new ModuleClass(this)
       const isLifecycleModule = Boolean(
-        module?.lifeCycleModule ?? module?.constructor?.lifeCycleModule
+        ModuleClass?.lifeCycleModule ?? instance?.constructor?.lifeCycleModule
       )
-      this.addModule(module, isLifecycleModule)
+      this.addModule(instance, isLifecycleModule)
     }
   }
 }

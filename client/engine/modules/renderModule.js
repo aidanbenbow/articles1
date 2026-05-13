@@ -1,3 +1,4 @@
+import { setupCanvas } from '../nodes/render/canvasManager.js'
 import { baseModule } from './baseModule.js'
 
 export class RenderModule extends baseModule {
@@ -15,23 +16,15 @@ export class RenderModule extends baseModule {
     contextExports() {
         return {
             render: this.render.bind(this),
-            setRenderCanvas: this.setCanvas.bind(this),
+            ctx: this.ctx,
+            canvas: this.canvas,
         }
     }
 
-    setCanvas(canvasOrId = 'mainCanvas') {
-        const canvas = typeof canvasOrId === 'string'
-            ? document.getElementById(canvasOrId)
-            : canvasOrId
-
-        if (!canvas || !(canvas instanceof HTMLCanvasElement)) {
-            console.warn('[RenderModule] Canvas not found or invalid')
-            return false
-        }
-
-        this.canvas = canvas
-        this.ctx = canvas.getContext('2d')
-        return Boolean(this.ctx)
+    setCanvas() {
+      const { ctx, canvas } = setupCanvas()
+      this.ctx = ctx
+      this.canvas = canvas
     }
 
     render() {
@@ -39,18 +32,22 @@ export class RenderModule extends baseModule {
         if (typeof this.context.getRoots !== 'function' || typeof this.context.getNode !== 'function') return
 
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
-
+        
         const drawNode = (node) => {
             if (!node) return
 
-            const x = Number.isFinite(node.x) ? node.x : 0
-            const y = Number.isFinite(node.y) ? node.y : 0
-            const width = Number.isFinite(node.width) ? node.width : 50
-            const height = Number.isFinite(node.height) ? node.height : 50
-            const color = node.color || '#2d6cdf'
+            if (typeof node.render === 'function') {
+                node.render(this.ctx)
+            } else {
+                const x = Number.isFinite(node.x) ? node.x : 0
+                const y = Number.isFinite(node.y) ? node.y : 0
+                const width = Number.isFinite(node.width) ? node.width : 50
+                const height = Number.isFinite(node.height) ? node.height : 50
+                const color = node.color || '#2d6cdf'
 
-            this.ctx.fillStyle = color
-            this.ctx.fillRect(x, y, width, height)
+                this.ctx.fillStyle = color
+                this.ctx.fillRect(x, y, width, height)
+            }
 
             for (const childId of node.children ?? []) {
                 drawNode(this.context.getNode(childId))
@@ -63,7 +60,7 @@ export class RenderModule extends baseModule {
     }
 
     attach() {
-        this.setCanvas('mainCanvas')
+        this.setCanvas()
         this._unsubscribe.push(this.engine.on('nodeAdded', () => this.render()))
         this._unsubscribe.push(this.engine.on('nodeRemoved', () => this.render()))
         this.render()

@@ -1,4 +1,6 @@
+import { rectangle } from "../render/helpers.js";
 import { Behavior } from "./behavior.js";
+
 
 export class Root extends Behavior {
     
@@ -10,8 +12,7 @@ export class Root extends Behavior {
     }
     update() {}
     render(ctx) {
-        ctx.fillStyle = this.node.color || '#2d6cdf'
-        ctx.fillRect(this.node.x, this.node.y, this.node.width, this.node.height)
-        
+        rectangle(this.node, ctx)
+
     }
 }
