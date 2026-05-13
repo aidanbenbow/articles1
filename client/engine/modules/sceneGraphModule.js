@@ -1,3 +1,4 @@
+import { Node } from '../nodes/node.js'
 import { baseModule } from './baseModule.js'
 
 export class SceneGraphModule extends baseModule {
@@ -82,6 +83,8 @@ export class SceneGraphModule extends baseModule {
   }
 
   attach() {
+    const rootNode = new Node('root', this.engine.context, {x: 50, y: 50, width: 100, height: 100, color: '#2d6cdf' })
+    this.addNode(rootNode)
     console.log('[SceneGraphModule] attached')
   }
 
