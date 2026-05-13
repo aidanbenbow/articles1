@@ -7,7 +7,7 @@ export class LayOutModule extends baseModule {
     constructor(engine) {
         super(engine)
         this.id = 'layOutModule'
-        
+        this._unsubscribe = []
     }
 
     contextExports() {
@@ -62,11 +62,17 @@ export class LayOutModule extends baseModule {
     }
 
     attach() {
+        this._unsubscribe.push(this.engine.on('nodeAdded', () => this.runLayout()))
+        this._unsubscribe.push(this.engine.on('nodeRemoved', () => this.runLayout()))
         this.runLayout()
         console.log('[LayOutModule] attached')
     }
 
     detach() {
+        for (const unsubscribe of this._unsubscribe) {
+            unsubscribe?.()
+        }
+        this._unsubscribe = []
         console.log('[LayOutModule] detached')
     }
 }

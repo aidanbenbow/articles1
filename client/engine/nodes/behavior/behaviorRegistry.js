@@ -1,5 +1,9 @@
 import { BasicScreen } from "./basicScreen.js"
+import ContainerBar from "./containerBar.js"
+import FormBar from "./formBar.js"
+import MessageBar from "./messageBar.js"
 import { Root } from "./rootBehavior.js"
+import ToolBar from "./toolBar.js"
 
 class BehaviorRegistry {
     constructor() {
@@ -24,4 +28,9 @@ export function registerCoreBehaviors() {
    
     behaviorRegistry.register('root', Root)
     behaviorRegistry.register('basicScreen', BasicScreen) 
+    behaviorRegistry.register('toolbar', ToolBar)
+    behaviorRegistry.register('messageBar', MessageBar)
+    behaviorRegistry.register('formBar', FormBar)
+    behaviorRegistry.register('containerBar', ContainerBar)
+
 }

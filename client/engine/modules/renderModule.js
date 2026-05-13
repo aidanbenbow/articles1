@@ -35,7 +35,10 @@ export class RenderModule extends baseModule {
         
         const drawNode = (node) => {
             if (!node) return
-                node.render(this.ctx)
+            node.render(this.ctx)
+            for (const childId of node.children ?? []) {
+                drawNode(this.context.getNode(childId))
+            }
         }
 
         for (const root of this.context.getRoots()) {
@@ -45,7 +48,10 @@ export class RenderModule extends baseModule {
 
     attach() {
         this.setCanvas()
-        this._unsubscribe.push(this.engine.on('nodeAdded', () => this.render()))
+        this._unsubscribe.push(this.engine.on('nodeAdded', (nde) =>{ 
+            this.render()
+            console.log('nodeAdded', nde)
+        }))
         this._unsubscribe.push(this.engine.on('nodeRemoved', () => this.render()))
         this.render()
         console.log('[RenderModule] attached')
