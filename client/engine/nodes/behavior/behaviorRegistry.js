@@ -1,3 +1,4 @@
+import { BasicScreen } from "./basicScreen.js"
 import { Root } from "./rootBehavior.js"
 
 class BehaviorRegistry {
@@ -22,4 +23,5 @@ export function registerCoreBehaviors() {
     coreBehaviorsRegistered = true
    
     behaviorRegistry.register('root', Root)
+    behaviorRegistry.register('basicScreen', BasicScreen) 
 }

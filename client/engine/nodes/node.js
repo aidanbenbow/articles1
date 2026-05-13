@@ -4,12 +4,10 @@ export class Node {
         this.context = context
         const BehaviorClass = this.context.behaviorRegistry ? this.context.behaviorRegistry.getBehavior(this.id) : null
         this.behavior = BehaviorClass ? new BehaviorClass(this) : null
-        this.x = properties.x ?? 0
-        this.y = properties.y ?? 0
-        this.width = properties.width ?? 50
-        this.height = properties.height ?? 50
-        this.color = properties.color ?? '#2d6cdf'
-        this.children = []
+        this.measured = null
+        this.layouted = null
+        Object.assign(this, properties)
+        this.children = new Set()
     }
     measure(constraints, ctx) {
         if (!this.behavior?.measure) {

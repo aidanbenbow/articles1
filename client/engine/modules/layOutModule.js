@@ -7,6 +7,7 @@ export class LayOutModule extends baseModule {
     constructor(engine) {
         super(engine)
         this.id = 'layOutModule'
+        
     }
 
     contextExports() {
@@ -61,6 +62,7 @@ export class LayOutModule extends baseModule {
     }
 
     attach() {
+        this.runLayout()
         console.log('[LayOutModule] attached')
     }
 

@@ -35,23 +35,7 @@ export class RenderModule extends baseModule {
         
         const drawNode = (node) => {
             if (!node) return
-
-            if (typeof node.render === 'function') {
                 node.render(this.ctx)
-            } else {
-                const x = Number.isFinite(node.x) ? node.x : 0
-                const y = Number.isFinite(node.y) ? node.y : 0
-                const width = Number.isFinite(node.width) ? node.width : 50
-                const height = Number.isFinite(node.height) ? node.height : 50
-                const color = node.color || '#2d6cdf'
-
-                this.ctx.fillStyle = color
-                this.ctx.fillRect(x, y, width, height)
-            }
-
-            for (const childId of node.children ?? []) {
-                drawNode(this.context.getNode(childId))
-            }
         }
 
         for (const root of this.context.getRoots()) {
