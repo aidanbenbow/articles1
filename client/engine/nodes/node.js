@@ -1,41 +1,69 @@
 export class Node {
-    constructor(id,type,context, properties = {}) {
-        this.id = id
-        this.type = type
-        this.context = context
-        this.ctx = context.ctx
-        const BehaviorClass = this.context.behaviorRegistry ? this.context.behaviorRegistry.getBehavior(this.type) : null
-        this.behavior = BehaviorClass ? new BehaviorClass(this) : null
-       
-        this.measured = { width: properties.width ?? 100, height: properties.height ?? 100 }
-        this.layouted = { x: properties.x ?? 0, 
-            y: properties.y ?? 0, 
-            width: this.measured.width, 
-            height: this.measured.height,
-         padding:{
-                top: properties.paddingTop ?? 0,
-                right: properties.paddingRight ?? 0,
-                bottom: properties.paddingBottom ?? 0,
-                left: properties.paddingLeft ?? 0,
-         } }
-        this.color = properties.color ?? '#2d6cdf'
-        this.text = properties.text ?? ''
-        this.children = new Set()
+  constructor(id, type, props = {}) {
+    this.id = id
+    this.type = type
+
+    // layout + visual intent only
+    this.props = {
+      size: {
+        width: props.width,
+        height: props.height,
+        minWidth: props.minWidth,
+        minHeight: props.minHeight,
+      },
+
+      position: {
+        x: props.x ?? 0,
+        y: props.y ?? 0,
+      },
+
+      spacing: {
+        padding: props.padding ?? 0,
+        paddingX: props.paddingX ?? props.padding ?? 0,
+        paddingY: props.paddingY ?? props.padding ?? 0,
+        gap: props.gap ?? 0,
+        offsetX: props.offsetX ?? 0,
+        offsetY: props.offsetY ?? 0,
+      },
+
+      style: {
+        color: props.color ?? '#2d6cdf',
+      },
+
+      content: {
+        text: props.text ?? ''
+      }
     }
-    measure(constraints, ctx) {
-        if (!this.behavior?.measure) {
-            return this.measured
-        }
-        this.measured = this.behavior.measure(constraints, ctx)
-        return this.measured
-    }
-    layout(measured, ctx) {
-        if (!this.behavior?.layout) {
-            return this.layouted
-        }
-        this.layouted = this.behavior.layout(measured, ctx)
-        return this.layouted
-    }
-    update(ctx) {this.behavior?.update?.(ctx)}
-    render(ctx) {this.behavior?.render?.(ctx)}
+
+    // structure only
+    this.parentId = null
+    this.children = []
+  }
+
+  get color() { return this.props.style.color }
+  set color(value) { this.props.style.color = value }
+
+  get text() { return this.props.content.text }
+  set text(value) { this.props.content.text = value ?? '' }
+
+  get width() { return this.props.size.width }
+  set width(value) { this.props.size.width = value }
+
+  get height() { return this.props.size.height }
+  set height(value) { this.props.size.height = value }
+
+  get minWidth() { return this.props.size.minWidth }
+  get minHeight() { return this.props.size.minHeight }
+
+  get x() { return this.props.position.x ?? 0 }
+  set x(value) { this.props.position.x = value }
+
+  get y() { return this.props.position.y ?? 0 }
+  set y(value) { this.props.position.y = value }
+
+  get paddingX() { return this.props.spacing.paddingX ?? this.props.spacing.padding ?? 0 }
+  get paddingY() { return this.props.spacing.paddingY ?? this.props.spacing.padding ?? 0 }
+  get gap() { return this.props.spacing.gap ?? 0 }
+  get offsetX() { return this.props.spacing.offsetX ?? 0 }
+  get offsetY() { return this.props.spacing.offsetY ?? 0 }
 }

@@ -16,8 +16,9 @@ export class Behavior {
     render() {
         console.warn(`[Behavior] render not implemented for node ${this.node.id}`)
     }
-    getParent(){
-        if (!this.node?.context?.getParent) return null
-        return this.node.context.getParent(this.node)
+    getParent(context){
+        const resolver = context?.getParent ?? this.node?.context?.getParent
+        if (!resolver) return null
+        return resolver(this.node)
     }
 }

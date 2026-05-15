@@ -3,17 +3,19 @@ import { Behavior } from "./behavior.js";
 
 export class TextBox extends Behavior {
     measure(constraints, context) {
-     const drawCtx = context?.ctx ?? this.node?.context?.ctx ?? this.ctx
+     const drawCtx = context?.ctx
      const measured = measureText(this.node, drawCtx)
      return measured
     }
     layout(measured, context) {
         const parentId = this.node.parentId
         const parent = parentId ? context?.getNode?.(parentId) : null
-        const parentX = parent?.layouted?.x ?? parent?.x ?? 0
-        const parentY = parent?.layouted?.y ?? parent?.y ?? 0
-        const parentWidth = parent?.layouted?.width ?? parent?.width ?? measured.width
-        const parentHeight = parent?.layouted?.height ?? parent?.height ?? measured.height
+        const parentLayout = parent ? context?.getNodeLayout?.(parent.id) : null
+        const parentMeasured = parent ? context?.getNodeMeasured?.(parent.id) : null
+        const parentX = parentLayout?.x ?? parent?.x ?? 0
+        const parentY = parentLayout?.y ?? parent?.y ?? 0
+        const parentWidth = parentLayout?.width ?? parentMeasured?.width ?? measured.width
+        const parentHeight = parentLayout?.height ?? parentMeasured?.height ?? measured.height
 
         const offsetX = this.node.offsetX ?? 10
         const offsetY = this.node.offsetY ?? 10
@@ -24,12 +26,12 @@ export class TextBox extends Behavior {
         return { x: parentX + offsetX, y: parentY + offsetY, width, height }
     }
     update() {}
-    render(ctx) {    
-        rectangle(this.node, ctx)
-        const x = this.node.layouted?.x ?? this.node.x ?? 0
-        const y = this.node.layouted?.y ?? this.node.y ?? 0
-        const width = this.node.layouted?.width ?? this.node.width ?? 0
-        const height = this.node.layouted?.height ?? this.node.height ?? 0
+    render(ctx, runtime) {
+        rectangle(this.node, ctx, runtime)
+        const x = runtime?.layouted?.x ?? this.node.x ?? 0
+        const y = runtime?.layouted?.y ?? this.node.y ?? 0
+        const width = runtime?.layouted?.width ?? runtime?.measured?.width ?? this.node.width ?? 0
+        const height = runtime?.layouted?.height ?? runtime?.measured?.height ?? this.node.height ?? 0
         ctx.font = "20px Arial";
         ctx.fillStyle = "black";
         ctx.textAlign = "center";

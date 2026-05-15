@@ -1,8 +1,8 @@
-export function rectangle(node, ctx) {
-    const x = node.layouted?.x ?? node.x ?? 0
-    const y = node.layouted?.y ?? node.y ?? 0
-    const width = node.layouted?.width ?? node.measured?.width ?? node.width ?? 100
-    const height = node.layouted?.height ?? node.measured?.height ?? node.height ?? 100
+export function rectangle(node, ctx, runtime = {}) {
+    const x = runtime.layouted?.x ?? node.x ?? 0
+    const y = runtime.layouted?.y ?? node.y ?? 0
+    const width = runtime.layouted?.width ?? runtime.measured?.width ?? node.width ?? 100
+    const height = runtime.layouted?.height ?? runtime.measured?.height ?? node.height ?? 100
     const color = node.color || '#2d6cdf'
 //console.log('rectangle', { x, y, width, height, color })
     ctx.fillStyle = color

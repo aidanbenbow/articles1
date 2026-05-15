@@ -37,9 +37,11 @@ export class BarBehavior extends Behavior {
     }
     layout(measured, context) {
         const { parent, siblings, index } = this.getBarSiblings(context)
-        const parentX = parent?.layouted?.x ?? parent?.x ?? 0
-        const parentY = parent?.layouted?.y ?? parent?.y ?? 0
-        const parentWidth = parent?.layouted?.width ?? parent?.measured?.width ?? measured.width
+        const parentLayout = parent ? context?.getNodeLayout?.(parent.id) : null
+        const parentMeasured = parent ? context?.getNodeMeasured?.(parent.id) : null
+        const parentX = parentLayout?.x ?? parent?.x ?? 0
+        const parentY = parentLayout?.y ?? parent?.y ?? 0
+        const parentWidth = parentLayout?.width ?? parentMeasured?.width ?? measured.width
 
         const slotWidth = parentWidth / Math.max(siblings.length, 1)
         const x = parentX + (slotWidth * index)
@@ -48,7 +50,7 @@ export class BarBehavior extends Behavior {
         return { x, y, width: slotWidth, height: measured.height }
     }
     update() {}
-    render(ctx) {
-        rectangle(this.node, ctx)
+    render(ctx, runtime) {
+        rectangle(this.node, ctx, runtime)
     }
 }

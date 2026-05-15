@@ -33,7 +33,7 @@ export class SceneGraphModule extends baseModule {
       return
     }
 
-    node.children ??= new Set()
+    node.children ??= []
     node.parentId = parentId ?? null
 
     this._nodes.set(node.id, node)
@@ -41,7 +41,9 @@ export class SceneGraphModule extends baseModule {
     if (parentId) {
       const parent = this._nodes.get(parentId)
       if (parent) {
-        parent.children.add(node.id)
+        if (!parent.children.includes(node.id)) {
+          parent.children.push(node.id)
+        }
       } else {
         console.warn(`[SceneGraphModule] addNode: parent "${parentId}" not found, adding as root`)
         this._roots.add(node.id)
@@ -66,7 +68,9 @@ export class SceneGraphModule extends baseModule {
 
     if (node.parentId) {
       const parent = this._nodes.get(node.parentId)
-      parent?.children.delete(id)
+      if (parent?.children) {
+        parent.children = parent.children.filter((childId) => childId !== id)
+      }
     } else {
       this._roots.delete(id)
     }
@@ -88,7 +92,7 @@ export class SceneGraphModule extends baseModule {
   }
 
   attach() {
-    const rootNode = new Node('root','root', this.engine.context)
+    const rootNode = new Node('root', 'root')
     this.addNode(rootNode)
     console.log('[SceneGraphModule] attached', rootNode)
   }

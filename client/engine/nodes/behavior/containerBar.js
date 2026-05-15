@@ -22,11 +22,12 @@ class ContainerBar extends Behavior{
 
         for (const childId of children) {
             const child = context?.getNode?.(childId)
-            if (!child?.measured) continue
+            const childMeasured = context?.getNodeMeasured?.(childId)
+            if (!childMeasured) continue
             const childOffsetX = child.offsetX ?? 0
             const childOffsetY = child.offsetY ?? 0
-            contentWidth = Math.max(contentWidth, childOffsetX + (child.measured.width ?? 0))
-            contentHeight = Math.max(contentHeight, childOffsetY + (child.measured.height ?? 0))
+            contentWidth = Math.max(contentWidth, childOffsetX + (childMeasured.width ?? 0))
+            contentHeight = Math.max(contentHeight, childOffsetY + (childMeasured.height ?? 0))
         }
 
         const minWidth = this.node.minWidth ?? 0
@@ -42,8 +43,9 @@ class ContainerBar extends Behavior{
     layout(measured, context) {
         const parentId = this.node.parentId
         const parent = parentId ? context?.getNode?.(parentId) : null
-        const parentX = parent?.layouted?.x ?? parent?.x ?? 0
-        const parentY = parent?.layouted?.y ?? parent?.y ?? 0
+        const parentLayout = parent ? context?.getNodeLayout?.(parent.id) : null
+        const parentX = parentLayout?.x ?? parent?.x ?? 0
+        const parentY = parentLayout?.y ?? parent?.y ?? 0
         const paddingX = this.node.paddingX ?? 5
         const paddingY = this.node.paddingY ?? 5
         const gap = this.node.gap ?? 5
@@ -55,7 +57,8 @@ class ContainerBar extends Behavior{
                 if (childId === this.node.id) break
                 const sibling = context?.getNode?.(childId)
                 if (sibling?.type === 'containerBar') {
-                    stackY += (sibling.measured?.height ?? 0) + gap
+                    const siblingMeasured = context?.getNodeMeasured?.(sibling.id)
+                    stackY += (siblingMeasured?.height ?? 0) + gap
                 }
             }
         }
@@ -69,8 +72,10 @@ class ContainerBar extends Behavior{
     }
     update() {}
     layoutChildren(node, context) {
-        const containerX = node.layouted?.x ?? 0
-        const containerY = node.layouted?.y ?? 0
+        const containerLayout = context?.getNodeLayout?.(node.id)
+        const containerX = containerLayout?.x ?? 0
+        const containerY = containerLayout?.y ?? 0
+        const containerWidth = containerLayout?.width ?? 0
         const paddingX = node.paddingX ?? 10
         const paddingY = node.paddingY ?? 10
         const gap = node.gap ?? 5
@@ -79,19 +84,21 @@ class ContainerBar extends Behavior{
         for (const childId of node.children ?? []) {
             const child = context?.getNode?.(childId)
             if (!child) continue
-            const childHeight = child.measured?.height ?? 0
-            child.layouted = {
-                ...child.layouted,
+            const childMeasured = context?.getNodeMeasured?.(childId)
+            const existingLayout = context?.getNodeLayout?.(childId) ?? {}
+            const childHeight = childMeasured?.height ?? 0
+            context?.setNodeLayout?.(childId, {
+                ...existingLayout,
                 x: containerX + paddingX,
                 y: cursorY,
-                width: (node.layouted?.width ?? 0) - (paddingX * 2),
+                width: containerWidth - (paddingX * 2),
                 height: childHeight,
-            }
+            })
             cursorY += childHeight + gap
         }
     }
-    render(ctx) {
-       rectangle(this.node, ctx)
+    render(ctx, runtime) {
+       rectangle(this.node, ctx, runtime)
     }
 }
 
