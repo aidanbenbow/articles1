@@ -18,13 +18,20 @@ export class RenderModule extends baseModule {
             render: this.render.bind(this),
             ctx: this.ctx,
             canvas: this.canvas,
+            
         }
     }
 
     setCanvas() {
-      const { ctx, canvas } = setupCanvas()
+            const setup = setupCanvas()
+            if (!setup) return
+            const { ctx, canvas } = setup
       this.ctx = ctx
       this.canvas = canvas
+            this.context.ctx = ctx
+            this.context.canvas = canvas
+            this.context.canvasWidth = canvas.width
+            this.context.canvasHeight = canvas.height
     }
 
     render() {
@@ -49,6 +56,7 @@ export class RenderModule extends baseModule {
     attach() {
         this.setCanvas()
         this._unsubscribe.push(this.engine.on('nodeAdded', (nde) =>{ 
+            this.context.runLayout?.()
             this.render()
             console.log('nodeAdded', nde)
         }))

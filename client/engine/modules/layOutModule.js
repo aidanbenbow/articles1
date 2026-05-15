@@ -19,7 +19,7 @@ export class LayOutModule extends baseModule {
     // Measure pass: parent passes constraints down, each node returns its desired size.
     _measure(node, constraints) {
         if (!node) return
-        const measured = node.measure?.(constraints, this.context) ?? {
+        let measured = node.measure?.(constraints, this.context) ?? {
             width: node.width ?? constraints.width,
             height: node.height ?? constraints.height,
         }
@@ -27,6 +27,12 @@ export class LayOutModule extends baseModule {
         for (const childId of node.children ?? []) {
             const child = this.context.getNode(childId)
             this._measure(child, measured)
+        }
+
+        const adjustedMeasured = node.behavior?.afterChildrenMeasure?.(measured, constraints, this.context)
+        if (adjustedMeasured) {
+            node.measured = adjustedMeasured
+            measured = adjustedMeasured
         }
         return measured
     }

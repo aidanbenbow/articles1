@@ -18,6 +18,7 @@ export class SceneGraphModule extends baseModule {
       removeNode: this.removeNode.bind(this),
       getNode: this.getNode.bind(this),
       getRoots: this.getRoots.bind(this),
+      getParent: this.getParent.bind(this),
     }
   }
 
@@ -81,9 +82,13 @@ export class SceneGraphModule extends baseModule {
   getRoots() {
     return [...this._roots].map(id => this._nodes.get(id))
   }
+  getParent(node) {
+    if (!node?.parentId) return null
+    return this._nodes.get(node.parentId) ?? null
+  }
 
   attach() {
-    const rootNode = new Node('root', this.engine.context)
+    const rootNode = new Node('root','root', this.engine.context)
     this.addNode(rootNode)
     console.log('[SceneGraphModule] attached', rootNode)
   }

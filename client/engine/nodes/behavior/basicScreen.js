@@ -10,6 +10,6 @@ export class BasicScreen extends Behavior {
     }
     update() {}
     render(ctx) {
-        rectangle(this.node, ctx)
+        //rectangle(this.node, ctx)
     }
 }

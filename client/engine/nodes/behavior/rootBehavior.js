@@ -3,7 +3,6 @@ import { Behavior } from "./behavior.js";
 
 
 export class Root extends Behavior {
-    
     measure( constraints) {
         return { width: constraints.width, height: constraints.height }
     }
@@ -12,7 +11,6 @@ export class Root extends Behavior {
     }
     update() {}
     render(ctx) {
-        rectangle(this.node, ctx)
-
+       // rectangle(this.node, ctx)
     }
 }

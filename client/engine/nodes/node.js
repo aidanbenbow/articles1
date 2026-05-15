@@ -1,17 +1,29 @@
 export class Node {
-    constructor(id,context, properties = {}) {
+    constructor(id,type,context, properties = {}) {
         this.id = id
+        this.type = type
         this.context = context
-        const BehaviorClass = this.context.behaviorRegistry ? this.context.behaviorRegistry.getBehavior(this.id) : null
+        this.ctx = context.ctx
+        const BehaviorClass = this.context.behaviorRegistry ? this.context.behaviorRegistry.getBehavior(this.type) : null
         this.behavior = BehaviorClass ? new BehaviorClass(this) : null
-        this.measured = null
-        this.layouted = null
-        Object.assign(this, properties)
+       
+        this.measured = { width: properties.width ?? 100, height: properties.height ?? 100 }
+        this.layouted = { x: properties.x ?? 0, 
+            y: properties.y ?? 0, 
+            width: this.measured.width, 
+            height: this.measured.height,
+         padding:{
+                top: properties.paddingTop ?? 0,
+                right: properties.paddingRight ?? 0,
+                bottom: properties.paddingBottom ?? 0,
+                left: properties.paddingLeft ?? 0,
+         } }
+        this.color = properties.color ?? '#2d6cdf'
+        this.text = properties.text ?? ''
         this.children = new Set()
     }
     measure(constraints, ctx) {
         if (!this.behavior?.measure) {
-            this.measured = { width: this.width, height: this.height }
             return this.measured
         }
         this.measured = this.behavior.measure(constraints, ctx)
@@ -19,7 +31,6 @@ export class Node {
     }
     layout(measured, ctx) {
         if (!this.behavior?.layout) {
-            this.layouted = { x: this.x, y: this.y, width: this.width, height: this.height }
             return this.layouted
         }
         this.layouted = this.behavior.layout(measured, ctx)

@@ -2,6 +2,7 @@ export class baseModule{
     static lifeCycleModule = true
     constructor(engine) {
         this.engine = engine
+       
         this.id = 'baseModule'
     }
     contextExports() {

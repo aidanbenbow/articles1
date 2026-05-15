@@ -3,7 +3,7 @@ import { bootstrapDorcasApp } from './dorcasApp/main.js'
 
 const eng = bootstrapDorcasApp()
 
-const basicScreen = new Node('basicScreen', eng.context, {
+const basicScreen = new Node('basicScreen','basicScreen', eng.context, {
     color: '#f0f0f0'
 })
 
@@ -12,7 +12,9 @@ eng.context.addNode(
     'root'  
 )
 
-const toolBar = new Node('toolbar', eng.context, {
+
+const toolBar = new Node('toolbar','bar', eng.context, {
+    x: 0,
     color: '#333'
 })
 eng.context.addNode(
@@ -20,7 +22,17 @@ eng.context.addNode(
     'basicScreen'  
 )
 
-const messageBar = new Node('messageBar', eng.context, {
+const formBar = new Node('formBar','bar', eng.context, {
+    x: 2,
+    color: '#d93c46'
+})
+eng.context.addNode(
+    formBar,
+    'basicScreen'  
+)
+
+const messageBar = new Node('messageBar','bar', eng.context, {
+    x: 1,
     color: '#460cd9'
 })
 eng.context.addNode(
@@ -28,17 +40,20 @@ eng.context.addNode(
     'basicScreen'  
 )
 
-const formBar = new Node('formBar', eng.context, {
-    color: '#d93c46'
-})
-eng.context.addNode(
-    formBar,
-    'basicScreen'  
-)
-const containerBar = new Node('containerBar', eng.context, {
+
+const containerBar = new Node('containerBar','containerBar', eng.context, {
     color: '#3cd94c'
 })
 eng.context.addNode(
     containerBar,
+    'formBar'  
+)
+
+const titleNode = new Node('text','text', eng.context, {
+    text: 'Dorcas UI',
+    color: '#fff'
+})
+eng.context.addNode(
+    titleNode,
     'formBar'  
 )
