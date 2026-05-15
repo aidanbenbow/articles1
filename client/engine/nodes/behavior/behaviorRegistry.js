@@ -1,6 +1,7 @@
 import { BarBehavior } from "./barBehavior.js"
 import { BasicScreen } from "./basicScreen.js"
 import ContainerBar from "./containerBar.js"
+import { InputBox } from "./inputBox.js"
 import { Root } from "./rootBehavior.js"
 import { TextBox } from "./textBox.js"
 
@@ -31,5 +32,6 @@ export function registerCoreBehaviors() {
     behaviorRegistry.register('containerBar', ContainerBar)
     behaviorRegistry.register('text', TextBox)
     behaviorRegistry.register('bar', BarBehavior)
+    behaviorRegistry.register('inputBox', InputBox)
 
 }

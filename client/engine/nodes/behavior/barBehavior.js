@@ -26,6 +26,7 @@ export class BarBehavior extends Behavior {
     }
     measure(constraints, context) {
         const { siblings } = this.getBarSiblings(context)
+        
         const availableWidth = constraints?.width ?? 0
         const height = constraints?.height ?? 0
 

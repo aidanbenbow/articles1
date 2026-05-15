@@ -30,15 +30,15 @@ export class RenderModule extends baseModule {
       this.canvas = canvas
             this.context.ctx = ctx
             this.context.canvas = canvas
-            this.context.canvasWidth = canvas.width
-            this.context.canvasHeight = canvas.height
+            this.context.canvasWidth = canvas._logicalWidth ?? canvas.clientWidth ?? canvas.width
+            this.context.canvasHeight = canvas._logicalHeight ?? canvas.clientHeight ?? canvas.height
     }
 
     render() {
         if (!this.ctx || !this.canvas) return
         if (typeof this.context.getRoots !== 'function' || typeof this.context.getNode !== 'function') return
 
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+        this.ctx.clearRect(0, 0, this.context.canvasWidth ?? this.canvas.width, this.context.canvasHeight ?? this.canvas.height)
         
         const drawNode = (node) => {
             if (!node) return

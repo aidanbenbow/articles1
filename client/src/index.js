@@ -55,5 +55,31 @@ const titleNode = new Node('text','text', eng.context, {
 })
 eng.context.addNode(
     titleNode,
+    'containerBar'  
+)
+
+const containerBar2 = new Node('containerBar2','containerBar', eng.context, {
+    color: '#3cd94c'
+})
+eng.context.addNode(
+    containerBar2,
     'formBar'  
+)
+
+const nameNode = new Node('nameNode','text', eng.context, {
+    text: 'Name:',
+    color: '#fff'   
+})
+eng.context.addNode(
+    nameNode,
+    'containerBar2'  
+)
+
+const inputNode = new Node('inputNode','inputBox', eng.context, {
+    text: 'Type your name here',
+    color: '#fff'
+})
+eng.context.addNode(
+    inputNode,
+    'containerBar2'  
 )

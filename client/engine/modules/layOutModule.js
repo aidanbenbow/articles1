@@ -43,6 +43,9 @@ export class LayOutModule extends baseModule {
         const measured = node.measured ?? { width: node.width, height: node.height }
         node.layout?.(measured, this.context)
 
+        // Let behavior position children (e.g. vertical stack, flex, etc.)
+        node.behavior?.layoutChildren?.(node, this.context)
+
         const childOffset = { x: node.x ?? offset.x, y: node.y ?? offset.y }
         for (const childId of node.children ?? []) {
             const child = this.context.getNode(childId)

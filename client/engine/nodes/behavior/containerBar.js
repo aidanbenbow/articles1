@@ -44,12 +44,52 @@ class ContainerBar extends Behavior{
         const parent = parentId ? context?.getNode?.(parentId) : null
         const parentX = parent?.layouted?.x ?? parent?.x ?? 0
         const parentY = parent?.layouted?.y ?? parent?.y ?? 0
-        const offsetX = this.node.offsetX ?? 5
-        const offsetY = this.node.offsetY ?? 5
+        const paddingX = this.node.paddingX ?? 5
+        const paddingY = this.node.paddingY ?? 5
+        const gap = this.node.gap ?? 5
 
-        return { x: parentX + offsetX, y: parentY + offsetY, width: measured.width, height: measured.height }
+        // Stack below any preceding containerBar siblings
+        let stackY = 0
+        if (parent) {
+            for (const childId of parent.children ?? []) {
+                if (childId === this.node.id) break
+                const sibling = context?.getNode?.(childId)
+                if (sibling?.type === 'containerBar') {
+                    stackY += (sibling.measured?.height ?? 0) + gap
+                }
+            }
+        }
+
+        return {
+            x: parentX + paddingX,
+            y: parentY + paddingY + stackY,
+            width: measured.width,
+            height: measured.height,
+        }
     }
     update() {}
+    layoutChildren(node, context) {
+        const containerX = node.layouted?.x ?? 0
+        const containerY = node.layouted?.y ?? 0
+        const paddingX = node.paddingX ?? 10
+        const paddingY = node.paddingY ?? 10
+        const gap = node.gap ?? 5
+
+        let cursorY = containerY + paddingY
+        for (const childId of node.children ?? []) {
+            const child = context?.getNode?.(childId)
+            if (!child) continue
+            const childHeight = child.measured?.height ?? 0
+            child.layouted = {
+                ...child.layouted,
+                x: containerX + paddingX,
+                y: cursorY,
+                width: (node.layouted?.width ?? 0) - (paddingX * 2),
+                height: childHeight,
+            }
+            cursorY += childHeight + gap
+        }
+    }
     render(ctx) {
        rectangle(this.node, ctx)
     }
