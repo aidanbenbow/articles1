@@ -113,6 +113,7 @@ export class LayOutModule extends baseModule {
         }
 
         this._layoutTrees = roots.map((root) => this._buildLayoutTree(root))
+        console.log('[LayOutModule] layout completed', { layoutTrees: this._layoutTrees })
         this.context.layoutTrees = this._layoutTrees
 
         this.engine.emit('layoutDone')
@@ -167,6 +168,7 @@ export class LayOutModule extends baseModule {
 
     attach() {
         this._unsubscribe.push(this.engine.on('nodeAdded', () => this.runLayout()))
+        this._unsubscribe.push(this.engine.on('nodesBatchAdded', () => this.runLayout()))
         this._unsubscribe.push(this.engine.on('nodeRemoved', ({ id }) => {
             if (id) this._behaviorInstances.delete(id)
             this.runLayout()

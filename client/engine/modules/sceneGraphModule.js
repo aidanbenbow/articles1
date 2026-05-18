@@ -15,6 +15,7 @@ export class SceneGraphModule extends baseModule {
   contextExports() {
     return {
       addNode: this.addNode.bind(this),
+      batchAdd: this.batchAdd.bind(this),
       removeNode: this.removeNode.bind(this),
       getNode: this.getNode.bind(this),
       getRoots: this.getRoots.bind(this),
@@ -54,6 +55,40 @@ export class SceneGraphModule extends baseModule {
 
     this.engine.emit('nodeAdded', { node })
     return node
+  }
+
+  // Add multiple nodes silently, then emit a single 'nodesBatchAdded' event.
+  // entries: Array of { node, parentId? }
+  batchAdd(entries = []) {
+    const added = []
+    for (const { node, parentId = null } of entries) {
+      if (!node?.id) {
+        console.warn('[SceneGraphModule] batchAdd: node must have an id')
+        continue
+      }
+      if (this._nodes.has(node.id)) {
+        console.warn(`[SceneGraphModule] batchAdd: node "${node.id}" already exists`)
+        continue
+      }
+      node.children ??= []
+      node.parentId = parentId ?? null
+      this._nodes.set(node.id, node)
+
+      if (parentId) {
+        const parent = this._nodes.get(parentId)
+        if (parent) {
+          if (!parent.children.includes(node.id)) parent.children.push(node.id)
+        } else {
+          console.warn(`[SceneGraphModule] batchAdd: parent "${parentId}" not found, adding "${node.id}" as root`)
+          this._roots.add(node.id)
+        }
+      } else {
+        this._roots.add(node.id)
+      }
+      added.push(node)
+    }
+    if (added.length) this.engine.emit('nodesBatchAdded', { nodes: added })
+    return added
   }
 
   removeNode(id, { removeChildren = true } = {}) {

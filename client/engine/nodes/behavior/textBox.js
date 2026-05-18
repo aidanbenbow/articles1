@@ -36,6 +36,6 @@ export class TextBox extends Behavior {
         ctx.fillStyle = "black";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillText(this.node.text, x + width / 2, y + height / 2);
+        ctx.fillText(this.node.content.text, x + width / 2, y + height / 2);
     }
 }

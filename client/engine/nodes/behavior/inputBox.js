@@ -3,7 +3,10 @@ import { Behavior } from "./behavior.js"
 
 export class InputBox extends Behavior {
     measure(constraints) {
-        return { width: constraints.width, height: this.node.height ?? 30 }
+        const offsetX = this.node.offsetX ?? 10
+        const offsetY = this.node.offsetY ?? 10
+        const height = this.node.height ?? 30
+        return { width: Math.max((constraints.width ?? 0) - (offsetX * 2), 0), height: Math.max(height - (offsetY * 2), 0) }
     }
     layout(measured, context) {
         const parentId = this.node.parentId
@@ -20,7 +23,7 @@ export class InputBox extends Behavior {
         const width = Math.min(measured.width, Math.max(parentWidth - (offsetX * 2), 0))
         const height = Math.min(measured.height, Math.max(parentHeight - (offsetY * 2), 0))
 
-        return { x: parentX + offsetX, y: parentY + offsetY, width, height }
+        return { x: parentX + offsetX, y: parentY + offsetY+20, width, height }
     }
     update() {}
     render(ctx, runtime) {
@@ -33,6 +36,6 @@ export class InputBox extends Behavior {
         ctx.fillStyle = "black";
         ctx.textAlign = "left";
         ctx.textBaseline = "middle";
-        ctx.fillText(this.node.text, x + 5, y + height / 2);
+        ctx.fillText(this.node.content.text, x + 5, y + height / 2);
     }
 }

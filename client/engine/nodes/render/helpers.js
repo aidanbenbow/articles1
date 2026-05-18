@@ -3,7 +3,7 @@ export function rectangle(node, ctx, runtime = {}) {
     const y = runtime.layouted?.y ?? node.y ?? 0
     const width = runtime.layouted?.width ?? runtime.measured?.width ?? node.width ?? 100
     const height = runtime.layouted?.height ?? runtime.measured?.height ?? node.height ?? 100
-    const color = node.color || '#2d6cdf'
+    const color = node.style.color || '#2d6cdf'
 //console.log('rectangle', { x, y, width, height, color })
     ctx.fillStyle = color
     ctx.fillRect(x, y, width, height)
