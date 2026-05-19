@@ -2,6 +2,7 @@ export class Node {
   constructor(id, type, props = {}) {
     this.id = id
     this.type = type
+    this.zIndex = props.zIndex ?? 0
 
     // layout + visual intent only
     this.props = {

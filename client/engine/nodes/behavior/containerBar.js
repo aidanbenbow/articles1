@@ -19,9 +19,7 @@ class ContainerBar extends Behavior{
         const parentY = 0 + order * measured.height 
         const gap = this.node.props.spacing.gap ?? 5
         const space =  gap * order
-        
-        console.log('ContainerBar layout', { parentX, parentY, measured })
-        console.log('order', this.node.props.layout.order)
+      
         return {
             x: parentX + 5,
             y: parentY + 5 + 20 + space,

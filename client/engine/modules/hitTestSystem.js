@@ -3,25 +3,17 @@ export class HitTestSystem {
         this.context = context
     }
    hitTest(x, y) {
-    let hitNode = null
-
-    this.context.traversal(node => {
-        const layout = this.context.getNodeLayout(node.id)
-
-        if (
-            layout &&
-            x >= layout.x &&
-            x <= layout.x + layout.width &&
-            y >= layout.y &&
-            y <= layout.y + layout.height
-        ) {
-            hitNode = node
-            return true // stop traversal
+        const nodes = this.context.getNodesInRenderOrder()
+        console.log('[HitTestSystem] hitTest at', { x, y, nodes })
+        for (let i = nodes.length - 1; i >= 0; i--) {
+            const node = nodes[i]
+            const layout = this.context.getNodeLayout?.(node.id)
+            if (layout &&
+                x >= layout.x && x <= layout.x + layout.width &&
+                y >= layout.y && y <= layout.y + layout.height) {
+                return node
+            }
         }
-
-        return false
-    })
-
-    return hitNode
-}
+        return null
+    }
 }

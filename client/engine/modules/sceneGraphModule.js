@@ -130,7 +130,7 @@ export class SceneGraphModule extends baseModule {
   attach() {
     const rootNode = new Node('root', 'root')
     this.addNode(rootNode)
-    console.log('[SceneGraphModule] attached', rootNode)
+    console.log('[SceneGraphModule] attached')
   }
 
   detach() {
@@ -161,4 +161,5 @@ _traverseNode(node, callback) {
 
     return false
 }
+
 }

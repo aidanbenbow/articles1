@@ -19,6 +19,7 @@ export class RenderModule extends baseModule {
             render: this.render.bind(this),
             ctx: this.ctx,
             canvas: this.canvas,
+            getNodesInRenderOrder: this.getNodesInRenderOrder.bind(this),
             
         }
     }
@@ -95,4 +96,32 @@ export class RenderModule extends baseModule {
         this._behaviorInstances.clear()
         console.log('[RenderModule] detached')
     }
+    getNodesInRenderOrder() {
+    const nodes = []
+
+    const traverse = (node) => {
+        if (!node) return
+
+        nodes.push(node)
+
+        const children = (node.children ?? [])
+            .map(id => this.context.getNode(id))
+            .filter(Boolean)
+            .sort((a, b) => (a.zIndex ?? 0) - (b.zIndex ?? 0))
+
+        for (const child of children) {
+            traverse(child)
+        }
+    }
+
+    const roots = (this.context.getLayoutTrees?.() ?? [])
+        .slice()
+        .sort((a, b) => (a.zIndex ?? 0) - (b.zIndex ?? 0))
+
+    for (const root of roots) {
+        traverse(root)
+    }
+
+    return nodes
+}
 }
