@@ -68,11 +68,6 @@ export class LayOutModule extends baseModule {
             this._measure(child, measured)
         }
 
-        const adjustedMeasured = behavior?.afterChildrenMeasure?.(measured, constraints, this.context)
-        if (adjustedMeasured) {
-            this._measuredById.set(node.id, adjustedMeasured)
-            measured = adjustedMeasured
-        }
         return measured
     }
 
@@ -84,9 +79,6 @@ export class LayOutModule extends baseModule {
         const preset = this._layoutById.get(node.id)
         const computed = behavior?.layout?.(measured, this.context) ?? this._defaultLayout(node, measured)
         this._layoutById.set(node.id, preset ? { ...computed, ...preset } : computed)
-
-        // Let behavior position children (e.g. vertical stack, flex, etc.)
-        behavior?.layoutChildren?.(node, this.context)
 
         const childOffset = { x: node.x ?? offset.x, y: node.y ?? offset.y }
         for (const childId of node.children ?? []) {
@@ -113,7 +105,7 @@ export class LayOutModule extends baseModule {
         }
 
         this._layoutTrees = roots.map((root) => this._buildLayoutTree(root))
-        console.log('[LayOutModule] layout completed', { layoutTrees: this._layoutTrees })
+        console.log('[LayOutModule] layout completed', { layoutTrees: this._layoutTrees[0].children[0] })
         this.context.layoutTrees = this._layoutTrees
 
         this.engine.emit('layoutDone')

@@ -27,7 +27,7 @@ export class TextBox extends Behavior {
     }
     update() {}
     render(ctx, runtime) {
-        rectangle(this.node, ctx, runtime)
+       // rectangle(this.node, ctx, runtime)
         const x = runtime?.layouted?.x ?? this.node.x ?? 0
         const y = runtime?.layouted?.y ?? this.node.y ?? 0
         const width = runtime?.layouted?.width ?? runtime?.measured?.width ?? this.node.width ?? 0

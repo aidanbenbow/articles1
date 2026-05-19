@@ -4,16 +4,10 @@ import { Behavior } from "./behavior.js";
 class ContainerBar extends Behavior{
     
     measure(constraints) {
-        const offsetX = this.node.offsetX ?? 5
+        const offsetX = this.node.offsetX ?? 15
         const offsetY = this.node.offsetY ?? 5
-        const children = this.node.children ?? []
-        for (const child of children) {
-            const childMeasured = this.context?.getNodeMeasured?.(child)
-            if (childMeasured) {
-                offsetY += childMeasured.height + (this.node.gap ?? 5)
-            }
-        }
-        return { width: Math.max((constraints.width ?? 0) - (offsetX * 2), 0), height: 50 }
+       
+        return { width: constraints.width - (offsetX * 2), height: 70 }
     }
    
     layout(measured, context) {
@@ -21,12 +15,16 @@ class ContainerBar extends Behavior{
         const parent = parentId ? context?.getNode?.(parentId) : null
         const parentLayout = parent ? context?.getNodeLayout?.(parent.id) : null
         const parentX = parentLayout?.x ?? parent?.x ?? 0
-        const parentY = 0 + (this.node.order ?? 0) * measured.height 
+        const order = this.node.props.layout.order ?? 0
+        const parentY = 0 + order * measured.height 
+        const gap = this.node.props.spacing.gap ?? 5
+        const space =  gap * order
+        
         console.log('ContainerBar layout', { parentX, parentY, measured })
-        console.log('order', this.node.order)
+        console.log('order', this.node.props.layout.order)
         return {
             x: parentX + 5,
-            y: parentY + 5 + 20,
+            y: parentY + 5 + 20 + space,
             width: measured.width,
             height: measured.height,
         }

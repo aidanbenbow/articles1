@@ -3,8 +3,9 @@ import { CommandModule } from '../../engine/modules/commandModule.js'
 import { SceneGraphModule } from '../../engine/modules/sceneGraphModule.js'
 import { RenderModule } from '../../engine/modules/renderModule.js'
 import { LayOutModule } from '../../engine/modules/layOutModule.js'
+import { InputModule } from '../../engine/modules/inputModule.js'
 
-const defaultModules = [CommandModule,RenderModule, SceneGraphModule, LayOutModule, ]
+const defaultModules = [CommandModule,RenderModule, SceneGraphModule, LayOutModule, InputModule ]
 
 export function bootstrapDorcasApp(options = {}) {
 	const engine = new Engine({

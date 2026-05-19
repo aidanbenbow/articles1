@@ -6,7 +6,7 @@ export class InputBox extends Behavior {
         const offsetX = this.node.offsetX ?? 10
         const offsetY = this.node.offsetY ?? 10
         const height = this.node.height ?? 30
-        return { width: Math.max((constraints.width ?? 0) - (offsetX * 2), 0), height: Math.max(height - (offsetY * 2), 0) }
+        return { width: Math.max((constraints.width ?? 0) - (offsetX * 2), 0), height: Math.max(height, 0) }
     }
     layout(measured, context) {
         const parentId = this.node.parentId

@@ -26,9 +26,9 @@ export class Node {
         padding: props.padding ?? 0,
         paddingX: props.paddingX ?? props.padding ?? 0,
         paddingY: props.paddingY ?? props.padding ?? 0,
-        gap: props.gap ?? 0,
-        offsetX: props.offsetX ?? 0,
-        offsetY: props.offsetY ?? 0,
+        gap: props.gap ?? 10,
+        offsetX: props.offsetX ?? 10,
+        offsetY: props.offsetY ?? 10,
       },
 
       style: {
