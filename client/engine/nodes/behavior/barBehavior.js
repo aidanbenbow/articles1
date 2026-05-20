@@ -19,6 +19,6 @@ const x = this.node.x ?? 0
     }
     update() {}
     render(ctx, runtime) {
-        rectangle(this.node, ctx, runtime)
+        rectangle(ctx, runtime)
     }
 }

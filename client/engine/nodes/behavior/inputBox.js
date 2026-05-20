@@ -27,15 +27,15 @@ export class InputBox extends Behavior {
     }
     update() {}
     render(ctx, runtime) {
-        rectangle(this.node, ctx, runtime)
-        const x = runtime?.layouted?.x ?? this.node.x ?? 0
-        const y = runtime?.layouted?.y ?? this.node.y ?? 0
-        const width = runtime?.layouted?.width ?? runtime?.measured?.width ?? this.node.width ?? 0
-        const height = runtime?.layouted?.height ?? runtime?.measured?.height ?? this.node.height ?? 0
+        rectangle( ctx, runtime)
+        const x = runtime.rect.x
+        const y = runtime.rect.y
+        const width = runtime.rect.width
+        const height = runtime.rect.height
         ctx.font = "20px Arial";
         ctx.fillStyle = "black";
         ctx.textAlign = "left";
         ctx.textBaseline = "middle";
-        ctx.fillText(this.node.content.text, x + 5, y + height / 2);
+        ctx.fillText(runtime.text, x + 5, y + height / 2);
     }
 }

@@ -15,6 +15,7 @@ export function createLayoutNode(node, rect, children = []) {
     },
     style: {
       color: node.color,
+      borderColor: node.props.style.borderColor ?? '#000000',
     },
     proportion,
     x,

@@ -40,23 +40,34 @@ _hitTestSystem() {
         return this.hitTestSystem
     }
     _onPointerDown = (event) => {
+        const { x, y } = this._normalisePointerEvent(event)
+        const hit = this.hitTestSystem.hitTest(x, y)
         this.pointerState.isDown = true
-        this.pointerState.target = event.target
-        this.pointerState.x = event.clientX
-        this.pointerState.y = event.clientY
-       const hit = this.hitTestSystem.hitTest(this.pointerState.x, this.pointerState.y)
-        console.log('Pointer down', { pointerState: this.pointerState, hit })
+        this.pointerState.x = x
+        this.pointerState.y = y
+        this.pointerState.target = hit
+        console.log('[InputModule] pointer down',   hit.id )
+            if (hit) {
+                this.context.setFocusedNode?.(hit.id)
+            }
     }
     _onPointerMove = (event) => {
         if (this.pointerState.isDown) {
-            this.pointerState.x = event.clientX
-            this.pointerState.y = event.clientY
+            const { x, y } = this._normalisePointerEvent(event)
+            this.pointerState.x = x
+            this.pointerState.y = y
         }
     }
     _onPointerUp = (event) => {
       const hit = this.hitTestSystem.hitTest(this.pointerState.x, this.pointerState.y)
-        console.log('Pointer up', { pointerState: this.pointerState, hit })
+    
         this.pointerState.isDown = false
         this.pointerState.target = null
+    }
+    _normalisePointerEvent(event) {
+        const rect = this.canvas.getBoundingClientRect()
+        const x = event.clientX - rect.left
+        const y = event.clientY - rect.top
+        return { x, y }
     }
 }

@@ -19,7 +19,7 @@ export class RenderModule extends baseModule {
             render: this.render.bind(this),
             ctx: this.ctx,
             canvas: this.canvas,
-            getNodesInRenderOrder: this.getNodesInRenderOrder.bind(this),
+            
             
         }
     }
@@ -62,9 +62,9 @@ export class RenderModule extends baseModule {
             if (!layoutNode) return
             const behavior = this._getBehavior(layoutNode)
             const runtime = {
-                layouted: layoutNode.rect,
-                measured: this.context.getNodeMeasured?.(layoutNode.id),
-                layoutNode,
+                rect: layoutNode.rect,
+                style: layoutNode.style,
+                text: layoutNode.content?.text,
             }
             behavior?.render?.(this.ctx, runtime, this.context)
             for (const child of layoutNode.children ?? []) {
@@ -80,11 +80,12 @@ export class RenderModule extends baseModule {
     attach() {
         this.setCanvas()
         this._unsubscribe.push(this.engine.on('layoutDone', () => this.render()))
+        
         this._unsubscribe.push(this.engine.on('nodeRemoved', ({ id }) => {
             if (id) this._behaviorInstances.delete(id)
         }))
-        this.context.runLayout?.()
-        this.render()
+        // this.context.runLayout?.()
+        // this.render()
         console.log('[RenderModule] attached')
     }
 
@@ -96,32 +97,5 @@ export class RenderModule extends baseModule {
         this._behaviorInstances.clear()
         console.log('[RenderModule] detached')
     }
-    getNodesInRenderOrder() {
-    const nodes = []
-
-    const traverse = (node) => {
-        if (!node) return
-
-        nodes.push(node)
-
-        const children = (node.children ?? [])
-            .map(id => this.context.getNode(id))
-            .filter(Boolean)
-            .sort((a, b) => (a.zIndex ?? 0) - (b.zIndex ?? 0))
-
-        for (const child of children) {
-            traverse(child)
-        }
-    }
-
-    const roots = (this.context.getLayoutTrees?.() ?? [])
-        .slice()
-        .sort((a, b) => (a.zIndex ?? 0) - (b.zIndex ?? 0))
-
-    for (const root of roots) {
-        traverse(root)
-    }
-
-    return nodes
-}
+   
 }

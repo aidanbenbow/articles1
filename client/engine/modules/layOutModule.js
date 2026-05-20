@@ -23,6 +23,7 @@ export class LayOutModule extends baseModule {
             getNodeMeasured: this.getNodeMeasured.bind(this),
             getNodeLayout: this.getNodeLayout.bind(this),
             setNodeLayout: this.setNodeLayout.bind(this),
+            
         }
     }
 
@@ -85,6 +86,7 @@ export class LayOutModule extends baseModule {
             const child = this.context.getNode(childId)
             this._layout(child, childOffset)
         }
+        
     }
 
     runLayout() {
@@ -105,7 +107,7 @@ export class LayOutModule extends baseModule {
         }
 
         this._layoutTrees = roots.map((root) => this._buildLayoutTree(root))
-        console.log('[LayOutModule] layout completed', { layoutTrees: this._layoutTrees[0].children[0] })
+        console.log('[LayOutModule] layout completed', { layoutTrees: this._layoutTrees})
         this.context.layoutTrees = this._layoutTrees
 
         this.engine.emit('layoutDone')
@@ -157,15 +159,23 @@ export class LayOutModule extends baseModule {
     getLayoutTrees() {
         return [...this._layoutTrees]
     }
+updateLayoutTree(node) {       
+      const nodeTochange = this.context.getNode(node.nodeId)
+      if (!nodeTochange) return
+        console.log('[LayOutModule] node updated, re-running layout', { nodeTochange })
+        nodeTochange.props = { ...nodeTochange.props, ...node.props }
+        this.runLayout()
 
+}
     attach() {
         this._unsubscribe.push(this.engine.on('nodeAdded', () => this.runLayout()))
         this._unsubscribe.push(this.engine.on('nodesBatchAdded', () => this.runLayout()))
+        this._unsubscribe.push(this.engine.on('nodeUpdated', (newNode) => this.updateLayoutTree(newNode)))
         this._unsubscribe.push(this.engine.on('nodeRemoved', ({ id }) => {
             if (id) this._behaviorInstances.delete(id)
             this.runLayout()
         }))
-        this.runLayout()
+       // this.runLayout()
         console.log('[LayOutModule] attached')
     }
 

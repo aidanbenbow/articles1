@@ -34,6 +34,7 @@ export class Node {
 
       style: {
         color: props.color ?? '#2d6cdf',
+        borderColor: props.borderColor ?? '#000000',
       },
 
       content: {

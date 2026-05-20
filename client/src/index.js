@@ -29,7 +29,26 @@ const messageNode    = new Node('messageNode',         'text',
 const messageInputNode    = new Node('messageInputNode',     'inputBox',     
     { text: 'Type your message here', color: '#e1d0d0' })
 
+const containerBar4 = new Node('containerBar4','containerBar',
+    {order:3, color: '#8ec693' })
+const reportNode    = new Node('reportNode',         'text',         
+    { text: 'Raport', color: '#fff' })
+const reportInputNode    = new Node('reportInputNode',     'inputBox',     
+    { text: 'Type your message here', color: '#e1d0d0' })
 
+const containerBar5 = new Node('containerBar5','containerBar',
+    {order:0, color: '#8ec693' })
+const reportToDo    = new Node('reportToDo',  'text',         
+    { text: 'Raportdefacut', color: '#fff' })
+const toDo    = new Node('toDo',     'text',     
+    { text: '205', color: '#e1d0d0' })
+
+    const containerBar6 = new Node('containerBar6','containerBar',
+    {order:1, color: '#8ec693' })
+const names1    = new Node('names1',  'text',         
+    { text: 'ala', color: '#fff' })
+const names2    = new Node('names2',     'inputBox',     
+    { text: 'ana', color: '#e1d0d0' })
 // --- Add all nodes at once, layout runs once at the end ---
 eng.context.batchAdd([
     { node: basicScreen,   parentId: 'root' },
@@ -44,4 +63,13 @@ eng.context.batchAdd([
     { node: containerBar3, parentId: 'formBar' },
     { node: messageNode,   parentId: 'containerBar3' },
     { node: messageInputNode, parentId: 'containerBar3' },
+    { node: containerBar4, parentId: 'formBar' },
+    { node: reportNode,    parentId: 'containerBar4' },
+    { node: reportInputNode, parentId: 'containerBar4' },
+    { node: containerBar5, parentId: 'messageBar' },
+    { node: reportToDo,    parentId: 'containerBar5' },
+    { node: toDo,          parentId: 'containerBar5' },
+    { node: containerBar6, parentId: 'messageBar' },
+    { node: names1,        parentId: 'containerBar6' },
+    { node: names2,        parentId: 'containerBar6' },
 ])

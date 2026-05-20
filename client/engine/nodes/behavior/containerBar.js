@@ -30,7 +30,7 @@ class ContainerBar extends Behavior{
     update() {}
 
     render(ctx, runtime) {
-       rectangle(this.node, ctx, runtime)
+       rectangle( ctx, runtime)
     }
 }
 

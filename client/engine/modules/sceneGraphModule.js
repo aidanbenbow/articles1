@@ -20,7 +20,7 @@ export class SceneGraphModule extends baseModule {
       getNode: this.getNode.bind(this),
       getRoots: this.getRoots.bind(this),
       getParent: this.getParent.bind(this),
-      traversal: this.traversal.bind(this),
+     
     }
   }
 
@@ -86,9 +86,12 @@ export class SceneGraphModule extends baseModule {
       } else {
         this._roots.add(node.id)
       }
+      
       added.push(node)
     }
     if (added.length) this.engine.emit('nodesBatchAdded', { nodes: added })
+      console.log(this._nodes)
+    
     return added
   }
 
@@ -138,28 +141,5 @@ export class SceneGraphModule extends baseModule {
     this._roots.clear()
     console.log('[SceneGraphModule] detached')
   }
-  traversal(callback, nodeId = null) {
-    const node = nodeId ? this.getNode(nodeId) : null
-
-    const roots = node ? [node] : this.getRoots()
-
-    for (const root of roots) {
-        const result = this._traverseNode(root, callback)
-        if (result === true) return true
-    }
-}
-
-_traverseNode(node, callback) {
-    if (callback(node) === true) return true
-
-    for (const childId of node.children) {
-        const child = this.getNode(childId)
-        if (child && this._traverseNode(child, callback)) {
-            return true
-        }
-    }
-
-    return false
-}
-
+ 
 }
