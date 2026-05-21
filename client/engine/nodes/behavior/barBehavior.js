@@ -13,9 +13,17 @@ export class BarBehavior extends Behavior {
             height: constraints.height,
         }
     }
-    layout(measured, context) {
-const x = this.node.x ?? 0
-        return { x: x * measured.width/2, y: 0, width: measured.width, height: measured.height }
+    layout(measured,rect, context) {
+        let currentY = rect?.y ?? 0
+        for(const childId of this.node.children) {
+            const childMeasured = context?.getNodeMeasured?.(childId)
+            const childRect = { x: rect.x, y: currentY, width: rect.width, height: childMeasured?.height ?? 0 }
+            context?.setNodeLayout?.(childId, childRect)
+            currentY += childRect.height
+            console.log(`BarBehavior layout child ${childId} rect`, childRect)
+        }
+        return { x: rect.x, y: rect.y, width: rect.width, height: rect.height }
+
     }
     update() {}
     render(ctx, runtime) {

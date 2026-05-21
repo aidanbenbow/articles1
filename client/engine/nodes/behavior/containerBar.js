@@ -10,22 +10,16 @@ class ContainerBar extends Behavior{
         return { width: constraints.width - (offsetX * 2), height: 70 }
     }
    
-    layout(measured, context) {
-        const parentId = this.node.parentId
-        const parent = parentId ? context?.getNode?.(parentId) : null
-        const parentLayout = parent ? context?.getNodeLayout?.(parent.id) : null
-        const parentX = parentLayout?.x ?? parent?.x ?? 0
-        const order = this.node.props.layout.order ?? 0
-        const parentY = 0 + order * measured.height 
-        const gap = this.node.props.spacing.gap ?? 5
-        const space =  gap * order
-      
-        return {
-            x: parentX + 5,
-            y: parentY + 5 + 20 + space,
-            width: measured.width,
-            height: measured.height,
+    layout(measured,rect, context) {
+       let currentY = rect?.y ?? 0
+        for(const childId of this.node.children) {
+            const childMeasured = context?.getNodeMeasured?.(childId)
+            const childRect = { x: rect.x, y: currentY, width: rect.width, height: childMeasured?.height ?? 0 }
+            context?.setNodeLayout?.(childId, childRect)
+            currentY += childRect.height
+            console.log(`ContainerBar layout child ${childId} rect`, childRect)
         }
+        return { x: rect.x, y: rect.y, width: rect.width, height: currentY - rect.y }
     }
     update() {}
 

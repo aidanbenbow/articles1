@@ -73,18 +73,19 @@ export class LayOutModule extends baseModule {
     }
 
     // Layout pass: parent assigns positions/sizes to each child.
-    _layout(node, offset = { x: 0, y: 0 }) {
+    _layout(node, asignedRect = null) {
         if (!node) return
         const behavior = this._getBehavior(node)
-        const measured = this._measuredById.get(node.id) ?? this._defaultMeasured(node, offset)
-        const preset = this._layoutById.get(node.id)
-        const computed = behavior?.layout?.(measured, this.context) ?? this._defaultLayout(node, measured)
-        this._layoutById.set(node.id, preset ? { ...computed, ...preset } : computed)
+        const measured = this._measuredById.get(node.id) ?? this._defaultMeasured(node, asignedRect)
+        const rect = asignedRect ?? this._defaultLayout(node, measured)
+       
+        const computed = behavior?.layout?.(measured,rect, this.context) ??rect
+        this._layoutById.set(node.id, computed)
 
-        const childOffset = { x: node.x ?? offset.x, y: node.y ?? offset.y }
         for (const childId of node.children ?? []) {
             const child = this.context.getNode(childId)
-            this._layout(child, childOffset)
+            const childRect = this._layoutById.get(childId) 
+            this._layout(child, childRect)
         }
         
     }
@@ -100,10 +101,11 @@ export class LayOutModule extends baseModule {
             width: this.context.canvasWidth ?? 800,
             height: this.context.canvasHeight ?? 600,
         }
+        const rootRect = { x: 0, y: 0, width: viewport.width, height: viewport.height }
 
         for (const root of roots) {
             this._measure(root, viewport)
-            this._layout(root, { x: 0, y: 0 })
+            this._layout(root, rootRect)
         }
 
         this._layoutTrees = roots.map((root) => this._buildLayoutTree(root))
@@ -168,6 +170,7 @@ updateLayoutTree(node) {
 
 }
     attach() {
+        this._unsubscribe.push(this.engine.on('stateChanged', () => this.runLayout()))
         this._unsubscribe.push(this.engine.on('nodeAdded', () => this.runLayout()))
         this._unsubscribe.push(this.engine.on('nodesBatchAdded', () => this.runLayout()))
         this._unsubscribe.push(this.engine.on('nodeUpdated', (newNode) => this.updateLayoutTree(newNode)))

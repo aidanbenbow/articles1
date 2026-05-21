@@ -2,6 +2,9 @@ export class BaseEngine {
   constructor() {
     this.id = 'engine'
     this.context = {}
+    this.state = {
+      
+    }
     this.modules = []
     this.lifecycleModules = []
     this.eventListeners = new Map()
@@ -104,4 +107,37 @@ export class BaseEngine {
       }
     }
   }
+  dispatch(command) {
+    if (!command || typeof command !== 'object' || !command.type) return;
+    const handler = this.commandHandlers?.get(command.type);
+    if (!handler) {
+      console.warn(`[${this.id}] No handlers for command: ${command.type}`);
+      return;
+    }
+    try {
+      const result = handler(this.context, command.payload);
+      if(result){
+        this.applyTransaction?.(result)
+      } }catch (error) {
+      console.error(`[${this.id}] Error in command handler for ${command.type}`, error);
+    }
+  }
+  registerCommand(type, handler) {
+    if (!type || typeof handler !== 'function') return;
+    if (!this.commandHandlers) this.commandHandlers = new Map();
+    this.commandHandlers.set(type, handler);
+  }
+  applyTransaction(transaction) {
+    if(!transaction.updates) return
+    for(const update of transaction.updates){
+      this.context.updateNode?.(update.nodeId, node => {
+        if(!node) return null
+        const next = { ...node, ...update.patch }
+        return next
+      }
+      )
+    }
+    this.emit('stateChanged', this.context)
+  }
+
 }

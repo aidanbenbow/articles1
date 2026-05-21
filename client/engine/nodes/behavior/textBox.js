@@ -7,23 +7,8 @@ export class TextBox extends Behavior {
      const measured = measureText(this.node, drawCtx)
      return measured
     }
-    layout(measured, context) {
-        const parentId = this.node.parentId
-        const parent = parentId ? context?.getNode?.(parentId) : null
-        const parentLayout = parent ? context?.getNodeLayout?.(parent.id) : null
-        const parentMeasured = parent ? context?.getNodeMeasured?.(parent.id) : null
-        const parentX = parentLayout?.x ?? parent?.x ?? 0
-        const parentY = parentLayout?.y ?? parent?.y ?? 0
-        const parentWidth = parentLayout?.width ?? parentMeasured?.width ?? measured.width
-        const parentHeight = parentLayout?.height ?? parentMeasured?.height ?? measured.height
-
-        const offsetX = this.node.offsetX ?? 10
-        const offsetY = this.node.offsetY ?? 10
-
-        const width = Math.min(measured.width, Math.max(parentWidth - (offsetX * 2), 0))
-        const height = Math.min(measured.height, Math.max(parentHeight - (offsetY * 2), 0))
-
-        return { x: parentX + offsetX, y: parentY + offsetY, width, height }
+    layout(measured,rect, context) {
+        return rect
     }
     update() {}
     render(ctx, runtime) {

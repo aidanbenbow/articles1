@@ -19,13 +19,12 @@ export class TextModule extends baseModule {
         this.engine.off('focusChanged', this._onFocusChanged)
     }
     _onFocusChanged = ({ nodeId }) => {
-        const node = this.context.getNode?.(nodeId)
-        if (node && node.type === 'inputBox') {
-            const newColor = '#ff0000'
-            addKeyboardListener(node, this.engine)
-           
-            this.engine.emit('nodeUpdated', { nodeId, props: { ...node.props, style: { ...node.props.style, borderColor: newColor },  } })
-        }
+
+         this.engine.dispatch({
+            type: 'focusNode',
+            payload: { nodeId }
+         })
+        
     }
    
 }

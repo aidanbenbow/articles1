@@ -13,6 +13,28 @@ runlayout:
 root measure => create root behav inst
 
 
+2. Add FlexContainer behavior
 
+Parent assigns child rects.
+
+3. Change _layout
+
+From:
+
+_layout(node)
+
+To:
+
+_layout(node, rect)
+4. Store final child rects centrally
+_layoutById.set(id, rect)
+Minimal Future API
+measure(node, constraints)
+
+layout(node, rect)
+
+render(node)
+
+That becomes a real UI engine foundation.
 
 

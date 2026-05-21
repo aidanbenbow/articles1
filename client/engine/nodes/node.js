@@ -39,7 +39,12 @@ export class Node {
 
       content: {
         text: props.text ?? ''
-      }
+      },
+      uistate: {
+        focused: false,
+        caretIndex: 0,
+
+      },
     }
 
     // structure only

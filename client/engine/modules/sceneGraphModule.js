@@ -15,6 +15,7 @@ export class SceneGraphModule extends baseModule {
   contextExports() {
     return {
       addNode: this.addNode.bind(this),
+      update: this.updateNode.bind(this),
       batchAdd: this.batchAdd.bind(this),
       removeNode: this.removeNode.bind(this),
       getNode: this.getNode.bind(this),
@@ -54,8 +55,20 @@ export class SceneGraphModule extends baseModule {
       this._roots.add(node.id)
     }
 
-    this.engine.emit('nodeAdded', { node })
     return node
+  }
+
+  updateNode(nodeId, updaterFn) {
+    const node = this._nodes.get(nodeId)
+    if (!node) {
+      console.warn(`[SceneGraphModule] updateNode: node "${nodeId}" not found`)
+      return
+    }
+   const next = updaterFn(node)
+   if(!next) return null
+   this._nodes.set(nodeId, next)
+   this.updateLayoutTree(next)
+   return next
   }
 
   // Add multiple nodes silently, then emit a single 'nodesBatchAdded' event.
