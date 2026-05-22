@@ -38,11 +38,13 @@ export class Node {
       },
 
       content: {
-        text: props.text ?? ''
+        value: props.value ?? '',
+        placeholder: props.placeholder ?? '',
       },
       uistate: {
         focused: false,
         caretIndex: 0,
+        hidden: false,
 
       },
     }
@@ -50,42 +52,5 @@ export class Node {
     // structure only
     this.parentId = null
     this.children = []
-  }
-
-  get color() { return this.props.style.color }
-  set color(value) { this.props.style.color = value }
-
-  get text() { return this.props.content.text }
-  set text(value) { this.props.content.text = value ?? '' }
-
-  get width() { return this.props.size.width }
-  set width(value) { this.props.size.width = value }
-
-  get height() { return this.props.size.height }
-  set height(value) { this.props.size.height = value }
-
-  get minWidth() { return this.props.size.minWidth }
-  get minHeight() { return this.props.size.minHeight }
-
-  get x() { return this.props.position.x ?? 0 }
-  set x(value) { this.props.position.x = value }
-
-  get y() { return this.props.position.y ?? 0 }
-  set y(value) { this.props.position.y = value }
-
-  get paddingX() { return this.props.spacing.paddingX ?? this.props.spacing.padding ?? 0 }
-  get paddingY() { return this.props.spacing.paddingY ?? this.props.spacing.padding ?? 0 }
-  get gap() { return this.props.spacing.gap ?? 0 }
-  get offsetX() { return this.props.spacing.offsetX ?? 0 }
-  get offsetY() { return this.props.spacing.offsetY ?? 0 }
-
-  get proportion() {
-    return this.props.layout.proportion ?? 1
-  }
-
-  set proportion(value) {
-    const normalized = value ?? 1
-    this.props.layout.proportion = normalized
-    this.props.layout.propotion = normalized
   }
 }

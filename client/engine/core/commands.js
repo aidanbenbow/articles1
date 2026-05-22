@@ -1,27 +1,33 @@
 export function registerCommands(engine) {
-    engine.registerCommand('focusNode', ({ nodeId }) => {
+    engine.registerCommand('focusNode', (context,{ nodeId }) => {
         return {
             updates: [
                 { nodeId,
-                    patch: {
-                        uistate: { focused: true }
-                    }
+                   patch: {
+  props: {
+    uistate: {
+      focused: true
+    }
+  }
+}
                 }
             ]
         }
     })
 
-    engine.registerCommand('keypress', ({ nodeId, key }) => {
-        const node = engine.state.nodes.get(nodeId)
+    engine.registerCommand('keyPress', (context, { nodeId, key }) => {
+        const node = context.getFocusedNode?.()
         if (!node) {
-            console.warn(`[focusNode] node "${nodeId}" not found`)
+            console.warn(`[keyPress] node "${nodeId}" not found`)
             return
         }
         return {
             updates: [
-                { nodeId,
+                { nodeId: node.id,
                     patch: {
-                        props: { text: (node.props.text ?? '') + key }
+                        props: {
+                            content:{ value: (node.props.content.value ?? '') + key }
+                        }
                     }
                 }
             ]

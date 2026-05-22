@@ -109,13 +109,15 @@ export class BaseEngine {
   }
   dispatch(command) {
     if (!command || typeof command !== 'object' || !command.type) return;
-    const handler = this.commandHandlers?.get(command.type);
+    const handler = this.commandHandlers.get(command.type);
     if (!handler) {
       console.warn(`[${this.id}] No handlers for command: ${command.type}`);
       return;
     }
+
     try {
       const result = handler(this.context, command.payload);
+      console.log(`[${this.id}] Command "${command.type}" executed with result:`, result);
       if(result){
         this.applyTransaction?.(result)
       } }catch (error) {
@@ -132,7 +134,50 @@ export class BaseEngine {
     for(const update of transaction.updates){
       this.context.updateNode?.(update.nodeId, node => {
         if(!node) return null
-        const next = { ...node, ...update.patch }
+        const next = {
+  ...node,
+
+  props: {
+    ...node.props,
+    ...update.patch.props,
+
+    size: {
+      ...node.props.size,
+      ...update.patch.props?.size
+    },
+
+    layout: {
+      ...node.props.layout,
+      ...update.patch.props?.layout
+    },
+
+    position: {
+      ...node.props.position,
+      ...update.patch.props?.position
+    },
+
+    spacing: {
+      ...node.props.spacing,
+      ...update.patch.props?.spacing
+    },
+
+    style: {
+      ...node.props.style,
+      ...update.patch.props?.style
+    },
+
+    content: {
+      ...node.props.content,
+      ...update.patch.props?.content
+    },
+
+    uistate: {
+      ...node.props.uistate,
+      ...update.patch.props?.uistate
+    }
+  }
+}
+        console.log(`[${this.id}] Applying update to node ${update.nodeId}:`, { patch: update.patch, next })
         return next
       }
       )

@@ -15,7 +15,7 @@ export class SceneGraphModule extends baseModule {
   contextExports() {
     return {
       addNode: this.addNode.bind(this),
-      update: this.updateNode.bind(this),
+      updateNode: this.updateNode.bind(this),
       batchAdd: this.batchAdd.bind(this),
       removeNode: this.removeNode.bind(this),
       getNode: this.getNode.bind(this),
@@ -67,7 +67,7 @@ export class SceneGraphModule extends baseModule {
    const next = updaterFn(node)
    if(!next) return null
    this._nodes.set(nodeId, next)
-   this.updateLayoutTree(next)
+   console.log(`[SceneGraphModule] Node`, this._nodes.get(nodeId))
    return next
   }
 

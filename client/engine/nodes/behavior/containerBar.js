@@ -17,7 +17,7 @@ class ContainerBar extends Behavior{
             const childRect = { x: rect.x, y: currentY, width: rect.width, height: childMeasured?.height ?? 0 }
             context?.setNodeLayout?.(childId, childRect)
             currentY += childRect.height
-            console.log(`ContainerBar layout child ${childId} rect`, childRect)
+        
         }
         return { x: rect.x, y: rect.y, width: rect.width, height: currentY - rect.y }
     }

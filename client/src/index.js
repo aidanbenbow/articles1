@@ -15,40 +15,49 @@ const messageBar   = new Node('messageBar',    'bar',
 const containerBar = new Node('containerBar',  'containerBar', 
     {order:0, color: '#90c095', zIndex: 4 })
 const titleNode    = new Node('text',          'text',        
-     { text: 'Raporte', color: '#fff', zIndex: 5 })
+     { value: 'Raporte', color: '#fff', zIndex: 5 })
 const containerBar2 = new Node('containerBar2','containerBar', 
     {order:1, color: '#8ecd94' })
 const nameNode     = new Node('nameNode',      'text',         
-    { text: 'Nume:', color: '#fff' })
+    { value: 'Nume:', color: '#fff' })
 const inputNode    = new Node('inputNode',     'inputBox',     
-    { text: 'Type your name here', color: '#e1d0d0' })
+    { placeholder: 'Type your name here', color: '#e1d0d0' })
 const containerBar3 = new Node('containerBar3','containerBar', 
     {order:2, color: '#8ec693' })
 const messageNode    = new Node('messageNode',         'text',         
-    { text: 'messajul', color: '#fff' })
+    { value: 'messajul', color: '#fff' })
 const messageInputNode    = new Node('messageInputNode',     'inputBox',     
-    { text: 'Type your message here', color: '#e1d0d0' })
+    { placeholder: 'Type your message here', color: '#e1d0d0' })
 
 const containerBar4 = new Node('containerBar4','containerBar',
     {order:3, color: '#8ec693' })
 const reportNode    = new Node('reportNode',         'text',         
-    { text: 'Raport', color: '#fff' })
+    { value: 'Raport', color: '#fff' })
 const reportInputNode    = new Node('reportInputNode',     'inputBox',     
-    { text: 'Type your message here', color: '#e1d0d0' })
+    { placeholder: 'Type your message here', color: '#e1d0d0' })
 
 const containerBar5 = new Node('containerBar5','containerBar',
     {order:0, color: '#8ec693' })
 const reportToDo    = new Node('reportToDo',  'text',         
-    { text: 'Raportdefacut', color: '#fff' })
+    { value: 'Raportdefacut', color: '#fff' })
 const toDo    = new Node('toDo',     'text',     
-    { text: '205', color: '#e1d0d0' })
+    { value: '205', color: '#e1d0d0' })
+
+
+    const names = ['ala', 'ana', 'ion', 'maria', 'george', 'ioana', 'mihai', 'andreea']
 
     const containerBar6 = new Node('containerBar6','containerBar',
     {order:1, color: '#8ec693' })
-const names1    = new Node('names1',  'text',         
-    { text: 'ala', color: '#fff' })
-const names2    = new Node('names2',     'inputBox',     
-    { text: 'ana', color: '#e1d0d0' })
+
+
+    function createNameNodes() {
+        return names.map((name, index) => {
+            return new Node(`name${index}`, 'text', { value: name, color: '#e1d0d0' })
+        })
+    }
+
+    const nameNodes = createNameNodes()
+    console.log(nameNodes)
 // --- Add all nodes at once, layout runs once at the end ---
 eng.context.batchAdd([
     { node: basicScreen,   parentId: 'root' },
@@ -70,6 +79,13 @@ eng.context.batchAdd([
     { node: reportToDo,    parentId: 'containerBar5' },
     { node: toDo,          parentId: 'containerBar5' },
     { node: containerBar6, parentId: 'messageBar' },
-    { node: names1,        parentId: 'containerBar6' },
-    { node: names2,        parentId: 'containerBar6' },
+    ...nameNodes.map(node => ({ node, parentId: 'containerBar6' })),
 ])
+
+window.addEventListener('keydown', (e) => {
+  eng.emit('keyPress', {
+    nodeId: eng.context.focusedNodeId,
+    key: e.key,
+    code: e.code
+  })
+})

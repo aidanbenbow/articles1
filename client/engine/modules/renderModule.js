@@ -64,7 +64,9 @@ export class RenderModule extends baseModule {
             const runtime = {
                 rect: layoutNode.rect,
                 style: layoutNode.style,
-                text: layoutNode.content?.text,
+                text: layoutNode.content?.value,
+                placeholder: layoutNode.content?.placeholder,
+                uistate: layoutNode.uistate,
             }
             behavior?.render?.(this.ctx, runtime, this.context)
             for (const child of layoutNode.children ?? []) {
@@ -80,6 +82,7 @@ export class RenderModule extends baseModule {
     attach() {
         this.setCanvas()
         this._unsubscribe.push(this.engine.on('layoutDone', () => this.render()))
+        this._unsubscribe.push(this.engine.on('renderRequested', () => this.render()))
         
         this._unsubscribe.push(this.engine.on('nodeRemoved', ({ id }) => {
             if (id) this._behaviorInstances.delete(id)

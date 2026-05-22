@@ -18,10 +18,15 @@ export class InputBox extends Behavior {
         const y = runtime.rect.y
         const width = runtime.rect.width
         const height = runtime.rect.height
+       
         ctx.font = "20px Arial";
         ctx.fillStyle = "black";
         ctx.textAlign = "left";
         ctx.textBaseline = "middle";
-        ctx.fillText(runtime.text, x + 5, y + height / 2);
+        if(runtime.uistate.focused) {
+            ctx.fillText(runtime.text, x + 5, y + height / 2);
+        } else {
+        ctx.fillText(runtime.placeholder, x + 5, y + height / 2);
+        }
     }
 }

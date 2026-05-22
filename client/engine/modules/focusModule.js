@@ -19,6 +19,7 @@ export class FocusModule extends baseModule {
         if (this.focusedNodeId !== nodeId && !this.focused) {
             this.focusedNodeId = nodeId
             this.focused = true
+            
             this.engine.emit('focusChanged', { nodeId })
         }
     }

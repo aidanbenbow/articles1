@@ -13,6 +13,7 @@ export class TextBox extends Behavior {
     update() {}
     render(ctx, runtime) {
        // rectangle(this.node, ctx, runtime)
+       if(runtime.uistate.hidden) return
         const x = runtime.rect.x
         const y = runtime.rect.y
         const width = runtime.rect.width

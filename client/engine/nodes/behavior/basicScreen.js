@@ -15,7 +15,7 @@ export class BasicScreen extends Behavior {
             const childRect = { x: currentX, y: rect.y, width: childMeasured?.width ?? 0, height: rect.height }
             context?.setNodeLayout?.(childId, childRect)
             currentX += childRect.width
-            console.log(`BasicScreen layout child ${childId} rect`, childRect)
+            
         }
         return { x: rect.x, y: rect.y, width: currentX - rect.x, height: rect.height }
     }

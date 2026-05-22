@@ -9,7 +9,7 @@ export class BarBehavior extends Behavior {
     measure(constraints, context) {
       
         return {
-            width: constraints.width/this.node.proportion,
+            width: constraints.width/this.node.props.layout.proportion,
             height: constraints.height,
         }
     }
@@ -20,7 +20,7 @@ export class BarBehavior extends Behavior {
             const childRect = { x: rect.x, y: currentY, width: rect.width, height: childMeasured?.height ?? 0 }
             context?.setNodeLayout?.(childId, childRect)
             currentY += childRect.height
-            console.log(`BarBehavior layout child ${childId} rect`, childRect)
+   
         }
         return { x: rect.x, y: rect.y, width: rect.width, height: rect.height }
 

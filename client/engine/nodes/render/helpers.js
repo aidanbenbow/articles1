@@ -3,12 +3,13 @@ export function rectangle( ctx, runtime = {}) {
     const y = runtime.rect?.y ?? 0
     const width = runtime.rect?.width ?? 100
     const height = runtime.rect?.height ?? 100
-    const color = runtime.style?.color || '#2d6cdf'
+    const color = runtime.style?.color || '#7184a9'
     const borderColor = runtime.style?.borderColor || '#000000'
-//console.log('rectangle', { x, y, width, height, color })
+    const isFocused = runtime.uistate?.focused ?? false
+  
     ctx.fillStyle = color
     ctx.fillRect(x, y, width, height)
-    ctx.strokeStyle = borderColor
+    ctx.strokeStyle = isFocused ? 'red' : borderColor
     ctx.strokeRect(x, y, width, height)
 }
 
