@@ -15,6 +15,21 @@ export function registerCommands(engine) {
         }
     })
 
+    engine.registerCommand('blurNode', (context,{ nodeId }) => {
+        return {
+            updates: [
+                { nodeId,
+                   patch: {
+  props: {
+    uistate: {
+      focused: false
+    }
+    }
+}                }
+            ]
+        }
+    })
+
     engine.registerCommand('keyPress', (context, { nodeId, key }) => {
         const node = context.getFocusedNode?.()
         if (!node) {

@@ -23,10 +23,14 @@ export class InputBox extends Behavior {
         ctx.fillStyle = "black";
         ctx.textAlign = "left";
         ctx.textBaseline = "middle";
-        if(runtime.uistate.focused) {
-            ctx.fillText(runtime.text, x + 5, y + height / 2);
+        const placeholder = runtime.placeholder ?? "Enter text..."
+        const text = runtime.text ?? ""
+        const hasText = text.length > 0
+        if(hasText) {
+            ctx.fillText(text, x + 5, y + height / 2);
         } else {
-        ctx.fillText(runtime.placeholder, x + 5, y + height / 2);
+            ctx.fillStyle = "gray";
+            ctx.fillText(placeholder, x + 5, y + height / 2);
         }
     }
 }

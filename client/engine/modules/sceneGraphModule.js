@@ -21,6 +21,7 @@ export class SceneGraphModule extends baseModule {
       getNode: this.getNode.bind(this),
       getRoots: this.getRoots.bind(this),
       getParent: this.getParent.bind(this),
+      setChildren: this.setChildren.bind(this),
      
     }
   }
@@ -106,6 +107,25 @@ export class SceneGraphModule extends baseModule {
       console.log(this._nodes)
     
     return added
+  }
+
+  setChildren(parentId, childrenIds = []) {
+    const parent = this._nodes.get(parentId)
+    if (!parent) {
+      console.warn(`[SceneGraphModule] setChildren: parent "${parentId}" not found`)
+      return
+    }
+    // Detach old children
+    for (const childId of parent.children) {
+      const child = this._nodes.get(childId)
+      if (child) child.parentId = null
+    }
+    // Attach new children
+    parent.children = childrenIds
+    for (const childId of childrenIds) {
+      const child = this._nodes.get(childId)
+      if (child) child.parentId = parentId
+    }
   }
 
   removeNode(id, { removeChildren = true } = {}) {

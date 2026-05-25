@@ -10,9 +10,9 @@ export class TextModule extends baseModule {
 
         this.keyActions = {
             ' ': 'insertSpace',
-            'Enter': 'insertNewLine',
-            'Backspace': 'delChar',
-            'Delete': 'delCharNext',
+            'Enter': 'insertNewline',
+            'Backspace': 'deleteChar',
+            'Delete': 'deleteCharNext',
             'ArrowUp': 'moveUp',
             'ArrowDown': 'moveDown',
             'ArrowLeft': 'moveLeft',
@@ -43,12 +43,21 @@ export class TextModule extends baseModule {
         this.engine.off('focusChanged', this._onFocusChanged)
         this.engine.off('keyPress', this._onKeyPress)
     }
-    _onFocusChanged = ({ nodeId }) => {
+    _onFocusChanged = ({prevFocusedNodeId, nodeId }) => {
 
+        if(prevFocusedNodeId) {
+            this.engine.dispatch({
+                type: 'blurNode',
+                payload: { nodeId: prevFocusedNodeId }
+            })
+        }
+
+        if(nodeId) {
          this.engine.dispatch({
             type: 'focusNode',
             payload: { nodeId }
          })
+        }
         
     }
     _onKeyPress = ({nodeId, key }) => {

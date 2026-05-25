@@ -49,6 +49,8 @@ _hitTestSystem() {
         console.log('[InputModule] pointer down',   hit.id )
             if (hit) {
                 this.context.setFocusedNode?.(hit.id)
+            } else {
+                this.context.clearFocusedNode?.()
             }
     }
     _onPointerMove = (event) => {
