@@ -58,7 +58,7 @@ export class TextModule extends baseModule {
             payload: { nodeId }
          })
         }
-        
+
     }
     _onKeyPress = ({nodeId, key }) => {
         const action = this.keyActions[key] || (key.length === 1 ? 'insertText' : null)

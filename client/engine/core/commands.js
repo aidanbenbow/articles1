@@ -30,6 +30,32 @@ export function registerCommands(engine) {
         }
     })
 
+    engine.registerCommand('setReport', (context, { report }) => {
+        console.log('Setting report in context:', report)
+        return {
+            updates: [
+                { nodeId: 'reportInputNode',
+                   patch: {
+  props: {
+    content: { value: report ? `${report.report}` : 'No report available' },
+  }
+}                },
+{ nodeId: 'messageInputNode',
+                   patch: {
+  props: {
+    content: { value: report ? `${report.message}` : 'No message available' },
+  }
+}                },
+{ nodeId: 'nameInputNode',
+                   patch: {
+  props: {
+    content: { value: report ? `${report.name}` : 'No name available' },
+  }
+}                }
+  ]
+        }
+    })
+
     engine.registerCommand('keyPress', (context, { nodeId, key }) => {
         const node = context.getFocusedNode?.()
         if (!node) {

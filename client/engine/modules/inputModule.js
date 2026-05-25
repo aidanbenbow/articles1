@@ -52,6 +52,9 @@ _hitTestSystem() {
             } else {
                 this.context.clearFocusedNode?.()
             }
+            if(hit?.id.startsWith('name')) {
+                this.engine.emit('nameSelected', { index: parseInt(hit.id.replace('name', '')) })
+            }
     }
     _onPointerMove = (event) => {
         if (this.pointerState.isDown) {
