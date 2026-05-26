@@ -10,20 +10,32 @@ export class NameFilterModule extends baseModule {
         this.id = 'nameFilterModule'
       
         this.reports = [
-        { name: 'ala', message: 'hi!', report: 'good job' },
-        { name: 'ana', message: 'hello!', report: 'bad job' },
-        { name: 'ion', message: 'hey!', report: 'average job' },
-        { name: 'maria', message: 'greetings!', report: 'excellent job' },
-        { name: 'george', message: 'what\'s up!', report: 'poor job' },
+        { name: 'ala', 
+            message: 'The key thing is you do not measure the text once.You measure progressively while building lines.', 
+            report: 'good job' },
+        { name: 'ana', 
+            message: 'hello!', 
+            report: 'bad job' },
+        { name: 'ion', 
+            message: 'hey!', 
+            report: 'average job' },
+        { name: 'maria', 
+            message: 'greetings!', 
+            report: 'excellent job' },
+        { name: 'george', 
+            message: 'what\'s up!', 
+            report: 'poor job' },
     ]
    this.nameNodes = this.createNameNodes()
    this.engine.context.batchAdd(this.nameNodes.map(node => ({ node, parentId: null })))
+ this.layoutCache = new Map()
     }
 
     attach() {
         this.engine.on('nameFilterChanged', this._onNameFilterChanged)
         this.engine.on('nameSelected', this._onNameSelected)
-      
+        this.fillLayoutCache()
+        console.log(this.layoutCache)
     }
 
     detach() {
@@ -68,5 +80,50 @@ _onNameSelected = ({ index }) => {
     }
     get names() {
         return this.reports.map(r => r.name)
+    }
+
+    measureTextWidth(text, font = '16px Arial') {
+        if (!this.context?.canvas) return 0
+        const ctx = this.context.canvas.getContext('2d')
+        ctx.font = font
+        const metrics = ctx.measureText(text)
+        return metrics.width
+    }
+   
+    wrapText(text, maxWidth, font = '16px Arial') {
+        if (!this.context?.canvas) return [text]
+        const ctx = this.context.canvas.getContext('2d')
+        ctx.font = font
+        const words = text.split(' ')
+        let line = ''
+        const lines = []
+        for (const word of words) {
+            const testLine = line + word + ' '
+            const metrics = ctx.measureText(testLine)
+            if (metrics.width > maxWidth && line !== '') {
+                lines.push(line.trim())
+                line = word + ' '
+            } else {
+                line = testLine
+            }
+        }
+        if (line.trim() !== '') lines.push(line.trim())
+        return lines
+    }
+
+    createLayoutCacheForReport(report, font = '16px Arial', padding = 10) {
+        const maxWidth = 433
+        const textWidth = this.measureTextWidth(report.message, font)
+        const width = Math.min(textWidth + padding * 2, maxWidth)
+        const lines = this.wrapText(report.message, maxWidth - padding * 2, font)
+        const lineHeight = 20
+        const height = lines.length * lineHeight + padding * 2
+        return { width, height, lines }
+    }
+    fillLayoutCache() {
+        for (const report of this.reports) {
+            const cache = this.createLayoutCacheForReport(report)
+            this.layoutCache.set(report.name, cache)
+        }
     }
 }

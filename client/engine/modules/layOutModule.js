@@ -1,5 +1,24 @@
 import { baseModule } from "./baseModule.js";
 import { createLayoutNode } from "../nodes/layout/createLayoutNode.js";
+function wrapText(text, maxWidth, font, ctx) {
+    if (!ctx) return [text]
+    ctx.font = font
+    const words = text.split(' ')
+    let line = ''
+    const lines = []
+    for (const word of words) {
+       const testLine = line ? `${line} ${word}` : word
+        const metrics = ctx.measureText(testLine)
+        if (metrics.width > maxWidth && line !== '') {
+            lines.push(line.trim())
+            line = word + ' '
+        } else {
+            line = testLine
+        }
+    }
+    if (line.trim() !== '') lines.push(line.trim())
+    return lines
+}
 
 export class LayOutModule extends baseModule {
     static moduleName = 'layOutModule'
@@ -60,8 +79,26 @@ export class LayOutModule extends baseModule {
     _measure(node, constraints) {
         if (!node) return
         const behavior = this._getBehavior(node)
-        let measured = behavior?.measure?.(constraints, this.context) ?? this._defaultMeasured(node, constraints)
-        this._measuredById.set(node.id, measured)
+
+        let measured 
+
+        if(node.type === 'inputBox' || node.type === 'text') {
+            const ctx = this.context.ctx
+            ctx.font = "16px Arial";
+            const text = node.props.content?.value ?? ''
+            const lines = wrapText(text, constraints?.width - 20 ?? 180, ctx.font, ctx)
+    
+            const lineHeight = 20
+            measured = {
+                width: Math.min(constraints?.width ?? 100, Math.max(...lines.map(line => ctx.measureText(line).width)) + 20),
+                height: lines.length * lineHeight + 20,
+                lines,
+            }
+            this._measuredById.set(node.id, measured)
+            } else {
+            measured = behavior?.measure?.(constraints, this.context) ?? this._defaultMeasured(node, constraints)
+            this._measuredById.set(node.id, measured)
+        }
 
         // Recurse into children with the measured size as new constraints
         for (const childId of node.children ?? []) {
@@ -110,7 +147,7 @@ export class LayOutModule extends baseModule {
 
         this._layoutTrees = roots.map((root) => this._buildLayoutTree(root))
         console.log('[LayOutModule] layout completed', { layoutTrees: this._layoutTrees})
-        const inputnode = this.context.getNode?.('inputNode')
+        const inputnode = this.context.getNode?.('messageInputNode')
         if(inputnode){
             console.log('Input node layout:', inputnode)
         }

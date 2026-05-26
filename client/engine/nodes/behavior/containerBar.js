@@ -7,7 +7,7 @@ class ContainerBar extends Behavior{
         const offsetX = this.node.offsetX ?? 15
         const offsetY = this.node.offsetY ?? 5
        
-        return { width: constraints.width - (offsetX * 2), height: 70 }
+        return { width: constraints.width - (offsetX * 2), height: 140 }
     }
    
     layout(measured,rect, context) {

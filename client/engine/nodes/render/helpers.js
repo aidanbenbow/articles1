@@ -23,3 +23,23 @@ export function measureText(node, ctx) {
     const metrics = ctx.measureText(text);
     return { width: metrics.width, height: 20 }
 }
+
+export function wrapText(text, maxWidth, font = '16px Arial', ctx) {
+        if (!ctx) return [text]
+        ctx.font = font
+        const words = text.split(' ')
+        let line = ''
+        const lines = []
+        for (const word of words) {
+           const testLine = line ? `${line} ${word}` : word
+            const metrics = ctx.measureText(testLine)
+            if (metrics.width > maxWidth && line !== '') {
+                lines.push(line.trim())
+                line = word + ' '
+            } else {
+                line = testLine
+            }
+        }
+        if (line.trim() !== '') lines.push(line.trim())
+        return lines
+    }

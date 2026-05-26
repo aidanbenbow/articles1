@@ -40,6 +40,7 @@ export class Node {
       content: {
         value: props.value ?? '',
         placeholder: props.placeholder ?? '',
+       
       },
       uistate: {
         focused: false,
