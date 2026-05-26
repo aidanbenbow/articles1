@@ -44,25 +44,15 @@ const toDo    = new Node('toDo',     'text',
     { value: '205', color: '#e1d0d0' })
 
 
-    const names = ['ala', 'ana', 'ion', 'maria', 'george', 'ioana', 'mihai', 'andreea']
-
-    const reports = [
-        { name: 'ala', message: 'hi!', report: 'good job' },
-        { name: 'ana', message: 'hello!', report: 'bad job' },
-    ]
-
     const containerBar6 = new Node('containerBar6','containerBar',
     {order:1, color: '#8ec693' })
 
+const containerBar7 = new Node('containerBar7','containerBar',
+    {order:2, color: '#8ec693' })
 
-    function createNameNodes() {
-        return names.map((name, index) => {
-            return new Node(`name${index}`, 'text', { value: name, color: '#e1d0d0' })
-        })
-    }
-
-    const nameNodes = createNameNodes()
-    console.log(nameNodes)
+    const buttonNode = new Node('buttonNode', 'button', { value: 'Click me', color: '#e1d0d0' })
+    
+  
 // --- Add all nodes at once, layout runs once at the end ---
 eng.context.batchAdd([
     { node: basicScreen,   parentId: 'root' },
@@ -84,7 +74,9 @@ eng.context.batchAdd([
     { node: reportToDo,    parentId: 'containerBar5' },
     { node: toDo,          parentId: 'containerBar5' },
     { node: containerBar6, parentId: 'messageBar' },
-    // ...nameNodes.map(node => ({ node, parentId: 'containerBar6' })),
+    { node: containerBar7, parentId: 'formBar' },
+    { node: buttonNode,    parentId: 'containerBar7' },
+   
 ])
 
 window.addEventListener('keydown', (e) => {

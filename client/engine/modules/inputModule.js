@@ -55,6 +55,9 @@ _hitTestSystem() {
             if(hit?.id.startsWith('name')) {
                 this.engine.emit('nameSelected', { index: parseInt(hit.id.replace('name', '')) })
             }
+            if(hit?.type === 'button') {
+                this.engine.emit('saveState', { id: hit.id })
+            }
     }
     _onPointerMove = (event) => {
         if (this.pointerState.isDown) {

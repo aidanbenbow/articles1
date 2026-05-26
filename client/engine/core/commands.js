@@ -46,7 +46,7 @@ export function registerCommands(engine) {
     content: { value: report ? `${report.message}` : 'No message available' },
   }
 }                },
-{ nodeId: 'nameInputNode',
+{ nodeId: 'inputNode',
                    patch: {
   props: {
     content: { value: report ? `${report.name}` : 'No name available' },
