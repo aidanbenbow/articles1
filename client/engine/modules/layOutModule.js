@@ -42,22 +42,21 @@ export class LayOutModule extends baseModule {
             getNodeMeasured: this.getNodeMeasured.bind(this),
             getNodeLayout: this.getNodeLayout.bind(this),
             setNodeLayout: this.setNodeLayout.bind(this),
+            measureNode: this._measure.bind(this),
             
         }
     }
 
     _getBehavior(node) {
-        if (!node?.id) return null
-        const existing = this._behaviorInstances.get(node.id)
-        if (existing) return existing
+    if (!node) return null
 
-        const BehaviorClass = this.context.behaviorRegistry?.getBehavior?.(node.type)
-        if (!BehaviorClass) return null
+    const BehaviorClass =
+        this.context.behaviorRegistry?.getBehavior?.(node.type)
 
-        const instance = new BehaviorClass(node)
-        this._behaviorInstances.set(node.id, instance)
-        return instance
-    }
+    if (!BehaviorClass) return null
+
+    return new BehaviorClass(node)
+}
 
     _defaultMeasured(node, constraints) {
         return {
@@ -96,11 +95,11 @@ export class LayOutModule extends baseModule {
             }
             this._measuredById.set(node.id, measured)
             } else {
-            measured = behavior?.measure?.(constraints, this.context) ?? this._defaultMeasured(node, constraints)
+            measured = behavior?.measure?.(constraints, this.context)// ?? this._defaultMeasured(node, constraints)
             this._measuredById.set(node.id, measured)
         }
 
-        // Recurse into children with the measured size as new constraints
+       // Recurse into children with the measured size as new constraints
         for (const childId of node.children ?? []) {
             const child = this.context.getNode(childId)
             this._measure(child, measured)

@@ -11,25 +11,24 @@ export class Node {
         height: props.height,
         minWidth: props.minWidth,
         minHeight: props.minHeight,
+        maxWidth: props.maxWidth,
+        maxHeight: props.maxHeight,
       },
       layout: {
-        proportion: props.proportion ?? 1,
-      x: props.x ?? 0,
-      order: props.order ?? 0,
+        direction: props.direction ?? 'column',
+        gap: props.gap ?? 0,
+        flexGrow: props.flexGrow ?? 0,
+        flexBasis: props.flexBasis ?? 0,
+        flexShrink: props.flexShrink ?? 1,
+        alignItems: props.alignItems ?? 'start',
+        justifyContent: props.justifyContent ?? 'start',
+
       },
 
-      position: {
-        x: props.x ?? 0,
-        y: props.y ?? 0,
-      },
-
-      spacing: {
+      box: {
         padding: props.padding ?? 0,
         paddingX: props.paddingX ?? props.padding ?? 0,
         paddingY: props.paddingY ?? props.padding ?? 0,
-        gap: props.gap ?? 10,
-        offsetX: props.offsetX ?? 10,
-        offsetY: props.offsetY ?? 10,
       },
 
       style: {
