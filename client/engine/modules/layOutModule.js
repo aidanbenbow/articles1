@@ -28,7 +28,7 @@ export class LayOutModule extends baseModule {
         super(engine)
         this.id = 'layOutModule'
         this._unsubscribe = []
-        this._behaviorInstances = new Map()
+     
         this._layoutTrees = []
         this._measuredById = new Map()
         this._layoutById = new Map()
@@ -43,6 +43,7 @@ export class LayOutModule extends baseModule {
             getNodeLayout: this.getNodeLayout.bind(this),
             setNodeLayout: this.setNodeLayout.bind(this),
             measureNode: this._measure.bind(this),
+            getBehavior: this._getBehavior.bind(this),
             
         }
     }
@@ -55,57 +56,44 @@ export class LayOutModule extends baseModule {
 
     if (!BehaviorClass) return null
 
-    return new BehaviorClass(node)
+    return BehaviorClass
 }
 
-    _defaultMeasured(node, constraints) {
-        return {
-            width: node?.width ?? constraints?.width ?? 100,
-            height: node?.height ?? constraints?.height ?? 100,
-        }
-    }
 
-    _defaultLayout(node, measured) {
-        return {
-            x: node?.x ?? 0,
-            y: node?.y ?? 0,
-            width: measured?.width ?? 0,
-            height: measured?.height ?? 0,
-        }
-    }
-
-    // Measure pass: parent passes constraints down, each node returns its desired size.
+   
     _measure(node, constraints) {
         if (!node) return
         const behavior = this._getBehavior(node)
 
         let measured 
+        console.log('Measuring node', node.id, 'with constraints', constraints)
 
-        if(node.type === 'inputBox' || node.type === 'text') {
-            const ctx = this.context.ctx
-            ctx.font = "16px Arial";
-            const text = node.props.content?.value ?? ''
-            const lines = wrapText(text, constraints?.width - 20 ?? 180, ctx.font, ctx)
+//         if(node.type === 'inputBox' || node.type === 'text') {
+//             const ctx = this.context.ctx
+//             ctx.font = "16px Arial";
+//             const text = node.props.content?.value ?? ''
+//             const lines = wrapText(text, constraints?.width - 20 ?? 180, ctx.font, ctx)
     
-            const lineHeight = 20
-            measured = {
-                width: Math.min(constraints?.width ?? 100, Math.max(...lines.map(line => ctx.measureText(line).width)) + 20),
-                height: lines.length * lineHeight + 20,
-                lines,
-            }
-            this._measuredById.set(node.id, measured)
-            } else {
-            measured = behavior?.measure?.(constraints, this.context)// ?? this._defaultMeasured(node, constraints)
-            this._measuredById.set(node.id, measured)
-        }
+//             const lineHeight = 20
+//             measured = {
+//                 width: Math.min(constraints?.width ?? 100, Math.max(...lines.map(line => ctx.measureText(line).width)) + 20),
+//                 height: lines.length * lineHeight + 20,
+//                 lines,
+//             }
+//             this._measuredById.set(node.id, measured)
+//             } else {
+//             measured = behavior?.measure?.(constraints, this.context)// ?? this._defaultMeasured(node, constraints)
+//             this._measuredById.set(node.id, measured)
+//         }
 
-       // Recurse into children with the measured size as new constraints
-        for (const childId of node.children ?? []) {
-            const child = this.context.getNode(childId)
-            this._measure(child, measured)
-        }
-
-        return measured
+//        // Recurse into children with the measured size as new constraints
+//         for (const childId of node.children ?? []) {
+//             const child = this.context.getNode(childId)
+          
+//             this._measure(child, measured)
+//         }
+// console.log(this._measuredById)
+//         return measured
     }
 
     // Layout pass: parent assigns positions/sizes to each child.
@@ -120,49 +108,66 @@ export class LayOutModule extends baseModule {
 
         for (const childId of node.children ?? []) {
             const child = this.context.getNode(childId)
-            const childRect = this._layoutById.get(childId) 
+           const childRect = {
+            x:0
+           }
             this._layout(child, childRect)
         }
         
     }
 
-    runLayout() {
-        const roots = this.context.getRoots?.()
-        if (!roots?.length) return
+    measure(nodes) {
+        for(const node of nodes) {
+            const behaviour = this._getBehavior(node)
+            const parent = this.context.getParent?.(node)
+            
+            const parentMeasured = parent ? this._measuredById.get(parent.id) : null
+            const measured = behaviour?.measure?.(node, parentMeasured, this.context) 
+            this._measuredById.set(node.id, measured)
+    }
+}
 
+layout(node, rect) {
+   this._layoutById.set(node.id, rect)
+   const behaviour = this._getBehavior(node)
+   const measured = this._measuredById.get(node.id)
+   const childRects = behaviour?.layout?.(node, measured, rect, this.context) ?? rect
+   for(const childId of node.children ?? []) {
+    const child = this.context.getNode(childId)
+    const childRect = childRects?.[childId] ?? rect
+    this.layout(child, childRect)
+   }
+}
+    runLayout() {
+        const nodes = this.context.getNodes?.()
+        if (!nodes?.length) return
+        
         this._measuredById.clear()
         this._layoutById.clear()
+        this.measure(nodes)
+        const rect = { x: 0, y: 0, width: this.context.canvasWidth ?? 800, height: this.context.canvasHeight ?? 600 }
+        const node = this.context.getNode?.('root')
+        this.layout(node, rect)
 
-        const viewport = {
-            width: this.context.canvasWidth ?? 800,
-            height: this.context.canvasHeight ?? 600,
-        }
-        const rootRect = { x: 0, y: 0, width: viewport.width, height: viewport.height }
+       this._buildLayoutTree(node)
 
-        for (const root of roots) {
-            this._measure(root, viewport)
-            this._layout(root, rootRect)
-        }
-
-        this._layoutTrees = roots.map((root) => this._buildLayoutTree(root))
-        console.log('[LayOutModule] layout completed', { layoutTrees: this._layoutTrees})
-        const inputnode = this.context.getNode?.('messageInputNode')
-        if(inputnode){
-            console.log('Input node layout:', inputnode)
-        }
-        this.context.layoutTrees = this._layoutTrees
 
         this.engine.emit('layoutDone')
     }
 
     _buildLayoutTree(node) {
         if (!node) return null
-        const children = (node.children ?? [])
-            .map((childId) => this.context.getNode(childId))
-            .map((child) => this._buildLayoutTree(child))
-            .filter(Boolean)
-
-        return createLayoutNode(node, this.getNodeLayout(node.id), children)
+        let renderNode = null
+        for (const childId of node.children ?? []) {
+            const child = this.context.getNode(childId)
+            const childLayout = this._layoutById.get(childId)
+            const children = child?.children ?? []
+           
+         renderNode =  createLayoutNode(child, childLayout, children)
+         this._layoutTrees.push(renderNode)
+         this._buildLayoutTree(child)
+        }
+        return renderNode
     }
 
     getNodeMeasured(nodeOrId) {

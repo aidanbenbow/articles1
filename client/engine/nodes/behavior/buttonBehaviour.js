@@ -2,7 +2,7 @@ import { rectangle } from "../render/helpers.js"
 import { Behavior } from "./behavior.js"
 
 export class ButtonBehavior extends Behavior {
-    measure(constraints) {
+    measure(node,constraints) {
         return { width: 100, height: 40 }
     }
     layout(measured, rect, context) {

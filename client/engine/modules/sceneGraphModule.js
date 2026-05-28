@@ -22,6 +22,7 @@ export class SceneGraphModule extends baseModule {
       getRoots: this.getRoots.bind(this),
       getParent: this.getParent.bind(this),
       setChildren: this.setChildren.bind(this),
+      getNodes: this.getNodes.bind(this),
      
     }
   }
@@ -104,7 +105,7 @@ export class SceneGraphModule extends baseModule {
       added.push(node)
     }
     if (added.length) this.engine.emit('nodesBatchAdded', { nodes: added })
-      console.log(this._nodes)
+   
     
     return added
   }
@@ -155,6 +156,10 @@ export class SceneGraphModule extends baseModule {
     return this._nodes.get(id) ?? null
   }
 
+getNodes() {
+    return [...this._nodes.values()]
+  }
+
   getRoots() {
     return [...this._roots].map(id => this._nodes.get(id))
   }
@@ -164,9 +169,14 @@ export class SceneGraphModule extends baseModule {
   }
 
   attach() {
-    const rootNode = new Node('root', 'root')
+    const viewport = {
+      width: this.context.canvasWidth ?? 800,
+      height: this.context.canvasHeight ?? 600,
+    }
+  
+    const rootNode = new Node('root', 'root', { width: viewport.width, height: viewport.height })
     this.addNode(rootNode)
-    console.log('[SceneGraphModule] attached')
+    console.log('[SceneGraphModule] attached', { rootNode })
   }
 
   detach() {

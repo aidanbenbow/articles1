@@ -17,7 +17,7 @@ export class Node {
       layout: {
         direction: props.direction ?? 'column',
         gap: props.gap ?? 0,
-        flexGrow: props.flexGrow ?? 0,
+        flexGrow: props.flexGrow ?? 1,
         flexBasis: props.flexBasis ?? 0,
         flexShrink: props.flexShrink ?? 1,
         alignItems: props.alignItems ?? 'start',

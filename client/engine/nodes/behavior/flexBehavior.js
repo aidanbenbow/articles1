@@ -4,26 +4,31 @@ import { rectangle } from "../render/helpers.js";
 
 export class FlexBehavior extends Behavior {
     static handlesChildrenMeasurement = true;
-    measure(constraints, ctx) {
+    measure(node,constraints, ctx) {
+       
         return measureFlex({
-            node: this.node,
+            node: node,
             constraints,
             getNode: ctx.getNode,
             measureNode: ctx.measureNode
         });
     }
 
-    layout(measured, rect, ctx) {
+    layout(node,measured, rect, ctx) {
+        
         return layoutFlex({
-            node: this.node,
-            rect,
+            node: node, 
             measured,
-            setLayout: (id, r) => ctx.setNodeLayout(id, r)
+            rect,
+            getNode: ctx.getNode,
+            getMeasured: ctx.getNodeMeasured,
+        
         });
     }
 
     render(ctx, runtime) {
-        rectangle(this.node, ctx, runtime);
+        
+        rectangle( ctx, runtime);
     }
 }
 

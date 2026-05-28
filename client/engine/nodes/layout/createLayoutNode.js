@@ -1,8 +1,5 @@
 export function createLayoutNode(node, rect, children = []) {
-  const proportion = node.props.layout.proportion ?? node.props.layout.propotion ?? 1
-  const x = node.props.layout.x ?? 0
-  const order = node.props.layout.order ?? 0
-  
+
   return {
     id: node.id,
     type: node.type,
@@ -17,9 +14,6 @@ export function createLayoutNode(node, rect, children = []) {
       color: node.props.style.color,
       borderColor: node.props.style.borderColor ?? '#000000',
     },
-    proportion,
-    x,
-    order,
     content: {
       value: node.props.content.value ?? '',
       placeholder: node.props.content.placeholder ?? '',

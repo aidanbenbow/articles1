@@ -2,9 +2,9 @@ import { measureText, rectangle } from "../render/helpers.js";
 import { Behavior } from "./behavior.js";
 
 export class TextBox extends Behavior {
-    measure(constraints, context) {
+    measure(node,constraints, context) {
      const drawCtx = context?.ctx
-     const measured = measureText(this.node, drawCtx)
+     const measured = measureText(node, drawCtx)
      return measured
     }
     layout(measured,rect, context) {
@@ -13,7 +13,7 @@ export class TextBox extends Behavior {
     update() {}
     render(ctx, runtime) {
        // rectangle(this.node, ctx, runtime)
-       if(runtime.uistate.hidden) return
+      
         const x = runtime.rect.x
         const y = runtime.rect.y
         const width = runtime.rect.width

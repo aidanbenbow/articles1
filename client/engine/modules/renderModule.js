@@ -36,21 +36,7 @@ export class RenderModule extends baseModule {
             this.context.canvasHeight = canvas._logicalHeight ?? canvas.clientHeight ?? canvas.height
     }
 
-    _getBehavior(layoutNode) {
-        if (!layoutNode?.id) return null
-        const existing = this._behaviorInstances.get(layoutNode.id)
-        if (existing) {
-            existing.node = layoutNode
-            return existing
-        }
 
-        const BehaviorClass = this.context.behaviorRegistry?.getBehavior?.(layoutNode.type)
-        if (!BehaviorClass) return null
-
-        const instance = new BehaviorClass(layoutNode)
-        this._behaviorInstances.set(layoutNode.id, instance)
-        return instance
-    }
 
     render() {
         if (!this.ctx || !this.canvas) return
@@ -58,28 +44,43 @@ export class RenderModule extends baseModule {
 
         this.ctx.clearRect(0, 0, this.context.canvasWidth ?? this.canvas.width, this.context.canvasHeight ?? this.canvas.height)
 
-        const drawLayoutNode = (layoutNode) => {
-            if (!layoutNode) return
-            const behavior = this._getBehavior(layoutNode)
-            const measured = this.context.getNodeMeasured?.(layoutNode.id)
+        const layoutTree = this.context.getLayoutTrees?.()
+        console.log('Rendering layout tree', layoutTree)
+
+        layoutTree?.forEach(layoutNode => {
+            const behavior = this.context.getBehavior?.(layoutNode)
             const runtime = {
                 rect: layoutNode.rect,
                 style: layoutNode.style,
                 text: layoutNode.content?.value,
-                lines: measured?.lines,
                 placeholder: layoutNode.content?.placeholder,
-                uistate: layoutNode.uistate,
             }
-            
+           
             behavior?.render?.(this.ctx, runtime, this.context)
-            for (const child of layoutNode.children ?? []) {
-                drawLayoutNode(child)
-            }
-        }
+        })
 
-        for (const root of this.context.getLayoutTrees() ?? []) {
-            drawLayoutNode(root)
-        }
+        // const drawLayoutNode = (layoutNode) => {
+        //     if (!layoutNode) return
+        //     const behavior = this._getBehavior(layoutNode)
+        //     const measured = this.context.getNodeMeasured?.(layoutNode.id)
+        //     const runtime = {
+        //         rect: layoutNode.rect,
+        //         style: layoutNode.style,
+        //         text: layoutNode.content?.value,
+        //         lines: measured?.lines,
+        //         placeholder: layoutNode.content?.placeholder,
+        //         uistate: layoutNode.uistate,
+        //     }
+            
+        //     behavior?.render?.(this.ctx, runtime, this.context)
+        //     for (const child of layoutNode.children ?? []) {
+        //         drawLayoutNode(child)
+        //     }
+        // }
+
+        // for (const root of this.context.getLayoutTrees() ?? []) {
+        //     drawLayoutNode(root)
+        // }
     }
 
     attach() {

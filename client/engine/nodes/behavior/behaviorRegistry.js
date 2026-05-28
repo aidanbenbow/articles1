@@ -29,13 +29,13 @@ export function registerCoreBehaviors() {
     if (coreBehaviorsRegistered) return
     coreBehaviorsRegistered = true
    
-    behaviorRegistry.register('root', Root)
-    behaviorRegistry.register('basicScreen', BasicScreen) 
-    behaviorRegistry.register('containerBar', ContainerBar)
-    behaviorRegistry.register('text', TextBox)
-    behaviorRegistry.register('bar', BarBehavior)
-    behaviorRegistry.register('inputBox', InputBox)
-    behaviorRegistry.register('button', ButtonBehavior)
-    behaviorRegistry.register('flexBar', FlexBehavior)
+    behaviorRegistry.register('root', new Root())
+    behaviorRegistry.register('basicScreen', new BasicScreen()) 
+    behaviorRegistry.register('containerBar', new ContainerBar())
+    behaviorRegistry.register('text', new TextBox())
+    behaviorRegistry.register('bar', new BarBehavior())
+    behaviorRegistry.register('inputBox', new InputBox())
+    behaviorRegistry.register('button', new ButtonBehavior())
+    behaviorRegistry.register('flexBar', new FlexBehavior())
 
 }

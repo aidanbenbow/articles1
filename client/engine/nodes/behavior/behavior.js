@@ -1,24 +1,18 @@
 export class Behavior {
-    constructor(node) {
-        this.node = node
-       // this.ctx = node.ctx
-        
+    constructor() {
+       
     }
     measure(){
-        console.warn(`[Behavior] measure not implemented for node ${this.node.id}`)
+        console.warn(`[Behavior] measure not implemented for node `)
     }
     layout(){
-        console.warn(`[Behavior] layout not implemented for node ${this.node.id}`)
+        console.warn(`[Behavior] layout not implemented for node `)
     }
     update() {
-        console.warn(`[Behavior] update not implemented for node ${this.node.id}`)
+        console.warn(`[Behavior] update not implemented for node `)
     }
     render() {
-        console.warn(`[Behavior] render not implemented for node ${this.node.id}`)
+        console.warn(`[Behavior] render not implemented for node `)
     }
-    getParent(context){
-        const resolver = context?.getParent ?? this.node?.context?.getParent
-        if (!resolver) return null
-        return resolver(this.node)
-    }
+   
 }

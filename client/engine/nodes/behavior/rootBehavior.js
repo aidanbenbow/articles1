@@ -3,11 +3,16 @@ import { Behavior } from "./behavior.js";
 
 
 export class Root extends Behavior {
-    measure( constraints) {
-        return { width: constraints.width, height: constraints.height }
+    measure(node, constraints) {
+        return { width: node.props.size.width, height: node.props.size.height }
     }
-    layout( measured) {
-        return { x: 0, y: 0, width: measured.width, height: measured.height }
+    layout(node, measured, rect) {
+        const childRect = { x: 0, y: 0, width: measured.width, height: measured.height }
+        const childRects = {}
+            for(const child of node.children) {
+                childRects[child.id] = childRect
+            }
+        return childRects
     }
     update() {}
     render(ctx) {

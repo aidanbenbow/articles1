@@ -2,11 +2,11 @@ import { rectangle } from "../render/helpers.js"
 import { Behavior } from "./behavior.js"
 
 export class InputBox extends Behavior {
-    measure(constraints) {
-        const offsetX = this.node.offsetX ?? 10
-        const offsetY = this.node.offsetY ?? 10
-        const height = this.node.height ?? 30
-        return { width: Math.max((constraints.width ?? 0) - (offsetX * 2), 0), height: Math.max(height, 0) }
+    measure(node,constraints) {
+        const offsetX =  10
+        const offsetY =  10
+        const height =  30
+        return { width: constraints.width - offsetX * 2, height: height + offsetY * 2 }
     }
     layout(measured,rect, context) {
        return rect
