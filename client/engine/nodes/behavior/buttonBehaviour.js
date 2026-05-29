@@ -9,16 +9,27 @@ export class ButtonBehavior extends Behavior {
         return rect
     }
     render(ctx, runtime) {
-        rectangle(ctx, runtime)
-        const x = runtime.rect.x
-        const y = runtime.rect.y
-        const width = runtime.rect.width
-        const height = runtime.rect.height
+        const miniBtn = {
+            ...runtime,
+            rect: {
+                
+                width: 100,
+                height: 40,
+                x: runtime.rect.x + (runtime.rect.width - 100) / 2,
+                y: runtime.rect.y + (runtime.rect.height - 40) / 2
+            }
+        }
+        rectangle(ctx, miniBtn)
+        const x = miniBtn.rect.x
+        const y = miniBtn.rect.y
+        const width = miniBtn.rect.width
+        const height = miniBtn.rect.height
         ctx.font = "20px Arial";
         ctx.fillStyle = "black";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         const text = runtime.text ?? "Button"
+       
         ctx.fillText(text, x + width / 2, y + height / 2);
     }
 }

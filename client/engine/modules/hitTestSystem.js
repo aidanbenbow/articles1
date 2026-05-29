@@ -3,8 +3,8 @@ export class HitTestSystem {
         this.context = context
     }
    hitTest(x, y) {
-        const nodes = this.context.layoutTrees?.flatMap(tree => this._flattenLayoutTree(tree)) || []
-        //console.log('[HitTestSystem]', { x, y, nodes })
+        const nodes = this.context.getLayoutTrees?.()
+        console.log('[HitTestSystem]', { x, y, nodes })
         for (let i = nodes.length - 1; i >= 0; i--) {
             const node = nodes[i]
             const layout = this.context.getNodeLayout?.(node.id)

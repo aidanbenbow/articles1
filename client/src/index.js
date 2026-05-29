@@ -13,42 +13,42 @@ const formBar     = new Node('formBar',       'flexBar',
 const messageBar   = new Node('messageBar',    'flexBar',          
     { flexGrow:2, color: '#8c80a9', zIndex: 3, direction: 'column' })
 const containerBar = new Node('containerBar',  'flexBar', 
-    { color: '#90c095', zIndex: 4, flexGrow: 5 })
+    { color: '#90c095', zIndex: 4, flexGrow: 1 })
 const titleNode    = new Node('text',          'text',        
      { value: 'Raporte', color: '#fff', zIndex: 5 })
 const containerBar2 = new Node('containerBar2','flexBar', 
-    { color: '#8ecd94', flexGrow: 5 })
+    { color: '#8ecd94', flexGrow: 1 })
 const nameNode     = new Node('nameNode',      'text',         
     { value: 'Nume:', color: '#fff' })
 const inputNode    = new Node('inputNode',     'inputBox',     
-    { placeholder: 'Type your name here', color: '#e1d0d0' })
+    { placeholder: 'Type your name here', color: '#e1d0d0', flexGrow: 1 })
 const containerBar3 = new Node('containerBar3','flexBar', 
-    { color: '#8ec693', flexGrow: 5 })
+    { color: '#8ec693', flexGrow: 2 })
 const messageNode    = new Node('messageNode',         'text',         
     { value: 'messajul', color: '#fff' })
 const messageInputNode    = new Node('messageInputNode',     'inputBox',     
-    { placeholder: 'Type your message here', color: '#e1d0d0' })
+    { placeholder: 'Type your message here', color: '#e1d0d0', flexGrow: 2 })
 
 const containerBar4 = new Node('containerBar4','flexBar',
     { color: '#8ec693', flexGrow:5 })
 const reportNode    = new Node('reportNode',         'text',         
     { value: 'Raport', color: '#fff' })
 const reportInputNode    = new Node('reportInputNode',     'inputBox',     
-    { placeholder: 'Type your message here', color: '#e1d0d0' })
+    { placeholder: 'Type your message here', color: '#e1d0d0', flexGrow: 5 })
 
 const containerBar5 = new Node('containerBar5','flexBar',
-    { color: '#8ec693', flexGrow: 5 })
+    { color: '#8ec693', flexGrow: 0.5 })
 const reportToDo    = new Node('reportToDo',  'text',         
-    { value: 'Raportdefacut', color: '#fff' })
+    { value: 'Raportdefacut', color: '#fff', flexGrow: 2 })
 const toDo    = new Node('toDo',     'text',     
-    { value: '205', color: '#e1d0d0' })
+    { value: '205', color: '#e1d0d0', flexGrow: 3 })
 
 
     const containerBar6 = new Node('containerBar6','flexBar',
-    { color: '#8ec693', flexGrow: 2 })
+    { color: '#8ec693', flexGrow: 5 })
 
 const containerBar7 = new Node('containerBar7','flexBar',
-    { color: '#8ec693', flexGrow: 5 })
+    { color: '#8ec693', flexGrow: 2 })
 
     const buttonNode = new Node('buttonNode', 'button', { value: 'Click me', color: '#e1d0d0' })
     

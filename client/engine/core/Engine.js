@@ -19,6 +19,9 @@ export class Engine extends BaseEngine {
         ModuleClass?.lifeCycleModule ?? instance?.constructor?.lifeCycleModule
       )
       this.addModule(instance, isLifecycleModule)
+      if (isLifecycleModule) {
+        instance.init?.()
+      }
     }
   }
 }

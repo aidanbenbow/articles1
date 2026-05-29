@@ -14,6 +14,64 @@ export function rectangle( ctx, runtime = {}) {
     ctx.strokeRect(x, y, width, height)
 }
 
+export function measureTextBlock({
+    text = '',
+    maxWidth = 200,
+    font = '16px Arial',
+    padding = 0,
+    ctx,
+}) {
+    ctx.font = font
+
+    const words = text.split(' ')
+
+    let line = ''
+
+    const lines = []
+
+    for (const word of words) {
+        const testLine =
+            line ? `${line} ${word}` : word
+
+        const width =
+            ctx.measureText(testLine).width
+
+        if (width > maxWidth - padding * 2 && line) {
+            lines.push(line)
+            line = word
+        } else {
+            line = testLine
+        }
+    }
+
+    if (line) {
+        lines.push(line)
+    }
+
+    const lineHeight = 20
+
+    const width = Math.min(
+        maxWidth,
+        Math.max(
+            ...lines.map(
+                line => ctx.measureText(line).width
+            ),
+            0
+        ) + padding * 2
+    )
+
+    const height =
+        lines.length * lineHeight +
+        padding * 2
+
+    return {
+        width,
+        height,
+        lines,
+        lineHeight,
+    }
+}
+
 export function measureText(node, ctx) {
     if (!ctx) {
         const text = node.text || ""

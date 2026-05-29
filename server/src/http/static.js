@@ -7,9 +7,9 @@ export function setupStatic(app) {
   app.use(express.static(clientPath));
   app.use(express.static(srcPath));
     
-    app.use((req, res) => {
+    app.use((req, res, next) => {
       if(req.path.startsWith('/api')) {
-        return res.status(404).json({ error: 'Not found' });
+        return next();
       }
       res.sendFile(path.join(srcPath, 'index.html'));
     });

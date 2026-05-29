@@ -49,13 +49,17 @@ export class RenderModule extends baseModule {
 
         layoutTree?.forEach(layoutNode => {
             const behavior = this.context.getBehavior?.(layoutNode)
+            const measured = this.context.getNodeMeasured?.(layoutNode.id)
             const runtime = {
                 rect: layoutNode.rect,
                 style: layoutNode.style,
                 text: layoutNode.content?.value,
+                lines: measured?.lines,
+                lineHeight: measured?.lineHeight,
                 placeholder: layoutNode.content?.placeholder,
+                uistate: layoutNode.uistate,
             }
-           
+       
             behavior?.render?.(this.ctx, runtime, this.context)
         })
 

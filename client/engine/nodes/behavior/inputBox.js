@@ -1,14 +1,23 @@
-import { rectangle } from "../render/helpers.js"
+import { measureTextBlock, rectangle } from "../render/helpers.js"
 import { Behavior } from "./behavior.js"
 
 export class InputBox extends Behavior {
-    measure(node,constraints) {
+    measure(node,constraints, context) {
         const offsetX =  10
         const offsetY =  10
         const height =  30
-        return { width: constraints.width - offsetX * 2, height: height + offsetY * 2 }
+        
+      return  measureTextBlock({
+            text: node.props.content?.value ?? "",
+            maxWidth: constraints.width,
+            font: "16px Arial",
+            padding: 10,
+            ctx: context.ctx,
+        })
+        
     }
     layout(measured,rect, context) {
+      
        return rect
     }
     update() {}

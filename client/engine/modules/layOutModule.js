@@ -122,9 +122,14 @@ export class LayOutModule extends baseModule {
             const parent = this.context.getParent?.(node)
             
             const parentMeasured = parent ? this._measuredById.get(parent.id) : null
+            if(node.id === 'inputNode' || node.id === 'messageNode'|| node.id === 'reportNode') {
+                parentMeasured.width = 466
+                
+            }
             const measured = behaviour?.measure?.(node, parentMeasured, this.context) 
             this._measuredById.set(node.id, measured)
     }
+   
 }
 
 layout(node, rect) {
@@ -144,6 +149,7 @@ layout(node, rect) {
         
         this._measuredById.clear()
         this._layoutById.clear()
+        this._layoutTrees = []
         this.measure(nodes)
         const rect = { x: 0, y: 0, width: this.context.canvasWidth ?? 800, height: this.context.canvasHeight ?? 600 }
         const node = this.context.getNode?.('root')

@@ -1,4 +1,5 @@
 import { Node } from "../nodes/node.js";
+import { dataStore, initializeDataStore } from "./appDataStore.js";
 import { baseModule } from "./baseModule.js";
 
 export class NameFilterModule extends baseModule {
@@ -8,34 +9,42 @@ export class NameFilterModule extends baseModule {
     constructor(engine) {
         super(engine)
         this.id = 'nameFilterModule'
-      
-        this.reports = [
-        { name: 'ala', 
-            message: 'The key thing is you do not measure the text once.You measure progressively while building lines.', 
-            report: 'good job' },
-        { name: 'ana', 
-            message: 'hello!', 
-            report: 'bad job' },
-        { name: 'ion', 
-            message: 'hey!', 
-            report: 'average job' },
-        { name: 'maria', 
-            message: 'greetings!', 
-            report: 'excellent job' },
-        { name: 'george', 
-            message: 'what\'s up!', 
-            report: 'poor job' },
-    ]
-   this.nameNodes = this.createNameNodes()
-   this.engine.context.batchAdd(this.nameNodes.map(node => ({ node, parentId: null })))
+        this.reports = []
+    
+    //     this.reports = [
+    //     { name: 'ala', 
+    //         message: 'The key thing is you do not measure the text once.You measure progressively while building lines.', 
+    //         report: 'good job' },
+    //     { name: 'ana', 
+    //         message: 'hello!', 
+    //         report: 'bad job' },
+    //     { name: 'ion', 
+    //         message: 'hey!', 
+    //         report: 'average job' },
+    //     { name: 'maria', 
+    //         message: 'greetings!', 
+    //         report: 'excellent job' },
+    //     { name: 'george', 
+    //         message: 'what\'s up!', 
+    //         report: 'poor job' },
+    // ]
+   this.nameNodes = []
  this.layoutCache = new Map()
+    }
+
+    async init() {
+ await initializeDataStore()
+this.reports = dataStore.reports
+console.log('NameFilterModule initialized with reports:', this.reports)
+this.nameNodes = this.createNameNodes()
+this.engine.context.batchAdd(this.nameNodes.map(node => ({ node, parentId: null })))
+        this.fillLayoutCache()
     }
 
     attach() {
         this.engine.on('nameFilterChanged', this._onNameFilterChanged)
         this.engine.on('nameSelected', this._onNameSelected)
-        this.fillLayoutCache()
-        console.log(this.layoutCache)
+      
     }
 
     detach() {
@@ -71,7 +80,7 @@ _onNameSelected = ({ index }) => {
 
     createNameNodes() {
         return this.reports.map((report, index) => {
-            return new Node(`name${index}`, 'text', { value: report.name, color: '#e1d0d0' })
+            return new Node(`name${index}`, 'text', { value: report.name, color: '#e1d0d0', flexGrow: 2 })
         })
     }
 
