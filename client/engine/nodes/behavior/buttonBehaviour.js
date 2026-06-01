@@ -19,6 +19,7 @@ export class ButtonBehavior extends Behavior {
                 y: runtime.rect.y + (runtime.rect.height - 40) / 2
             }
         }
+  
         rectangle(ctx, miniBtn)
         const x = miniBtn.rect.x
         const y = miniBtn.rect.y

@@ -20,9 +20,7 @@ export class FocusModule extends baseModule {
         if(this.focusedNodeId === nodeId) return // no change
             const prevFocusedNodeId = this.focusedNodeId
             this.focusedNodeId = nodeId
-            console.log(`[FocusModule] Focus changed from ${prevFocusedNodeId} to ${nodeId}`)
-            
-            
+        
             this.engine.emit('focusChanged', {prevFocusedNodeId, nodeId })
         
     }

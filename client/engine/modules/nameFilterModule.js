@@ -11,31 +11,20 @@ export class NameFilterModule extends baseModule {
         this.id = 'nameFilterModule'
         this.reports = []
     
-    //     this.reports = [
-    //     { name: 'ala', 
-    //         message: 'The key thing is you do not measure the text once.You measure progressively while building lines.', 
-    //         report: 'good job' },
-    //     { name: 'ana', 
-    //         message: 'hello!', 
-    //         report: 'bad job' },
-    //     { name: 'ion', 
-    //         message: 'hey!', 
-    //         report: 'average job' },
-    //     { name: 'maria', 
-    //         message: 'greetings!', 
-    //         report: 'excellent job' },
-    //     { name: 'george', 
-    //         message: 'what\'s up!', 
-    //         report: 'poor job' },
-    // ]
    this.nameNodes = []
  this.layoutCache = new Map()
     }
 
     async init() {
  await initializeDataStore()
-this.reports = dataStore.reports
-console.log('NameFilterModule initialized with reports:', this.reports)
+//  this.rep = dataStore.reports
+//  this.year = this.rep.filter(r => r.messageYear === 26)
+ //console.log('Reports for year 26:', this.year)
+this.reports = dataStore.reports 
+// const toDo = this.reports.length
+// const toDoNode = this.context.getNode('toDo')
+// toDoNode.props.content.value = ` ${toDo}`
+// console.log(`Loaded ${toDo} reports for year 26`, toDoNode)
 this.nameNodes = this.createNameNodes()
 this.engine.context.batchAdd(this.nameNodes.map(node => ({ node, parentId: null })))
         this.fillLayoutCache()
@@ -58,7 +47,8 @@ const filteredIds = this.names
         .map((name, index) => ({ name, id: `name${index}` }))
         .filter(x =>
             q === '' || x.name.toLowerCase().startsWith(q)
-        )
+          
+        ).slice(0, 5)
         .map(x => x.id)
 
         
@@ -80,7 +70,7 @@ _onNameSelected = ({ index }) => {
 
     createNameNodes() {
         return this.reports.map((report, index) => {
-            return new Node(`name${index}`, 'text', { value: report.name, color: '#e1d0d0', flexGrow: 2 })
+            return new Node(`name${index}`, 'text', { value: report.name, color: '#e1d0d0', flexGrow: 10 })
         })
     }
 

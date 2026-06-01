@@ -46,7 +46,7 @@ _hitTestSystem() {
         this.pointerState.x = x
         this.pointerState.y = y
         this.pointerState.target = hit
-        console.log('[InputModule] pointer down',   hit.id )
+        
             if (hit) {
                 this.context.setFocusedNode?.(hit.id)
             } else {
@@ -55,8 +55,13 @@ _hitTestSystem() {
             if(hit?.id.startsWith('name')) {
                 this.engine.emit('nameSelected', { index: parseInt(hit.id.replace('name', '')) })
             }
-            if(hit?.type === 'button') {
-                this.engine.emit('saveState', { id: hit.id })
+            
+            if(hit?.type === 'button' && hit?.id === 'copyButtonNode') {
+                this.engine.emit('copyRequested', { id: hit.id })
+            } else if(hit?.type === 'button' && hit?.id === 'buttonNode') {
+                this.engine.emit('saveState')
+            } else if(hit?.type === 'button' && hit?.id === 'pasteButton') {
+                this.engine.emit('pasteRequested', { id: hit.id })
             }
     }
     _onPointerMove = (event) => {

@@ -118,7 +118,7 @@ export class BaseEngine {
 
     try {
       const result = handler(this.context, command.payload);
-      console.log(`[${this.id}] Command "${command.type}" executed with result:`, result);
+     
       if(result){
         this.applyTransaction?.(result)
       } }catch (error) {
@@ -178,7 +178,7 @@ export class BaseEngine {
     }
   }
 }
-        console.log(`[${this.id}] Applying update to node ${update.nodeId}:`, { patch: update.patch, next })
+   
         return next
       }
       )

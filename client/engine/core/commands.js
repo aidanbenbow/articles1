@@ -56,6 +56,20 @@ export function registerCommands(engine) {
         }
     })
 
+    engine.registerCommand('setMessage', (context, { message }) => {
+        console.log('Setting message in context:', message)
+        return {
+            updates: [
+                { nodeId: 'messageInputNode',
+                   patch: {
+    props: {
+        content: { value: message },
+    }
+}                }
+  ]
+        }
+    })
+
     engine.registerCommand('keyPress', (context, { nodeId, key }) => {
         const node = context.getFocusedNode?.()
         if (!node) {

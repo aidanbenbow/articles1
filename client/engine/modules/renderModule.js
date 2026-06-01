@@ -45,7 +45,7 @@ export class RenderModule extends baseModule {
         this.ctx.clearRect(0, 0, this.context.canvasWidth ?? this.canvas.width, this.context.canvasHeight ?? this.canvas.height)
 
         const layoutTree = this.context.getLayoutTrees?.()
-        console.log('Rendering layout tree', layoutTree)
+       // console.log('Rendering layout tree', layoutTree)
 
         layoutTree?.forEach(layoutNode => {
             const behavior = this.context.getBehavior?.(layoutNode)

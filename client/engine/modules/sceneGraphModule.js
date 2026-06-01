@@ -69,7 +69,7 @@ export class SceneGraphModule extends baseModule {
    const next = updaterFn(node)
    if(!next) return null
    this._nodes.set(nodeId, next)
-   console.log(`[SceneGraphModule] Node`, this._nodes.get(nodeId))
+   
    return next
   }
 
