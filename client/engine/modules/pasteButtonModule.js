@@ -18,14 +18,14 @@ export class PasteButtonModule extends baseModule {
     }
     _onFocusedNodeChanged = ({ nodeId }) => {
         const isPasteableNode = nodeId === 'messageInputNode' || nodeId === 'reportInputNode'
-        console.log(`[PasteButtonModule] Focus changed to ${nodeId}, pasteable: ${isPasteableNode}`)
+        
         if (isPasteableNode) {
             this.lastPasteableInputId = nodeId
         }
     }
 
     _onPasteButtonClick = async ({ id }) => {
-        console.log(`[PasteButtonModule] Paste button clicked: ${id}`)
+      
 
         if (id !== 'pasteButton'|| !this.lastPasteableInputId) return
         try {

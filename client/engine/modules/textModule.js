@@ -120,7 +120,7 @@ export class TextModule extends baseModule {
     }
 
     _cmd_deleteCharNext(context, payload) {
-        const node = context.getFocusedNode
+        const node = context.getFocusedNode()
         const text = node.props.content.value
         const caretIndex = node.props.uistate.caretIndex
         return {
@@ -148,7 +148,7 @@ export class TextModule extends baseModule {
     }
 
     _cmd_moveLeft(context, payload) {
-        const node = context.getFocusedNode
+        const node = context.getFocusedNode()
         const caretIndex = node.props.uistate.caretIndex
         return {
             updates: [{

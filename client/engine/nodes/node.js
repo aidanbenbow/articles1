@@ -45,7 +45,7 @@ export class Node {
         focused: false,
         caretIndex: 0,
         hidden: false,
-
+caretVisible: false
       },
     }
 

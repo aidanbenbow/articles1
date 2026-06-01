@@ -35,7 +35,10 @@ export class InputBox extends Behavior {
         const placeholder = runtime.placeholder ?? "Enter text..."
         const text = runtime.text ?? ""
         const lines = runtime.lines ?? []
-      
+        const focused = runtime.uistate?.focused
+        const caretVisible = runtime.uistate?.caretVisible
+        const caretIndex = runtime.uistate?.caretIndex
+      console.log('Rendering InputBox with runtime:', runtime)
         const hasLines = lines.length > 0
 
     if (text.length === 0) {
@@ -47,5 +50,17 @@ export class InputBox extends Behavior {
     for (let i = 0; i < lines.length; i++) {
         ctx.fillText(lines[i], x + 5, y + 10 + i * 20)
     }
+    if(focused && caretVisible) {
+        const beforeCaret = text.substring(0, caretIndex)
+        const caretX = x + 5 + ctx.measureText(beforeCaret).width
+        const caretY = y + 10 + Math.floor(caretIndex / (runtime.lines[0]?.length ?? text.length)) * 20
+        ctx.beginPath()
+        ctx.moveTo(caretX, caretY - 10)
+        ctx.lineTo(caretX, caretY + 10)
+        ctx.strokeStyle = "black"
+        ctx.lineWidth = 1
+        ctx.stroke()
+        console.log('Caret position:', { caretX, caretY, caretIndex, beforeCaret })
     }
+}
 }

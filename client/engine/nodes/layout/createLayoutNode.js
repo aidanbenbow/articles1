@@ -34,6 +34,7 @@ export function createLayoutNode(node, rect, children = []) {
       focused: node.props.uistate?.focused ?? false,
       caretIndex: node.props.uistate?.caretIndex ?? 0,
       hidden: node.props.uistate?.hidden ?? false,
+      caretVisible: node.props.uistate?.caretVisible ?? false
     },
     children,
   }

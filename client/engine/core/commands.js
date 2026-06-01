@@ -6,7 +6,10 @@ export function registerCommands(engine) {
                    patch: {
   props: {
     uistate: {
-      focused: true
+      focused: true,
+      caretVisible: true,
+      caretIndex: context.getNode(nodeId)?.props.content.value.length || 0
+
     }
   }
 }
@@ -22,7 +25,9 @@ export function registerCommands(engine) {
                    patch: {
   props: {
     uistate: {
-      focused: false
+      focused: false,
+      caretVisible: false,
+      caretIndex: 0
     }
     }
 }                }

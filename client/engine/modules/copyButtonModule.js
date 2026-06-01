@@ -25,7 +25,6 @@ export class CopyButtonModule extends baseModule {
         if (isCopyableNode) {
             this.lastCopyableInputId = nodeId
         } 
-        console.log(`[CopyButtonModule] Focus changed to ${nodeId}, copyable: ${isCopyableNode}`)
        
         
     }

@@ -6,4 +6,7 @@ export class DorcasService {
     fetchAllReports() {
         return this.repRepo.fetchAllReports();
     }
+    updateReport(reportId, updates) {
+        return this.repRepo.updateReport(reportId, updates);
+    }
 }

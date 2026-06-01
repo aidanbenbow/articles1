@@ -7,6 +7,8 @@ dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 5000;
+// Parse JSON request bodies
+app.use(express.json());
 
 setupStatic(app);
 
