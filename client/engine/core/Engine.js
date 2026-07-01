@@ -24,4 +24,27 @@ export class Engine extends BaseEngine {
       }
     }
   }
-}
+  createNode(id, type, props = {}) {
+    const behavior = this.context.behaviorRegistry.getBehavior(type)
+
+    if (!behavior) {
+      console.warn(`Behavior for node type "${type}" not found`)
+      return null
+    }
+
+    const node = {
+      id,
+      type,
+      props: {
+        ...props,
+        size: {
+          width: props.width || 100,
+          height: props.height || 100,
+        },
+      },
+    }
+
+    return node
+  }
+
+  }

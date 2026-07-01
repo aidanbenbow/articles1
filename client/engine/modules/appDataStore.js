@@ -17,5 +17,6 @@ async function fetchReports() {
 }
 
 export async function initializeDataStore() {
-    await fetchReports();
+  await fetchReports();
+ return dataStore
 }

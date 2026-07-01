@@ -19,8 +19,6 @@ export class RenderModule extends baseModule {
             render: this.render.bind(this),
             ctx: this.ctx,
             canvas: this.canvas,
-            
-            
         }
     }
 
@@ -63,28 +61,6 @@ export class RenderModule extends baseModule {
             behavior?.render?.(this.ctx, runtime, this.context)
         })
 
-        // const drawLayoutNode = (layoutNode) => {
-        //     if (!layoutNode) return
-        //     const behavior = this._getBehavior(layoutNode)
-        //     const measured = this.context.getNodeMeasured?.(layoutNode.id)
-        //     const runtime = {
-        //         rect: layoutNode.rect,
-        //         style: layoutNode.style,
-        //         text: layoutNode.content?.value,
-        //         lines: measured?.lines,
-        //         placeholder: layoutNode.content?.placeholder,
-        //         uistate: layoutNode.uistate,
-        //     }
-            
-        //     behavior?.render?.(this.ctx, runtime, this.context)
-        //     for (const child of layoutNode.children ?? []) {
-        //         drawLayoutNode(child)
-        //     }
-        // }
-
-        // for (const root of this.context.getLayoutTrees() ?? []) {
-        //     drawLayoutNode(root)
-        // }
     }
 
     attach() {

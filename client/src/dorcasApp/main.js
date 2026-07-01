@@ -22,3 +22,13 @@ export function bootstrapDorcasApp(options = {}) {
 	engine.mount()
 	return engine
 }
+
+export function bootstrapDorcas2App(options = {}) {
+	const engine = new Engine({
+		id: options.id ?? 'dorcas2',
+		modules: options.modules ?? defaultModules,
+		...options,
+	})
+	engine.mount()
+	return engine
+}

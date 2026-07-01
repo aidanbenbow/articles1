@@ -38,7 +38,7 @@ export class InputBox extends Behavior {
         const focused = runtime.uistate?.focused
         const caretVisible = runtime.uistate?.caretVisible
         const caretIndex = runtime.uistate?.caretIndex
-      console.log('Rendering InputBox with runtime:', runtime)
+     
         const hasLines = lines.length > 0
 
     if (text.length === 0) {

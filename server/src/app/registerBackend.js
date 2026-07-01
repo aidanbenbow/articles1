@@ -1,11 +1,11 @@
 import { docClient } from "../http/db.js";
-import { registerDorcasHandlers } from "./dorcasHandlers.js";
-import { DorcasRepository } from "./dorcasRepository.js";
-import { DorcasService } from "./dorcasService.js";
+import { registerArticlesHandlers } from "./articlesHandlers.js";
+import { ArticlesRepository } from "./articlesRepository.js";
+import { ArticlesService } from "./articlesService.js";
 
 export function registerBackend(app) {
-const repRepo = new DorcasRepository(docClient)
-const dorcasService = new DorcasService(repRepo)
+const articlesRepo = new ArticlesRepository(docClient)
+const articlesService = new ArticlesService(articlesRepo)
 
-registerDorcasHandlers(app, dorcasService);
+registerArticlesHandlers(app, articlesService)
 }

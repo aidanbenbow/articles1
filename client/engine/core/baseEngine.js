@@ -1,7 +1,9 @@
 export class BaseEngine {
   constructor() {
     this.id = 'engine'
-    this.context = {}
+    this.context = {
+      nodes: new Map(),
+    }
     this.state = {
       
     }
