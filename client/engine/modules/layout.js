@@ -21,6 +21,9 @@ this._scrollByView = {
     article: 0
 }
         this._onWheel = this._onWheel.bind(this)
+        
+        this._onTouchMove = this._onTouchMove.bind(this)
+      
     }
     contextExports() {
         return {
@@ -36,18 +39,43 @@ this._scrollByView = {
     attach() {
       this.init()
 this._bindWheel()
+
+const target = this.engine.context.canvas
+target.addEventListener('touchend', () => {
+    this._touchStart = 0
+}, { passive: false })
+target.addEventListener('touchcancel', () => {
+    this._touchStart = 0
+}, { passive: false })
+
       this._unsubscribe.push(this.engine.on('articlesDataReady', () => this.init()))
     }
     _bindWheel() {
         const canvas = this.engine.context.canvas
         if (canvas) {
             canvas.addEventListener('wheel', this._onWheel, { passive: false })
+            canvas.addEventListener('touchmove', this._onTouchMove, { passive: false })
         }
-this._unsubscribe.push(() => {canvas.removeEventListener('wheel', this._onWheel)})
+this._unsubscribe.push(() => {
+    canvas.removeEventListener('wheel', this._onWheel)
+    canvas.removeEventListener('touchmove', this._onTouchMove)
+})
     }
     _onWheel(event) {
         event.preventDefault()
         const deltaY = event.deltaY
+        this.scrollBy(deltaY)
+    }
+   _onTouchMove(event) {
+        event.preventDefault()
+        if(event.touches.length !== 1) return
+        const currentY = event.touches[0].clientY
+        if(this._touchStart === 0){
+            this._touchStart = currentY
+            return
+        }
+        const deltaY = currentY - this._touchStart
+        this._touchStart = currentY
         this.scrollBy(deltaY)
     }
     init() {
@@ -245,7 +273,7 @@ layoutArticlesDetail(articleNode) {
     const x = this.width / 8
     const y = this.height / 8
 
-    const width = (articleNode?.props?.size?.width || 200) + 200
+    const width = Math.min(this.width * 0.75, 600)
 
     const content = articleNode?.props?.articleData?.content || articleNode?.props?.articleData?.article || ''
     const charsPerLine = Math.floor(width / 8)
