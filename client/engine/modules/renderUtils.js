@@ -6,8 +6,31 @@ const TEXT_OFFSET_X = 10;
 const TEXT_OFFSET_Y = 30;
 const LINE_HEIGHT = 20;
 
-export function renderReportsToDo(ctx, node) {
-    drawRectLabel(ctx, node, {showSelection: true})
+function resolveScrollY(viewportOrScrollY) {
+    if (typeof viewportOrScrollY === 'number') return viewportOrScrollY
+    return viewportOrScrollY?.y || 0
+}
+
+function getScreenRect(node, viewportOrScrollY) {
+    const scrollY = resolveScrollY(viewportOrScrollY)
+    return {
+        x: node.x,
+        y: node.worldY - scrollY,
+        width: node.width,
+        height: node.height,
+        color: node.color,
+        selected: node.selected,
+        type: node.type,
+        kind: node.kind,
+        text: node.text,
+        content: node.content,
+        contentOffsetY: node.contentOffsetY
+    }
+}
+
+export function renderReportsToDo(ctx, node, viewport) {
+    const rect = getScreenRect(node, viewport)
+    drawRectLabel(ctx, rect, {showSelection: true})
 }
 
 export function renderBackground(ctx, width, height, bgColor) {
@@ -17,52 +40,52 @@ export function renderBackground(ctx, width, height, bgColor) {
     ctx.fillRect(0, 0, width, height)
 }
 
-export function renderButtons(ctx, nodes) {
+export function renderButtons(ctx, nodes, viewport) {
     nodes.forEach(node => {
-        drawRectLabel(ctx, node, {showSelection: true})
+        const rect = getScreenRect(node, viewport)
+        drawRectLabel(ctx, rect, {showSelection: true})
     })
 }
 
-export function renderInputBoxes(ctx, nodes) {
+export function renderInputBoxes(ctx, nodes, viewport) {
     nodes.forEach(node => {
-        drawRectLabel(ctx, node, {showSelection: true})
-        drawTextBlock(ctx, node.text || '', node.x, node.y, node.width, LINE_HEIGHT)
+        const rect = getScreenRect(node, viewport)
+        drawRectLabel(ctx, rect, {showSelection: true})
+        drawTextBlock(ctx, node.text || '', rect.x, rect.y, rect.width, LINE_HEIGHT)
     })
 }
 
-export function renderReports(ctx, nodes) {
+export function renderReports(ctx, nodes, viewport) {
     nodes.forEach(node => {
-        drawRectLabel(ctx, node, {showSelection: true})
+        const rect = getScreenRect(node, viewport)
+        drawRectLabel(ctx, rect, {showSelection: true})
     })
 }
 
 
-export function drawRectLabel(ctx, node, options = {}) {
-    drawRect(ctx, node, options)
-    drawSingleLineText(ctx, node.text || '', node.x, node.y)
+export function drawRectLabel(ctx, rect, options = {}) {
+    drawRect(ctx, rect, options)
+    drawSingleLineText(ctx, rect)
 }
 
-export function drawRect(ctx, node, {showSelection = false} = {}) {
+export function drawRect(ctx, rect, {showSelection = false} = {}) {
    
-    ctx.fillStyle = node.color || DEFAULT_FILL_COLOR
-    const x = node.x
-    const y = node.y
-    const width = node.width
-    const height = node.height
+    ctx.fillStyle = rect.color || DEFAULT_FILL_COLOR
+    const { x, y, width, height } = rect
 
     ctx.fillRect(x, y, width, height)
 
-    if (showSelection && node.selected) {
+    if (showSelection && rect.selected) {
         ctx.strokeStyle = SELECTION_COLOR
         ctx.lineWidth = 2
         ctx.strokeRect(x, y, width, height)
     }
 }
 
-export function drawSingleLineText(ctx, text,x, y) {
+export function drawSingleLineText(ctx, rect) {
     ctx.fillStyle = TEXT_COLOR
     ctx.font = FONT
-    ctx.fillText(text || '', x + TEXT_OFFSET_X, y + TEXT_OFFSET_Y)
+    ctx.fillText(rect.text || '', rect.x + TEXT_OFFSET_X, rect.y + TEXT_OFFSET_Y)
 }
 
 
@@ -93,10 +116,12 @@ export function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
     ctx.fillText(line, x, y)
 }
 
-export function renderArticle(ctx, node) {
-    drawRectLabel(ctx, node, {showSelection: true})
-   drawSingleLineText(ctx, node.text || '', node.x, node.y)
-   drawTextBlockClipped(ctx, node.content || '', node.x, node.y + 50, node.width, node.height - 50, LINE_HEIGHT, node.contentOffsetY || 0)
+export function renderArticle(ctx, node, viewport) {
+    ctx.textBaseline = "top";
+    const rect = getScreenRect(node, viewport)
+    drawRectLabel(ctx, rect, {showSelection: true})
+   drawSingleLineText(ctx, rect)
+   drawTextBlockClipped(ctx, node.content || '', rect.x, rect.y + 50, rect.width, rect.height - 50, LINE_HEIGHT, node.contentOffsetY || 0)
 }
 
 export function drawTextBlockClipped(ctx, text, x, y, maxWidth, maxHeight, lineHeight, offsetY = 0) {

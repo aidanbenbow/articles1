@@ -10,9 +10,11 @@ export class Input {
             y: 0,
         }
         this.selectedNode = null
+        this.interaction = null
     }
 attach() {
         this.canvas = this.engine.context.canvas
+        this.interaction = this.engine.context.getInteractionManager()
         if (this.canvas) {
             this.canvas.addEventListener('pointerdown', this._onPointerDown)
             this.canvas.addEventListener('pointermove', this._onPointerMove)
@@ -27,75 +29,35 @@ attach() {
         }
     }
     _onPointerDown = (event) => {
-        const { x, y } = this._normalisePointerEvent(event)
-        this.pointerState.isDown = true
-        this.pointerState.x = x
-        this.pointerState.y = y
-  
-        const colorAtPoint = getCanvasColorAtPoint(this.engine.context.ctx, x, y)
-        const hex = convertColorToHex(colorAtPoint)
-       const layoutNodes = this.engine.context.getLayout()
-        const targetNode = Array.from(layoutNodes.values()).find(node => node.color === hex)
-      
-        this.pointerState.target = targetNode || null
-       if(targetNode.kind === 'article') {
-        targetNode.selected = true
-            this.engine.context.selectArticle(targetNode.articleId)
-        }
-        if(targetNode.type === 'button') {
-            if(targetNode.text === 'back') {
-                this.engine.context.clearSelectedArticle()
-            }
-        }
-    //    layoutNodes.forEach((node, id) => {
-    //         if (node === this.pointerState.target && node.type === 'input') {
-    //             node.selected = true
-    //             node.text = ' '
-    //         } else if(node=== this.pointerState.target && node.type === 'text') {
-    //             node.selected = true
-    //             const inputNodes = Array.from(layoutNodes.values()).filter(node => node.type === 'input')
-    //             inputNodes.forEach(inputNode => {
-    //                 inputNode.selected = false
-    //             })
-    //             inputNodes[0].text = node.text || ''
-    //             inputNodes[1].text = node.message || ''
-    //             inputNodes[1].height = 70
-    //             inputNodes[2].text = node.report || ''
-    //             inputNodes[2].height = 400
-    //             this.selectedNode = node
-    //         } else if(node=== this.pointerState.target && node.type === 'button'&& node.text === 'Copy Report') {
-    //             node.selected = true
-    //             const reportInputNode = layoutNodes.get('reportInputNode')
-                
-    //             if(reportInputNode) {
-    //                 const reportText = reportInputNode.text || ''
-    //                 navigator.clipboard.writeText(reportText).then(() => {
-    //                     console.log('Report copied to clipboard:', reportText)
-    //                 }).catch(err => {
-    //                     console.error('Failed to copy report:', err)
-    //                 })
-    //             }
-    //         } else if(node=== this.pointerState.target && node.type === 'button'&& node.text === 'Complete Report') {
-    //             node.selected = true
-    //             const reportId = this.selectedNode?.reportId
-                
-    //             if(reportId) {
-    //                 this.engine.context.completeReport(reportId).then(success => {
-    //                     if(success) {
-    //                         console.log('Report marked as complete:', reportId)
-    //                         this.engine.context.removeNode(reportId)
-    //                     } else {
-    //                         console.error('Failed to mark report as complete:', reportId)
-    //                     }
-    //                 })
-    //             }
-              
-    //         } else {
-    //             node.selected = false
-    //         }
-    //     })
-    //     this.engine.emit('layoutChanged', { layout: layoutNodes })
+
+    const {x,y} =
+        this._normalisePointerEvent(event)
+
+
+    const layoutNodes =
+        this.engine.context.getLayout()
+
+
+    const targetNode =
+        this.hitTest(
+            layoutNodes,
+            x,
+            y
+        )
+
+
+    this.pointerState = {
+        isDown:true,
+        target:targetNode,
+        x,
+        y
     }
+
+console.log('Input: pointer down at', x, y, 'targetNode:', targetNode?.id)
+    this.interaction.handleTargetNode(targetNode)
+}
+
+    
        
         
 
@@ -105,6 +67,53 @@ _normalisePointerEvent(event) {
         const y = event.clientY - rect.top
         return { x, y }
     }
+    hitTest(nodes, x, y) {
+
+    const viewport =
+        this.engine.context.getViewport()
+
+    for(const node of nodes.values()) {
+
+        const nodeY =
+            (node.worldY ?? node.y) - viewport.scrollY
+
+
+        if(
+            x >= node.x &&
+            x <= node.x + node.width &&
+            y >= nodeY &&
+            y <= nodeY + node.height
+        ) {
+            return node
+        }
+    }
+
+    return null
+}
+}
+
+function hitTest(nodes, x, y) {
+
+    const viewport =
+        this.engine.context.getViewport()
+
+    for(const node of nodes.values()) {
+
+        const nodeY =
+            (node.worldY ?? node.y) - viewport.scrollY
+
+
+        if(
+            x >= node.x &&
+            x <= node.x + node.width &&
+            y >= nodeY &&
+            y <= nodeY + node.height
+        ) {
+            return node
+        }
+    }
+
+    return null
 }
 
 function getCanvasColorAtPoint(ctx, x, y) {

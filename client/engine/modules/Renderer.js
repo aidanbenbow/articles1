@@ -37,6 +37,7 @@ this.bgColor = this.screen?.color || '#ffffff'
         renderBackground(this.ctx, this.canvas.width, this.canvas.height, this.bgColor)
 
 const currentLayout = this.engine.context.getLayout()
+const viewport = this.engine.context.getViewport()
 const searchTerm = (currentLayout.get('inputNode')?.text || '').trim().toLowerCase()
 this.engine.context.applyReportFilter(searchTerm)
 
@@ -44,20 +45,20 @@ this.engine.context.applyReportFilter(searchTerm)
         const allNodes = [...layout.values()]
         const view = createRendererViewModel(layout, allNodes)
 
-        renderInputBoxes(this.ctx, view.inputNodes)
-        renderButtons(this.ctx, view.buttonNodes)
+        renderInputBoxes(this.ctx, view.inputNodes, viewport)
+        renderButtons(this.ctx, view.buttonNodes, viewport)
        
         if(view.nodeSelected) {
-            console.log('Rendering selected article:', view.nodeSelected)
-          renderArticle(this.ctx, view.nodeSelected)
+            //console.log('Rendering selected article:', view.nodeSelected)
+          renderArticle(this.ctx, view.nodeSelected, viewport)
         } else {
-            console.log('Rendering reports:', view.reportsNodes)
-            renderReports(this.ctx, view.reportsNodes)
+           // console.log('Rendering reports:', view.reportsNodes)
+            renderReports(this.ctx, view.reportsNodes, viewport)
         }
 
         
         if(view.reportsToDoNode) {
-            renderReportsToDo(this.ctx, view.reportsToDoNode)
+            renderReportsToDo(this.ctx, view.reportsToDoNode, viewport)
         }
         
         
