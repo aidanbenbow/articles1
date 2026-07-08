@@ -5,8 +5,10 @@ export class InteractionManager {
         this.id = 'interactionState'
 
         this.state = {
+            view: 'list',
             selectedNodeId: null,
-            searchTerm: ''
+            searchTerm: '',
+            focusedNodeId: null,
         }
     }
 
@@ -15,6 +17,7 @@ export class InteractionManager {
         return {
             getInteractionState: () => this.state,
             getInteractionManager: () => this,
+            appendSearchTerm: this.appendSearchTerm.bind(this),
           
         }
     }
@@ -24,12 +27,43 @@ export class InteractionManager {
 
         if(!targetNode) return
 
+if(targetNode.type === 'input') {
+    this.state = {
+        ...this.state,
+        view: 'list',
+        focusedNodeId: targetNode.id
+    }
+}
+
+if(targetNode.type === 'button') {
+    this.state = {
+        ...this.state,
+        view: 'list',
+        selectedNodeId: null
+    }
+   
+    this.engine.context.clearSelectedArticle()
+    return
+} else if(targetNode.type === 'text') {
+
         this.state = {
-            ...this.state,
+            view:  'article',
             selectedNodeId: targetNode.id
         }
+        console.log(this.state)
 
-        console.log('InteractionManager: selectedNodeId set to', targetNode.id)
+       // this.engine.emit('layoutChanged', { layout: this.engine.context.getLayout() })
+        this.engine.context.selectArticle(targetNode.props?.articleData?.articleId || null)
+    } else if(targetNode.type === 'input') {
+        console.log('InteractionManager: input node selected:', targetNode)
+    }
+}
+appendSearchTerm(char) {
+        this.state = {
+            ...this.state,
+            searchTerm: this.state.searchTerm + char
+        }
+        console.log('InteractionManager: search term updated:', this.state.searchTerm)
     }
 
 

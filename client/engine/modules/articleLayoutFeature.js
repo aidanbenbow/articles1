@@ -4,6 +4,7 @@ import { matchesOrderedPrefix, normalize } from "./search.js"
 export class ArticleLayoutFeature {
     constructor(layout) {
         this.layout = layout
+        
         this._lastFilter = ''
     }
 
@@ -27,15 +28,17 @@ export class ArticleLayoutFeature {
         this.layoutArticles(filtered)
     }
 
-    layoutArticles(articleNodes = null) {
+    layoutArticles(articleNodes = null, state) {
         articleNodes ??= this.getArticleNodes()
 
-        if (this.layout.viewState.view === 'list') {
+        if (state.view === 'list') {
             this.layoutArticlesList(articleNodes)
         } else {
+          
             const selected = articleNodes.find(
-                node => node.props?.articleData?.articleId === this.layout.viewState.selectedArticleId
-            )
+                node => node.id === state.selectedNodeId
+            ) 
+            
             this.layoutArticlesDetail(selected)
         }
 
@@ -99,7 +102,7 @@ export class ArticleLayoutFeature {
         const colour = articleNode?.props?.color || '#ffffff'
 
         const rect = {
-            id: articleNode.articleId,
+            id: articleNode.id,
             x,
             worldY,
             width,

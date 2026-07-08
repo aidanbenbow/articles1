@@ -26,7 +26,7 @@ export function getNodeStyle(node) {
 
 export function createRect({
     x,
-  
+  id,
     width,
     height,
     color,
@@ -37,7 +37,7 @@ export function createRect({
 }) {
     return {
         x,
-        
+       id, 
         width,
         height,
         worldY,

@@ -20,12 +20,14 @@ attach() {
             this.canvas.addEventListener('pointermove', this._onPointerMove)
             this.canvas.addEventListener('pointerup', this._onPointerUp)
         }
+        window.addEventListener('keydown', this._onKeyDown)
     }
     detach() {
         if (this.canvas) {
             this.canvas.removeEventListener('pointerdown', this._onPointerDown)
             this.canvas.removeEventListener('pointermove', this._onPointerMove)
             this.canvas.removeEventListener('pointerup', this._onPointerUp)
+            window.removeEventListener('keydown', this._onKeyDown)
         }
     }
     _onPointerDown = (event) => {
@@ -57,9 +59,14 @@ console.log('Input: pointer down at', x, y, 'targetNode:', targetNode?.id)
     this.interaction.handleTargetNode(targetNode)
 }
 
-    
-       
-        
+    _onKeyDown = (event) => {
+        const state = this.engine.context.getInteractionState()
+        if(!state.focusedNodeId) return
+
+        if(event.key.length === 1) {
+            this.interaction.appendSearchTerm(event.key)
+        }
+    }
 
 _normalisePointerEvent(event) {
         const rect = this.canvas.getBoundingClientRect()
@@ -74,9 +81,9 @@ _normalisePointerEvent(event) {
 
     for(const node of nodes.values()) {
 
-        const nodeY =
-            (node.worldY ?? node.y) - viewport.scrollY
-
+      const nodeY =
+    (node.worldY ?? node.y ?? 0) - viewport.y
+if(node.kind === 'screen') continue
 
         if(
             x >= node.x &&
@@ -90,30 +97,6 @@ _normalisePointerEvent(event) {
 
     return null
 }
-}
-
-function hitTest(nodes, x, y) {
-
-    const viewport =
-        this.engine.context.getViewport()
-
-    for(const node of nodes.values()) {
-
-        const nodeY =
-            (node.worldY ?? node.y) - viewport.scrollY
-
-
-        if(
-            x >= node.x &&
-            x <= node.x + node.width &&
-            y >= nodeY &&
-            y <= nodeY + node.height
-        ) {
-            return node
-        }
-    }
-
-    return null
 }
 
 function getCanvasColorAtPoint(ctx, x, y) {

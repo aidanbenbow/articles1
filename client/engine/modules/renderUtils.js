@@ -119,6 +119,7 @@ export function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
 export function renderArticle(ctx, node, viewport) {
     ctx.textBaseline = "top";
     const rect = getScreenRect(node, viewport)
+    
     drawRectLabel(ctx, rect, {showSelection: true})
    drawSingleLineText(ctx, rect)
    drawTextBlockClipped(ctx, node.content || '', rect.x, rect.y + 50, rect.width, rect.height - 50, LINE_HEIGHT, node.contentOffsetY || 0)

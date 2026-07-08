@@ -14,6 +14,7 @@ export class ScreenLayout {
 
         const rect = createRect({
             x: 0,
+            id: screenNodes[0]?.id || 'screen',
             width: this.layout.width,
             height: this.layout.height,
             color: colour,
@@ -35,12 +36,13 @@ export class ScreenLayout {
             const parentLayout = this.layout.layoutNodes.get(node.parentId)
             if (!parentLayout) return
 
-            const x = parentLayout.x + LAYOUT.padding
+            const x = parentLayout.width/2 - LAYOUT.padding - (index * LAYOUT.inputGap)
             const worldY = parentLayout.worldY + LAYOUT.marginTop + (index * LAYOUT.inputGap)
             const { width, height, color: colour } = getNodeStyle(node)
 
             const rect = createRect({
                 x,
+                id: node.id,
                 worldY,
                 width,
                 height,
@@ -64,6 +66,7 @@ export class ScreenLayout {
 
             const rect = createRect({
                 x,
+                id: node.id,
                 worldY,
                 width,
                 height,

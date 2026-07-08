@@ -71,11 +71,16 @@ getViewPort() {
         this.screenLayout.layoutScreenNodes()
         this.screenLayout.layoutChildren()
       
-      this.articleFeature.layoutArticles()
+      this.layoutArticles()
       this.engine.emit('layoutChanged', { layout: this.layoutNodes })
        }, 0)
     }
-    
+    layoutArticles() {
+const state = this.engine.context.getInteractionState()
+
+        this.articleFeature.layoutArticles(null, state)
+
+    }
     setView(view, articleId = null) {
     this.viewState.view = view
     this.viewState.selectedArticleId = articleId

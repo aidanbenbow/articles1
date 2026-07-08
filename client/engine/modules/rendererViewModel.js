@@ -1,11 +1,11 @@
-export function createRendererViewModel(layout, allnodes,inputNodeId= 'inputNode') {
+export function createRendererViewModel( allnodes,state) {
     const inputNodes = allnodes.filter(node => node.type === 'input')
     const buttonNodes = allnodes.filter(node => node.type === 'button')
     const textNodes = allnodes.filter(node => node.type === 'text' && node.props?.text !== 'Reports To Do')
     const reportsToDoNode = allnodes.find(node => node.kind === 'reportsToDo')
     
     const reportsNodes = allnodes.filter(node => node.type === 'text' && node.kind === 'article')
-    const nodeSelected = allnodes.find(node => node.selected && node.type === 'text')
+    const nodeSelected = allnodes.find(node => node.id === state.selectedNodeId)
     return {
         inputNodes,
         buttonNodes,
