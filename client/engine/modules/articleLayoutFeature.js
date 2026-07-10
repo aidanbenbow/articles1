@@ -161,7 +161,12 @@ for (const [id, rect] of this.layout.layoutNodes) {
             content,
             article: articleNode.props?.articleData || {},
             type: 'text',
-            kind: 'article'
+            kind: 'article',
+            borderRadius: 12,
+        padding,
+        lineHeight,
+        fontSize: 16,
+        shadow: '0 4px 16px rgba(0,0,0,0.12)'
         }
 
         this.layout.layoutNodes.set(articleNode.id, rect)
