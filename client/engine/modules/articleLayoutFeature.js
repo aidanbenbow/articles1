@@ -57,6 +57,16 @@ export class ArticleLayoutFeature {
     const state =
         this.engine.context.getInteractionState()
 
+          // clear invalid selection
+    if (
+        state.selectedNodeId &&
+        !filtered.some(
+            node => node.id === state.selectedNodeId
+        )
+    ) {
+        this.engine.context.clearSelectedArticle()
+    }
+
     this.layoutArticles(filtered, state)
 }
 
@@ -80,6 +90,12 @@ export class ArticleLayoutFeature {
     layoutArticlesList(articleNodes) {
         const startY = this.layout.height / 8
         const spacingY = 30
+
+for (const [id, rect] of this.layout.layoutNodes) {
+        if (rect.kind === 'article') {
+            this.layout.layoutNodes.delete(id)
+        }
+    }
 
         const rects = layoutVerticalList(articleNodes, {
             startX: this.layout.width / 8,
