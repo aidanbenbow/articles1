@@ -47,11 +47,13 @@ export function renderButtons(ctx, nodes, viewport) {
     })
 }
 
-export function renderInputBoxes(ctx, nodes, viewport) {
+export function renderInputBoxes(ctx, nodes, viewport, searchTerm) {
     nodes.forEach(node => {
+        console.log('Rendering input box:', node, 'searchTerm:', searchTerm)
         const rect = getScreenRect(node, viewport)
-        drawRectLabel(ctx, rect, {showSelection: true})
-        drawTextBlock(ctx, node.text || '', rect.x, rect.y, rect.width, LINE_HEIGHT)
+       // drawRectLabel(ctx, rect, {showSelection: true})
+       drawRect(ctx, rect, {showSelection: true})
+        drawTextBlock(ctx, searchTerm || '', rect.x, rect.y, rect.width, LINE_HEIGHT)
     })
 }
 

@@ -1,3 +1,4 @@
+import { ArticleLayoutFeature } from "../engine/modules/articleLayoutFeature.js";
 import { articlesModule } from "../engine/modules/articles.js";
 import { CanvasModule } from "../engine/modules/canvasModule.js";
 import { Input } from "../engine/modules/input.js";
@@ -17,7 +18,8 @@ Layout,
 Renderer,
 articlesModule,
 InteractionManager,
-Input
+Input,
+ArticleLayoutFeature
 
 ]
 }

@@ -12,7 +12,8 @@ export function createRendererViewModel( allnodes,state) {
         textNodes,
         reportsToDoNode,
         reportsNodes,
-        nodeSelected
+        nodeSelected,
+        searchTerm: state.searchTerm,
     }
 }
 

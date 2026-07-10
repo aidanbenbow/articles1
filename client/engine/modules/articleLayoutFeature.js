@@ -2,10 +2,29 @@ import { getNodeStyle, layoutVerticalList } from "../constants/layoutConstants.j
 import { matchesOrderedPrefix, normalize } from "./search.js"
 
 export class ArticleLayoutFeature {
-    constructor(layout) {
-        this.layout = layout
-        
+    constructor(engine) {
+        this.layout = null
+        this.engine = engine
+        this._unsubscribe = []
         this._lastFilter = ''
+    }
+    contextExports() {
+        return {
+            applyArticleFilter: this.applyFilter.bind(this),
+            layoutArticles: this.layoutArticles.bind(this),
+            getArticleLayoutFeature: () => this,
+        }
+    }
+    attach() {
+        this.layout = this.engine.context.getLayoutManager()
+        this._unsubscribe.push(this.engine.on('searchChanged', (searchTerm) => {
+            this.applyFilter(searchTerm)
+        }))
+    }
+
+    detach() {
+        this._unsubscribe.forEach(unsub => unsub())
+        this._unsubscribe = []
     }
 
     getArticleNodes() {
@@ -16,17 +35,30 @@ export class ArticleLayoutFeature {
         return this.layout.nodeQuery.getSearchBar()
     }
 
-    applyFilter(searchTerm) {
-        const normalized = normalize(searchTerm)
-        if (normalized === this._lastFilter) return
-        this._lastFilter = normalized
+   applyFilter(searchTerm) {
 
-        const filtered = this.getArticleNodes().filter(node =>
-            matchesOrderedPrefix(node.props?.title || '', normalized)
+    console.log(
+        'ArticleLayoutFeature: applyFilter called with searchTerm:',
+        searchTerm
+    )
+
+    const normalized = normalize(searchTerm)
+
+    if (normalized === this._lastFilter) return
+    this._lastFilter = normalized
+
+    const filtered = this.getArticleNodes().filter(node =>
+        matchesOrderedPrefix(
+            node.props?.title || '',
+            normalized
         )
+    )
 
-        this.layoutArticles(filtered)
-    }
+    const state =
+        this.engine.context.getInteractionState()
+
+    this.layoutArticles(filtered, state)
+}
 
     layoutArticles(articleNodes = null, state) {
         articleNodes ??= this.getArticleNodes()
@@ -42,7 +74,7 @@ export class ArticleLayoutFeature {
             this.layoutArticlesDetail(selected)
         }
 
-        this.layout.engine.emit('layoutChanged', { layout: this.layout.layoutNodes })
+        this.engine.emit('layoutChanged', { layout: this.layout.layoutNodes })
     }
 
     layoutArticlesList(articleNodes) {

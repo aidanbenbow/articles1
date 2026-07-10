@@ -18,7 +18,7 @@ export class Layout {
         this.height = null
         this._unsubscribe = []
         this.reportFeature = new ReportLayoutFeature(this)
-        this.articleFeature = new ArticleLayoutFeature(this)
+     
         this.screenLayout = new ScreenLayout(this)
         
         this.viewState = {
@@ -43,8 +43,9 @@ export class Layout {
     contextExports() {
         return {
             getLayout: () => this.layoutNodes,
+            getLayoutManager: () => this,
             applyReportFilter: this.reportFeature.applyFilter.bind(this.reportFeature),
-            applyArticleFilter: this.articleFeature.applyFilter.bind(this.articleFeature),
+           // applyArticleFilter: this.articleFeature.applyFilter.bind(this.articleFeature),
             selectArticle: (id)=> this.setView('article', id),
             clearSelectedArticle: () => this.setView('list'),
             scrollBy: this.scroll.scrollBy.bind(this.scroll),
@@ -76,14 +77,13 @@ getViewPort() {
        }, 0)
     }
     layoutArticles() {
-const state = this.engine.context.getInteractionState()
-
-        this.articleFeature.layoutArticles(null, state)
+        const state = this.engine.context.getInteractionState()
+this.engine.context.getArticleLayoutFeature().layoutArticles(null, state)
 
     }
     setView(view, articleId = null) {
-    this.viewState.view = view
-    this.viewState.selectedArticleId = articleId
+    // this.viewState.view = view
+    // this.viewState.selectedArticleId = articleId
 
     this.scroll.scrollY = this.scroll.scrollByView[view] || 0
     this.init()

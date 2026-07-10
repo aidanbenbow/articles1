@@ -63,6 +63,10 @@ console.log('Input: pointer down at', x, y, 'targetNode:', targetNode?.id)
         const state = this.engine.context.getInteractionState()
         if(!state.focusedNodeId) return
 
+        if(event.key === 'Backspace') {
+            this.interaction.removeSearchTerm()
+        }
+
         if(event.key.length === 1) {
             this.interaction.appendSearchTerm(event.key)
         }

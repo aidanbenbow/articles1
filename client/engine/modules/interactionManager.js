@@ -18,7 +18,7 @@ export class InteractionManager {
             getInteractionState: () => this.state,
             getInteractionManager: () => this,
             appendSearchTerm: this.appendSearchTerm.bind(this),
-          
+            removeSearchTerm: this.removeSearchTerm.bind(this),
         }
     }
 
@@ -47,6 +47,7 @@ if(targetNode.type === 'button') {
 } else if(targetNode.type === 'text') {
 
         this.state = {
+            ...this.state,
             view:  'article',
             selectedNodeId: targetNode.id
         }
@@ -59,12 +60,31 @@ if(targetNode.type === 'button') {
     }
 }
 appendSearchTerm(char) {
+    const searchTerm = this.state.searchTerm + char
         this.state = {
             ...this.state,
-            searchTerm: this.state.searchTerm + char
+            searchTerm
         }
-        console.log('InteractionManager: search term updated:', this.state.searchTerm)
+       this.engine.emit(
+            'searchChanged',
+            searchTerm
+        )
     }
+    removeSearchTerm() {
+
+    const searchTerm =
+        this.state.searchTerm.slice(0, -1)
+
+    this.state = {
+        ...this.state,
+        searchTerm
+    }
+
+    this.engine.emit(
+        'searchChanged',
+        searchTerm
+    )
+}
 
 
     setSearchTerm(term = '') {

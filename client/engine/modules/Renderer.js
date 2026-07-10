@@ -46,7 +46,7 @@ const viewport = this.engine.context.getViewport()
         
         const view = createRendererViewModel(allNodes, viewState)
 
-        renderInputBoxes(this.ctx, view.inputNodes, viewport)
+        renderInputBoxes(this.ctx, view.inputNodes, viewport, viewState.searchTerm)
         renderButtons(this.ctx, view.buttonNodes, viewport)
        
         if(view.nodeSelected) {
@@ -70,7 +70,7 @@ const viewport = this.engine.context.getViewport()
               this._unsubscribe.push(this.engine.on('layoutChanged', this.render.bind(this)))
             this.render()
         }, 0)
-            
+            this._unsubscribe.push(this.engine.on('searchChanged', this.render.bind(this)))
              this._unsubscribe.push(this.engine.on('reportsDataReady', () => this.render())) 
     }
     detach() {
