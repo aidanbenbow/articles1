@@ -72,7 +72,7 @@ export function renderReports(ctx, nodes, viewport, assetManager) {
         const rect = getScreenRect(node, viewport)
         drawRect(ctx, rect, {showSelection: true})
 
-        const hasThumbnail = !!node.thumbnail
+        const hasThumbnail = !!rect.thumbnail
         if (hasThumbnail) {
             drawThumbnail(ctx, rect, assetManager)
         }
@@ -81,13 +81,19 @@ export function renderReports(ctx, nodes, viewport, assetManager) {
             ? rect.x + rect.thumbnailSize + 30
             : rect.x
 
-        const textWidth = hasThumbnail
-            ? rect.width - rect.thumbnailSize - 40
-            : rect.width
+       const textWidth = rect.thumbnail
+    ? rect.width - rect.thumbnailSize - 50
+    : rect.width - 20
+
+    ctx.save()
+    ctx.beginPath()
+    ctx.rect(rect.x, rect.y, rect.width, rect.height)
+    ctx.clip()
 
             drawSingleLineText(ctx, { ...rect, x: textX })
             
         drawTextBlock(ctx, node.excerpt || '', textX, rect.y + TEXT_OFFSET_Y, textWidth, LINE_HEIGHT)
+        ctx.restore()
     })
 }
 

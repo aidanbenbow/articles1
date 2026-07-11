@@ -98,22 +98,19 @@ for (const [id, rect] of this.layout.layoutNodes) {
     }
     
         const rects = layoutVerticalList(articleNodes, {
-            startX: this.layout.width / 8,
+            startX: Math.max(this.layout.width / 8, 20),
             startY,
             spacing: spacingY,
             getItemHeight: (node) => {
-                const title = node.props?.title || 'article'
-                const measured = this.layout.measureText(title, '16px Arial')
-                return Math.max(measured.height + 80, 50) // Ensure a minimum height of 50
+                const { height } = this.getArticleCardSize(node)
+                return height
             },
             create: (node, worldY, startX) => {
                 const {  color } = getNodeStyle(node)
-const title = node.props?.title || 'article'
+
 const thumbnail = node.props?.articleData?.photo 
-const measured = this.layout.measureText(title, '16px Arial')
-const thumbnailSize = 80
-const width = Math.max(measured.width + 40 + thumbnailSize, 400) // Ensure a minimum width of 200
-const height = Math.max(measured.height + 100, 50) // Ensure a minimum height of 50
+
+const { width, height, thumbnailSize } = this.getArticleCardSize(node)
                 return {
                     id: node.id,
                     articleId: node.props?.articleData?.articleId || null,
@@ -185,5 +182,70 @@ const height = Math.max(measured.height + 100, 50) // Ensure a minimum height of
         this.layout.layoutNodes.set(articleNode.id, rect)
         this.layout.scroll.updateBounds(contentHeight)
     }
- 
+    getArticleCardSize(node) {
+    
+    const width = Math.min(
+    this.layout.width * 0.8,
+    500
+)
+
+   const thumbnailSize = Math.min(
+    80,
+    width * 0.25
+)
+
+    const excerpt =
+    node.props?.articleData?.content?.substring(0,100) || ''
+
+const textWidth =
+    width - thumbnailSize - 70
+
+
+const textSize =
+    this.measureArticleText(
+        excerpt,
+        textWidth
+    )
+
+
+const height = Math.min(
+    Math.max(
+        thumbnailSize + 40,
+        120
+    ),
+    180
+)
+
+    return {
+        width,
+        height,
+        thumbnailSize
+    }
+}
+ measureArticleText(text, width) {
+    const ctx = this.layout.engine.context.ctx
+    ctx.font = '16px Arial'
+
+    const words = text.split(' ')
+    let line = ''
+    let lines = 1
+
+    for (const word of words) {
+
+        const testLine = line + word + ' '
+        const measured = ctx.measureText(testLine)
+
+        if (measured.width > width) {
+            lines++
+            line = word + ' '
+        } else {
+            line = testLine
+        }
+    }
+
+    return {
+        lines,
+        height: lines * 20
+    }
+}
 }
