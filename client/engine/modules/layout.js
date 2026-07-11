@@ -82,8 +82,6 @@ this.engine.context.getArticleLayoutFeature().layoutArticles(null, state)
 
     }
     setView(view, articleId = null) {
-    // this.viewState.view = view
-    // this.viewState.selectedArticleId = articleId
 
     this.scroll.scrollY = this.scroll.scrollByView[view] || 0
     this.init()
@@ -102,6 +100,15 @@ computeScrollBounds(rects) {
     }
 
     this.scroll.updateBounds(maxBottom)
+}
+measureText(text, font) {
+    const ctx = this.engine.context.ctx
+    ctx.font = font
+    const metrics = ctx.measureText(text)
+    return {
+        width: metrics.width,
+        height: metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent
+    }
 }
 
 }

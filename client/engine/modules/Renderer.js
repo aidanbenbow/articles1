@@ -43,6 +43,7 @@ const viewport = this.engine.context.getViewport()
         const layout = this.engine.context.getLayout()
         const viewState = this.engine.context.getInteractionState()
         const allNodes = [...layout.values()]
+        const assetManager = this.engine.context.getAssetManager()
         
         const view = createRendererViewModel(allNodes, viewState)
 
@@ -54,7 +55,7 @@ const viewport = this.engine.context.getViewport()
           renderArticle(this.ctx, view.nodeSelected, viewport)
         } else {
            // console.log('Rendering reports:', view.reportsNodes)
-            renderReports(this.ctx, view.reportsNodes, viewport)
+            renderReports(this.ctx, view.reportsNodes, viewport, assetManager)
         }
 
         
@@ -72,6 +73,7 @@ const viewport = this.engine.context.getViewport()
         }, 0)
             this._unsubscribe.push(this.engine.on('searchChanged', this.render.bind(this)))
              this._unsubscribe.push(this.engine.on('reportsDataReady', () => this.render())) 
+             this._unsubscribe.push(this.engine.on('assetLoaded', () => this.render()))
     }
     detach() {
         console.log('Renderer detached')

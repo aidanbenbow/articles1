@@ -1,3 +1,5 @@
+
+
 const DEFAULT_FILL_COLOR = '#791e1e';
 const TEXT_COLOR = '#000000';
 const SELECTION_COLOR = '#ff0000';
@@ -6,6 +8,7 @@ const FONT = '16px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helve
 const TEXT_OFFSET_X = 10;
 const TEXT_OFFSET_Y = 30;
 const LINE_HEIGHT = 20;
+
 
 function resolveScrollY(viewportOrScrollY) {
     if (typeof viewportOrScrollY === 'number') return viewportOrScrollY
@@ -24,8 +27,15 @@ function getScreenRect(node, viewportOrScrollY) {
         type: node.type,
         kind: node.kind,
         text: node.text,
+        excerpt: node.excerpt,
         content: node.content,
-        contentOffsetY: node.contentOffsetY
+        thumbnail: node.thumbnail,
+        thumbnailSize: node.thumbnailSize,
+        contentOffsetY: node.contentOffsetY,
+        lineHeight: node.lineHeight,
+        padding: node.padding,
+        borderRadius: node.borderRadius,
+        shadow: node.shadow,
     }
 }
 
@@ -35,7 +45,6 @@ export function renderReportsToDo(ctx, node, viewport) {
 }
 
 export function renderBackground(ctx, width, height, bgColor) {
-   
     ctx.clearRect(0, 0, width, height)
     ctx.fillStyle = bgColor || DEFAULT_FILL_COLOR
     ctx.fillRect(0, 0, width, height)
@@ -52,19 +61,54 @@ export function renderInputBoxes(ctx, nodes, viewport, searchTerm) {
     nodes.forEach(node => {
         
         const rect = getScreenRect(node, viewport)
-       // drawRectLabel(ctx, rect, {showSelection: true})
+     
        drawRect(ctx, rect, {showSelection: true})
         drawTextBlock(ctx, searchTerm || '', rect.x, rect.y, rect.width, LINE_HEIGHT)
     })
 }
 
-export function renderReports(ctx, nodes, viewport) {
+export function renderReports(ctx, nodes, viewport, assetManager) {
     nodes.forEach(node => {
         const rect = getScreenRect(node, viewport)
-        drawRectLabel(ctx, rect, {showSelection: true})
+        drawRect(ctx, rect, {showSelection: true})
+
+        const hasThumbnail = !!node.thumbnail
+        if (hasThumbnail) {
+            drawThumbnail(ctx, rect, assetManager)
+        }
+
+        const textX = hasThumbnail
+            ? rect.x + rect.thumbnailSize + 30
+            : rect.x
+
+        const textWidth = hasThumbnail
+            ? rect.width - rect.thumbnailSize - 40
+            : rect.width
+
+            drawSingleLineText(ctx, { ...rect, x: textX })
+            
+        drawTextBlock(ctx, node.excerpt || '', textX, rect.y + TEXT_OFFSET_Y, textWidth, LINE_HEIGHT)
     })
 }
 
+function drawThumbnail(ctx, rect, assetManager) {
+
+    if (!rect.thumbnail) return
+
+    const img = assetManager.loadImage(rect.thumbnail)
+
+    if (!img.complete|| img.naturalWidth === 0) return
+
+    const size = rect.thumbnailSize || 80
+
+    ctx.drawImage(
+        img,
+        rect.x + 15,
+        rect.y + 15,
+        size,
+        size
+    )
+}
 
 export function drawRectLabel(ctx, rect, options = {}) {
     drawRect(ctx, rect, options)
@@ -144,6 +188,7 @@ export function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
 }
 
 export function renderArticle(ctx, node, viewport) {
+    ctx.save()
     ctx.textBaseline = 'top'
     const rect = getScreenRect(node, viewport)
 
@@ -178,6 +223,7 @@ export function renderArticle(ctx, node, viewport) {
 
     // Reset font for other renders
     ctx.font = FONT
+    ctx.restore()
 }
 
 

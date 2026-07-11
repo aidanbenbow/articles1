@@ -55,6 +55,7 @@ export class ScreenLayout {
     }
 
     layoutButtons() {
+        
         const childButtons = this.layout.nodeQuery.getButtons()
         childButtons.forEach((node, index) => {
             const parentLayout = this.layout.layoutNodes.get(node.parentId)
@@ -62,14 +63,14 @@ export class ScreenLayout {
 
             const x = parentLayout.x + LAYOUT.padding + (index * LAYOUT.buttonGap)
             const worldY = parentLayout.worldY + LAYOUT.marginTop
-            const { width, height, color: colour } = getNodeStyle(node)
-
+            const {  color: colour } = getNodeStyle(node)
+const measured = this.layout.measureText(node.props?.text || '', '16px Arial')
             const rect = createRect({
                 x,
                 id: node.id,
                 worldY,
-                width,
-                height,
+                width: measured.width + LAYOUT.padding * 2,
+                height: measured.height + LAYOUT.padding,
                 color: colour,
                 type: 'button',
                 text: node.props?.text || ''
@@ -78,4 +79,5 @@ export class ScreenLayout {
             this.layout.layoutNodes.set(node.id, rect)
         })
     }
+   
 }

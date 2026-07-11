@@ -5,7 +5,9 @@ export class CanvasModule {
         this.engine = engine
         this.id = 'canvasModule'
     }
-    contextExports() {}
+    contextExports() {
+        
+    }
     attach() {
         const setup = setupCanvas()
         

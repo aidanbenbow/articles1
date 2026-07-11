@@ -96,15 +96,24 @@ for (const [id, rect] of this.layout.layoutNodes) {
             this.layout.layoutNodes.delete(id)
         }
     }
-
+    
         const rects = layoutVerticalList(articleNodes, {
             startX: this.layout.width / 8,
             startY,
             spacing: spacingY,
-            getItemHeight: (node) => getNodeStyle(node).height,
+            getItemHeight: (node) => {
+                const title = node.props?.title || 'article'
+                const measured = this.layout.measureText(title, '16px Arial')
+                return Math.max(measured.height + 80, 50) // Ensure a minimum height of 50
+            },
             create: (node, worldY, startX) => {
-                const { width, height, color } = getNodeStyle(node)
-
+                const {  color } = getNodeStyle(node)
+const title = node.props?.title || 'article'
+const thumbnail = node.props?.articleData?.photo 
+const measured = this.layout.measureText(title, '16px Arial')
+const thumbnailSize = 80
+const width = Math.max(measured.width + 40 + thumbnailSize, 400) // Ensure a minimum width of 200
+const height = Math.max(measured.height + 100, 50) // Ensure a minimum height of 50
                 return {
                     id: node.id,
                     articleId: node.props?.articleData?.articleId || null,
@@ -112,10 +121,14 @@ for (const [id, rect] of this.layout.layoutNodes) {
                     width,
                     height,
                     color,
+                    thumbnail,
+                    thumbnailSize,
                     selected: false,
                     text: node.props?.title || 'article',
                     content: node.props?.articleData?.content || '',
-                    article: node.props?.articleData || {},
+                   
+                   excerpt: node.props?.articleData?.content?.substring(0, 100) || ''
+                   || node.props?.articleData?.article?.substring(0, 100) || '',
                     type: 'text',
                     kind: 'article',
                     worldY
@@ -172,4 +185,5 @@ for (const [id, rect] of this.layout.layoutNodes) {
         this.layout.layoutNodes.set(articleNode.id, rect)
         this.layout.scroll.updateBounds(contentHeight)
     }
+ 
 }

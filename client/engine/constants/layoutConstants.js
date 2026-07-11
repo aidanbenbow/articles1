@@ -6,7 +6,7 @@ export const LAYOUT = {
     articleWidth: 600,
     inputGap: 80,
     buttonGap: 160,
-    marginTop: 20
+    marginTop: 30
 }
 
 // layoutHelpers.js
@@ -21,6 +21,8 @@ export function getNodeStyle(node) {
         color: props.color ?? "#000000"
     }
 }
+
+
 
 // layoutHelpers.js
 
