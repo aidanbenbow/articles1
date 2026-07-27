@@ -50,6 +50,17 @@ export function renderBackground(ctx, width, height, bgColor) {
     ctx.fillRect(0, 0, width, height)
 }
 
+export function renderHeader(ctx, node, viewport) {
+    const rect = getScreenRect(node, viewport)
+    drawRect(ctx, rect, {showSelection: true})
+    ctx.fillStyle = TEXT_COLOR
+    ctx.font = FONT
+    const halfWidth = rect.width / 2
+    const textWidth = ctx.measureText(rect.text || '').width
+    const textX = rect.x + halfWidth - textWidth / 2
+    ctx.fillText(rect.text || '', textX, rect.y + TEXT_OFFSET_Y)
+}
+
 export function renderButtons(ctx, nodes, viewport) {
     nodes.forEach(node => {
         const rect = getScreenRect(node, viewport)

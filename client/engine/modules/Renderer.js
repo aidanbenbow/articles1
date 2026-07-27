@@ -1,5 +1,5 @@
 import { createRendererViewModel } from './rendererViewModel.js'
-import { renderInputBoxes, renderButtons, renderReports, renderReportsToDo, renderBackground, renderArticle  } from './renderUtils.js'
+import { renderInputBoxes, renderButtons, renderReports, renderReportsToDo, renderBackground, renderArticle, renderHeader  } from './renderUtils.js'
 
 export class Renderer {
     constructor(engine) {
@@ -47,8 +47,7 @@ const viewport = this.engine.context.getViewport()
         
         const view = createRendererViewModel(allNodes, viewState)
 
-        renderInputBoxes(this.ctx, view.inputNodes, viewport, viewState.searchTerm)
-        renderButtons(this.ctx, view.buttonNodes, viewport)
+        
        
         if(view.nodeSelected) {
             
@@ -58,6 +57,9 @@ const viewport = this.engine.context.getViewport()
             renderReports(this.ctx, view.reportsNodes, viewport, assetManager)
         }
 
+        renderHeader(this.ctx, view.headerNode, viewport)
+        renderInputBoxes(this.ctx, view.inputNodes, viewport, viewState.searchTerm)
+        renderButtons(this.ctx, view.buttonNodes, viewport)
         
         if(view.reportsToDoNode) {
             renderReportsToDo(this.ctx, view.reportsToDoNode, viewport)

@@ -45,7 +45,7 @@ export class Layout {
             getLayout: () => this.layoutNodes,
             getLayoutManager: () => this,
             applyReportFilter: this.reportFeature.applyFilter.bind(this.reportFeature),
-           // applyArticleFilter: this.articleFeature.applyFilter.bind(this.articleFeature),
+           incrementArticleViews: this.incrementArticleViews.bind(this),
             selectArticle: (id)=> this.setView('article', id),
             clearSelectedArticle: () => this.setView('list'),
             scrollBy: this.scroll.scrollBy.bind(this.scroll),
@@ -108,6 +108,19 @@ measureText(text, font) {
     return {
         width: metrics.width,
         height: metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent
+    }
+}
+async incrementArticleViews(articleId) {
+    console.log('Incrementing views for article:', articleId)
+    if (!articleId) return;
+
+    try {
+        console.log(`Incrementing views for article ${articleId}`);
+        await fetch(`/api/articles/${articleId}/views`, {
+            method: 'POST'
+        });
+    } catch (err) {
+        console.error('Failed to increment article views', err);
     }
 }
 

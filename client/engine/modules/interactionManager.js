@@ -53,8 +53,9 @@ if(targetNode.type === 'button') {
         }
         console.log(this.state)
 
-       // this.engine.emit('layoutChanged', { layout: this.engine.context.getLayout() })
         this.engine.context.selectArticle(targetNode.props?.articleData?.articleId || null)
+       console.log('InteractionManager: text node selected:', targetNode)
+        this.engine.context.incrementArticleViews(targetNode.articleId || null)
     } else if(targetNode.type === 'input') {
         console.log('InteractionManager: input node selected:', targetNode)
     }

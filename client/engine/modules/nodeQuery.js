@@ -50,4 +50,10 @@ export class NodeQuery {
             node.type === 'text' && node.props?.text === 'Reports To Do'
         )
     }
+
+    getHeaderNode() {
+        return this.getAll().find(node => 
+            node.type === 'header'
+        )
+    }
 }

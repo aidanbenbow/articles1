@@ -12,4 +12,7 @@ export class ArticlesService {
     markArticleAsComplete(articleId) {
         return this.articlesRepo.markArticleAsComplete(articleId);
     }
+   incrementViews(articleId) {
+    return this.articlesRepo.incrementViews(articleId);
+}
 }

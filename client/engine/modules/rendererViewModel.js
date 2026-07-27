@@ -1,6 +1,7 @@
 export function createRendererViewModel( allnodes,state) {
     const inputNodes = allnodes.filter(node => node.type === 'input')
     const buttonNodes = allnodes.filter(node => node.type === 'button')
+    const headerNode = allnodes.find(node => node.type === 'header')
     const textNodes = allnodes.filter(node => node.type === 'text' && node.props?.text !== 'Reports To Do')
     const reportsToDoNode = allnodes.find(node => node.kind === 'reportsToDo')
     
@@ -9,6 +10,7 @@ export function createRendererViewModel( allnodes,state) {
     return {
         inputNodes,
         buttonNodes,
+        headerNode,
         textNodes,
         reportsToDoNode,
         reportsNodes,

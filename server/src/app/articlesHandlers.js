@@ -23,4 +23,15 @@ export function registerArticlesHandlers(app, articlesService) {
             res.status(500).json({ error: 'Failed to mark article as complete' });
         }
     });
+    app.post('/api/articles/:articleId/views', async (req, res) => {
+        const { articleId } = req.params;
+        console.log(`Received request to increment views for article ${articleId}`);
+        try {
+            const updatedArticle = await articlesService.incrementViews(articleId);
+            res.json(updatedArticle);
+        } catch (error) {
+            console.error('Error incrementing views for article:', error);
+            res.status(500).json({ error: 'Failed to increment views for article' });
+        }
+    });
 }

@@ -22,7 +22,7 @@ export class AssetManager {
             img.crossOrigin = "anonymous"
 
             img.onload = () => {
-                console.log(`Image loaded: ${url}`)
+              
                 this.engine.emit('assetLoaded', url)
             }
 

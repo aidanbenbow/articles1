@@ -44,7 +44,7 @@ export class ArticlesRepository {
     }
     const nextArticle = {
       ...existing,
-      completed: false,
+      completed: true,
       updatedAt: Date.now(),
     };
     console.log(`Marking article ${articleId} as complete. Updated article:`, nextArticle);
@@ -77,8 +77,27 @@ export class ArticlesRepository {
       ExclusiveStartKey = result.LastEvaluatedKey;
     } while (ExclusiveStartKey);
 
-    return items.sort((a, b) => (b?.updatedAt ?? 0) - (a?.updatedAt ?? 0));
+   return items.sort((a, b) => {
+    if ((b.views ?? 0) !== (a.views ?? 0)) {
+        return (b.views ?? 0) - (a.views ?? 0);
+    }
+
+    return (b.updatedAt ?? 0) - (a.updatedAt ?? 0);
+});
   }
+
+  async incrementViews(articleId) {
+    const article = await this.fetchArticle(articleId);
+
+    if (!article) {
+        throw new Error(`Article ${articleId} not found`);
+    }
+
+    article.views = (article.views ?? 0) + 1;
+    article.updatedAt = Date.now();
+
+    return this.saveArticle(article);
+}
 
   async deleteArticle(articleId) {
     await this.docClient.send(

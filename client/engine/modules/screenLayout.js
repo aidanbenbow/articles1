@@ -25,7 +25,34 @@ export class ScreenLayout {
         this.layout.layoutNodes = new Map(screenNodes.map(node => [node.id, rect]))
     }
 
+    layoutHeader() {
+        const headerNode = this.layout.nodeQuery.getHeaderNode()
+        if (!headerNode) return
+        const parentLayout = this.layout.layoutNodes.get(headerNode.parentId)
+        if (!parentLayout) return
+
+        const x = parentLayout.x 
+        const worldY = parentLayout.worldY 
+        const {  height, color: colour } = getNodeStyle(headerNode)
+        const width = parentLayout.width 
+
+        const rect = createRect({
+            x,
+            id: headerNode.id,
+            worldY,
+            width,
+            height,
+            color: colour,
+            type: 'header',
+            kind: 'header',
+            text: headerNode.props?.text || ''
+        })
+
+        this.layout.layoutNodes.set(headerNode.id, rect)
+    }
+
     layoutChildren() {
+        this.layoutHeader()
         this.layoutInputs()
         this.layoutButtons()
     }
@@ -36,9 +63,9 @@ export class ScreenLayout {
             const parentLayout = this.layout.layoutNodes.get(node.parentId)
             if (!parentLayout) return
 
-            const x = parentLayout.width/2 - LAYOUT.padding - (index * LAYOUT.inputGap)
-            const worldY = parentLayout.worldY + LAYOUT.marginTop + (index * LAYOUT.inputGap)
             const { width, height, color: colour } = getNodeStyle(node)
+            const x = parentLayout.width - LAYOUT.padding*4 - width
+            const worldY = parentLayout.worldY + LAYOUT.marginTop + (index * LAYOUT.inputGap)
 
             const rect = createRect({
                 x,
