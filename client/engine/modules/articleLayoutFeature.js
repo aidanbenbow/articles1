@@ -1,4 +1,5 @@
 import { getNodeStyle, layoutVerticalList } from "../constants/layoutConstants.js"
+import { parseArticle } from "../constants/layoutParser.js"
 import { matchesOrderedPrefix, normalize } from "./search.js"
 
 export class ArticleLayoutFeature {
@@ -147,39 +148,99 @@ const { width, height, thumbnailSize } = this.getArticleCardSize(node)
         const x = this.layout.width / 8
         const worldY = this.layout.height / 8
         const width = Math.min(this.layout.width * 0.75, 600)
+const color = articleNode?.props?.color || '#ffffff'
+      
 
-        const content =
-            articleNode?.props?.articleData?.content ||
-            articleNode?.props?.articleData?.article ||
-            ''
+            const lesson = parseArticle(articleNode)
 
-        const charsPerLine = Math.floor(width / 8)
-        const lines = Math.ceil(content.length / charsPerLine)
-        const lineHeight = 20
-        const contentHeight = lines * lineHeight + padding * 2
-        const colour = articleNode?.props?.color || '#ffffff'
+console.log(lesson)
+let currentY = worldY 
 
-        const rect = {
-            id: articleNode.id,
+const titleHeight = 50
+
+this.layout.layoutNodes.set(`${articleNode.id}-title`, {
+    id: `${articleNode.id}-title`,
+    x,
+    worldY: currentY,
+    width,
+    height: titleHeight,
+    color,
+    text: lesson.title,
+    kind: 'lessonTitle',
+    type: 'text',
+    padding
+})
+
+currentY += titleHeight + 20
+
+lesson.sections.forEach((section, index) => {
+    if(section.type === 'heading'){
+        const headingHeight = 30
+        const headingRect = {
+            id: `${articleNode.id}-${index}`,
             x,
-            worldY,
+            worldY: currentY,
             width,
-            height: contentHeight,
-            color: colour,
-            selected: true,
-            text: articleNode.props?.title || 'article',
-            content,
-            article: articleNode.props?.articleData || {},
+            height: headingHeight,
+            padding,
+            color: color,
+            selected: false,
+            text: section.text,
             type: 'text',
-            kind: 'article',
-            borderRadius: 12,
-        padding,
-        lineHeight,
-        fontSize: 16,
-        shadow: '0 4px 16px rgba(0,0,0,0.12)'
+            kind: 'lessonSection',
+            sectionType: 'heading'
         }
+        this.layout.layoutNodes.set(headingRect.id, headingRect)
+        currentY += headingHeight + 10
+    } else if(section.type === 'paragraph'){
+        const paragraphHeight = this.measureParagraphText(section.text, width - padding * 2)
+        const paragraphRect = { 
+            id: `${articleNode.id}-${index}`,
+            x,
+            worldY: currentY,
+            width,
+            height: paragraphHeight,
+            padding,
+            color: '#f0f0f0',
+            selected: false,
+            text: section.text,
+            type: 'text',
+            kind: 'lessonSection',
+            sectionType: 'paragraph'
+        }
+        this.layout.layoutNodes.set(paragraphRect.id, paragraphRect)
+        currentY += paragraphHeight + 10
+    }
+})
 
-        this.layout.layoutNodes.set(articleNode.id, rect)
+        // const charsPerLine = Math.floor(width / 8)
+        // const lines = Math.ceil(content.length / charsPerLine)
+        // const lineHeight = 20
+        // const contentHeight = lines * lineHeight + padding * 2
+        // const colour = articleNode?.props?.color || '#ffffff'
+
+        // const rect = {
+        //     id: articleNode.id,
+        //     x,
+        //     worldY,
+        //     width,
+        //     height: contentHeight,
+        //     color: colour,
+        //     selected: true,
+        //     text: articleNode.props?.title || 'article',
+        //     content,
+        //     article: articleNode.props?.articleData || {},
+        //     type: 'text',
+        //     kind: 'article',
+        //     borderRadius: 12,
+        // padding,
+        // lineHeight,
+        // fontSize: 16,
+        // shadow: '0 4px 16px rgba(0,0,0,0.12)'
+        // }
+
+        // this.layout.layoutNodes.set(articleNode.id, rect)
+        const contentHeight = currentY - worldY + 20
         this.layout.scroll.updateBounds(contentHeight)
     }
     getArticleCardSize(node) {
@@ -247,5 +308,9 @@ const height = Math.min(
         lines,
         height: lines * 20
     }
+}
+measureParagraphText(text, width) {
+const {lines} = this.measureArticleText(text, width)
+return lines * 20 + 20
 }
 }

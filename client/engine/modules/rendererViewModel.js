@@ -6,7 +6,9 @@ export function createRendererViewModel( allnodes,state) {
     const reportsToDoNode = allnodes.find(node => node.kind === 'reportsToDo')
     
     const reportsNodes = allnodes.filter(node => node.type === 'text' && node.kind === 'article')
-    const nodeSelected = allnodes.find(node => node.id === state.selectedNodeId)
+    //const nodeSelected = allnodes.find(node => node.id === state.selectedNodeId)
+    const lessonSectionNodes = allnodes.filter(node => node.type === 'text' && node.kind === 'lessonSection')
+    const lessonTitleNodes = allnodes.filter(node => node.type === 'text' && node.kind === 'lessonTitle')
     return {
         inputNodes,
         buttonNodes,
@@ -14,35 +16,8 @@ export function createRendererViewModel( allnodes,state) {
         textNodes,
         reportsToDoNode,
         reportsNodes,
-        nodeSelected,
+        lessonSectionNodes,
+        lessonTitleNodes,
         searchTerm: state.searchTerm,
     }
-}
-
-function getSearchTerm(layout, inputNodeId) {
-    const inputNode = layout.get(inputNodeId)
-    return (inputNode?.text || '').trim().toLowerCase()
-}
-
-function filterReports(reportNodes, searchTerm) {
-    const query = normalize(searchTerm)
-    if (!query) return reportNodes
-    const compactQuery = query.replace(/\s+/g, ' ')
-    return reportNodes.filter(node => {
-        const text = normalize(node.text || '')
-        const initials = getInitials(text)
-        return text.startsWith(query) || initials.startsWith(compactQuery)
-    })
-}
-
-function normalize(value){
-    return String(value).trim().toLowerCase().replace(/\s+/g, ' ')
-}
-
-function getInitials(text) {
-    return text.
-split(' ')
-.filter(Boolean)
-.map(word => word[0])
-.join('')
 }
