@@ -208,39 +208,43 @@ lesson.sections.forEach((section, index) => {
             kind: 'lessonSection',
             sectionType: 'paragraph'
         }
+
         this.layout.layoutNodes.set(paragraphRect.id, paragraphRect)
         currentY += paragraphHeight + 10
-    }
-})
+    }  else if(section.type === 'quiz'){
+            const questionHeight = 30
+const optionHeight = 30
 
-        // const charsPerLine = Math.floor(width / 8)
-        // const lines = Math.ceil(content.length / charsPerLine)
-        // const lineHeight = 20
-        // const contentHeight = lines * lineHeight + padding * 2
-        // const colour = articleNode?.props?.color || '#ffffff'
+const quizHeight =
+    padding * 2 +
+    questionHeight +
+    section.options.length * optionHeight
+            const quizRect = {
+                id: `${articleNode.id}-${index}`,
+                x,
+                worldY: currentY,
+                width,
+                height: quizHeight,
+                padding,
+                color: '#e0e0e0',
+                selected: false,
+                question: section.question,
+                type: 'text',
+                kind: 'lessonSection',
+                sectionType: 'quiz',
+                options: section.options,
+                answer: section.answer,
+                quizId: `${lesson.id}-${index}`
+            }
+            this.layout.layoutNodes.set(quizRect.id, quizRect)
+            currentY += quizHeight + 10
+        }}
+    )
 
-        // const rect = {
-        //     id: articleNode.id,
-        //     x,
-        //     worldY,
-        //     width,
-        //     height: contentHeight,
-        //     color: colour,
-        //     selected: true,
-        //     text: articleNode.props?.title || 'article',
-        //     content,
-        //     article: articleNode.props?.articleData || {},
-        //     type: 'text',
-        //     kind: 'article',
-        //     borderRadius: 12,
-        // padding,
-        // lineHeight,
-        // fontSize: 16,
-        // shadow: '0 4px 16px rgba(0,0,0,0.12)'
-        // }
 
-        // this.layout.layoutNodes.set(articleNode.id, rect)
-        const contentHeight = currentY - worldY + 20
+
+       // const contentHeight = currentY - worldY + 20
+    const contentHeight = this.getContentHeight()
         this.layout.scroll.updateBounds(contentHeight)
     }
     getArticleCardSize(node) {
@@ -282,6 +286,21 @@ const height = Math.min(
         height,
         thumbnailSize
     }
+}
+getContentHeight() {
+
+    let maxBottom = 0
+
+    for (const node of this.layout.layoutNodes.values()) {
+
+        const bottom = node.worldY + node.height
+
+        if (bottom > maxBottom) {
+            maxBottom = bottom
+        }
+    }
+
+    return maxBottom
 }
  measureArticleText(text, width) {
     const ctx = this.layout.engine.context.ctx

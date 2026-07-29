@@ -121,6 +121,10 @@ export function renderLesson(ctx, sections, viewport) {
             case 'paragraph':
                 renderParagraph(ctx, section, viewport)
                 break
+
+            case 'quiz':
+                renderQuiz(ctx, section, viewport)
+                break
         }
 
     }
@@ -163,6 +167,52 @@ function renderParagraph(ctx, node, viewport) {
         22
     )
 }
+
+export function renderQuiz(ctx, node, viewport) {
+    const rect = getScreenRect(node, viewport)
+
+    drawRect(ctx, rect)
+
+    const padding = node.padding || 20
+
+    // Question
+    ctx.fillStyle = '#000'
+    ctx.font = 'bold 18px Arial'
+
+    ctx.fillText(
+        node.question,
+        rect.x + padding,
+        rect.y + padding
+    )
+
+    // Options
+    ctx.font = FONT
+
+    let y = rect.y + padding + 40
+
+    node.options.forEach((option, index) => {
+
+        ctx.beginPath()
+        ctx.arc(
+            rect.x + padding + 8,
+            y + 6,
+            6,
+            0,
+            Math.PI * 2
+        )
+        ctx.stroke()
+
+        ctx.fillText(
+            option,
+            rect.x + padding + 24,
+            y + 12
+        )
+
+        y += 30
+    })
+}
+
+
 
 function drawThumbnail(ctx, rect, assetManager) {
 
