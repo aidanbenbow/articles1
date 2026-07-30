@@ -51,6 +51,13 @@ if(targetNode.sectionType === 'quizOption') {
     return
 }
 
+if(
+    targetNode.kind === 'lessonSection' ||
+    targetNode.kind === 'lessonTitle'
+) {
+    return
+}
+
 if(targetNode.type === 'button') {
     this.state = {
         ...this.state,
