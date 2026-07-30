@@ -7,8 +7,8 @@ export function createRendererViewModel( allnodes,state) {
     
     const reportsNodes = allnodes.filter(node => node.type === 'text' && node.kind === 'article')
     //const nodeSelected = allnodes.find(node => node.id === state.selectedNodeId)
-    const lessonSectionNodes = allnodes.filter(node => node.type === 'text' && node.kind === 'lessonSection')
-    const lessonTitleNodes = allnodes.filter(node => node.type === 'text' && node.kind === 'lessonTitle')
+    const lessonSectionNodes = allnodes.filter(node => node.kind === 'lessonSection')
+    const lessonTitleNodes = allnodes.filter(node =>  node.kind === 'lessonTitle')
     return {
         inputNodes,
         buttonNodes,
@@ -19,5 +19,6 @@ export function createRendererViewModel( allnodes,state) {
         lessonSectionNodes,
         lessonTitleNodes,
         searchTerm: state.searchTerm,
+        quizAnswers: state.quizAnswers,
     }
 }

@@ -153,7 +153,7 @@ const color = articleNode?.props?.color || '#ffffff'
 
             const lesson = parseArticle(articleNode)
 
-console.log(lesson)
+//console.log(lesson)
 let currentY = worldY 
 
 const titleHeight = 50
@@ -229,7 +229,7 @@ const quizHeight =
                 color: '#e0e0e0',
                 selected: false,
                 question: section.question,
-                type: 'text',
+                type: 'quiz',
                 kind: 'lessonSection',
                 sectionType: 'quiz',
                 options: section.options,
@@ -238,10 +238,29 @@ const quizHeight =
             }
             this.layout.layoutNodes.set(quizRect.id, quizRect)
             currentY += quizHeight + 10
+
+            for (let i = 0; i < section.options.length; i++) {
+                const optionRect = {
+                    id: `${articleNode.id}-${index}-option-${i}`,
+                    x: x + padding,
+                    worldY: currentY - quizHeight + padding + questionHeight + i * optionHeight,
+                    width: width - padding * 2,
+                    height: optionHeight,
+                    padding,
+                    color: '#d0d0d0',
+                    selected: false,
+                    text: section.options[i],
+                    type: 'text',
+                    kind: 'lessonSection',
+                    sectionType: 'quizOption',
+                    quizId: `${lesson.id}-${index}`,
+                    optionIndex: i,
+                    answer: section.answer
+                }
+                this.layout.layoutNodes.set(optionRect.id, optionRect)
+            }
         }}
     )
-
-
 
        // const contentHeight = currentY - worldY + 20
     const contentHeight = this.getContentHeight()

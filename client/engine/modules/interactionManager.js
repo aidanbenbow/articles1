@@ -31,8 +31,24 @@ if(targetNode.type === 'input') {
     this.state = {
         ...this.state,
         view: 'list',
-        focusedNodeId: targetNode.id
+        focusedNodeId: targetNode.id,
+
+        quizAnswers: {}
     }
+}
+
+if(targetNode.sectionType === 'quizOption') {
+    
+    this.state = {
+        ...this.state,
+        quizAnswers: {
+            ...this.state.quizAnswers,
+            [targetNode.quizId]: targetNode.optionIndex
+        }
+    }
+    console.log(this.state)
+    this.engine.emit('layoutChanged', { layout: this.engine.context.getLayout().layoutNodes })
+    return
 }
 
 if(targetNode.type === 'button') {

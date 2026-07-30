@@ -52,18 +52,11 @@ const viewport = this.engine.context.getViewport()
         }
 
         if (view.lessonSectionNodes.length) {
-    renderLesson(this.ctx, view.lessonSectionNodes, viewport)
+    renderLesson(this.ctx, view.lessonSectionNodes, viewport, viewState.quizAnswers)
 } else {
     renderReports(this.ctx, view.reportsNodes, viewport, assetManager)
 }
        
-        // if(view.nodeSelected) {
-            
-        //   renderArticle(this.ctx, view.nodeSelected, viewport)
-        // } else {
-        //    // console.log('Rendering reports:', view.reportsNodes)
-        //     renderReports(this.ctx, view.reportsNodes, viewport, assetManager)
-        // }
 
         renderHeader(this.ctx, view.headerNode, viewport)
         renderInputBoxes(this.ctx, view.inputNodes, viewport, viewState.searchTerm)

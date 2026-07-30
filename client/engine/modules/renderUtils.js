@@ -108,7 +108,7 @@ export function renderReports(ctx, nodes, viewport, assetManager) {
     })
 }
 
-export function renderLesson(ctx, sections, viewport) {
+export function renderLesson(ctx, sections, viewport, answers) {
 
     for (const section of sections) {
 
@@ -124,6 +124,9 @@ export function renderLesson(ctx, sections, viewport) {
 
             case 'quiz':
                 renderQuiz(ctx, section, viewport)
+                break
+            case 'quizOption':
+                renderQuizOption(ctx, section, viewport, answers)
                 break
         }
 
@@ -175,7 +178,6 @@ export function renderQuiz(ctx, node, viewport) {
 
     const padding = node.padding || 20
 
-    // Question
     ctx.fillStyle = '#000'
     ctx.font = 'bold 18px Arial'
 
@@ -184,34 +186,68 @@ export function renderQuiz(ctx, node, viewport) {
         rect.x + padding,
         rect.y + padding
     )
+}
+export function renderQuizOption(ctx, node, viewport, answers) {
+    const rect = getScreenRect(node, viewport)
 
-    // Options
-    ctx.font = FONT
+    const selectedIndex = answers?.[node.quizId]
+    const isSelected = selectedIndex === node.optionIndex
+    const isCorrect = node.optionIndex === node.answer
 
-    let y = rect.y + padding + 40
+    // Background
+    if (isSelected) {
+        ctx.fillStyle = isCorrect ? '#b8f5b8' : '#f5b8b8'
+    } else {
+        ctx.fillStyle = '#d0d0d0'
+    }
 
-    node.options.forEach((option, index) => {
+    drawRect(ctx, {
+        ...rect,
+        color: ctx.fillStyle
+    })
 
+    // Radio button
+    ctx.beginPath()
+    ctx.arc(
+        rect.x + 12,
+        rect.y + rect.height / 2,
+        6,
+        0,
+        Math.PI * 2
+    )
+    ctx.stroke()
+
+    if (isSelected) {
         ctx.beginPath()
         ctx.arc(
-            rect.x + padding + 8,
-            y + 6,
-            6,
+            rect.x + 12,
+            rect.y + rect.height / 2,
+            3,
             0,
             Math.PI * 2
         )
-        ctx.stroke()
+        ctx.fill()
+    }
 
+    // Text
+    ctx.fillStyle = '#000'
+    ctx.font = FONT
+
+    ctx.fillText(
+        node.text,
+        rect.x + 28,
+        rect.y + rect.height / 2 + 5
+    )
+
+    // Optional ✓ or ✗
+    if (isSelected) {
         ctx.fillText(
-            option,
-            rect.x + padding + 24,
-            y + 12
+            isCorrect ? '✓' : '✗',
+            rect.x + rect.width - 25,
+            rect.y + rect.height / 2 + 5
         )
-
-        y += 30
-    })
+    }
 }
-
 
 
 function drawThumbnail(ctx, rect, assetManager) {
