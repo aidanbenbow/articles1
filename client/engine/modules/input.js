@@ -8,6 +8,9 @@ export class Input {
             target: null,
             x: 0,
             y: 0,
+            startX: 0,
+startY: 0,
+moved: false,
         }
         this.selectedNode = null
         this.interaction = null
@@ -30,33 +33,64 @@ attach() {
             window.removeEventListener('keydown', this._onKeyDown)
         }
     }
-    _onPointerDown = (event) => {
+  _onPointerDown = (event) => {
 
-    const {x,y} =
-        this._normalisePointerEvent(event)
+    const {x,y} = this._normalisePointerEvent(event)
 
+    const layoutNodes = this.engine.context.getLayout()
 
-    const layoutNodes =
-        this.engine.context.getLayout()
-
-
-    const targetNode =
-        this.hitTest(
-            layoutNodes,
-            x,
-            y
-        )
-
-
-    this.pointerState = {
-        isDown:true,
-        target:targetNode,
+    const targetNode = this.hitTest(
+        layoutNodes,
         x,
         y
+    )
+
+    this.pointerState = {
+        isDown: true,
+        target: targetNode,
+        x,
+        y,
+        startX: x,
+        startY: y,
+        moved: false
+    }
+}
+
+_onPointerMove = (event) => {
+
+    if (!this.pointerState.isDown) return
+
+    const {x,y} = this._normalisePointerEvent(event)
+
+    const dx = x - this.pointerState.startX
+    const dy = y - this.pointerState.startY
+
+    if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+        this.pointerState.moved = true
+    }
+}
+_onPointerUp = () => {
+
+    if (!this.pointerState.isDown) return
+
+    if (
+        !this.pointerState.moved &&
+        this.pointerState.target
+    ) {
+        this.interaction.handleTargetNode(
+            this.pointerState.target
+        )
     }
 
-console.log('Input: pointer down at', x, y, 'targetNode:', targetNode?.id)
-    this.interaction.handleTargetNode(targetNode)
+    this.pointerState = {
+        isDown:false,
+        target:null,
+        x:0,
+        y:0,
+        startX:0,
+        startY:0,
+        moved:false
+    }
 }
 
     _onKeyDown = (event) => {
