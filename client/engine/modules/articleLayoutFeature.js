@@ -125,7 +125,7 @@ const { width, height, thumbnailSize } = this.getArticleCardSize(node)
                     text: node.props?.title || 'article',
                     content: node.props?.articleData?.content || '',
                    
-                   excerpt: node.props?.articleData?.content?.substring(0, 100) || ''
+                   excerpt: node.props?.articleData?.excerpt || ''
                    || node.props?.articleData?.article?.substring(0, 100) || '',
                     type: 'text',
                     kind: 'article',
@@ -259,7 +259,54 @@ const quizHeight =
                 }
                 this.layout.layoutNodes.set(optionRect.id, optionRect)
             }
-        }}
+        } else if(section.type === 'survey'){
+            const surveyHeight =
+                padding * 2 +
+                30 + // question height
+                section.options.length * 30 // option height
+
+            const surveyRect = {
+                id: `${articleNode.id}-${index}`,
+                x,
+                worldY: currentY,
+                width,
+                height: surveyHeight,
+                padding,
+                color: '#e0e0e0',
+                selected: false,
+                question: section.question,
+                type: 'survey',
+                surveyType: section.surveyType,
+                kind: 'lessonSection',
+                sectionType: 'survey',
+                options: section.options,
+                surveyId: `${lesson.id}-${index}`
+            }
+            this.layout.layoutNodes.set(surveyRect.id, surveyRect)
+            currentY += surveyHeight + 10
+
+            for (let i = 0; i < section.options.length; i++) {
+                const optionRect = {
+                    id: `${articleNode.id}-${index}-option-${i}`,
+                    x: x + padding,
+                    worldY: currentY - surveyHeight + padding + 30 + i * 30,
+                    width: width - padding * 2,
+                    height: 30,
+                    padding,
+                    color: '#d0d0d0',
+                    selected: false,
+                    text: section.options[i],
+                    type: 'text',
+                    kind: 'lessonSection',
+                    sectionType: 'surveyOption',
+                    surveyId: `${lesson.id}-${index}`,
+                    optionIndex: i
+                }
+                this.layout.layoutNodes.set(optionRect.id, optionRect)
+            }
+
+        }
+    }
     )
 
        // const contentHeight = currentY - worldY + 20

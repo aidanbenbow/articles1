@@ -121,7 +121,9 @@ _normalisePointerEvent(event) {
 
       const nodeY =
     (node.worldY ?? node.y ?? 0) - viewport.y
-if(node.kind === 'screen' || node.kind === 'header' || node.sectionType === 'quiz') continue
+if(node.kind === 'screen' || node.kind === 'header' || node.sectionType === 'quiz'
+    || node.sectionType === 'survey'
+) continue
 
         if(
             x >= node.x &&

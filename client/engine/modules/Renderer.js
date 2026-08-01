@@ -52,7 +52,7 @@ const viewport = this.engine.context.getViewport()
         }
 
         if (view.lessonSectionNodes.length) {
-    renderLesson(this.ctx, view.lessonSectionNodes, viewport, viewState.quizAnswers)
+    renderLesson(this.ctx, view.lessonSectionNodes, viewport, viewState)
 } else {
     renderReports(this.ctx, view.reportsNodes, viewport, assetManager)
 }

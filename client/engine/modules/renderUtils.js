@@ -126,12 +126,85 @@ export function renderLesson(ctx, sections, viewport, answers) {
                 renderQuiz(ctx, section, viewport)
                 break
             case 'quizOption':
-                renderQuizOption(ctx, section, viewport, answers)
+                renderQuizOption(ctx, section, viewport, answers.quizAnswers)
                 break
+                case 'survey':
+    renderSurvey(ctx, section, viewport, answers.surveyResponses)
+    break
+    case 'surveyOption':
+    renderSurveyOption(ctx, section, viewport, answers.surveyResponses)
+    break
         }
 
     }
 }
+
+export function renderSurvey(ctx, section, viewport, responses) {
+
+    switch (section.surveyType) {
+
+        case 'single':
+            renderSurveySingleChoice(ctx, section, viewport, responses)
+            break
+
+        // case 'multiple':
+        //     renderSurveyMultipleChoice(ctx, section, viewport, responses)
+        //     break
+
+        // case 'rating':
+        //     renderSurveyRating(ctx, section, viewport, responses)
+        //     break
+
+        // case 'text':
+        //     renderSurveyText(ctx, section, viewport, responses)
+        //     break
+    }
+
+}
+
+export function renderSurveySingleChoice(ctx, section, viewport, responses) {
+
+    const rect = getScreenRect(section, viewport)
+
+    drawRect(ctx, rect, { showSelection: true })
+
+    drawTextBlock(
+        ctx,
+        section.question,
+        rect.x + 20,
+        rect.y + 20,
+        rect.width - 40,
+        22
+    )
+
+}
+
+export function renderSurveyOption(ctx, section, viewport, responses) {
+
+    const rect = getScreenRect(section, viewport)
+
+    const selected =
+        responses?.[section.surveyId] === section.optionIndex
+
+        if(selected) {
+            ctx.fillStyle = '#b8f5b8'
+        } else {
+            ctx.fillStyle = '#d0d0d0'
+        }
+
+    drawRect(ctx, { ...rect, color: ctx.fillStyle })
+ctx.fillStyle = '#000'
+    drawTextBlock(
+        ctx,
+        section.text,
+        rect.x + 10,
+        rect.y ,
+        rect.width - 20,
+        20
+    )
+}
+
+
 
 export function renderLessonTitle(ctx, node, viewport) {
     const rect = getScreenRect(node, viewport)
@@ -141,7 +214,7 @@ export function renderLessonTitle(ctx, node, viewport) {
     ctx.fillText(
         node.text || 'Lesson Title',
         rect.x + 20,
-        rect.y + 20
+        rect.y + 10
     )
 }
 
@@ -152,8 +225,8 @@ function renderHeading(ctx, node, viewport) {
     ctx.font = 'bold 24px Arial'
     ctx.fillText(
         node.text,
-        rect.x,
-        rect.y
+        rect.x + 15,
+        rect.y + 20
     )
 }
 

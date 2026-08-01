@@ -9,6 +9,8 @@ export class InteractionManager {
             selectedNodeId: null,
             searchTerm: '',
             focusedNodeId: null,
+             quizAnswers: {},
+    surveyResponses: {}
         }
     }
 
@@ -33,8 +35,25 @@ if(targetNode.type === 'input') {
         view: 'list',
         focusedNodeId: targetNode.id,
 
-        quizAnswers: {}
     }
+}
+
+if (targetNode.sectionType === 'surveyOption') {
+console.log('InteractionManager: survey option selected:', targetNode)
+    this.state = {
+        ...this.state,
+        surveyResponses: {
+            ...this.state.surveyResponses,
+            [targetNode.surveyId]: targetNode.optionIndex
+        }
+    }
+
+    this.engine.emit(
+        'layoutChanged',
+        { layout: this.engine.context.getLayout().layoutNodes }
+    )
+
+    return
 }
 
 if(targetNode.sectionType === 'quizOption') {

@@ -27,6 +27,17 @@ export function parseArticle(article) {
         continue
     }
 
+    if (text === ':::survey') {
+    flushParagraph()
+
+    const { survey, nextIndex } = parseSurvey(lines, i)
+
+    sections.push(survey)
+
+    i = nextIndex
+    continue
+}
+
     if (text === ':::quiz') {
         flushParagraph()
 
@@ -58,6 +69,40 @@ export function parseArticle(article) {
         id: article?.props?.articleData?.articleId || null,
         title: article?.props?.articleData?.title || '',
         sections
+    }
+}
+
+function parseSurvey(lines, startIndex) {
+    const survey = {
+        type: 'survey',
+        question: '',
+        surveyType: 'single',
+        options: []
+    }
+
+    let i = startIndex + 1
+
+    while (i < lines.length) {
+        const line = lines[i].trim()
+
+        if (line === ':::') break
+
+        if (line.startsWith('question:')) {
+            survey.question = line.substring(9).trim()
+        }
+        else if (line.startsWith('type:')) {
+            survey.surveyType = line.substring(5).trim()
+        }
+        else if (line.startsWith('- ')) {
+            survey.options.push(line.substring(2).trim())
+        }
+
+        i++
+    }
+
+    return {
+        survey,
+        nextIndex: i
     }
 }
 
