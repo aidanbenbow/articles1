@@ -10,7 +10,8 @@ export class InteractionManager {
             searchTerm: '',
             focusedNodeId: null,
              quizAnswers: {},
-    surveyResponses: {}
+    surveyResponses: {},
+    surveyResults: {}
         }
     }
 
@@ -39,21 +40,8 @@ if(targetNode.type === 'input') {
 }
 
 if (targetNode.sectionType === 'surveyOption') {
-console.log('InteractionManager: survey option selected:', targetNode)
-    this.state = {
-        ...this.state,
-        surveyResponses: {
-            ...this.state.surveyResponses,
-            [targetNode.surveyId]: targetNode.optionIndex
-        }
-    }
-
-    this.engine.emit(
-        'layoutChanged',
-        { layout: this.engine.context.getLayout().layoutNodes }
-    )
-
-    return
+this.handleSurveyOption(targetNode)
+return
 }
 
 if(targetNode.sectionType === 'quizOption') {
@@ -142,4 +130,40 @@ appendSearchTerm(char) {
             term
         )
     }
+    handleSurveyOption(targetNode) {
+
+    const surveyId = targetNode.surveyId
+    const optionIndex = targetNode.optionIndex
+
+    const currentResults =
+        this.state.surveyResults[surveyId] || {}
+
+    this.state = {
+        ...this.state,
+
+        surveyResponses: {
+            ...this.state.surveyResponses,
+            [surveyId]: optionIndex
+        },
+
+        surveyResults: {
+            ...this.state.surveyResults,
+
+            [surveyId]: {
+                ...currentResults,
+
+                [optionIndex]:
+                    (currentResults[optionIndex] || 0) + 1
+            }
+        }
+    }
+
+    this.emitLayoutChanged()
+}
+emitLayoutChanged() {
+    this.engine.emit(
+        'layoutChanged',
+        { layout: this.engine.context.getLayout().layoutNodes }
+    )
+}
 }

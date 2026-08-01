@@ -132,7 +132,7 @@ export function renderLesson(ctx, sections, viewport, answers) {
     renderSurvey(ctx, section, viewport, answers.surveyResponses)
     break
     case 'surveyOption':
-    renderSurveyOption(ctx, section, viewport, answers.surveyResponses)
+    renderSurveyOption(ctx, section, viewport, answers.surveyResponses, answers.surveyResults)
     break
         }
 
@@ -179,26 +179,42 @@ export function renderSurveySingleChoice(ctx, section, viewport, responses) {
 
 }
 
-export function renderSurveyOption(ctx, section, viewport, responses) {
-
+export function renderSurveyOption(ctx, section, viewport, responses, results) {
+console.log('renderSurveyOption', section, responses, results)
     const rect = getScreenRect(section, viewport)
 
     const selected =
         responses?.[section.surveyId] === section.optionIndex
+        const surveyResults = results?.[section.surveyId] || {} 
 
-        if(selected) {
-            ctx.fillStyle = '#b8f5b8'
-        } else {
-            ctx.fillStyle = '#d0d0d0'
-        }
+       const total =
+        Object.values(surveyResults)
+            .reduce((a,b)=>a+b,0)
 
-    drawRect(ctx, { ...rect, color: ctx.fillStyle })
-ctx.fillStyle = '#000'
+
+    const votes =
+        surveyResults[section.optionIndex] || 0
+
+
+    const percentage =
+        total > 0
+            ? Math.round((votes / total) * 100)
+            : 0
+
+
+    drawRect(ctx, {
+        ...rect,
+        color: selected
+            ? '#b8f5b8'
+            : '#d0d0d0'
+    })
+
+
     drawTextBlock(
         ctx,
-        section.text,
+        `${section.text}   ${percentage}%`,
         rect.x + 10,
-        rect.y ,
+        rect.y + 5,
         rect.width - 20,
         20
     )
