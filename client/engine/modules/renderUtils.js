@@ -126,7 +126,7 @@ export function renderLesson(ctx, sections, viewport, answers) {
                 renderQuiz(ctx, section, viewport)
                 break
             case 'quizOption':
-                renderQuizOption(ctx, section, viewport, answers.quizAnswers)
+                renderQuizOption(ctx, section, viewport, answers.quizAnswers, answers.quizResults)
                 break
                 case 'survey':
     renderSurvey(ctx, section, viewport, answers.surveyResponses, answers.surveyResults)
@@ -317,26 +317,47 @@ export function renderQuiz(ctx, node, viewport) {
         rect.y + padding
     )
 }
-export function renderQuizOption(ctx, node, viewport, answers) {
+export function renderQuizOption(ctx, node, viewport, answers, results) {
+
     const rect = getScreenRect(node, viewport)
 
     const selectedIndex = answers?.[node.quizId]
-    const isSelected = selectedIndex === node.optionIndex
-    const isCorrect = node.optionIndex === node.answer
 
-    // Background
-    if (isSelected) {
-        ctx.fillStyle = isCorrect ? '#b8f5b8' : '#f5b8b8'
-    } else {
-        ctx.fillStyle = '#d0d0d0'
+    const result = results?.[node.quizId]
+
+    const isSelected =
+        selectedIndex === node.optionIndex
+
+    const showResult =
+        Boolean(result)
+
+    const isCorrect =
+        node.optionIndex === node.answer
+
+
+    let color = '#d0d0d0'
+
+
+    if (showResult) {
+
+        if (isCorrect) {
+            color = '#b8f5b8'
+        }
+
+        if (isSelected && !isCorrect) {
+            color = '#f5b8b8'
+        }
+
     }
+
 
     drawRect(ctx, {
         ...rect,
-        color: ctx.fillStyle
+        color
     })
 
-    // Radio button
+
+    // radio
     ctx.beginPath()
     ctx.arc(
         rect.x + 12,
@@ -347,7 +368,9 @@ export function renderQuizOption(ctx, node, viewport, answers) {
     )
     ctx.stroke()
 
+
     if (isSelected) {
+
         ctx.beginPath()
         ctx.arc(
             rect.x + 12,
@@ -357,9 +380,11 @@ export function renderQuizOption(ctx, node, viewport, answers) {
             Math.PI * 2
         )
         ctx.fill()
+
     }
 
-    // Text
+
+    // text
     ctx.fillStyle = '#000'
     ctx.font = FONT
 
@@ -369,13 +394,29 @@ export function renderQuizOption(ctx, node, viewport, answers) {
         rect.y + rect.height / 2 + 5
     )
 
-    // Optional ✓ or ✗
-    if (isSelected) {
-        ctx.fillText(
-            isCorrect ? '✓' : '✗',
-            rect.x + rect.width - 25,
-            rect.y + rect.height / 2 + 5
-        )
+
+    // result marker
+    if(showResult) {
+
+        if(isCorrect) {
+
+            ctx.fillText(
+                '✓',
+                rect.x + rect.width - 25,
+                rect.y + rect.height / 2 + 5
+            )
+
+        }
+
+        if(isSelected && !result.correct) {
+
+            ctx.fillText(
+                '✗',
+                rect.x + rect.width - 25,
+                rect.y + rect.height / 2 + 5
+            )
+
+        }
     }
 }
 

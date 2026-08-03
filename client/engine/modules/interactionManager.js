@@ -10,6 +10,7 @@ export class InteractionManager {
             searchTerm: '',
             focusedNodeId: null,
              quizAnswers: {},
+             quizResults: {},
     surveyResponses: {},
     surveyResults: {}
    
@@ -46,17 +47,9 @@ return
 }
 
 if(targetNode.sectionType === 'quizOption') {
-    
-    this.state = {
-        ...this.state,
-        quizAnswers: {
-            ...this.state.quizAnswers,
-            [targetNode.quizId]: targetNode.optionIndex
-        }
-    }
-    console.log(this.state)
-    this.engine.emit('layoutChanged', { layout: this.engine.context.getLayout().layoutNodes })
-    return
+    console.log('InteractionManager: quiz option selected:', targetNode)
+   this.handleQuizOption(targetNode)
+   return
 }
 
 if(
@@ -131,6 +124,34 @@ appendSearchTerm(char) {
             term
         )
     }
+handleQuizOption(targetNode) {
+    const correct =
+        targetNode.optionIndex === targetNode.answer
+
+
+    this.state = {
+        ...this.state,
+
+        quizAnswers: {
+            ...this.state.quizAnswers,
+            [targetNode.quizId]: targetNode.optionIndex
+        },
+
+        quizResults: {
+            ...this.state.quizResults,
+
+            [targetNode.quizId]: {
+                selected: targetNode.optionIndex,
+                correct
+            }
+        }
+    }
+
+
+    this.emitLayoutChanged()
+    return
+}
+
    async handleSurveyOption(targetNode) {
 
     const { surveyId, optionIndex } = targetNode
