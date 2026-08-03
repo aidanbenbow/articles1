@@ -126,7 +126,7 @@ export function renderLesson(ctx, sections, viewport, answers) {
                 renderQuiz(ctx, section, viewport)
                 break
             case 'quizOption':
-                renderQuizOption(ctx, section, viewport, answers.quizAnswers, answers.quizResults)
+                renderQuizOption(ctx, section, viewport, answers.quizAnswers)
                 break
                 case 'survey':
     renderSurvey(ctx, section, viewport, answers.surveyResponses, answers.surveyResults)
@@ -317,28 +317,21 @@ export function renderQuiz(ctx, node, viewport) {
         rect.y + padding
     )
 }
-export function renderQuizOption(ctx, node, viewport, answers, results) {
+export function renderQuizOption(ctx, node, viewport, answers) {
 
     const rect = getScreenRect(node, viewport)
 
-    const selectedIndex = answers?.[node.quizId]
+    const answer = answers?.[node.quizId]
 
-    const result = results?.[node.quizId]
-
-    const isSelected =
-        selectedIndex === node.optionIndex
-
-    const showResult =
-        Boolean(result)
-
-    const isCorrect =
-        node.optionIndex === node.answer
+const answered = !!answer
+const isSelected = answer?.selected === node.optionIndex
+const isCorrect = node.optionIndex === node.answer
 
 
     let color = '#d0d0d0'
 
 
-    if (showResult) {
+    if (answered) {
 
         if (isCorrect) {
             color = '#b8f5b8'
@@ -396,7 +389,7 @@ export function renderQuizOption(ctx, node, viewport, answers, results) {
 
 
     // result marker
-    if(showResult) {
+    if(answered) {
 
         if(isCorrect) {
 
@@ -408,7 +401,7 @@ export function renderQuizOption(ctx, node, viewport, answers, results) {
 
         }
 
-        if(isSelected && !result.correct) {
+        if(isSelected && !isCorrect) {
 
             ctx.fillText(
                 '✗',

@@ -10,7 +10,7 @@ export class InteractionManager {
             searchTerm: '',
             focusedNodeId: null,
              quizAnswers: {},
-             quizResults: {},
+             quizScore: 0,
     surveyResponses: {},
     surveyResults: {}
    
@@ -125,31 +125,32 @@ appendSearchTerm(char) {
         )
     }
 handleQuizOption(targetNode) {
-    const correct =
-        targetNode.optionIndex === targetNode.answer
 
+    const { quizId, optionIndex, answer } = targetNode
+
+   if (quizId in this.state.quizAnswers) {
+    return
+}
+
+    const correct = optionIndex === answer
 
     this.state = {
         ...this.state,
 
         quizAnswers: {
             ...this.state.quizAnswers,
-            [targetNode.quizId]: targetNode.optionIndex
-        },
 
-        quizResults: {
-            ...this.state.quizResults,
-
-            [targetNode.quizId]: {
-                selected: targetNode.optionIndex,
+            [quizId]: {
+                selected: optionIndex,
                 correct
             }
-        }
+        },
+
+        quizScore:
+            this.state.quizScore + (correct ? 1 : 0)
     }
 
-
     this.emitLayoutChanged()
-    return
 }
 
    async handleSurveyOption(targetNode) {
