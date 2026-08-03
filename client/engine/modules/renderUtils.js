@@ -129,7 +129,7 @@ export function renderLesson(ctx, sections, viewport, answers) {
                 renderQuizOption(ctx, section, viewport, answers.quizAnswers)
                 break
                 case 'survey':
-    renderSurvey(ctx, section, viewport, answers.surveyResponses)
+    renderSurvey(ctx, section, viewport, answers.surveyResponses, answers.surveyResults)
     break
     case 'surveyOption':
     renderSurveyOption(ctx, section, viewport, answers.surveyResponses, answers.surveyResults)
@@ -139,12 +139,12 @@ export function renderLesson(ctx, sections, viewport, answers) {
     }
 }
 
-export function renderSurvey(ctx, section, viewport, responses) {
+export function renderSurvey(ctx, section, viewport, responses, results) {
 
     switch (section.surveyType) {
 
         case 'single':
-            renderSurveySingleChoice(ctx, section, viewport, responses)
+            renderSurveySingleChoice(ctx, section, viewport, responses,results)
             break
 
         // case 'multiple':
@@ -162,11 +162,29 @@ export function renderSurvey(ctx, section, viewport, responses) {
 
 }
 
-export function renderSurveySingleChoice(ctx, section, viewport, responses) {
+export function renderSurveySingleChoice(
+    ctx,
+    section,
+    viewport,
+    responses,
+    results
+) {
 
     const rect = getScreenRect(section, viewport)
 
-    drawRect(ctx, rect, { showSelection: true })
+
+    const survey =
+        results?.[section.surveyId] || {}
+
+
+    const total =
+        survey.totalResponses || 0
+
+
+    drawRect(ctx, rect, {
+        showSelection: true
+    })
+
 
     drawTextBlock(
         ctx,
@@ -177,19 +195,42 @@ export function renderSurveySingleChoice(ctx, section, viewport, responses) {
         22
     )
 
+
+    drawTextBlock(
+        ctx,
+        `${total} responses`,
+        rect.x + 20,
+        rect.y + 45,
+        rect.width - 40,
+        16
+    )
 }
 
-export function renderSurveyOption(ctx, section, viewport, responses, results) {
-console.log('renderSurveyOption', section, responses, results)
+export function renderSurveyOption(
+    ctx,
+    section,
+    viewport,
+    responses,
+    results
+) {
+
     const rect = getScreenRect(section, viewport)
+
 
     const selected =
         responses?.[section.surveyId] === section.optionIndex
-        const surveyResults = results?.[section.surveyId] || {} 
 
-       const total =
-        Object.values(surveyResults)
-            .reduce((a,b)=>a+b,0)
+
+    const survey =
+        results?.[section.surveyId] || {}
+
+
+    const surveyResults =
+        survey.responses || {}
+
+
+    const total =
+        survey.totalResponses || 0
 
 
     const votes =

@@ -12,6 +12,7 @@ export class InteractionManager {
              quizAnswers: {},
     surveyResponses: {},
     surveyResults: {}
+   
         }
     }
 
@@ -26,7 +27,7 @@ export class InteractionManager {
     }
 
 
-    handleTargetNode(targetNode) {
+    async handleTargetNode(targetNode) {
 
         if(!targetNode) return
 
@@ -40,7 +41,7 @@ if(targetNode.type === 'input') {
 }
 
 if (targetNode.sectionType === 'surveyOption') {
-this.handleSurveyOption(targetNode)
+ await this.handleSurveyOption(targetNode)
 return
 }
 
@@ -130,33 +131,40 @@ appendSearchTerm(char) {
             term
         )
     }
-    handleSurveyOption(targetNode) {
+   async handleSurveyOption(targetNode) {
 
-    const surveyId = targetNode.surveyId
-    const optionIndex = targetNode.optionIndex
+    const { surveyId, optionIndex } = targetNode
 
-    const currentResults =
-        this.state.surveyResults[surveyId] || {}
 
+    // store this user's selection
     this.state = {
         ...this.state,
 
         surveyResponses: {
             ...this.state.surveyResponses,
             [surveyId]: optionIndex
-        },
+        }
+    }
+
+
+    const updatedResults =
+        await this.engine.context.recordSurveyResponse(
+            surveyId,
+            optionIndex
+        )
+
+
+    // update the cached results used by renderer
+    this.state = {
+        ...this.state,
 
         surveyResults: {
             ...this.state.surveyResults,
 
-            [surveyId]: {
-                ...currentResults,
-
-                [optionIndex]:
-                    (currentResults[optionIndex] || 0) + 1
-            }
+            [surveyId]: updatedResults
         }
     }
+
 
     this.emitLayoutChanged()
 }

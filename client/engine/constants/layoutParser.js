@@ -73,8 +73,10 @@ export function parseArticle(article) {
 }
 
 function parseSurvey(lines, startIndex) {
+
     const survey = {
         type: 'survey',
+        surveyId: '',
         question: '',
         surveyType: 'single',
         options: []
@@ -83,11 +85,15 @@ function parseSurvey(lines, startIndex) {
     let i = startIndex + 1
 
     while (i < lines.length) {
+
         const line = lines[i].trim()
 
         if (line === ':::') break
 
-        if (line.startsWith('question:')) {
+        if (line.startsWith('id:')) {
+            survey.surveyId = line.substring(3).trim()
+        }
+        else if (line.startsWith('question:')) {
             survey.question = line.substring(9).trim()
         }
         else if (line.startsWith('type:')) {

@@ -46,6 +46,7 @@ const viewport = this.engine.context.getViewport()
         const assetManager = this.engine.context.getAssetManager()
         
         const view = createRendererViewModel(allNodes, viewState)
+        
 
         if(view.lessonTitleNodes.length) {
             renderLessonTitle(this.ctx, view.lessonTitleNodes[0], viewport)

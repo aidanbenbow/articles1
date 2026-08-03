@@ -21,6 +21,7 @@ export function createRendererViewModel( allnodes,state) {
         searchTerm: state.searchTerm,
         quizAnswers: state.quizAnswers,
         surveyResponses: state.surveyResponses,
-        surveyResults: state.surveyResults
+        surveyResults: state.surveyResults,
+       
     }
 }

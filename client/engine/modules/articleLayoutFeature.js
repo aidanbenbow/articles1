@@ -260,10 +260,15 @@ const quizHeight =
                 this.layout.layoutNodes.set(optionRect.id, optionRect)
             }
         } else if(section.type === 'survey'){
-            const surveyHeight =
-                padding * 2 +
-                30 + // question height
-                section.options.length * 30 // option height
+            const questionHeight = 30
+const responseHeight = 20
+const optionHeight = 30
+
+const surveyHeight =
+    padding * 2 +
+    questionHeight +
+    responseHeight +
+    section.options.length * optionHeight
 
             const surveyRect = {
                 id: `${articleNode.id}-${index}`,
@@ -280,7 +285,7 @@ const quizHeight =
                 kind: 'lessonSection',
                 sectionType: 'survey',
                 options: section.options,
-                surveyId: `${lesson.id}-${index}`
+                surveyId: section.surveyId
             }
             this.layout.layoutNodes.set(surveyRect.id, surveyRect)
             currentY += surveyHeight + 10
@@ -289,9 +294,15 @@ const quizHeight =
                 const optionRect = {
                     id: `${articleNode.id}-${index}-option-${i}`,
                     x: x + padding,
-                    worldY: currentY - surveyHeight + padding + 30 + i * 30,
-                    width: width - padding * 2,
-                    height: 30,
+                    worldY:
+    currentY -
+    surveyHeight +
+    padding +
+    questionHeight +
+    responseHeight +
+    i * optionHeight,    
+    width: width - padding * 2,                
+                    height: optionHeight,
                     padding,
                     color: '#d0d0d0',
                     selected: false,
@@ -299,7 +310,7 @@ const quizHeight =
                     type: 'text',
                     kind: 'lessonSection',
                     sectionType: 'surveyOption',
-                    surveyId: `${lesson.id}-${index}`,
+                    surveyId: section.surveyId,
                     optionIndex: i
                 }
                 this.layout.layoutNodes.set(optionRect.id, optionRect)
