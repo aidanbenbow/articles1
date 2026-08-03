@@ -123,7 +123,7 @@ export function renderLesson(ctx, sections, viewport, answers) {
                 break
 
             case 'quiz':
-                renderQuiz(ctx, section, viewport)
+                renderQuiz(ctx, section, viewport, answers.quizAnswers, answers.quizScore)
                 break
             case 'quizOption':
                 renderQuizOption(ctx, section, viewport, answers.quizAnswers)
@@ -255,7 +255,7 @@ export function renderSurveyOption(
         ctx,
         `${section.text}   ${percentage}%`,
         rect.x + 10,
-        rect.y + 5,
+        rect.y ,
         rect.width - 20,
         20
     )
@@ -301,7 +301,7 @@ function renderParagraph(ctx, node, viewport) {
     )
 }
 
-export function renderQuiz(ctx, node, viewport) {
+export function renderQuiz(ctx, node, viewport, answers, quizScore) {
     const rect = getScreenRect(node, viewport)
 
     drawRect(ctx, rect)
@@ -316,6 +316,28 @@ export function renderQuiz(ctx, node, viewport) {
         rect.x + padding,
         rect.y + padding
     )
+
+    const answer = answers?.[node.quizId]
+
+    if (answer) {
+        const isCorrect = answer.selected === node.answer
+        const resultText = isCorrect
+            ? 'Correct!'
+            : `Incorrect. Correct answer: ${node.answer}`
+
+        ctx.fillStyle = isCorrect ? '#00aa00' : '#aa0000'
+        ctx.font = '16px Arial'
+        ctx.fillText(
+            resultText,
+            rect.x + padding,
+            rect.y + padding + 30
+        )
+         ctx.fillText(
+            `Score: ${quizScore}`,
+            rect.x + rect.width - 100,
+            rect.y + 50
+        )
+    }
 }
 export function renderQuizOption(ctx, node, viewport, answers) {
 
