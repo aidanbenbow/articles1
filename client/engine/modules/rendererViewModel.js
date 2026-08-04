@@ -19,9 +19,31 @@ export function createRendererViewModel( allnodes,state, lesson) {
         lessonSectionNodes,
         lessonTitleNodes,
         searchTerm: state.searchTerm,
-        quizAnswers: lesson.quizAnswers,
-        surveyResponses: lesson.surveyResponses,
-        surveyResults: lesson.surveyResults,
+
+        // Lesson data
+        quizAnswers:
+            lesson?.quizAnswers || {},
+
+        quizScore:
+            lesson?.quizScore || 0,
+
+        quizTotal:
+            lesson?.quizTotal || 0,
+
+        surveyResponses:
+            lesson?.surveyResponses || {},
+
+        surveyResults:
+            lesson?.surveyResults || {},
+
+
+        completedSections:
+            lesson?.completedSections || [],
+
+        progress:
+            lesson?.getProgress
+                ? lesson.getProgress()
+                : 0
        
     }
 }

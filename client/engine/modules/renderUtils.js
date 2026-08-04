@@ -151,13 +151,7 @@ export function renderSurvey(ctx, section, viewport, responses, results) {
         //     renderSurveyMultipleChoice(ctx, section, viewport, responses)
         //     break
 
-        // case 'rating':
-        //     renderSurveyRating(ctx, section, viewport, responses)
-        //     break
-
-        // case 'text':
-        //     renderSurveyText(ctx, section, viewport, responses)
-        //     break
+       
     }
 
 }
@@ -340,7 +334,7 @@ export function renderQuiz(ctx, node, viewport, answers, quizScore) {
     }
 }
 export function renderQuizOption(ctx, node, viewport, answers) {
-console.log('renderQuizOption', node, answers)
+
     const rect = getScreenRect(node, viewport)
 
     const answer = answers?.[node.quizId]

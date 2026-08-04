@@ -81,8 +81,8 @@ export class ArticleLayoutFeature {
             const selected = articleNodes.find(
                 node => node.id === state.selectedNodeId
             ) 
-            
-            this.layoutArticlesDetail(selected)
+            const lesson = this.engine.context.getLesson()
+            this.layoutArticlesDetail(selected, lesson )
         }
 
         this.engine.emit('layoutChanged', { layout: this.layout.layoutNodes })
@@ -115,6 +115,7 @@ const { width, height, thumbnailSize } = this.getArticleCardSize(node)
                 return {
                     id: node.id,
                     articleId: node.props?.articleData?.articleId || null,
+                    articleData: node.props?.articleData || null,
                     x: startX,
                     width,
                     height,
@@ -141,7 +142,7 @@ const { width, height, thumbnailSize } = this.getArticleCardSize(node)
         this.layout.computeScrollBounds(rects)
     }
 
-    layoutArticlesDetail(articleNode) {
+    layoutArticlesDetail(articleNode, lessonArticle) {
         if (!articleNode) return
 
         const padding = 20
@@ -151,7 +152,7 @@ const { width, height, thumbnailSize } = this.getArticleCardSize(node)
 const color = articleNode?.props?.color || '#ffffff'
       
 
-            const lesson = parseArticle(articleNode)
+            const lesson = lessonArticle
 
 //console.log(lesson)
 let currentY = worldY 
@@ -160,6 +161,7 @@ const titleHeight = 50
 
 this.layout.layoutNodes.set(`${articleNode.id}-title`, {
     id: `${articleNode.id}-title`,
+    sectionId: 'title',
     x,
     worldY: currentY,
     width,
@@ -178,6 +180,7 @@ lesson.sections.forEach((section, index) => {
         const headingHeight = 30
         const headingRect = {
             id: `${articleNode.id}-${index}`,
+            sectionId: section.id,
             x,
             worldY: currentY,
             width,
@@ -196,6 +199,7 @@ lesson.sections.forEach((section, index) => {
         const paragraphHeight = this.measureParagraphText(section.text, width - padding * 2)
         const paragraphRect = { 
             id: `${articleNode.id}-${index}`,
+            sectionId: section.id,
             x,
             worldY: currentY,
             width,
@@ -221,6 +225,7 @@ const quizHeight =
     section.options.length * optionHeight
             const quizRect = {
                 id: `${articleNode.id}-${index}`,
+                sectionId: section.id,
                 x,
                 worldY: currentY,
                 width,
@@ -234,7 +239,7 @@ const quizHeight =
                 sectionType: 'quiz',
                 options: section.options,
                 answer: section.answer,
-                quizId: `${lesson.id}-${index}`
+                quizId: section.id
             }
             this.layout.layoutNodes.set(quizRect.id, quizRect)
             currentY += quizHeight + 10
@@ -242,6 +247,7 @@ const quizHeight =
             for (let i = 0; i < section.options.length; i++) {
                 const optionRect = {
                     id: `${articleNode.id}-${index}-option-${i}`,
+                    sectionId: section.id,
                     x: x + padding,
                     worldY: currentY - quizHeight + padding + questionHeight + i * optionHeight,
                     width: width - padding * 2,
@@ -253,7 +259,7 @@ const quizHeight =
                     type: 'text',
                     kind: 'lessonSection',
                     sectionType: 'quizOption',
-                    quizId: `${lesson.id}-${index}`,
+                    quizId: section.id,
                     optionIndex: i,
                     answer: section.answer
                 }
@@ -272,6 +278,7 @@ const surveyHeight =
 
             const surveyRect = {
                 id: `${articleNode.id}-${index}`,
+                sectionId: section.id,
                 x,
                 worldY: currentY,
                 width,
@@ -285,7 +292,7 @@ const surveyHeight =
                 kind: 'lessonSection',
                 sectionType: 'survey',
                 options: section.options,
-                surveyId: section.surveyId
+                surveyId: section.id
             }
             this.layout.layoutNodes.set(surveyRect.id, surveyRect)
             currentY += surveyHeight + 10
@@ -293,6 +300,7 @@ const surveyHeight =
             for (let i = 0; i < section.options.length; i++) {
                 const optionRect = {
                     id: `${articleNode.id}-${index}-option-${i}`,
+                    sectionId: section.id,
                     x: x + padding,
                     worldY:
     currentY -
@@ -310,7 +318,7 @@ const surveyHeight =
                     type: 'text',
                     kind: 'lessonSection',
                     sectionType: 'surveyOption',
-                    surveyId: section.surveyId,
+                    surveyId: section.id,
                     optionIndex: i
                 }
                 this.layout.layoutNodes.set(optionRect.id, optionRect)

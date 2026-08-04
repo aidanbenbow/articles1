@@ -1,3 +1,5 @@
+import { parseArticle } from "../constants/layoutParser.js"
+
 export class InteractionManager {
 
     constructor(engine) {
@@ -9,11 +11,6 @@ export class InteractionManager {
             selectedNodeId: null,
             searchTerm: '',
             focusedNodeId: null,
-           
-    //          quizAnswers: {},
-    //          quizScore: 0,
-    // surveyResponses: {},
-    // surveyResults: {}
    
         }
     }
@@ -43,12 +40,13 @@ if(targetNode.type === 'input') {
 }
 
 if (targetNode.sectionType === 'surveyOption') {
- await this.handleSurveyOption(targetNode)
+ await this.engine.context.answerSurvey(targetNode.surveyId, targetNode.optionIndex)
+ this.emitLayoutChanged()
 return
 }
 
 if(targetNode.sectionType === 'quizOption') {
-   console.log('handle quiz option', targetNode)
+   
    this.engine.context.answerQuiz(targetNode.quizId, targetNode.optionIndex, targetNode.answer)
 this.emitLayoutChanged()
    return
@@ -77,8 +75,11 @@ if(targetNode.type === 'button') {
             view:  'article',
             selectedNodeId: targetNode.id
         }
+        const article = targetNode.articleData || null
         const articleId = targetNode.articleId
-    
+       const lesson = parseArticle(article)
+       
+    this.engine.context.startLesson(articleId, lesson.sections)
 
         this.engine.context.selectArticle(articleId)
       

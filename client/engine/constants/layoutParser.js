@@ -1,17 +1,19 @@
 export function parseArticle(article) {
-    const content = article?.props?.articleData?.content ||
-            article?.props?.articleData?.article ||
+    const content = article.content || ''|| article.article 
+   
             ''
     const lines = content.split('\n')
 
     const sections = []
 
     let paragraph = []
+    let sectionIndex = 0
 
     function flushParagraph() {
         if (!paragraph.length) return
 
         sections.push({
+            id: `section-${sectionIndex++}`,
             type: 'paragraph',
             text: paragraph.join(' ').trim()
         })
@@ -31,7 +33,7 @@ export function parseArticle(article) {
     flushParagraph()
 
     const { survey, nextIndex } = parseSurvey(lines, i)
-
+survey.id = survey.surveyId || `survey-${sectionIndex++}`
     sections.push(survey)
 
     i = nextIndex
@@ -42,7 +44,7 @@ export function parseArticle(article) {
         flushParagraph()
 
         const { quiz, nextIndex } = parseQuiz(lines, i)
-
+quiz.id = quiz.id || `quiz-${sectionIndex++}`
         sections.push(quiz)
 
         i = nextIndex
@@ -53,6 +55,7 @@ export function parseArticle(article) {
         flushParagraph()
 
         sections.push({
+            id: `section-${sectionIndex++}`,
             type: 'heading',
             text: text.substring(3)
         })
@@ -133,6 +136,8 @@ function parseQuiz(lines, startIndex) {
             quiz.question = line
                 .substring('question:'.length)
                 .trim()
+        } else if(line.startsWith('id:')) {
+            quiz.id = line.substring(3).trim()
         }
         else if (line.startsWith('- ')) {
 
