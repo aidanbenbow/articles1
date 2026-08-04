@@ -41,11 +41,12 @@ const viewport = this.engine.context.getViewport()
 
 
         const layout = this.engine.context.getLayout()
-        const viewState = this.engine.context.getInteractionState()
+        const interactionState = this.engine.context.getInteractionState()
+        const lessonState = this.engine.context.getLesson()
         const allNodes = [...layout.values()]
         const assetManager = this.engine.context.getAssetManager()
         
-        const view = createRendererViewModel(allNodes, viewState)
+        const view = createRendererViewModel(allNodes, interactionState, lessonState)
         
 
         if(view.lessonTitleNodes.length) {
@@ -53,14 +54,14 @@ const viewport = this.engine.context.getViewport()
         }
 
         if (view.lessonSectionNodes.length) {
-    renderLesson(this.ctx, view.lessonSectionNodes, viewport, viewState)
+    renderLesson(this.ctx, view.lessonSectionNodes, viewport, lessonState)
 } else {
     renderReports(this.ctx, view.reportsNodes, viewport, assetManager)
 }
        
 
         renderHeader(this.ctx, view.headerNode, viewport)
-        renderInputBoxes(this.ctx, view.inputNodes, viewport, viewState.searchTerm)
+        renderInputBoxes(this.ctx, view.inputNodes, viewport, interactionState.searchTerm)
         renderButtons(this.ctx, view.buttonNodes, viewport)
         
         if(view.reportsToDoNode) {

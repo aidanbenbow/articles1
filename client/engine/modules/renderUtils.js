@@ -340,7 +340,7 @@ export function renderQuiz(ctx, node, viewport, answers, quizScore) {
     }
 }
 export function renderQuizOption(ctx, node, viewport, answers) {
-
+console.log('renderQuizOption', node, answers)
     const rect = getScreenRect(node, viewport)
 
     const answer = answers?.[node.quizId]

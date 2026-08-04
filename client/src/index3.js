@@ -1,3 +1,4 @@
+import { LessonFeature } from "../engine/feature/lessonFeature.js";
 import { ArticleLayoutFeature } from "../engine/modules/articleLayoutFeature.js";
 import { articlesModule } from "../engine/modules/articles.js";
 import { AssetManager } from "../engine/modules/assetManager.js";
@@ -23,7 +24,8 @@ articlesModule,
 InteractionManager,
 Input,
 ArticleLayoutFeature,
-SurveyFeature
+SurveyFeature,
+LessonFeature
 
 ]
 }

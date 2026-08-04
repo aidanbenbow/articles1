@@ -82,7 +82,8 @@ this.engine.context.getArticleLayoutFeature().layoutArticles(null, state)
 
     }
     setView(view, articleId = null) {
-
+this.engine.context.startLesson(articleId)
+this.incrementArticleViews(articleId)
     this.scroll.scrollY = this.scroll.scrollByView[view] || 0
     this.init()
 }

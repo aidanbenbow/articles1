@@ -1,4 +1,4 @@
-export function createRendererViewModel( allnodes,state) {
+export function createRendererViewModel( allnodes,state, lesson) {
     const inputNodes = allnodes.filter(node => node.type === 'input')
     const buttonNodes = allnodes.filter(node => node.type === 'button')
     const headerNode = allnodes.find(node => node.type === 'header')
@@ -19,9 +19,9 @@ export function createRendererViewModel( allnodes,state) {
         lessonSectionNodes,
         lessonTitleNodes,
         searchTerm: state.searchTerm,
-        quizAnswers: state.quizAnswers,
-        surveyResponses: state.surveyResponses,
-        surveyResults: state.surveyResults,
+        quizAnswers: lesson.quizAnswers,
+        surveyResponses: lesson.surveyResponses,
+        surveyResults: lesson.surveyResults,
        
     }
 }

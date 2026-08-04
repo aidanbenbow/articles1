@@ -9,10 +9,11 @@ export class InteractionManager {
             selectedNodeId: null,
             searchTerm: '',
             focusedNodeId: null,
-             quizAnswers: {},
-             quizScore: 0,
-    surveyResponses: {},
-    surveyResults: {}
+           
+    //          quizAnswers: {},
+    //          quizScore: 0,
+    // surveyResponses: {},
+    // surveyResults: {}
    
         }
     }
@@ -47,8 +48,9 @@ return
 }
 
 if(targetNode.sectionType === 'quizOption') {
-    console.log('InteractionManager: quiz option selected:', targetNode)
-   this.handleQuizOption(targetNode)
+   console.log('handle quiz option', targetNode)
+   this.engine.context.answerQuiz(targetNode.quizId, targetNode.optionIndex, targetNode.answer)
+this.emitLayoutChanged()
    return
 }
 
@@ -75,14 +77,13 @@ if(targetNode.type === 'button') {
             view:  'article',
             selectedNodeId: targetNode.id
         }
-        console.log(this.state)
+        const articleId = targetNode.articleId
+    
 
-        this.engine.context.selectArticle(targetNode.props?.articleData?.articleId || null)
-       console.log('InteractionManager: text node selected:', targetNode)
-        this.engine.context.incrementArticleViews(targetNode.articleId || null)
-    } else if(targetNode.type === 'input') {
-        console.log('InteractionManager: input node selected:', targetNode)
-    }
+        this.engine.context.selectArticle(articleId)
+      
+       // this.engine.context.incrementArticleViews(articleId || null)
+     } 
 }
 appendSearchTerm(char) {
     const searchTerm = this.state.searchTerm + char
