@@ -1,7 +1,8 @@
 export class LessonController {
 
-    constructor(lessonService) {
+    constructor(lessonService, engine) {
         this.lessonService = lessonService
+        this.engine = engine
     }
 
 
@@ -54,5 +55,44 @@ export class LessonController {
         return this.lessonService.getLesson()
 
     }
+     updateProgress() {
+const viewport = this.engine.context.getViewport()
+const layoutNodes = this.engine.context.getLayout()
 
+        for (const node of layoutNodes.values()) {
+
+            if (node.kind !== 'lessonSection') {
+                continue
+            }
+
+            if (!isVisible(node, viewport)) {
+                continue
+            }
+
+            switch (node.sectionType) {
+
+                case 'heading':
+                case 'paragraph':
+                    this.lessonService.completeSection(
+                        node.sectionId
+                    )
+                    break
+            }
+        }
+    }
+
+}
+
+function isVisible(node, viewport) {
+
+    const nodeTop = node.worldY
+    const nodeBottom = node.worldY + node.height
+
+    const viewTop = viewport.y
+    const viewBottom = viewport.y + viewport.height
+
+    return (
+        nodeBottom > viewTop &&
+        nodeTop < viewBottom
+    )
 }

@@ -19,6 +19,13 @@ export class LessonState {
          this.startedAt = new Date().toISOString()
         this.completed = false
     }
+     completeSection(sectionId) {
+
+    if (!this.completedSections.includes(sectionId)) {
+        this.completedSections.push(sectionId)
+    }
+
+}
     getProgress() {
 
         if (!this.sections.length) {

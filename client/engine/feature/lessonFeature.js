@@ -9,7 +9,7 @@ export class LessonFeature {
     constructor(engine) {
         this.engine = engine
         this.lessonService = new LessonService(new SurveyApi())
-        this.lessonController = new LessonController(this.lessonService)
+        this.lessonController = new LessonController(this.lessonService, engine)
     }
 
     contextExports() {
@@ -19,7 +19,8 @@ export class LessonFeature {
             getLesson: () => this.lessonController.getState(),
             answerQuiz: (quizId, optionIndex, answer) => this.lessonController.answerQuiz(quizId, optionIndex, answer),
             answerSurvey: (surveyId, optionIndex) => this.lessonController.answerSurvey(surveyId, optionIndex),
-            completeSection: (sectionId) => this.lessonController.completeSection(sectionId)
+            completeSection: (sectionId) => this.lessonController.completeSection(sectionId),
+            updateProgress: () => this.lessonController.updateProgress()
         }
     }
 

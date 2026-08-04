@@ -46,8 +46,9 @@ return
 }
 
 if(targetNode.sectionType === 'quizOption') {
-   
-   this.engine.context.answerQuiz(targetNode.quizId, targetNode.optionIndex, targetNode.answer)
+
+   this.engine.context.answerQuiz(targetNode.sectionId,
+    targetNode.quizId, targetNode.optionIndex, targetNode.answer)
 this.emitLayoutChanged()
    return
 }

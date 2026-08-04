@@ -18,7 +18,7 @@ export class LessonService {
     getLesson() {
         return this.lesson
     }
-    answerQuiz(quizId, optionIndex, answer) {
+    answerQuiz(sectionId, quizId, optionIndex, answer) {
 
         if (quizId in this.lesson.quizAnswers) {
             return this.lesson.quizAnswers[quizId]
@@ -32,6 +32,7 @@ export class LessonService {
             correct
         }
 
+        this.completeSection(sectionId)
         if (correct) {
             this.lesson.quizScore++
         }
@@ -61,12 +62,6 @@ export class LessonService {
         this.lesson.surveyResults[surveyId] = results
     }
     completeSection(sectionId) {
-
-    if (
-        !this.lesson.completedSections.includes(sectionId)
-    ) {
-        this.lesson.completedSections.push(sectionId)
-    }
-
+this.lesson.completeSection(sectionId)
 }
 }
