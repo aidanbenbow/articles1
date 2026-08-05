@@ -108,152 +108,201 @@ export function renderReports(ctx, nodes, viewport, assetManager) {
     })
 }
 
-export function renderLesson(ctx, sections, viewport, answers) {
-
+export function renderLesson(ctx, sections, viewport, lesson) {
     for (const section of sections) {
 
-        switch (section.sectionType) {
+        const state =
+            lesson.getSectionState(
+                section.sectionId
+            )
 
-            case 'heading':
-                renderHeading(ctx, section, viewport)
-                break
+        renderLessonSection(
+            ctx,
+            section,
+            state,
+            viewport,
+            lesson
+        )
+    }
+    // for (const section of sections) {
 
-            case 'paragraph':
-                renderParagraph(ctx, section, viewport)
-                break
+    //     switch (section.sectionType) {
 
-            case 'quiz':
-                renderQuiz(ctx, section, viewport, answers.quizAnswers, answers.quizScore)
-                break
-            case 'quizOption':
-                renderQuizOption(ctx, section, viewport, answers.quizAnswers)
-                break
-                case 'survey':
-    renderSurvey(ctx, section, viewport, answers.surveyResponses, answers.surveyResults)
-    break
-    case 'surveyOption':
-    renderSurveyOption(ctx, section, viewport, answers.surveyResponses, answers.surveyResults)
-    break
-        }
+    //         case 'heading':
+    //             renderHeading(ctx, section, viewport)
+    //             break
+
+    //         case 'paragraph':
+    //             renderParagraph(ctx, section, viewport)
+    //             break
+
+    //         case 'quiz':
+    //             renderQuiz(ctx, section, viewport, answers.quizAnswers, answers.quizScore)
+    //             break
+    //         case 'quizOption':
+    //             renderQuizOption(ctx, section, viewport, answers.quizAnswers)
+    //             break
+    //             case 'survey':
+    // renderSurvey(ctx, section, viewport, answers.surveyResponses, answers.surveyResults)
+    // break
+    // case 'surveyOption':
+    // renderSurveyOption(ctx, section, viewport, answers.surveyResponses, answers.surveyResults)
+    // break
+    //     }
 
     }
-}
 
-export function renderSurvey(ctx, section, viewport, responses, results) {
-
-    switch (section.surveyType) {
-
-        case 'single':
-            renderSurveySingleChoice(ctx, section, viewport, responses,results)
-            break
-
-        // case 'multiple':
-        //     renderSurveyMultipleChoice(ctx, section, viewport, responses)
-        //     break
-
-       
-    }
-
-}
-
-export function renderSurveySingleChoice(
+    function renderLessonSection(
     ctx,
     section,
+    state,
     viewport,
-    responses,
-    results
+    lesson
 ) {
 
-    const rect = getScreenRect(section, viewport)
+    switch (section.sectionType) {
+
+        case 'heading':
+            renderHeading(
+                ctx,
+                section,
+                state,
+                viewport
+            )
+            break
+
+        case 'paragraph':
+            renderParagraph(
+                ctx,
+                section,
+                state,
+                viewport,
+                lesson
+            )
+            break
+
+        case 'quiz':
+            renderQuiz(
+                ctx,
+                section,
+                state,
+                viewport,
+                lesson
+            )
+            break
+
+            case 'quizOption':
+            renderQuizOption(
+                ctx,
+                section,
+                viewport,
+                lesson
+            )
+            break
+
+        case 'survey':
+            renderSurvey(
+                ctx,
+                section,
+                state,
+                viewport,
+                lesson
+            )
+            break
+            case 'surveyOption':
+            renderSurveyOption(
+                ctx,
+                section,
+                viewport,
+                lesson
+            )
+            break
+    }
+
+}
+
+function renderHeading(
+    ctx,
+    node,
+    state,
+    viewport
+) {
+    const rect = getScreenRect(node, viewport)
+
+    let icon = ''
+
+switch (state) {
+
+    case 'completed':
+        icon = '✓'
+        break
+
+    case 'current':
+        icon = '▶'
+        break
+
+    case 'locked':
+        icon = '○'
+        break
+}
+
+ctx.fillText(
+    `${icon} ${node.text}`,
+    rect.x + 15,
+    rect.y + 20
+)
+}
+
+function renderParagraph(ctx, node,state, viewport, lesson) {
+
+    const rect = getScreenRect(node, viewport)
+console.log('lesson', lesson)
+    const sectionState =
+        lesson.getSectionState(node.sectionId)
 
 
-    const survey =
-        results?.[section.surveyId] || {}
+    if (sectionState === 'locked') {
 
+        drawRect(ctx, {
+            ...rect,
+            color: '#eeeeee'
+        })
 
-    const total =
-        survey.totalResponses || 0
+        ctx.fillStyle = '#999'
+        ctx.fillText(
+            'Complete previous sections',
+            rect.x + 20,
+            rect.y + 30
+        )
 
-
-    drawRect(ctx, rect, {
-        showSelection: true
-    })
+        return
+    }
 
 
     drawTextBlock(
         ctx,
-        section.question,
-        rect.x + 20,
-        rect.y + 20,
-        rect.width - 40,
+        node.text,
+        rect.x,
+        rect.y,
+        rect.width,
         22
     )
 
 
-    drawTextBlock(
-        ctx,
-        `${total} responses`,
-        rect.x + 20,
-        rect.y + 45,
-        rect.width - 40,
-        16
-    )
+    if(sectionState === 'current') {
+
+        ctx.strokeStyle = '#00aa00'
+        ctx.strokeRect(
+            rect.x,
+            rect.y,
+            rect.width,
+            rect.height
+        )
+
+    }
+
 }
 
-export function renderSurveyOption(
-    ctx,
-    section,
-    viewport,
-    responses,
-    results
-) {
-
-    const rect = getScreenRect(section, viewport)
-
-
-    const selected =
-        responses?.[section.surveyId] === section.optionIndex
-
-
-    const survey =
-        results?.[section.surveyId] || {}
-
-
-    const surveyResults =
-        survey.responses || {}
-
-
-    const total =
-        survey.totalResponses || 0
-
-
-    const votes =
-        surveyResults[section.optionIndex] || 0
-
-
-    const percentage =
-        total > 0
-            ? Math.round((votes / total) * 100)
-            : 0
-
-
-    drawRect(ctx, {
-        ...rect,
-        color: selected
-            ? '#b8f5b8'
-            : '#d0d0d0'
-    })
-
-
-    drawTextBlock(
-        ctx,
-        `${section.text}   ${percentage}%`,
-        rect.x + 10,
-        rect.y ,
-        rect.width - 20,
-        20
-    )
-}
 
 
 
@@ -269,33 +318,11 @@ export function renderLessonTitle(ctx, node, viewport) {
     )
 }
 
-function renderHeading(ctx, node, viewport) {
 
-    const rect = getScreenRect(node, viewport)
 
-    ctx.font = 'bold 24px Arial'
-    ctx.fillText(
-        node.text,
-        rect.x + 15,
-        rect.y + 20
-    )
-}
 
-function renderParagraph(ctx, node, viewport) {
 
-    const rect = getScreenRect(node, viewport)
-
-    drawTextBlock(
-        ctx,
-        node.text,
-        rect.x,
-        rect.y,
-        rect.width,
-        22
-    )
-}
-
-export function renderQuiz(ctx, node, viewport, answers, quizScore) {
+export function renderQuiz(ctx, node,state, viewport, lesson) {
     const rect = getScreenRect(node, viewport)
 
     drawRect(ctx, rect)
@@ -311,7 +338,7 @@ export function renderQuiz(ctx, node, viewport, answers, quizScore) {
         rect.y + padding
     )
 
-    const answer = answers?.[node.quizId]
+    const answer = lesson.quizAnswers?.[node.quizId]
 
     if (answer) {
         const isCorrect = answer.selected === node.answer
@@ -327,17 +354,17 @@ export function renderQuiz(ctx, node, viewport, answers, quizScore) {
             rect.y + padding + 30
         )
          ctx.fillText(
-            `Score: ${quizScore}`,
+            `Score: ${lesson.quizScore}`,
             rect.x + rect.width - 100,
             rect.y + 50
         )
     }
 }
-export function renderQuizOption(ctx, node, viewport, answers) {
+export function renderQuizOption(ctx, node, viewport, lesson) {
 
     const rect = getScreenRect(node, viewport)
 
-    const answer = answers?.[node.quizId]
+    const answer = lesson.quizAnswers?.[node.quizId]
 
 const answered = !!answer
 const isSelected = answer?.selected === node.optionIndex
@@ -428,6 +455,122 @@ const isCorrect = node.optionIndex === node.answer
         }
     }
 }
+
+export function renderSurvey(ctx, section,state, viewport, lesson) {
+
+    switch (section.surveyType) {
+
+        case 'single':
+            renderSurveySingleChoice(ctx, section,state, viewport, lesson)
+            break
+
+        // case 'multiple':
+        //     renderSurveyMultipleChoice(ctx, section, viewport, responses)
+        //     break
+
+       
+    }
+
+}
+
+export function renderSurveySingleChoice(
+    ctx,
+    section,
+    state,
+    viewport,
+   lesson
+) {
+
+    const rect = getScreenRect(section, viewport)
+
+
+    const survey =
+        lesson.surveyResults?.[section.surveyId] || {}
+
+
+    const total =
+        survey.totalResponses || 0
+
+
+    drawRect(ctx, rect, {
+        showSelection: true
+    })
+
+
+    drawTextBlock(
+        ctx,
+        section.question,
+        rect.x + 20,
+        rect.y + 20,
+        rect.width - 40,
+        22
+    )
+
+
+    drawTextBlock(
+        ctx,
+        `${total} responses`,
+        rect.x + 20,
+        rect.y + 45,
+        rect.width - 40,
+        16
+    )
+}
+
+export function renderSurveyOption(
+    ctx,
+    section,
+    viewport,
+    lesson
+) {
+
+    const rect = getScreenRect(section, viewport)
+
+
+    const selected =
+        lesson.surveyAnswers?.[section.surveyId] === section.optionIndex
+
+
+    const survey =
+        lesson.surveyResults?.[section.surveyId] || {}
+
+
+    const surveyResults =
+        survey.responses || {}
+
+
+    const total =
+        survey.totalResponses || 0
+
+
+    const votes =
+        surveyResults[section.optionIndex] || 0
+
+
+    const percentage =
+        total > 0
+            ? Math.round((votes / total) * 100)
+            : 0
+
+
+    drawRect(ctx, {
+        ...rect,
+        color: selected
+            ? '#b8f5b8'
+            : '#d0d0d0'
+    })
+
+
+    drawTextBlock(
+        ctx,
+        `${section.text}   ${percentage}%`,
+        rect.x + 10,
+        rect.y ,
+        rect.width - 20,
+        20
+    )
+}
+
 
 
 function drawThumbnail(ctx, rect, assetManager) {

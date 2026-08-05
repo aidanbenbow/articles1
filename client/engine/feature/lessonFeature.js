@@ -20,7 +20,9 @@ export class LessonFeature {
             answerQuiz: (quizId, optionIndex, answer) => this.lessonController.answerQuiz(quizId, optionIndex, answer),
             answerSurvey: (surveyId, optionIndex) => this.lessonController.answerSurvey(surveyId, optionIndex),
             completeSection: (sectionId) => this.lessonController.completeSection(sectionId),
-            updateProgress: () => this.lessonController.updateProgress()
+            setCurrentSection: (sectionId) => this.lessonController.setCurrentSection(sectionId),
+            updateProgress: () => this.lessonController.updateProgress(),
+            onViewPortChanged: () => this.lessonController.onViewPortChanged(), 
         }
     }
 

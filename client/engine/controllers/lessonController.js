@@ -11,6 +11,13 @@ export class LessonController {
         return this.lessonService.startLesson(articleId, sections)
 
     }
+    setCurrentSection(sectionId) {
+
+    this.lessonService.setCurrentSection(
+        sectionId
+    )
+
+}
 
 
     answerQuiz(
@@ -40,59 +47,79 @@ export class LessonController {
 
     }
 
-
-    completeSection(sectionId) {
-
-        this.lessonService.completeSection(
-            sectionId
-        )
-
-    }
-
-
     getState() {
 
         return this.lessonService.getLesson()
 
     }
-     updateProgress() {
+  updateProgress() {
 const viewport = this.engine.context.getViewport()
-const layoutNodes = this.engine.context.getLayout()
+    const layoutNodes = this.engine.context.getLayout()
 
-        for (const node of layoutNodes.values()) {
+    let closest = null
 
-            if (node.kind !== 'lessonSection') {
-                continue
-            }
+    for(const node of layoutNodes.values()) {
 
-            if (!isVisible(node, viewport)) {
-                continue
-            }
+        if(node.kind !== 'lessonSection')
+            continue
 
-            switch (node.sectionType) {
 
-                case 'heading':
-                case 'paragraph':
-                    this.lessonService.completeSection(
-                        node.sectionId
-                    )
-                    break
-            }
+        if(!this.isVisible(node, viewport))
+            continue
+
+
+        if(!closest || node.worldY < closest.worldY) {
+            closest = node
         }
+
     }
 
+
+    if(closest) {
+
+        const lesson =
+            this.lessonService.getLesson()
+
+
+        // complete the previous section
+        if(
+            lesson.currentSectionId &&
+            lesson.currentSectionId !== closest.sectionId
+        ) {
+
+            this.lessonService.completeSection(
+                lesson.currentSectionId
+            )
+
+        }
+
+
+        // move current marker
+        this.lessonService.setCurrentSection(
+            closest.sectionId
+        )
+    }
+
+}   isVisible(node, viewport) {
+
+        const nodeTop = node.worldY
+        const nodeBottom = node.worldY + node.height
+
+        const viewTop = viewport.y
+        const viewBottom = viewport.y + viewport.height
+
+        return (
+            nodeBottom > viewTop &&
+            nodeTop < viewBottom
+        )
+    }
+    advanceLesson() {
+
+    const moved =
+        this.lessonService.lesson.advanceSection()
+
+    return moved
+
 }
-
-function isVisible(node, viewport) {
-
-    const nodeTop = node.worldY
-    const nodeBottom = node.worldY + node.height
-
-    const viewTop = viewport.y
-    const viewBottom = viewport.y + viewport.height
-
-    return (
-        nodeBottom > viewTop &&
-        nodeTop < viewBottom
-    )
+   
 }

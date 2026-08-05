@@ -18,6 +18,17 @@ export class LessonService {
     getLesson() {
         return this.lesson
     }
+   setCurrentSection(sectionId) {
+
+    if (!this.lesson) {
+        return
+    }
+
+    this.lesson.setCurrentSection(sectionId)
+
+}
+ 
+   
     answerQuiz(sectionId, quizId, optionIndex, answer) {
 
         if (quizId in this.lesson.quizAnswers) {
@@ -36,10 +47,18 @@ export class LessonService {
         if (correct) {
             this.lesson.quizScore++
         }
+        this.lesson.advanceSection()
         return {
+            currentSection: this.lesson.currentSectionId,
             correct,
-            score: this.lesson.quizScore
+            score: this.lesson.quizScore,
+            progress: this.lesson.getProgress()
         }
+    }
+      completeSection(sectionId) {
+
+        this.lesson.completeSection(sectionId)
+
     }
       async answerSurvey(surveyId, optionIndex) {
 
@@ -51,6 +70,8 @@ export class LessonService {
         // Remember this user's answer
         this.lesson.surveyResponses[surveyId] = optionIndex
 
+        this.completeSection(surveyId)
+        this.lesson.advanceSection()
         // Save to server
         const results =
             await this.surveyApi.recordSurveyResponse(
@@ -61,7 +82,9 @@ export class LessonService {
         // Cache updated totals
         this.lesson.surveyResults[surveyId] = results
     }
-    completeSection(sectionId) {
-this.lesson.completeSection(sectionId)
+    updateCurrentSection(sectionId) {
+
+    this.lesson.setCurrentSection(sectionId)
+
 }
 }
