@@ -54,7 +54,7 @@ export class ScreenLayout {
     layoutChildren() {
         this.layoutHeader()
         this.layoutInputs()
-        this.layoutButtons()
+       // this.layoutButtons()
     }
 
     layoutInputs() {

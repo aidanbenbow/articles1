@@ -8,6 +8,11 @@ export class ArticleLayoutFeature {
         this.engine = engine
         this._unsubscribe = []
         this._lastFilter = ''
+
+        this.engine.on('lessonStateChanged', () => {
+            const state = this.engine.context.getInteractionState()
+            this.layoutArticles(null, state)
+        })
     }
     contextExports() {
         return {
@@ -141,134 +146,225 @@ const { width, height, thumbnailSize } = this.getArticleCardSize(node)
 
         this.layout.computeScrollBounds(rects)
     }
+    clearLessonLayout(articleNode) {
 
-    layoutArticlesDetail(articleNode, lessonArticle) {
-        if (!articleNode) return
+    if (!articleNode) return
 
-        const padding = 20
-        const x = this.layout.width / 8
-        const worldY = this.layout.height / 8
-        const width = Math.min(this.layout.width * 0.75, 600)
-const color = articleNode?.props?.color || '#ffffff'
-      
+    for (const [id, rect] of this.layout.layoutNodes) {
 
-            const lesson = lessonArticle
+        if (
+            id.startsWith(`${articleNode.id}-`) &&
+            (
+                rect.kind === 'lessonSection' ||
+                rect.kind === 'lessonTitle' ||
+                rect.kind === 'lessonControl'
+            )
+        ) {
+            this.layout.layoutNodes.delete(id)
+        }
+    }
+}
 
-//console.log(lesson)
-let currentY = worldY 
+   layoutArticlesDetail(articleNode, lesson) {
 
-const titleHeight = 50
+    if (!articleNode || !lesson) {
+        return
+    }
+this.clearLessonLayout(articleNode)
+    const padding = 20
+    const x = this.layout.width / 8
+    const worldY = this.layout.height / 8
+    const width = Math.min(this.layout.width * 0.75, 600)
+    const color = articleNode?.props?.color || '#ffffff'
 
-this.layout.layoutNodes.set(`${articleNode.id}-title`, {
-    id: `${articleNode.id}-title`,
-    sectionId: 'title',
+    let currentY = worldY
+
+    this.layout.layoutNodes.set(`${articleNode.id}-title`, {
+        id: `${articleNode.id}-title`,
+        sectionId: 'title',
+        x,
+        worldY: currentY,
+        width,
+        height: 50,
+        color,
+        text: lesson.title,
+        kind: 'lessonTitle',
+        type: 'text',
+        padding
+    })
+
+    currentY += 70
+
+    const section = lesson.getCurrentSection()
+
+    if (section) {
+        currentY = this.layoutSection(
+            articleNode,
+            section,
+            currentY,
+            x,
+            width,
+            padding,
+            color
+        )
+    }
+
+    this.layout.scroll.updateBounds(
+        currentY - worldY + 20
+    )
+    this.layoutContinueButton(articleNode, currentY, x, width, padding, color)
+}
+
+layoutSection( articleNode,
+    currentSection,
+    currentY,
     x,
-    worldY: currentY,
     width,
-    height: titleHeight,
-    color,
-    text: lesson.title,
-    kind: 'lessonTitle',
-    type: 'text',
-    padding
-})
-
-currentY += titleHeight + 20
-
-lesson.sections.forEach((section, index) => {
-    if(section.type === 'heading'){
-        const headingHeight = 30
-        const headingRect = {
-            id: `${articleNode.id}-${index}`,
-            sectionId: section.id,
-            x,
-            worldY: currentY,
-            width,
-            height: headingHeight,
-            padding,
-            color: color,
-            selected: false,
-            text: section.text,
-            type: 'text',
-            kind: 'lessonSection',
-            sectionType: 'heading'
+    padding,
+    color){
+        switch(currentSection.type){
+            case 'heading':
+                return this.layoutHeadingSection(
+                    articleNode,
+                    currentSection,
+                    currentY,
+                    x,
+                    width,
+                    padding,
+                    color
+                )
+                
+            case 'paragraph':
+                return this.layoutParagraphSection( 
+                    articleNode,
+                    currentSection,
+                    currentY,
+                    x,
+                    width,
+                    padding,
+                    color
+                )
+                
+            case 'quiz':
+                return this.layoutQuizSection(
+                    articleNode,
+                    currentSection,
+                    currentY,
+                    x,
+                    width,
+                    padding,
+                    color
+                )
+            case 'survey':
+                return this.layoutSurveySection(
+                    articleNode,
+                    currentSection,
+                    currentY,
+                    x,
+                    width,
+                    padding,
+                    color
+                )
         }
-        this.layout.layoutNodes.set(headingRect.id, headingRect)
-        currentY += headingHeight + 10
-    } else if(section.type === 'paragraph'){
-        const paragraphHeight = this.measureParagraphText(section.text, width - padding * 2)
-        const paragraphRect = { 
-            id: `${articleNode.id}-${index}`,
-            sectionId: section.id,
-            x,
-            worldY: currentY,
-            width,
-            height: paragraphHeight,
-            padding,
-            color: '#f0f0f0',
-            selected: false,
-            text: section.text,
-            type: 'text',
-            kind: 'lessonSection',
-            sectionType: 'paragraph'
-        }
+    }
+layoutHeadingSection(articleNode, section, currentY, x, width, padding, color) {
+    const headingHeight = 30
+    const headingRect = {
+        id: `${articleNode.id}-${section.id}`,
+        sectionId: section.id,
+        x,
+        worldY: currentY,
+        width,
+        height: headingHeight,
+        padding,
+        color: color,
+        selected: false,
+        text: section.text,
+        type: 'text',
+        kind: 'lessonSection',
+        sectionType: 'heading'
+    }
+    this.layout.layoutNodes.set(headingRect.id, headingRect)
+    return currentY + headingHeight + 10
+}
 
-        this.layout.layoutNodes.set(paragraphRect.id, paragraphRect)
-        currentY += paragraphHeight + 10
-    }  else if(section.type === 'quiz'){
-            const questionHeight = 30
-const optionHeight = 30
-
+layoutParagraphSection(articleNode, section, currentY, x, width, padding, color) {
+    const paragraphHeight = this.measureParagraphText(section.text, width - padding * 2)
+    const paragraphRect = {
+        id: `${articleNode.id}-${section.id}`,
+        sectionId: section.id,
+        x,
+        worldY: currentY,
+        width,
+        height: paragraphHeight,
+        padding,
+        color: '#f0f0f0',
+        selected: false,
+        text: section.text,
+        type: 'text',
+        kind: 'lessonSection',
+        sectionType: 'paragraph'
+    }
+    this.layout.layoutNodes.set(paragraphRect.id, paragraphRect)
+    return currentY + paragraphHeight + 10
+}
+layoutQuizSection(articleNode, section, currentY, x, width, padding, color) {
+    const questionHeight = 30
+    const optionHeight = 30
+    const quizTop = currentY
 const quizHeight =
     padding * 2 +
     questionHeight +
     section.options.length * optionHeight
-            const quizRect = {
-                id: `${articleNode.id}-${index}`,
-                sectionId: section.id,
-                x,
-                worldY: currentY,
-                width,
-                height: quizHeight,
-                padding,
-                color: '#e0e0e0',
-                selected: false,
-                question: section.question,
-                type: 'quiz',
-                kind: 'lessonSection',
-                sectionType: 'quiz',
-                options: section.options,
-                answer: section.answer,
-                quizId: section.id
-            }
-            this.layout.layoutNodes.set(quizRect.id, quizRect)
-            currentY += quizHeight + 10
 
-            for (let i = 0; i < section.options.length; i++) {
-                const optionRect = {
-                    id: `${articleNode.id}-${index}-option-${i}`,
-                    sectionId: section.id,
-                    x: x + padding,
-                    worldY: currentY - quizHeight + padding + questionHeight + i * optionHeight,
-                    width: width - padding * 2,
-                    height: optionHeight,
-                    padding,
-                    color: '#d0d0d0',
-                    selected: false,
-                    text: section.options[i],
-                    type: 'text',
-                    kind: 'lessonSection',
-                    sectionType: 'quizOption',
-                    quizId: section.id,
-                    optionIndex: i,
-                    answer: section.answer
-                }
-                this.layout.layoutNodes.set(optionRect.id, optionRect)
-            }
-        } else if(section.type === 'survey'){
-            const questionHeight = 30
-const responseHeight = 20
-const optionHeight = 30
+    const quizRect = {
+        id: `${articleNode.id}-${section.id}`,
+        sectionId: section.id,
+        x,
+        worldY: quizTop,
+        width,
+        height: quizHeight,
+        padding,
+        color: '#e0e0e0',
+        selected: false,
+        question: section.question,
+        type: 'quiz',
+        kind: 'lessonSection',
+        sectionType: 'quiz',
+        options: section.options,
+        answer: section.answer,
+        quizId: section.id
+    }
+    this.layout.layoutNodes.set(quizRect.id, quizRect)
+
+    for (let i = 0; i < section.options.length; i++) {
+        const optionRect = {
+            id: `${articleNode.id}-${section.id}-option-${i}`,
+            sectionId: section.id,
+            x: x + padding,
+            worldY: quizTop + padding + questionHeight + i * optionHeight,
+            width: width - padding * 2,
+            height: optionHeight,
+            padding,
+            color: '#d0d0d0',
+            selected: false,
+            text: section.options[i],
+            type: 'text',
+            kind: 'lessonSection',
+            sectionType: 'quizOption',
+            quizId: section.id,
+            optionIndex: i,
+            answer: section.answer
+        }
+        this.layout.layoutNodes.set(optionRect.id, optionRect)
+    }
+    return currentY + quizHeight + 10
+}
+layoutSurveySection(articleNode, section, currentY, x, width, padding, color) {
+    const questionHeight = 30
+    const responseHeight = 20
+    const optionHeight = 30
+    const surveyTop = currentY
 
 const surveyHeight =
     padding * 2 +
@@ -276,62 +372,75 @@ const surveyHeight =
     responseHeight +
     section.options.length * optionHeight
 
-            const surveyRect = {
-                id: `${articleNode.id}-${index}`,
-                sectionId: section.id,
-                x,
-                worldY: currentY,
-                width,
-                height: surveyHeight,
-                padding,
-                color: '#e0e0e0',
-                selected: false,
-                question: section.question,
-                type: 'survey',
-                surveyType: section.surveyType,
-                kind: 'lessonSection',
-                sectionType: 'survey',
-                options: section.options,
-                surveyId: section.id
-            }
-            this.layout.layoutNodes.set(surveyRect.id, surveyRect)
-            currentY += surveyHeight + 10
-
-            for (let i = 0; i < section.options.length; i++) {
-                const optionRect = {
-                    id: `${articleNode.id}-${index}-option-${i}`,
-                    sectionId: section.id,
-                    x: x + padding,
-                    worldY:
-    currentY -
-    surveyHeight +
+    const surveyRect = {
+        id: `${articleNode.id}-${section.id}`,
+        sectionId: section.id,
+        x,
+        worldY: surveyTop,
+        width,
+        height: surveyHeight,
+        padding,
+        color: '#e0e0e0',
+        selected: false,
+        question: section.question,
+        type: 'survey',
+        surveyType: section.surveyType,
+        kind: 'lessonSection',
+        sectionType: 'survey',
+        options: section.options,
+        surveyId: section.id
+    }
+    this.layout.layoutNodes.set(surveyRect.id, surveyRect)
+    for (let i = 0; i < section.options.length; i++) {
+        const optionY =
+    surveyTop +
     padding +
     questionHeight +
     responseHeight +
-    i * optionHeight,    
-    width: width - padding * 2,                
-                    height: optionHeight,
-                    padding,
-                    color: '#d0d0d0',
-                    selected: false,
-                    text: section.options[i],
-                    type: 'text',
-                    kind: 'lessonSection',
-                    sectionType: 'surveyOption',
-                    surveyId: section.id,
-                    optionIndex: i
-                }
-                this.layout.layoutNodes.set(optionRect.id, optionRect)
-            }
-
+    i * optionHeight
+        const optionRect = {
+            id: `${articleNode.id}-${section.id}-option-${i}`,
+            sectionId: section.id,
+            x: x + padding,
+            worldY: optionY,
+            width: width - padding * 2,
+            height: optionHeight,
+            padding,
+            color: '#d0d0d0',
+            selected: false,
+            text: section.options[i],
+            type: 'text',
+            kind: 'lessonSection',
+            sectionType: 'surveyOption',
+            surveyId: section.id,
+            optionIndex: i
         }
+        this.layout.layoutNodes.set(optionRect.id, optionRect)
     }
-    )
+    return currentY + surveyHeight + 10
+}
 
-       // const contentHeight = currentY - worldY + 20
-    const contentHeight = this.getContentHeight()
-        this.layout.scroll.updateBounds(contentHeight)
+layoutContinueButton(articleNode, currentY, x, width, padding, color) {
+    const buttonHeight = 40
+    const buttonRect = {
+        id: `${articleNode.id}-continue-button`,
+        sectionId: 'continue-button',
+        x,
+        worldY: currentY,
+        width,
+        height: buttonHeight,
+        padding,
+        color: '#23979d',
+        selected: false,
+        text: 'Continue',
+        type: 'button',
+        kind: 'lessonSection',
+        sectionType: 'continueButton'
     }
+    this.layout.layoutNodes.set(buttonRect.id, buttonRect)
+    return currentY + buttonHeight + 10
+}
+
     getArticleCardSize(node) {
     
     const width = Math.min(
@@ -418,3 +527,151 @@ const {lines} = this.measureArticleText(text, width)
 return lines * 20 + 20
 }
 }
+
+// if(section.type === 'heading'){
+//         const headingHeight = 30
+//         const headingRect = {
+//             id: `${articleNode.id}-${index}`,
+//             sectionId: section.id,
+//             x,
+//             worldY: currentY,
+//             width,
+//             height: headingHeight,
+//             padding,
+//             color: color,
+//             selected: false,
+//             text: section.text,
+//             type: 'text',
+//             kind: 'lessonSection',
+//             sectionType: 'heading'
+//         }
+//         this.layout.layoutNodes.set(headingRect.id, headingRect)
+//         currentY += headingHeight + 10
+//     } else if(section.type === 'paragraph'){
+//         const paragraphHeight = this.measureParagraphText(section.text, width - padding * 2)
+//         const paragraphRect = { 
+//             id: `${articleNode.id}-${index}`,
+//             sectionId: section.id,
+//             x,
+//             worldY: currentY,
+//             width,
+//             height: paragraphHeight,
+//             padding,
+//             color: '#f0f0f0',
+//             selected: false,
+//             text: section.text,
+//             type: 'text',
+//             kind: 'lessonSection',
+//             sectionType: 'paragraph'
+//         }
+
+//         this.layout.layoutNodes.set(paragraphRect.id, paragraphRect)
+//         currentY += paragraphHeight + 10
+//     }  else if(section.type === 'quiz'){
+//             const questionHeight = 30
+// const optionHeight = 30
+
+// const quizHeight =
+//     padding * 2 +
+//     questionHeight +
+//     section.options.length * optionHeight
+//             const quizRect = {
+//                 id: `${articleNode.id}-${index}`,
+//                 sectionId: section.id,
+//                 x,
+//                 worldY: currentY,
+//                 width,
+//                 height: quizHeight,
+//                 padding,
+//                 color: '#e0e0e0',
+//                 selected: false,
+//                 question: section.question,
+//                 type: 'quiz',
+//                 kind: 'lessonSection',
+//                 sectionType: 'quiz',
+//                 options: section.options,
+//                 answer: section.answer,
+//                 quizId: section.id
+//             }
+//             this.layout.layoutNodes.set(quizRect.id, quizRect)
+//             currentY += quizHeight + 10
+
+//             for (let i = 0; i < section.options.length; i++) {
+//                 const optionRect = {
+//                     id: `${articleNode.id}-${index}-option-${i}`,
+//                     sectionId: section.id,
+//                     x: x + padding,
+//                     worldY: currentY - quizHeight + padding + questionHeight + i * optionHeight,
+//                     width: width - padding * 2,
+//                     height: optionHeight,
+//                     padding,
+//                     color: '#d0d0d0',
+//                     selected: false,
+//                     text: section.options[i],
+//                     type: 'text',
+//                     kind: 'lessonSection',
+//                     sectionType: 'quizOption',
+//                     quizId: section.id,
+//                     optionIndex: i,
+//                     answer: section.answer
+//                 }
+//                 this.layout.layoutNodes.set(optionRect.id, optionRect)
+//             }
+//         } else if(section.type === 'survey'){
+//             const questionHeight = 30
+// const responseHeight = 20
+// const optionHeight = 30
+
+// const surveyHeight =
+//     padding * 2 +
+//     questionHeight +
+//     responseHeight +
+//     section.options.length * optionHeight
+
+//             const surveyRect = {
+//                 id: `${articleNode.id}-${index}`,
+//                 sectionId: section.id,
+//                 x,
+//                 worldY: currentY,
+//                 width,
+//                 height: surveyHeight,
+//                 padding,
+//                 color: '#e0e0e0',
+//                 selected: false,
+//                 question: section.question,
+//                 type: 'survey',
+//                 surveyType: section.surveyType,
+//                 kind: 'lessonSection',
+//                 sectionType: 'survey',
+//                 options: section.options,
+//                 surveyId: section.id
+//             }
+//             this.layout.layoutNodes.set(surveyRect.id, surveyRect)
+//             currentY += surveyHeight + 10
+
+//             for (let i = 0; i < section.options.length; i++) {
+//                 const optionRect = {
+//                     id: `${articleNode.id}-${index}-option-${i}`,
+//                     sectionId: section.id,
+//                     x: x + padding,
+//                     worldY:
+//     currentY -
+//     surveyHeight +
+//     padding +
+//     questionHeight +
+//     responseHeight +
+//     i * optionHeight,    
+//     width: width - padding * 2,                
+//                     height: optionHeight,
+//                     padding,
+//                     color: '#d0d0d0',
+//                     selected: false,
+//                     text: section.options[i],
+//                     type: 'text',
+//                     kind: 'lessonSection',
+//                     sectionType: 'surveyOption',
+//                     surveyId: section.id,
+//                     optionIndex: i
+//                 }
+//                 this.layout.layoutNodes.set(optionRect.id, optionRect)
+//             }

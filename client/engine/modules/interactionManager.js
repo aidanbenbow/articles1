@@ -53,12 +53,20 @@ this.emitLayoutChanged()
    return
 }
 
+if (targetNode.sectionType === 'continueButton') {
+   
+    this.engine.context.advanceLessonSection()
+    return
+}
+
+
 if(
     targetNode.kind === 'lessonSection' ||
     targetNode.kind === 'lessonTitle'
 ) {
     return
 }
+
 
 if(targetNode.type === 'button') {
     this.state = {
@@ -128,7 +136,7 @@ appendSearchTerm(char) {
         )
     }
 handleQuizOption(targetNode) {
-
+console.log('handleQuizOption', targetNode)
     const { quizId, optionIndex, answer } = targetNode
 
    if (quizId in this.state.quizAnswers) {

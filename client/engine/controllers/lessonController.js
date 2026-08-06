@@ -21,12 +21,14 @@ export class LessonController {
 
 
     answerQuiz(
+        sectionId,
         quizId,
         optionIndex,
         answer
     ) {
 
         this.lessonService.answerQuiz(
+            sectionId,
             quizId,
             optionIndex,
             answer
@@ -114,9 +116,14 @@ const viewport = this.engine.context.getViewport()
         )
     }
     advanceLesson() {
-
     const moved =
         this.lessonService.lesson.advanceSection()
+        if(moved) {
+            this.engine.emit('lessonStateChanged', {
+                currentSectionId:
+                    this.lessonService.lesson.currentSectionId
+            })
+        }
 
     return moved
 

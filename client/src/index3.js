@@ -38,3 +38,5 @@ const headerNode = eng.context.createNode('headerNode', 'header', articlesScreen
 const inputNode = eng.context.createNode('inputNode', 'inputBox', headerNode.id, { placeholder: '',width: 200, height: 50 , color: '#e1d0d0', flexGrow: 1 })
 
 const backButtonNode = eng.context.createNode('backButtonNode', 'button', headerNode.id, { text: 'back',  color: '#23979d', flexGrow: 1 })
+
+const continueButtonNode = eng.context.createNode('lesson-continue', 'button', headerNode.id, { text: 'continue',  color: '#23979d', flexGrow: 1 })

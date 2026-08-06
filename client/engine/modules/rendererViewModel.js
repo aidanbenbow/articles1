@@ -9,6 +9,7 @@ export function createRendererViewModel( allnodes,state, lesson) {
     //const nodeSelected = allnodes.find(node => node.id === state.selectedNodeId)
     const lessonSectionNodes = allnodes.filter(node => node.kind === 'lessonSection')
     const lessonTitleNodes = allnodes.filter(node =>  node.kind === 'lessonTitle')
+    
     return {
         inputNodes,
         buttonNodes,

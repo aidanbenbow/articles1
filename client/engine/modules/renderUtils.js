@@ -124,32 +124,7 @@ export function renderLesson(ctx, sections, viewport, lesson) {
             lesson
         )
     }
-    // for (const section of sections) {
-
-    //     switch (section.sectionType) {
-
-    //         case 'heading':
-    //             renderHeading(ctx, section, viewport)
-    //             break
-
-    //         case 'paragraph':
-    //             renderParagraph(ctx, section, viewport)
-    //             break
-
-    //         case 'quiz':
-    //             renderQuiz(ctx, section, viewport, answers.quizAnswers, answers.quizScore)
-    //             break
-    //         case 'quizOption':
-    //             renderQuizOption(ctx, section, viewport, answers.quizAnswers)
-    //             break
-    //             case 'survey':
-    // renderSurvey(ctx, section, viewport, answers.surveyResponses, answers.surveyResults)
-    // break
-    // case 'surveyOption':
-    // renderSurveyOption(ctx, section, viewport, answers.surveyResponses, answers.surveyResults)
-    // break
-    //     }
-
+  
     }
 
     function renderLessonSection(
@@ -215,6 +190,13 @@ export function renderLesson(ctx, sections, viewport, lesson) {
                 section,
                 viewport,
                 lesson
+            )
+            break
+            case 'continueButton':
+            renderContinueButton(
+                ctx,
+                section,
+                viewport
             )
             break
     }
@@ -571,6 +553,28 @@ export function renderSurveyOption(
     )
 }
 
+function renderContinueButton(
+    ctx,
+    node,
+    viewport
+) {
+
+    const rect = getScreenRect(node, viewport)
+
+    drawRect(ctx, rect, {showSelection: true})
+
+    ctx.fillStyle = TEXT_COLOR
+    ctx.font = 'bold 18px Arial'
+
+    const textWidth = ctx.measureText(node.text || '').width
+    const textX = rect.x + rect.width / 2 - textWidth / 2
+
+    ctx.fillText(
+        node.text || 'Continue',
+        textX,
+        rect.y + 20
+    )
+}
 
 
 function drawThumbnail(ctx, rect, assetManager) {

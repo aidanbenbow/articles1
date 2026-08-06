@@ -30,10 +30,17 @@ export class LessonService {
  
    
     answerQuiz(sectionId, quizId, optionIndex, answer) {
-
+console.log('LessonService.answerQuiz', {
+        sectionId,
+        quizId,
+        optionIndex,
+        answer,
+        scoreBefore: this.lesson.quizScore
+    })
         if (quizId in this.lesson.quizAnswers) {
             return this.lesson.quizAnswers[quizId]
         }
+
 
         const correct = optionIndex === answer
 
@@ -44,9 +51,16 @@ export class LessonService {
         }
 
         this.completeSection(sectionId)
+        console.log({
+    optionIndex,
+    answer,
+    optionType: typeof optionIndex,
+    answerType: typeof answer
+})
         if (correct) {
             this.lesson.quizScore++
         }
+        console.log('score', this.lesson.quizScore)
         this.lesson.advanceSection()
         return {
             currentSection: this.lesson.currentSectionId,

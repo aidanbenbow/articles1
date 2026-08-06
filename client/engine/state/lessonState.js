@@ -71,50 +71,74 @@ getCurrentSection() {
             ) * 100
         )
     }
-     advanceSection() {
+   advanceSection() {
 
-        if (!this.canUnlockNextSection()) {
-            return false
-        }
+    const current =
+        this.getCurrentSection()
 
-
-        const next =
-            this.getNextSection()
-
-
-        if (!next) {
-
-            this.completed = true
-            return false
-
-        }
+    if (!current) {
+        return false
+    }
 
 
-        this.currentSectionIndex++
+    if (!this.canUnlockNextSection()) {
+        return false
+    }
 
-        this.currentSectionId =
-            next.id
 
+    this.completeSection(current.id)
+
+
+    const next =
+        this.getNextSection()
+
+
+    if (!next) {
+
+        this.completed = true
+        this.currentSectionId = null
 
         return true
-
     }
+
+
+    this.currentSectionIndex++
+
+    this.currentSectionId =
+        next.id
+
+
+    return true
+}
 canUnlockNextSection() {
 
-        const current =
-            this.getCurrentSection()
+    const current =
+        this.getCurrentSection()
 
-
-        if (!current) {
-            return false
-        }
-
-
-        return this.isSectionComplete(
-            current.id
-        )
-
+    if (!current) {
+        return false
     }
+
+
+    switch(current.type) {
+
+        case 'heading':
+        case 'paragraph':
+            return true
+
+
+        case 'quiz':
+            return this.quizAnswers[current.id] !== undefined
+
+
+        case 'survey':
+            return this.surveyResponses[current.id] !== undefined
+
+
+        default:
+            return true
+    }
+}
      getNextSection() {
 
         const nextIndex =

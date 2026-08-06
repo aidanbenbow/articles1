@@ -46,7 +46,7 @@ const viewport = this.engine.context.getViewport()
         const lessonState = this.engine.context.getLesson()
         const allNodes = [...layout.values()]
         const assetManager = this.engine.context.getAssetManager()
-        
+       
         const view = createRendererViewModel(allNodes, interactionState, lessonState)
         
 
@@ -83,6 +83,7 @@ const viewport = this.engine.context.getViewport()
             this._unsubscribe.push(this.engine.on('searchChanged', this.render.bind(this)))
              this._unsubscribe.push(this.engine.on('reportsDataReady', () => this.render())) 
              this._unsubscribe.push(this.engine.on('assetLoaded', () => this.render()))
+             this._unsubscribe.push(this.engine.on('lessonStateChanged', () => this.render()))
     }
     detach() {
         console.log('Renderer detached')
@@ -90,6 +91,24 @@ const viewport = this.engine.context.getViewport()
     destroy() {
         this.detach()
     }
+    renderLessonHeaderOnly() {
+    const viewport = this.engine.context.getViewport()
+    const lessonState = this.engine.context.getLesson()
+
+    // clear only header area
+    this.ctx.clearRect(
+        20,
+        20,
+        viewport.width - 40,
+        60
+    )
+
+    renderLessonHeader(
+        this.ctx,
+        lessonState,
+        viewport
+    )
+}
     
 }
 
