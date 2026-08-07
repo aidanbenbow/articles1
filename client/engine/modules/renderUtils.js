@@ -15,7 +15,7 @@ function resolveScrollY(viewportOrScrollY) {
     return viewportOrScrollY?.y || 0
 }
 
-function getScreenRect(node, viewportOrScrollY) {
+export function getScreenRect(node, viewportOrScrollY) {
     const scrollY = resolveScrollY(viewportOrScrollY)
     return {
         x: node.x,
@@ -109,6 +109,7 @@ export function renderReports(ctx, nodes, viewport, assetManager) {
 }
 
 export function renderLesson(ctx, sections, viewport, lesson) {
+    console.log('renderLesson', sections, lesson)
     for (const section of sections) {
 
         const state =
@@ -238,7 +239,7 @@ ctx.fillText(
 function renderParagraph(ctx, node,state, viewport, lesson) {
 
     const rect = getScreenRect(node, viewport)
-console.log('lesson', lesson)
+
     const sectionState =
         lesson.getSectionState(node.sectionId)
 

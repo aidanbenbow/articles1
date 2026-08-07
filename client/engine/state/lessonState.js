@@ -1,8 +1,9 @@
 export class LessonState {
 
-    constructor(articleId=null, sections=[]) {
+    constructor(articleId=null,title='', sections=[]) {
 
         this.articleId = articleId
+        this.title = title
         this.sections = sections || []
         this.currentSectionIndex = 0
         this.quizAnswers = {}
@@ -15,11 +16,21 @@ export class LessonState {
         this.surveyResponses = {}
         this.surveyResults = {}
 
+        this.phase = 'not-started'
         this.currentSectionId =
             sections[0]?.id ?? null
         this.completedSections = []
          this.startedAt = new Date().toISOString()
         this.completed = false
+    }
+    start(){
+        this.phase = 'intro'
+    }
+    startPhase() {
+        this.phase = 'active'
+    }
+    end() {
+        this.phase = 'completed'
     }
    setCurrentSection(sectionId) {
     this.currentSectionId = sectionId

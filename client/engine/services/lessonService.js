@@ -7,12 +7,15 @@ export class LessonService {
         this.lesson = new LessonState()
     }
 
-    startLesson(articleId, sections) {
+    startLesson(lessonData) {
+console.log('LessonService.startLesson', lessonData)
+        this.lesson = new LessonState(lessonData.articleId, lessonData.title, lessonData.sections)
 
-        this.lesson = new LessonState(articleId, sections)
-
-
+this.lesson.start()
         return this.lesson
+    }
+    startPhase() {
+        this.lesson.startPhase()
     }
 
     getLesson() {

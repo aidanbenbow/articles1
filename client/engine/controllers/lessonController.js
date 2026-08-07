@@ -128,5 +128,8 @@ const viewport = this.engine.context.getViewport()
     return moved
 
 }
+startPhase() {
+    this.lessonService.lesson.startPhase()
+}
    
 }

@@ -170,6 +170,7 @@ const { width, height, thumbnailSize } = this.getArticleCardSize(node)
     if (!articleNode || !lesson) {
         return
     }
+    
 this.clearLessonLayout(articleNode)
     const padding = 20
     const x = this.layout.width / 8
@@ -179,21 +180,12 @@ this.clearLessonLayout(articleNode)
 
     let currentY = worldY
 
-    this.layout.layoutNodes.set(`${articleNode.id}-title`, {
-        id: `${articleNode.id}-title`,
-        sectionId: 'title',
-        x,
-        worldY: currentY,
-        width,
-        height: 50,
-        color,
-        text: lesson.title,
-        kind: 'lessonTitle',
-        type: 'text',
-        padding
-    })
-
     currentY += 70
+
+    if(lesson.phase === 'intro') {
+        this.layoutLessonIntro(articleNode,lesson, currentY, x, width, padding, color)
+        return
+    }
 
     const section = lesson.getCurrentSection()
 
@@ -213,6 +205,40 @@ this.clearLessonLayout(articleNode)
         currentY - worldY + 20
     )
     this.layoutContinueButton(articleNode, currentY, x, width, padding, color)
+}
+
+layoutLessonIntro(articleNode, lesson, currentY, x, width, padding, color) {
+    
+    this.layout.layoutNodes.set(`${articleNode.id}-title`, {
+        id: `${articleNode.id}-title`,
+        sectionId: 'title',
+        x,
+        worldY: currentY,
+        width,
+        height: 50,
+        color,
+        text: lesson.title,
+        kind: 'lessonTitle',
+        type: 'text',
+        padding
+    })
+    currentY += 60
+    this.layout.layoutNodes.set(`${articleNode.id}-stats`, {
+    id: `${articleNode.id}-stats`,
+    type: 'text',
+    kind: 'lessonIntro',
+    text: `${lesson.sections.length} sections • ${lesson.quizTotal} quizzes`,
+    x,
+    worldY: currentY,
+    width,
+    height: 30,
+    color,
+    padding
+    })
+currentY += 40
+
+    currentY = this.layoutStartButton(articleNode, currentY, x, width, padding, color)
+    return currentY
 }
 
 layoutSection( articleNode,
@@ -436,6 +462,27 @@ layoutContinueButton(articleNode, currentY, x, width, padding, color) {
         type: 'button',
         kind: 'lessonSection',
         sectionType: 'continueButton'
+    }
+    this.layout.layoutNodes.set(buttonRect.id, buttonRect)
+    return currentY + buttonHeight + 10
+}
+
+layoutStartButton(articleNode, currentY, x, width, padding, color) {
+    const buttonHeight = 40
+    const buttonRect = {
+        id: `${articleNode.id}-start-button`,
+        sectionId: 'start-button',
+        x,
+        worldY: currentY,
+        width,
+        height: buttonHeight,
+        padding,
+        color: '#23979d',
+        selected: false,
+        text: 'Start',
+        type: 'button',
+        kind: 'startLessonButton',
+        sectionType: 'startButton'
     }
     this.layout.layoutNodes.set(buttonRect.id, buttonRect)
     return currentY + buttonHeight + 10

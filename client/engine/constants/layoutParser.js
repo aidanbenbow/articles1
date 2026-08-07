@@ -29,6 +29,19 @@ export function parseArticle(article) {
         continue
     }
 
+    if (text === ':::lesson') {
+    flushParagraph()
+
+    const { lesson, nextIndex } = parseLesson(lines, i)
+
+    lesson.id = `section-${sectionIndex++}`
+
+    sections.push(lesson)
+
+    i = nextIndex
+    continue
+}
+
     if (text === ':::survey') {
     flushParagraph()
 
@@ -69,9 +82,35 @@ quiz.id = quiz.id || `quiz-${sectionIndex++}`
     flushParagraph()
 
     return {
-        id: article?.props?.articleData?.articleId || null,
-        title: article?.props?.articleData?.title || '',
+        id: article.articleId || null,
+        title: article.title || '',
         sections
+    }
+}
+
+function parseLesson(lines, startIndex) {
+
+    const content = []
+    let i = startIndex + 1
+
+    while (i < lines.length) {
+
+        const text = lines[i].trim()
+
+        if (text === ':::') {
+            break
+        }
+
+        content.push(text)
+        i++
+    }
+
+    return {
+        lesson: {
+            type: 'paragraph',
+            text: content.join(' ').trim()
+        },
+        nextIndex: i
     }
 }
 

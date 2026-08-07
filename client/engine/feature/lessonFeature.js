@@ -24,6 +24,7 @@ export class LessonFeature {
             updateProgress: () => this.lessonController.updateProgress(),
             onViewPortChanged: () => this.lessonController.onViewPortChanged(), 
             advanceLessonSection: () => this.lessonController.advanceLesson(),
+            startLessonPhase: () => this.lessonController.startPhase(),
         }
     }
 

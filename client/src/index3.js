@@ -40,3 +40,5 @@ const inputNode = eng.context.createNode('inputNode', 'inputBox', headerNode.id,
 const backButtonNode = eng.context.createNode('backButtonNode', 'button', headerNode.id, { text: 'back',  color: '#23979d', flexGrow: 1 })
 
 const continueButtonNode = eng.context.createNode('lesson-continue', 'button', headerNode.id, { text: 'continue',  color: '#23979d', flexGrow: 1 })
+
+const startButtonNode = eng.context.createNode('lesson-start', 'button', headerNode.id, { text: 'start',  color: '#23979d', flexGrow: 1 })

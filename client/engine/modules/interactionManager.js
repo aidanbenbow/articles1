@@ -59,6 +59,13 @@ if (targetNode.sectionType === 'continueButton') {
     return
 }
 
+if (targetNode.sectionType === 'startButton') {
+
+    this.engine.context.startLessonPhase()
+    this.emitLayoutChanged()
+
+    return
+}
 
 if(
     targetNode.kind === 'lessonSection' ||
@@ -88,7 +95,7 @@ if(targetNode.type === 'button') {
         const articleId = targetNode.articleId
        const lesson = parseArticle(article)
        
-    this.engine.context.startLesson(articleId, lesson.sections)
+    this.engine.context.startLesson(lesson)
 
         this.engine.context.selectArticle(articleId)
       

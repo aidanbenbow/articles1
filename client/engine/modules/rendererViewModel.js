@@ -9,6 +9,7 @@ export function createRendererViewModel( allnodes,state, lesson) {
     //const nodeSelected = allnodes.find(node => node.id === state.selectedNodeId)
     const lessonSectionNodes = allnodes.filter(node => node.kind === 'lessonSection')
     const lessonTitleNodes = allnodes.filter(node =>  node.kind === 'lessonTitle')
+    const lessonIntroNodes = allnodes.filter(node =>  node.kind === 'lessonIntro')
     
     return {
         inputNodes,
@@ -19,6 +20,7 @@ export function createRendererViewModel( allnodes,state, lesson) {
         reportsNodes,
         lessonSectionNodes,
         lessonTitleNodes,
+        lessonIntroNodes,
         searchTerm: state.searchTerm,
 
         // Lesson data

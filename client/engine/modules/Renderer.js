@@ -1,6 +1,7 @@
 import { createRendererViewModel } from './rendererViewModel.js'
 import { renderInputBoxes, renderButtons, renderReports, renderReportsToDo, renderBackground, renderArticle, renderHeader, renderLesson, renderLessonTitle  } from './renderUtils.js'
 import { renderLessonHeader } from '../renderers/renderLessonHeader.js'
+import { renderLessonIntro } from '../renderers/renderLessonIntro.js'
 
 export class Renderer {
     constructor(engine) {
@@ -49,25 +50,45 @@ const viewport = this.engine.context.getViewport()
        
         const view = createRendererViewModel(allNodes, interactionState, lessonState)
         
-
-        if(view.lessonTitleNodes.length) {
-            renderLessonTitle(this.ctx, view.lessonTitleNodes[0], viewport)
-        }
-
-        if (view.lessonSectionNodes.length) {
+        if(!lessonState || lessonState.phase === 'not-started') {
+            renderReports(this.ctx, view.reportsNodes, viewport, assetManager)
             
-    renderLesson(this.ctx, view.lessonSectionNodes, viewport, lessonState)
-    renderLessonHeader(this.ctx, lessonState, viewport)
-} else {
-    renderReports(this.ctx, view.reportsNodes, viewport, assetManager)
-    
         renderHeader(this.ctx, view.headerNode, viewport)
         renderInputBoxes(this.ctx, view.inputNodes, viewport, interactionState.searchTerm)
         renderButtons(this.ctx, view.buttonNodes, viewport)
-}
-       
+        }
 
-        
+        switch (lessonState.phase) {
+
+    case 'intro':
+        renderLessonIntro(this.ctx, view, viewport)
+        break
+
+    case 'active':
+        renderLesson(this.ctx, view.lessonSectionNodes, viewport, lessonState)
+        renderLessonHeader(this.ctx, lessonState, viewport)
+        break
+
+    case 'completed':
+        renderLessonComplete(this.ctx, lesson, viewport)
+        break
+}
+
+//         if(view.lessonTitleNodes.length) {
+//             renderLessonTitle(this.ctx, view.lessonTitleNodes[0], viewport)
+//         }
+
+//         if (view.lessonSectionNodes.length) {
+            
+//     renderLesson(this.ctx, view.lessonSectionNodes, viewport, lessonState)
+//     renderLessonHeader(this.ctx, lessonState, viewport)
+// } else {
+    // renderReports(this.ctx, view.reportsNodes, viewport, assetManager)
+    
+    //     renderHeader(this.ctx, view.headerNode, viewport)
+    //     renderInputBoxes(this.ctx, view.inputNodes, viewport, interactionState.searchTerm)
+    //     renderButtons(this.ctx, view.buttonNodes, viewport)
+  
         if(view.reportsToDoNode) {
             renderReportsToDo(this.ctx, view.reportsToDoNode, viewport)
         }
