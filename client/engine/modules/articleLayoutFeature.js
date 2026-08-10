@@ -157,7 +157,9 @@ const { width, height, thumbnailSize } = this.getArticleCardSize(node)
             (
                 rect.kind === 'lessonSection' ||
                 rect.kind === 'lessonTitle' ||
-                rect.kind === 'lessonControl'
+                rect.kind === 'lessonControl'||
+                rect.kind === 'lessonIntro'||
+                rect.kind === 'startLessonButton'
             )
         ) {
             this.layout.layoutNodes.delete(id)

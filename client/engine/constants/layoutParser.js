@@ -1,7 +1,6 @@
 export function parseArticle(article) {
-    const content = article.content || ''|| article.article 
+    const content = article.content || article.article || ''
    
-            ''
     const lines = content.split('\n')
 
     const sections = []
