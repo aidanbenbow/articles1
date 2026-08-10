@@ -8,7 +8,7 @@ export class LessonService {
     }
 
     startLesson(lessonData) {
-console.log('LessonService.startLesson', lessonData)
+
         this.lesson = new LessonState(lessonData.articleId, lessonData.title, lessonData.sections)
 
 this.lesson.start()
@@ -33,13 +33,7 @@ this.lesson.start()
  
    
     answerQuiz(sectionId, quizId, optionIndex, answer) {
-console.log('LessonService.answerQuiz', {
-        sectionId,
-        quizId,
-        optionIndex,
-        answer,
-        scoreBefore: this.lesson.quizScore
-    })
+
         if (quizId in this.lesson.quizAnswers) {
             return this.lesson.quizAnswers[quizId]
         }
@@ -54,16 +48,11 @@ console.log('LessonService.answerQuiz', {
         }
 
         this.completeSection(sectionId)
-        console.log({
-    optionIndex,
-    answer,
-    optionType: typeof optionIndex,
-    answerType: typeof answer
-})
+     
         if (correct) {
             this.lesson.quizScore++
         }
-        console.log('score', this.lesson.quizScore)
+        
         this.lesson.advanceSection()
         return {
             currentSection: this.lesson.currentSectionId,

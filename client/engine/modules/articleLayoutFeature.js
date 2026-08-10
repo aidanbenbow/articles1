@@ -310,6 +310,7 @@ layoutHeadingSection(articleNode, section, currentY, x, width, padding, color) {
         kind: 'lessonSection',
         sectionType: 'heading'
     }
+    console.log('layoutHeadingSection', headingRect)
     this.layout.layoutNodes.set(headingRect.id, headingRect)
     return currentY + headingHeight + 10
 }

@@ -65,6 +65,7 @@ const viewport = this.engine.context.getViewport()
         break
 
     case 'active':
+       
         renderLesson(this.ctx, view.lessonSectionNodes, viewport, lessonState)
         renderLessonHeader(this.ctx, lessonState, viewport)
         break
@@ -74,21 +75,6 @@ const viewport = this.engine.context.getViewport()
         break
 }
 
-//         if(view.lessonTitleNodes.length) {
-//             renderLessonTitle(this.ctx, view.lessonTitleNodes[0], viewport)
-//         }
-
-//         if (view.lessonSectionNodes.length) {
-            
-//     renderLesson(this.ctx, view.lessonSectionNodes, viewport, lessonState)
-//     renderLessonHeader(this.ctx, lessonState, viewport)
-// } else {
-    // renderReports(this.ctx, view.reportsNodes, viewport, assetManager)
-    
-    //     renderHeader(this.ctx, view.headerNode, viewport)
-    //     renderInputBoxes(this.ctx, view.inputNodes, viewport, interactionState.searchTerm)
-    //     renderButtons(this.ctx, view.buttonNodes, viewport)
-  
         if(view.reportsToDoNode) {
             renderReportsToDo(this.ctx, view.reportsToDoNode, viewport)
         }

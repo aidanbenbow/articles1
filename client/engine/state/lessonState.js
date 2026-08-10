@@ -9,7 +9,7 @@ export class LessonState {
         this.quizAnswers = {}
         this.quizScore = 0
          this.quizTotal =
-            sections.filter(
+            this.sections.filter(
                 s => s.type === 'quiz'
             ).length
 

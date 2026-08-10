@@ -38,7 +38,7 @@ if(targetNode.type === 'input') {
 
     }
 }
-
+console.log('TARGET NODE', targetNode)
 if (targetNode.sectionType === 'surveyOption') {
  await this.engine.context.answerSurvey(targetNode.surveyId, targetNode.optionIndex)
  this.emitLayoutChanged()
@@ -62,14 +62,16 @@ if (targetNode.sectionType === 'continueButton') {
 if (targetNode.sectionType === 'startButton') {
 
     this.engine.context.startLessonPhase()
-    this.emitLayoutChanged()
-
+   // this.emitLayoutChanged()
+this.engine.emit('lessonStateChanged', this.engine.context.getLesson())
     return
 }
 
 if(
     targetNode.kind === 'lessonSection' ||
-    targetNode.kind === 'lessonTitle'
+    targetNode.kind === 'lessonTitle'||
+    targetNode.kind === 'lessonIntro'
+   
 ) {
     return
 }
@@ -85,7 +87,7 @@ if(targetNode.type === 'button') {
     this.engine.context.clearSelectedArticle()
     return
 } else if(targetNode.type === 'text') {
-
+console.log('FALLING THROUGH TO ARTICLE HANDLER', targetNode)
         this.state = {
             ...this.state,
             view:  'article',
@@ -93,6 +95,7 @@ if(targetNode.type === 'button') {
         }
         const article = targetNode.articleData || null
         const articleId = targetNode.articleId
+        console.log('ARTICLE DATA', article, articleId)
        const lesson = parseArticle(article)
        
     this.engine.context.startLesson(lesson)

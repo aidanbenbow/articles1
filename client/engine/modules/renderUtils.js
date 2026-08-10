@@ -109,7 +109,7 @@ export function renderReports(ctx, nodes, viewport, assetManager) {
 }
 
 export function renderLesson(ctx, sections, viewport, lesson) {
-    console.log('renderLesson', sections, lesson)
+   console.log('renderLesson', sections)
     for (const section of sections) {
 
         const state =
@@ -227,13 +227,19 @@ switch (state) {
     case 'locked':
         icon = '○'
         break
-}
+}ctx.save()
+ 
 
+    // Draw the text
+    ctx.fillStyle = 'black'
+    ctx.font = 'bold 20px sans-serif'
+    ctx.textBaseline = 'top'
 ctx.fillText(
     `${icon} ${node.text}`,
     rect.x + 15,
     rect.y + 20
 )
+ctx.restore()
 }
 
 function renderParagraph(ctx, node,state, viewport, lesson) {
