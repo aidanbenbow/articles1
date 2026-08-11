@@ -1,24 +1,24 @@
 export class LessonState {
 
-    constructor(articleId=null,title='', sections=[]) {
+    constructor(lesson={}) {
 
-        this.articleId = articleId
-        this.title = title
-        this.sections = sections || []
+        this.articleId = lesson.articleId
+        this.title = lesson.title
+        this.sections = lesson.sections || []
+        this.description = lesson.description || ''
         this.currentSectionIndex = 0
         this.quizAnswers = {}
         this.quizScore = 0
-         this.quizTotal =
-            this.sections.filter(
-                s => s.type === 'quiz'
-            ).length
+         this.quizTotal = lesson.quizTotal
+            this.surveyTotal = lesson.surveyTotal
+            this.lessonTotal = lesson.lessonTotal
 
         this.surveyResponses = {}
         this.surveyResults = {}
 
         this.phase = 'not-started'
         this.currentSectionId =
-            sections[0]?.id ?? null
+            this.sections[0]?.id ?? null
         this.completedSections = []
          this.startedAt = new Date().toISOString()
         this.completed = false

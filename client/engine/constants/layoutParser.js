@@ -7,6 +7,9 @@ export function parseArticle(article) {
 
     let paragraph = []
     let sectionIndex = 0
+    let lessonTotal = 0
+    let quizTotal = 0
+    let surveyTotal = 0
 
     function flushParagraph() {
         if (!paragraph.length) return
@@ -34,6 +37,7 @@ export function parseArticle(article) {
     const { lesson, nextIndex } = parseLesson(lines, i)
 
     lesson.id = `section-${sectionIndex++}`
+    lessonTotal++
 
     sections.push(lesson)
 
@@ -47,7 +51,7 @@ export function parseArticle(article) {
     const { survey, nextIndex } = parseSurvey(lines, i)
 survey.id = survey.surveyId || `survey-${sectionIndex++}`
     sections.push(survey)
-
+surveyTotal++
     i = nextIndex
     continue
 }
@@ -58,7 +62,7 @@ survey.id = survey.surveyId || `survey-${sectionIndex++}`
         const { quiz, nextIndex } = parseQuiz(lines, i)
 quiz.id = quiz.id || `quiz-${sectionIndex++}`
         sections.push(quiz)
-
+quizTotal++
         i = nextIndex
         continue
     }
@@ -79,11 +83,16 @@ quiz.id = quiz.id || `quiz-${sectionIndex++}`
 }
 
     flushParagraph()
+    const firstParagraph = sections.find(section => section.type === 'paragraph')
 
     return {
         id: article.articleId || null,
         title: article.title || '',
-        sections
+        description: article.description ||  firstParagraph.text || '',
+        sections,
+        lessonTotal,
+        quizTotal,
+        surveyTotal
     }
 }
 
@@ -106,7 +115,7 @@ function parseLesson(lines, startIndex) {
 
     return {
         lesson: {
-            type: 'paragraph',
+            type: 'lesson',
             text: content.join(' ').trim()
         },
         nextIndex: i

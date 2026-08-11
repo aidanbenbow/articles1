@@ -210,26 +210,51 @@ this.clearLessonLayout(articleNode)
 }
 
 layoutLessonIntro(articleNode, lesson, currentY, x, width, padding, color) {
-    
+    const titleHeight = 60
+    const descriptionHeight = lesson.description ? 60 : 0
+    const gap = 16
     this.layout.layoutNodes.set(`${articleNode.id}-title`, {
         id: `${articleNode.id}-title`,
         sectionId: 'title',
         x,
         worldY: currentY,
         width,
-        height: 50,
+        height: titleHeight,
         color,
         text: lesson.title,
         kind: 'lessonTitle',
         type: 'text',
         padding
     })
-    currentY += 60
+    currentY += titleHeight  + gap
+console.log(lesson)
+     if (lesson.description) {
+        this.layout.layoutNodes.set(`${articleNode.id}-description`, {
+            id: `${articleNode.id}-description`,
+            sectionId: 'description',
+            x,
+            worldY: currentY,
+            width,
+            height: descriptionHeight,
+            color,
+            text: lesson.description,
+            kind: 'lessonDescription',
+            type: 'text',
+            padding
+        })
+
+        currentY += descriptionHeight + gap
+    }
+     const lessonTotal = lesson.lessonTotal || 0
+    const quizCount = lesson.quizTotal || 0
+    const surveyCount = lesson.surveyTotal || 0
+
+    const stats = [`${lessonTotal} learning blocks`, `${quizCount} quizzes`, `${surveyCount} surveys`].filter(Boolean).join(' • ')
     this.layout.layoutNodes.set(`${articleNode.id}-stats`, {
     id: `${articleNode.id}-stats`,
     type: 'text',
-    kind: 'lessonIntro',
-    text: `${lesson.sections.length} sections • ${lesson.quizTotal} quizzes`,
+    kind: 'lessonStats',
+    text: stats,
     x,
     worldY: currentY,
     width,

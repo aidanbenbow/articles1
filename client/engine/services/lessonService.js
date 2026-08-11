@@ -9,7 +9,7 @@ export class LessonService {
 
     startLesson(lessonData) {
 
-        this.lesson = new LessonState(lessonData.articleId, lessonData.title, lessonData.sections)
+        this.lesson = new LessonState(lessonData)
 
 this.lesson.start()
         return this.lesson
@@ -21,6 +21,7 @@ this.lesson.start()
     getLesson() {
         return this.lesson
     }
+    
    setCurrentSection(sectionId) {
 
     if (!this.lesson) {

@@ -95,9 +95,9 @@ console.log('FALLING THROUGH TO ARTICLE HANDLER', targetNode)
         }
         const article = targetNode.articleData || null
         const articleId = targetNode.articleId
-        console.log('ARTICLE DATA', article, articleId)
+        
        const lesson = parseArticle(article)
-       
+       console.log('PARSED LESSON', lesson)
     this.engine.context.startLesson(lesson)
 
         this.engine.context.selectArticle(articleId)

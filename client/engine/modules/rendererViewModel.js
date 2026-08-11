@@ -9,7 +9,20 @@ export function createRendererViewModel( allnodes,state, lesson) {
     //const nodeSelected = allnodes.find(node => node.id === state.selectedNodeId)
     const lessonSectionNodes = allnodes.filter(node => node.kind === 'lessonSection')
     const lessonTitleNodes = allnodes.filter(node =>  node.kind === 'lessonTitle')
-    const lessonIntroNodes = allnodes.filter(node =>  node.kind === 'lessonIntro')
+    const lessonDescriptionNodes = allnodes.filter(node =>  node.kind === 'lessonDescription')
+    const lessonStatsNodes = allnodes.filter(node =>  node.kind === 'lessonStats')
+
+    const currentSection = lesson?.currentSectionIndex ?? 0
+    const currentLessonSection = lessonSectionNodes.find(node => node.props?.sectionIndex === currentSection) || null
+
+    const quizAnswers = lesson?.quizAnswers || {}
+    const quizScore = lesson?.quizScore || 0
+    const quizTotal = lesson?.quizTotal || 0
+    const surveyResponses = lesson?.surveyResponses || {}
+    const surveyResults = lesson?.surveyResults || {}
+    const surveyTotal = lesson?.surveyTotal || 0
+    const completedSections = lesson?.completedSections || []
+    const progress = lesson?.getProgress ? lesson.getProgress() : 0
     
     return {
         inputNodes,
@@ -20,33 +33,26 @@ export function createRendererViewModel( allnodes,state, lesson) {
         reportsNodes,
         lessonSectionNodes,
         lessonTitleNodes,
-        lessonIntroNodes,
+        lessonDescriptionNodes,
+        lessonStatsNodes,
+        currentLessonSection,
+        currentSection,
         searchTerm: state.searchTerm,
 
         // Lesson data
-        quizAnswers:
-            lesson?.quizAnswers || {},
+        lessonTitle: lesson?.title || '',
+        lessonDescription: lesson?.description || '',
+        lessonTotal: lesson?.lessonTotal || 0,
+        quizAnswers,
+        quizScore,
+        quizTotal,
 
-        quizScore:
-            lesson?.quizScore || 0,
+        surveyResponses,
+        surveyResults,
+        surveyTotal,
 
-        quizTotal:
-            lesson?.quizTotal || 0,
-
-        surveyResponses:
-            lesson?.surveyResponses || {},
-
-        surveyResults:
-            lesson?.surveyResults || {},
-
-
-        completedSections:
-            lesson?.completedSections || [],
-
-        progress:
-            lesson?.getProgress
-                ? lesson.getProgress()
-                : 0
+        completedSections,
+        progress
        
     }
 }
