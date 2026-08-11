@@ -1,5 +1,6 @@
+
 import { getNodeStyle, layoutVerticalList } from "../constants/layoutConstants.js"
-import { parseArticle } from "../constants/layoutParser.js"
+
 import { matchesOrderedPrefix, normalize } from "./search.js"
 
 export class ArticleLayoutFeature {
@@ -131,10 +132,11 @@ const { width, height, thumbnailSize } = this.getArticleCardSize(node)
                     text: node.props?.title || 'article',
                     content: node.props?.articleData?.content || '',
                    
-                   excerpt: node.props?.articleData?.excerpt || ''
+                   excerpt: node.props?.articleData?.excerpt
                    || node.props?.articleData?.article?.substring(0, 100) || '',
                     type: 'text',
                     kind: 'article',
+                    action: 'openLesson',
                     worldY
                 }
             }
@@ -159,7 +161,9 @@ const { width, height, thumbnailSize } = this.getArticleCardSize(node)
                 rect.kind === 'lessonTitle' ||
                 rect.kind === 'lessonControl'||
                 rect.kind === 'lessonIntro'||
-                rect.kind === 'startLessonButton'
+                rect.kind === 'startLessonButton'||
+                rect.kind === 'lessonDescription'||
+                rect.kind === 'lessonStats'
             )
         ) {
             this.layout.layoutNodes.delete(id)
@@ -337,7 +341,7 @@ layoutHeadingSection(articleNode, section, currentY, x, width, padding, color) {
         kind: 'lessonSection',
         sectionType: 'heading'
     }
-    console.log('layoutHeadingSection', headingRect)
+    
     this.layout.layoutNodes.set(headingRect.id, headingRect)
     return currentY + headingHeight + 10
 }
@@ -406,6 +410,7 @@ const quizHeight =
             type: 'text',
             kind: 'lessonSection',
             sectionType: 'quizOption',
+            action: 'answerQuiz',
             quizId: section.id,
             optionIndex: i,
             answer: section.answer
@@ -467,7 +472,8 @@ const surveyHeight =
             kind: 'lessonSection',
             sectionType: 'surveyOption',
             surveyId: section.id,
-            optionIndex: i
+            optionIndex: i,
+            action: 'answerSurvey'
         }
         this.layout.layoutNodes.set(optionRect.id, optionRect)
     }
@@ -489,7 +495,8 @@ layoutContinueButton(articleNode, currentY, x, width, padding, color) {
         text: 'Continue',
         type: 'button',
         kind: 'lessonSection',
-        sectionType: 'continueButton'
+        sectionType: 'continueButton',
+        action: 'advanceLessonSection'
     }
     this.layout.layoutNodes.set(buttonRect.id, buttonRect)
     return currentY + buttonHeight + 10
@@ -510,7 +517,8 @@ layoutStartButton(articleNode, currentY, x, width, padding, color) {
         text: 'Start',
         type: 'button',
         kind: 'startLessonButton',
-        sectionType: 'startButton'
+        sectionType: 'startButton',
+        action: 'startLessonPhase'
     }
     this.layout.layoutNodes.set(buttonRect.id, buttonRect)
     return currentY + buttonHeight + 10
