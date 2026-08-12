@@ -31,6 +31,7 @@ async handleTargetNode(targetNode) {
 
         switch (targetNode.action) {
             case 'advanceLessonSection':
+     
                 this.engine.context.advanceLessonSection()
                 return
             case 'startLessonPhase':

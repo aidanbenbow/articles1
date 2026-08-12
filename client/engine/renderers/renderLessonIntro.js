@@ -1,12 +1,12 @@
 import { getScreenRect, renderButtons, renderLessonTitle } from "../modules/renderUtils.js"
 
 export function renderLessonIntro(ctx, view, viewport) {
-console.log("renderLessonIntro", view)
+
    const titleNode = view.lessonTitleNodes[0]
    const descriptionNode = view.lessonDescriptionNodes[0]
    const statsNode = view.lessonStatsNodes[0]
    const buttonNode = view.buttonNodes.find(node => node.kind === 'startLessonButton')
-console.log("title node", titleNode, "description node", descriptionNode, "stats node", statsNode, "button node", buttonNode)
+
    if(titleNode) {
        renderLessonTitle(ctx, titleNode, viewport)
    }

@@ -109,14 +109,14 @@ export function renderReports(ctx, nodes, viewport, assetManager) {
 }
 
 export function renderLesson(ctx, sections, viewport, lesson) {
-   console.log('renderLesson', sections)
+   //console.log('renderLesson', sections)
     for (const section of sections) {
 
         const state =
             lesson.getSectionState(
                 section.sectionId
             )
-
+console.log('renderLesson section', section, state)
         renderLessonSection(
             ctx,
             section,
@@ -138,7 +138,7 @@ export function renderLesson(ctx, sections, viewport, lesson) {
 
     switch (section.sectionType) {
 
-        case 'heading':
+        case 'lessonHeading':
             renderHeading(
                 ctx,
                 section,
@@ -147,7 +147,7 @@ export function renderLesson(ctx, sections, viewport, lesson) {
             )
             break
 
-        case 'paragraph':
+        case 'lessonParagraph':
             renderParagraph(
                 ctx,
                 section,
@@ -211,7 +211,7 @@ function renderHeading(
     viewport
 ) {
     const rect = getScreenRect(node, viewport)
-
+console.log('renderHeading', node, rect)
     let icon = ''
 
 switch (state) {

@@ -1,4 +1,5 @@
 export function createRendererViewModel( allnodes,state, lesson) {
+
     const inputNodes = allnodes.filter(node => node.type === 'input')
     const buttonNodes = allnodes.filter(node => node.type === 'button')
     const headerNode = allnodes.find(node => node.type === 'header')

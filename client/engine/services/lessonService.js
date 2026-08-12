@@ -54,7 +54,7 @@ this.lesson.start()
             this.lesson.quizScore++
         }
         
-        this.lesson.advanceSection()
+      
         return {
             currentSection: this.lesson.currentSectionId,
             correct,
@@ -78,7 +78,7 @@ this.lesson.start()
         this.lesson.surveyResponses[surveyId] = optionIndex
 
         this.completeSection(surveyId)
-        this.lesson.advanceSection()
+       
         // Save to server
         const results =
             await this.surveyApi.recordSurveyResponse(

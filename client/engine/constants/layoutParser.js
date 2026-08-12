@@ -11,42 +11,50 @@ export function parseArticle(article) {
     let quizTotal = 0
     let surveyTotal = 0
 
-    function flushParagraph() {
-        if (!paragraph.length) return
+    let lessonBlocks = []
+
+    function flushLesson() {
+        if (!lessonBlocks.length) return
 
         sections.push({
             id: `section-${sectionIndex++}`,
-            type: 'paragraph',
-            text: paragraph.join(' ').trim()
+            type: 'lesson',
+            text: lessonBlocks
         })
-
-        paragraph = []
+lessonTotal++
+        lessonBlocks = []
     }
 
     for (let i = 0; i < lines.length; i++) {
     const text = lines[i].trim()
 
     if (!text) {
-        flushParagraph()
         continue
     }
 
     if (text === ':::lesson') {
-    flushParagraph()
+    flushLesson()
 
     const { lesson, nextIndex } = parseLesson(lines, i)
 
-    lesson.id = `section-${sectionIndex++}`
-    lessonTotal++
-
-    sections.push(lesson)
+    sections.push({
+                id: `section-${sectionIndex++}`,
+                type: 'lesson',
+                blocks: [
+                    {
+                        type: 'paragraph',
+                        text: lesson.text
+                    }
+                ]
+            })
+            lessonTotal++
 
     i = nextIndex
     continue
 }
 
     if (text === ':::survey') {
-    flushParagraph()
+    flushLesson()
 
     const { survey, nextIndex } = parseSurvey(lines, i)
 survey.id = survey.surveyId || `survey-${sectionIndex++}`
@@ -57,7 +65,7 @@ surveyTotal++
 }
 
     if (text === ':::quiz') {
-        flushParagraph()
+        flushLesson()
 
         const { quiz, nextIndex } = parseQuiz(lines, i)
 quiz.id = quiz.id || `quiz-${sectionIndex++}`
@@ -68,27 +76,37 @@ quizTotal++
     }
 
     if (text.startsWith('## ')) {
-        flushParagraph()
-
-        sections.push({
-            id: `section-${sectionIndex++}`,
+        lessonBlocks.push({
             type: 'heading',
-            text: text.substring(3)
+            text: text.substring(3).trim()
         })
 
         continue
     }
 
-    paragraph.push(text)
+ lessonBlocks.push({
+        type: 'paragraph',
+        text: text
+    })
 }
 
-    flushParagraph()
-    const firstParagraph = sections.find(section => section.type === 'paragraph')
+    flushLesson()
+    //   const firstParagraph =
+    //     sections
+    //         .flatMap(section =>
+    //             section.type === 'lesson'
+    //                 ? section.blocks
+    //                 : []
+    //         )
+    //         .find(
+    //             block =>
+    //                 block.type === 'paragraph'
+    //         )
 
     return {
         id: article.articleId || null,
         title: article.title || '',
-        description: article.description ||  firstParagraph.text || '',
+        description: article.description ||  firstParagraph?.text || '',
         sections,
         lessonTotal,
         quizTotal,
@@ -97,27 +115,65 @@ quizTotal++
 }
 
 function parseLesson(lines, startIndex) {
+    const blocks = []
 
-    const content = []
+    let paragraph = []
+
     let i = startIndex + 1
+
+    function flushParagraph() {
+        if (!paragraph.length) {
+            return
+        }
+
+        blocks.push({
+            type: 'paragraph',
+            text: paragraph.join(' ').trim()
+        })
+
+        paragraph = []
+    }
 
     while (i < lines.length) {
 
-        const text = lines[i].trim()
+        const text =
+            lines[i].trim()
 
         if (text === ':::') {
             break
         }
 
-        content.push(text)
+        if (!text) {
+            flushParagraph()
+            i++
+            continue
+        }
+
+        if (text.startsWith('## ')) {
+            flushParagraph()
+
+            blocks.push({
+                type: 'heading',
+                text: text.substring(3)
+            })
+
+            i++
+            continue
+        }
+
+        paragraph.push(text)
+
         i++
     }
+
+    flushParagraph()
 
     return {
         lesson: {
             type: 'lesson',
-            text: content.join(' ').trim()
+            blocks
         },
+
         nextIndex: i
     }
 }

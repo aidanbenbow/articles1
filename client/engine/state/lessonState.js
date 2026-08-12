@@ -65,10 +65,12 @@ export class LessonState {
     return 'locked'
 }
 getCurrentSection() {
+ console.log('getCurrentSection', this.currentSectionId)
     return this.sections.find(
         s => s.id === this.currentSectionId
     ) ?? null
 }
+    
     getProgress() {
 
         if (!this.sections.length) {
@@ -83,7 +85,7 @@ getCurrentSection() {
         )
     }
    advanceSection() {
-
+ 
     const current =
         this.getCurrentSection()
 
@@ -102,7 +104,6 @@ getCurrentSection() {
 
     const next =
         this.getNextSection()
-
 
     if (!next) {
 
@@ -133,8 +134,7 @@ canUnlockNextSection() {
 
     switch(current.type) {
 
-        case 'heading':
-        case 'paragraph':
+        case 'lesson':
             return true
 
 

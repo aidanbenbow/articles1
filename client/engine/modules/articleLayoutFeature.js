@@ -1,5 +1,7 @@
 
 import { getNodeStyle, layoutVerticalList } from "../constants/layoutConstants.js"
+import { layoutHeadingBlock } from "../layout/layoutHeadingBlock.js"
+import { layoutParagraphBlock } from "../layout/layoutParagraphBlock.js"
 
 import { matchesOrderedPrefix, normalize } from "./search.js"
 
@@ -163,7 +165,9 @@ const { width, height, thumbnailSize } = this.getArticleCardSize(node)
                 rect.kind === 'lessonIntro'||
                 rect.kind === 'startLessonButton'||
                 rect.kind === 'lessonDescription'||
-                rect.kind === 'lessonStats'
+                rect.kind === 'lessonStats' ||
+                rect.kind === 'lessonParagraph' ||
+                rect.kind === 'lessonHeading'
             )
         ) {
             this.layout.layoutNodes.delete(id)
@@ -184,7 +188,7 @@ this.clearLessonLayout(articleNode)
     const width = Math.min(this.layout.width * 0.75, 600)
     const color = articleNode?.props?.color || '#ffffff'
 
-    let currentY = worldY
+    let currentY =0
 
     currentY += 70
 
@@ -194,7 +198,7 @@ this.clearLessonLayout(articleNode)
     }
 
     const section = lesson.getCurrentSection()
-
+console.log('layoutArticlesDetail section', section)
     if (section) {
         currentY = this.layoutSection(
             articleNode,
@@ -280,28 +284,38 @@ layoutSection( articleNode,
     padding,
     color){
         switch(currentSection.type){
-            case 'heading':
-                return this.layoutHeadingSection(
-                    articleNode,
-                    currentSection,
-                    currentY,
-                    x,
-                    width,
-                    padding,
-                    color
-                )
+            // case 'heading':
+            //     return this.layoutHeadingSection(
+            //         articleNode,
+            //         currentSection,
+            //         currentY,
+            //         x,
+            //         width,
+            //         padding,
+            //         color
+            //     )
                 
-            case 'paragraph':
-                return this.layoutParagraphSection( 
-                    articleNode,
-                    currentSection,
-                    currentY,
-                    x,
-                    width,
-                    padding,
-                    color
-                )
+            // case 'paragraph':
+            //     return this.layoutParagraphSection( 
+            //         articleNode,
+            //         currentSection,
+            //         currentY,
+            //         x,
+            //         width,
+            //         padding,
+            //         color
+            //     )
                 
+                case 'lesson':
+                    return this.layoutLessonSection(
+                        articleNode,
+                        currentSection,
+                        currentY,
+                        x,
+                        width,
+                        padding,
+                        color
+                    )
             case 'quiz':
                 return this.layoutQuizSection(
                     articleNode,
@@ -323,7 +337,49 @@ layoutSection( articleNode,
                     color
                 )
         }
+    }layoutLessonSection(
+    articleNode,
+    section,
+    currentY,
+    x,
+    width,
+    padding,
+    color
+) {
+    const blocks = section.blocks || section.text ||[]
+console.log('layoutLessonSection', section, blocks)
+    for (const block of blocks) {
+
+        if (block.type === 'heading') {
+            currentY = layoutHeadingBlock(
+                this.layout,
+                articleNode,
+                section,
+                block,
+                currentY,
+                x,
+                width,
+                padding,
+                color
+            )
+
+        } else if (block.type === 'paragraph') {
+            currentY = layoutParagraphBlock(
+                this.layout,
+                articleNode,
+                section,
+                block,
+                currentY,
+                x,
+                width,
+                padding,
+                color
+            )
+        }
     }
+
+    return currentY + 20
+}
 layoutHeadingSection(articleNode, section, currentY, x, width, padding, color) {
     const headingHeight = 30
     const headingRect = {

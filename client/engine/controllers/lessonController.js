@@ -116,6 +116,7 @@ const viewport = this.engine.context.getViewport()
         )
     }
     advanceLesson() {
+    
     const moved =
         this.lessonService.lesson.advanceSection()
         if(moved) {
