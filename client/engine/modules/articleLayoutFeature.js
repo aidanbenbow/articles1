@@ -200,7 +200,7 @@ this.clearLessonLayout(articleNode)
     }
 
     const section = lesson.getCurrentSection()
-console.log('layoutArticlesDetail section', section)
+
     if (section) {
         currentY = this.layoutSection(
             articleNode,
@@ -213,15 +213,16 @@ console.log('layoutArticlesDetail section', section)
         )
     }
 
-    this.layout.scroll.updateBounds(
+   
+    if(!lesson.isLastSection()) {
+   currentY = this.layoutContinueButton(articleNode, currentY, x, width, padding, color)
+    } else {
+     currentY = this.layoutFinishButton(articleNode, currentY, x, width, padding, color)
+     currentY = this.layoutBackButton(articleNode, currentY + 50, x, width, padding, color)
+    }
+     this.layout.scroll.updateBounds(
         currentY - worldY + 20
     )
-    if(!lesson.isLastSection()) {
-    this.layoutContinueButton(articleNode, currentY, x, width, padding, color)
-    } else {
-     layoutFinishButton(articleNode, this.layout, currentY, x, width, padding, color)
-     layoutBackButton(articleNode, this.layout, currentY + 50, x, width, padding, color)
-    }
 }
 
 layoutLessonIntro(articleNode, lesson, currentY, x, width, padding, color) {
@@ -242,7 +243,7 @@ layoutLessonIntro(articleNode, lesson, currentY, x, width, padding, color) {
         padding
     })
     currentY += titleHeight  + gap
-console.log(lesson)
+
      if (lesson.description) {
         this.layout.layoutNodes.set(`${articleNode.id}-description`, {
             id: `${articleNode.id}-description`,
@@ -363,7 +364,7 @@ layoutSection( articleNode,
             )
         }
     }
-this.layout.scroll.updateBounds(currentY + 20)
+
     return currentY + 20
 }
 layoutHeadingSection(articleNode, section, currentY, x, width, padding, color) {
