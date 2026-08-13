@@ -9,7 +9,9 @@ export function layoutParagraphBlock(
     padding,
     color
 ) {
-    const lineHeight = 22
+    const lineHeight = 20
+    const paragraphGap = 6
+    const verticalPadding = 8
     const textWidth = width - padding * 2
 
     // Approximate height.
@@ -47,7 +49,7 @@ export function layoutParagraphBlock(
     const height =
         Math.max(lines.length, 1) *
         lineHeight +
-        padding * 2
+        verticalPadding * 2
 
     const node = {
         id: `${articleNode.id}-${section.id}-paragraph-${currentY}`,
@@ -69,5 +71,5 @@ export function layoutParagraphBlock(
         node
     )
 
-    return currentY + height + 12
+    return currentY + height + paragraphGap
 }

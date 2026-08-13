@@ -117,7 +117,7 @@ export function renderLesson(ctx, sections, viewport, lesson) {
             lesson.getSectionState(
                 section.sectionId
             )
-console.log('renderLesson section', section, state)
+
         renderLessonSection(
             ctx,
             section,
@@ -220,7 +220,7 @@ function renderHeading(
     viewport
 ) {
     const rect = getScreenRect(node, viewport)
-console.log('renderHeading', node, rect)
+
     let icon = ''
 
 switch (state) {
@@ -498,9 +498,9 @@ export function renderSurveySingleChoice(
     drawTextBlock(
         ctx,
         section.question,
-        rect.x + 20,
-        rect.y + 20,
-        rect.width - 40,
+        section.questionX,
+        section.questionY,
+        section.questionWidth,
         22
     )
 
@@ -508,9 +508,9 @@ export function renderSurveySingleChoice(
     drawTextBlock(
         ctx,
         `${total} responses`,
-        rect.x + 400,
-        rect.y + 20,
-        rect.width - 40,
+        section.responseX,
+        section.responseY,
+        section.responseWidth,
         16
     )
 }

@@ -291,28 +291,7 @@ layoutSection( articleNode,
     padding,
     color){
         switch(currentSection.type){
-            // case 'heading':
-            //     return this.layoutHeadingSection(
-            //         articleNode,
-            //         currentSection,
-            //         currentY,
-            //         x,
-            //         width,
-            //         padding,
-            //         color
-            //     )
-                
-            // case 'paragraph':
-            //     return this.layoutParagraphSection( 
-            //         articleNode,
-            //         currentSection,
-            //         currentY,
-            //         x,
-            //         width,
-            //         padding,
-            //         color
-            //     )
-                
+            
                 case 'lesson':
                     return this.layoutLessonSection(
                         articleNode,
@@ -496,6 +475,13 @@ const surveyHeight =
     section.options.length * optionHeight
     + (section.options.length - 1) * optionGap
 
+     const questionX = x + padding
+    const questionY = surveyTop + padding
+    const responseX = x + width - width/4 - padding
+    const responseY = questionY 
+    const questionWidth = width - padding * 2
+    const responseWidth = 100
+
     const surveyRect = {
         id: `${articleNode.id}-${section.id}`,
         sectionId: section.id,
@@ -512,7 +498,14 @@ const surveyHeight =
         kind: 'lessonSection',
         sectionType: 'survey',
         options: section.options,
-        surveyId: section.id
+        surveyId: section.id,
+
+        questionX,
+        questionY,
+        questionWidth,
+        responseX,
+        responseY,
+        responseWidth
     }
     this.layout.layoutNodes.set(surveyRect.id, surveyRect)
     for (let i = 0; i < section.options.length; i++) {
@@ -522,7 +515,7 @@ const surveyHeight =
     questionHeight +
     responseHeight +
     i * (optionHeight + optionGap)
-   
+
         const optionRect = {
             id: `${articleNode.id}-${section.id}-option-${i}`,
             sectionId: section.id,
