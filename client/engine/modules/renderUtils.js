@@ -1,3 +1,4 @@
+import { getSurveyResult } from "../helpers/surveyResults.js";
 
 
 const DEFAULT_FILL_COLOR = '#791e1e';
@@ -507,8 +508,8 @@ export function renderSurveySingleChoice(
     drawTextBlock(
         ctx,
         `${total} responses`,
-        rect.x + 20,
-        rect.y + 45,
+        rect.x + 400,
+        rect.y + 20,
         rect.width - 40,
         16
     )
@@ -525,29 +526,13 @@ export function renderSurveyOption(
 
 
     const selected =
-        lesson.surveyAnswers?.[section.surveyId] === section.optionIndex
+        lesson.surveyResponses?.[section.surveyId] === section.optionIndex
 
-
-    const survey =
-        lesson.surveyResults?.[section.surveyId] || {}
-
-
-    const surveyResults =
-        survey.responses || {}
-
-
-    const total =
-        survey.totalResponses || 0
-
-
-    const votes =
-        surveyResults[section.optionIndex] || 0
-
-
-    const percentage =
-        total > 0
-            ? Math.round((votes / total) * 100)
-            : 0
+    const { votes, percentage } = getSurveyResult(
+        lesson,
+        section.surveyId,
+        section.optionIndex
+    )
 
 
     drawRect(ctx, {
@@ -557,15 +542,63 @@ export function renderSurveyOption(
             : '#d0d0d0'
     })
 
+    // Percentage bar
+    const barHeight = 6
+    const barWidth =
+        rect.width * (percentage / 100)
 
+    ctx.fillStyle = '#23979d'
+
+    ctx.fillRect(
+        rect.x,
+        rect.y + rect.height - barHeight,
+        barWidth,
+        barHeight
+    )
+    ctx.save()
+if (selected) {
+    ctx.font = 'bold 18px Arial'
+    ctx.fillStyle = '#23979d'
+    ctx.textAlign = 'left'
+    ctx.textBaseline = 'middle'
+
+    ctx.fillText(
+        '✓',
+        rect.x + 12,
+        rect.y + rect.height / 2
+    )
+}
     drawTextBlock(
         ctx,
-        `${section.text}   ${percentage}%`,
+        section.text,
         rect.x + 10,
         rect.y ,
         rect.width - 20,
         20
     )
+
+      // Percentage
+    ctx.font = 'bold 16px Arial'
+    ctx.fillStyle = '#333'
+    ctx.textAlign = 'right'
+    ctx.textBaseline = 'middle'
+
+    ctx.fillText(
+        `${percentage}%`,
+        rect.x + rect.width - 15,
+        rect.y + rect.height / 2
+    )
+
+    // Vote count
+    ctx.font = '12px Arial'
+    ctx.fillStyle = '#777'
+
+    ctx.fillText(
+        `${votes} ${votes === 1 ? 'response' : 'responses'}`,
+        rect.x + rect.width - 15,
+        rect.y + rect.height / 2 + 18
+    )
+    ctx.restore()
 }
 
 function renderContinueButton(

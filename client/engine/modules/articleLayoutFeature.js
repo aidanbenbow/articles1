@@ -486,6 +486,7 @@ layoutSurveySection(articleNode, section, currentY, x, width, padding, color) {
     const questionHeight = 30
     const responseHeight = 20
     const optionHeight = 30
+    const optionGap = 10
     const surveyTop = currentY
 
 const surveyHeight =
@@ -493,6 +494,7 @@ const surveyHeight =
     questionHeight +
     responseHeight +
     section.options.length * optionHeight
+    + (section.options.length - 1) * optionGap
 
     const surveyRect = {
         id: `${articleNode.id}-${section.id}`,
@@ -519,7 +521,8 @@ const surveyHeight =
     padding +
     questionHeight +
     responseHeight +
-    i * optionHeight
+    i * (optionHeight + optionGap)
+   
         const optionRect = {
             id: `${articleNode.id}-${section.id}-option-${i}`,
             sectionId: section.id,
