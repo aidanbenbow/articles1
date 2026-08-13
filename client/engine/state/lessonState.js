@@ -161,4 +161,11 @@ canUnlockNextSection() {
         )
 
     }
+    hasNextSection() {
+    return this.getNextSection() !== null
+}
+
+isLastSection() {
+    return !this.hasNextSection()
+}
 }

@@ -17,6 +17,7 @@ this.lesson.start()
     startPhase() {
         this.lesson.startPhase()
     }
+    
 
     getLesson() {
         return this.lesson

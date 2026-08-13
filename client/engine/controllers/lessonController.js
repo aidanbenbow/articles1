@@ -132,5 +132,11 @@ const viewport = this.engine.context.getViewport()
 startPhase() {
     this.lessonService.lesson.startPhase()
 }
-   
+   finishLesson() {
+    this.lessonService.lesson.end()
+    this.engine.emit('lessonStateChanged', {
+        currentSectionId:
+            this.lessonService.lesson.currentSectionId
+    })
+}
 }

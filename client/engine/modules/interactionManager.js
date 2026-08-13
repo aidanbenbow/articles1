@@ -30,6 +30,10 @@ async handleTargetNode(targetNode) {
         console.log('TARGET NODE', targetNode)
 
         switch (targetNode.action) {
+            case 'finishLessonSection':
+                this.engine.context.finishLesson()
+                this.emitLayoutChanged()
+                return
             case 'advanceLessonSection':
      
                 this.engine.context.advanceLessonSection()

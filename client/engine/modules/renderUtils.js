@@ -200,6 +200,14 @@ console.log('renderLesson section', section, state)
                 viewport
             )
             break
+            case 'finishButton':
+            renderContinueButton(
+                ctx,
+                section,
+                viewport
+            )
+            break
+            
     }
 
 }

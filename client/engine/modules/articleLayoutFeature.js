@@ -1,5 +1,7 @@
 
 import { getNodeStyle, layoutVerticalList } from "../constants/layoutConstants.js"
+import { layoutBackButton } from "../layout/layoutBackButton.js"
+import { layoutFinishButton } from "../layout/layoutFinishButton.js"
 import { layoutHeadingBlock } from "../layout/layoutHeadingBlock.js"
 import { layoutParagraphBlock } from "../layout/layoutParagraphBlock.js"
 
@@ -214,7 +216,12 @@ console.log('layoutArticlesDetail section', section)
     this.layout.scroll.updateBounds(
         currentY - worldY + 20
     )
+    if(!lesson.isLastSection()) {
     this.layoutContinueButton(articleNode, currentY, x, width, padding, color)
+    } else {
+     layoutFinishButton(articleNode, this.layout, currentY, x, width, padding, color)
+     layoutBackButton(articleNode, this.layout, currentY + 50, x, width, padding, color)
+    }
 }
 
 layoutLessonIntro(articleNode, lesson, currentY, x, width, padding, color) {
@@ -347,7 +354,7 @@ layoutSection( articleNode,
     color
 ) {
     const blocks = section.blocks || section.text ||[]
-console.log('layoutLessonSection', section, blocks)
+
     for (const block of blocks) {
 
         if (block.type === 'heading') {
@@ -377,7 +384,7 @@ console.log('layoutLessonSection', section, blocks)
             )
         }
     }
-
+this.layout.scroll.updateBounds(currentY + 20)
     return currentY + 20
 }
 layoutHeadingSection(articleNode, section, currentY, x, width, padding, color) {

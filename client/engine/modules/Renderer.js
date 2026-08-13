@@ -2,6 +2,7 @@ import { createRendererViewModel } from './rendererViewModel.js'
 import { renderInputBoxes, renderButtons, renderReports, renderReportsToDo, renderBackground, renderArticle, renderHeader, renderLesson, renderLessonTitle  } from './renderUtils.js'
 import { renderLessonHeader } from '../renderers/renderLessonHeader.js'
 import { renderLessonIntro } from '../renderers/renderLessonIntro.js'
+import { renderLessonComplete } from '../renderers/renderLessonComplete.js'
 
 export class Renderer {
     constructor(engine) {
@@ -71,7 +72,7 @@ const viewport = this.engine.context.getViewport()
         break
 
     case 'completed':
-        renderLessonComplete(this.ctx, lesson, viewport)
+        renderLessonComplete(this.ctx, view, viewport)
         break
 }
 
