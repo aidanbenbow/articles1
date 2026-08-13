@@ -1,6 +1,7 @@
 
 import { getNodeStyle, layoutVerticalList } from "../constants/layoutConstants.js"
 import { layoutBackButton } from "../layout/layoutBackButton.js"
+import { layoutContinueButton } from "../layout/layoutContinueButton.js"
 import { layoutFinishButton } from "../layout/layoutFinishButton.js"
 import { layoutHeadingBlock } from "../layout/layoutHeadingBlock.js"
 import { layoutParagraphBlock } from "../layout/layoutParagraphBlock.js"
@@ -215,14 +216,18 @@ this.clearLessonLayout(articleNode)
 
    
     if(!lesson.isLastSection()) {
-   currentY = this.layoutContinueButton(articleNode, currentY, x, width, padding, color)
+   currentY = layoutContinueButton(articleNode,this.layout, currentY, x, width, padding, color)
     } else {
-     currentY = this.layoutFinishButton(articleNode, currentY, x, width, padding, color)
-     currentY = this.layoutBackButton(articleNode, currentY + 50, x, width, padding, color)
+     currentY = layoutFinishButton(articleNode,this.layout, currentY, x, width, padding, color)
+     currentY = layoutBackButton(articleNode,this.layout, currentY + 50, x, width, padding, color)
     }
-     this.layout.scroll.updateBounds(
-        currentY - worldY + 20
-    )
+     const contentBottom = Math.max(
+    ...[...this.layout.layoutNodes.values()]
+        .filter(node => node.kind === 'lessonSection')
+        .map(node => node.worldY + node.height)
+)
+
+this.layout.scroll.updateBounds(contentBottom + 20)
 }
 
 layoutLessonIntro(articleNode, lesson, currentY, x, width, padding, color) {
