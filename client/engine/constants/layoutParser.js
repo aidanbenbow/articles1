@@ -91,17 +91,15 @@ quizTotal++
 }
 
     flushLesson()
-    //   const firstParagraph =
-    //     sections
-    //         .flatMap(section =>
-    //             section.type === 'lesson'
-    //                 ? section.blocks
-    //                 : []
-    //         )
-    //         .find(
-    //             block =>
-    //                 block.type === 'paragraph'
-    //         )
+      const firstParagraph =
+        sections
+            .flatMap(section =>
+                section.type === 'lesson'
+                    ? section.blocks
+                    : []
+            )
+            
+            
 
     return {
         id: article.articleId || null,

@@ -113,11 +113,11 @@ measureText(text, font) {
     }
 }
 async incrementArticleViews(articleId) {
-    console.log('Incrementing views for article:', articleId)
+    
     if (!articleId) return;
 
     try {
-        console.log(`Incrementing views for article ${articleId}`);
+       
         await fetch(`/api/articles/${articleId}/views`, {
             method: 'POST'
         });

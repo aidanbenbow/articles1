@@ -55,6 +55,8 @@ export class LessonController {
 
     }
   updateProgress() {
+    // LessonController
+console.log('updateProgress CALLED')
 const viewport = this.engine.context.getViewport()
     const layoutNodes = this.engine.context.getLayout()
 
@@ -118,11 +120,11 @@ const viewport = this.engine.context.getViewport()
     advanceLesson() {
     
     const moved =
-        this.lessonService.lesson.advanceSection()
+        this.lessonService.advanceSection()
         if(moved) {
             this.engine.emit('lessonStateChanged', {
                 currentSectionId:
-                    this.lessonService.lesson.currentSectionId
+                    this.lessonService.getLesson().currentSectionId
             })
         }
 

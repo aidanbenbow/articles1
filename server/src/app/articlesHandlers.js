@@ -34,4 +34,31 @@ export function registerArticlesHandlers(app, articlesService) {
             res.status(500).json({ error: 'Failed to increment views for article' });
         }
     });
+
+    app.get('/api/lesson-progress', async (req, res) => {
+        try {
+            const progressRecords = [
+    {
+        "lessonId": "tofu",
+        "status": "in_progress",
+        "progressPercent": 6,
+        "currentActivityId": "section-0",
+        "completedActivityIds": [
+            "tried-tofu"
+        ]
+    },
+    {
+        "lessonId": "life-lessons-from-var",
+        "status": "in_progress",
+        "progressPercent": 20,
+        "currentActivityId": null,
+        "completedActivityIds": []
+    }
+]
+            res.json(progressRecords);
+        } catch (error) {
+            console.error('Error fetching lesson progress:', error);
+            res.status(500).json({ error: 'Failed to fetch lesson progress' });
+        }
+    });
 }

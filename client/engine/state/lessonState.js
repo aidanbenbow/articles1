@@ -1,10 +1,20 @@
 export class LessonState {
 
     constructor(lesson={}) {
-
-        this.articleId = lesson.articleId
+console.log('Initializing LessonState')
+    console.log('articleId:', lesson.id)
+    console.log('sections:', lesson.sections)
+        this.articleId = lesson.id
         this.title = lesson.title
         this.sections = lesson.sections || []
+         console.log(
+        'FIRST SECTION:',
+        this.sections[0]
+    )
+    console.log(
+        'FIRST SECTION ID:',
+        this.sections[0]?.id
+    )
         this.description = lesson.description || ''
         this.currentSectionIndex = 0
         this.quizAnswers = {}
@@ -65,7 +75,7 @@ export class LessonState {
     return 'locked'
 }
 getCurrentSection() {
- console.log('getCurrentSection', this.currentSectionId)
+
     return this.sections.find(
         s => s.id === this.currentSectionId
     ) ?? null
@@ -85,7 +95,11 @@ getCurrentSection() {
         )
     }
    advanceSection() {
- 
+ console.log(
+        'BEFORE ADVANCE:',
+        this.currentSectionId,
+        this.currentSectionIndex
+    )
     const current =
         this.getCurrentSection()
 
@@ -109,7 +123,9 @@ getCurrentSection() {
 
         this.completed = true
         this.currentSectionId = null
-
+      console.log(
+            'AFTER ADVANCE: LESSON COMPLETE'
+        )
         return true
     }
 
@@ -119,7 +135,11 @@ getCurrentSection() {
     this.currentSectionId =
         next.id
 
-
+ console.log(
+        'AFTER ADVANCE:',
+        this.currentSectionId,
+        this.currentSectionIndex
+    )
     return true
 }
 canUnlockNextSection() {
@@ -167,5 +187,48 @@ canUnlockNextSection() {
 
 isLastSection() {
     return !this.hasNextSection()
+}
+restoreProgress(progress) {
+    if (!progress) {
+        return
+    }
+
+    this.completedSections = [
+        ...(progress.completedActivityIds ?? [])
+    ]
+
+    this.quizAnswers = {
+        ...(progress.quizAnswers ?? {})
+    }
+
+    this.quizScore =
+        progress.quizScore ?? 0
+
+    this.surveyResponses = {
+        ...(progress.surveyResponses ?? {})
+    }
+
+    this.currentSectionId =
+        progress.currentActivityId ?? this.sections[0]?.id ?? null
+
+    this.currentSectionIndex =
+        this.sections.findIndex(
+            section => section.id === this.currentSectionId
+        )
+
+    if (this.currentSectionIndex < 0) {
+        this.currentSectionIndex = 0
+        this.currentSectionId =
+            this.sections[0]?.id ?? null
+    }
+
+    this.completed =
+        progress.status === 'completed'
+
+    if (this.completed) {
+        this.phase = 'completed'
+    } else if (progress.status === 'in_progress') {
+        this.phase = 'active'
+    }
 }
 }

@@ -15,6 +15,7 @@ export class ArticleLayoutFeature {
         this._unsubscribe = []
         this._lastFilter = ''
 
+   
         this.engine.on('lessonStateChanged', () => {
             const state = this.engine.context.getInteractionState()
             this.layoutArticles(null, state)
@@ -46,6 +47,13 @@ export class ArticleLayoutFeature {
     getSearchBarNode() {
         return this.layout.nodeQuery.getSearchBar()
     }
+    getLessonProgress(articleId) {
+
+    const store =
+        this.engine.context.getLessonProgressStore()
+
+    return store?.get(articleId) ?? null
+}
 
    applyFilter(searchTerm) {
 
@@ -93,6 +101,7 @@ export class ArticleLayoutFeature {
                 node => node.id === state.selectedNodeId
             ) 
             const lesson = this.engine.context.getLesson()
+          
             this.layoutArticlesDetail(selected, lesson )
         }
 
@@ -123,10 +132,19 @@ for (const [id, rect] of this.layout.layoutNodes) {
 const thumbnail = node.props?.articleData?.photo 
 
 const { width, height, thumbnailSize } = this.getArticleCardSize(node)
+const articleId = node.props?.articleData?.articleId || null
+const progressStore = this.engine.context.getLessonProgressStore()
+const progress = articleId ? progressStore?.get(articleId) : null
+console.log(
+    'progress for articleId', articleId,
+    'is',
+    progress
+)
                 return {
                     id: node.id,
                     articleId: node.props?.articleData?.articleId || null,
                     articleData: node.props?.articleData || null,
+                    progress: progress || null,
                     x: startX,
                     width,
                     height,
@@ -183,7 +201,7 @@ const { width, height, thumbnailSize } = this.getArticleCardSize(node)
     if (!articleNode || !lesson) {
         return
     }
-    
+  
 this.clearLessonLayout(articleNode)
     const padding = 20
     const x = this.layout.width / 8
@@ -193,7 +211,7 @@ this.clearLessonLayout(articleNode)
 
     let currentY =0
 
-    currentY += 70
+    currentY += 100
 
     if(lesson.phase === 'intro') {
         this.layoutLessonIntro(articleNode,lesson, currentY, x, width, padding, color)
@@ -417,11 +435,13 @@ layoutParagraphSection(articleNode, section, currentY, x, width, padding, color)
 layoutQuizSection(articleNode, section, currentY, x, width, padding, color) {
     const questionHeight = 30
     const optionHeight = 30
+    const optionGap = 10
     const quizTop = currentY
 const quizHeight =
     padding * 2 +
     questionHeight +
     section.options.length * optionHeight
+    + (section.options.length - 1) * optionGap
 
     const quizRect = {
         id: `${articleNode.id}-${section.id}`,
@@ -448,7 +468,7 @@ const quizHeight =
             id: `${articleNode.id}-${section.id}-option-${i}`,
             sectionId: section.id,
             x: x + padding,
-            worldY: quizTop + padding + questionHeight + i * optionHeight,
+            worldY: quizTop + padding + questionHeight + i * (optionHeight + optionGap),
             width: width - padding * 2,
             height: optionHeight,
             padding,

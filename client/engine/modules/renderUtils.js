@@ -24,6 +24,7 @@ export function getScreenRect(node, viewportOrScrollY) {
         width: node.width,
         height: node.height,
         color: node.color,
+        progress: node.progress,
         selected: node.selected,
         type: node.type,
         kind: node.kind,
@@ -105,8 +106,31 @@ export function renderReports(ctx, nodes, viewport, assetManager) {
             drawSingleLineText(ctx, { ...rect, x: textX })
             
         drawTextBlock(ctx, node.excerpt || '', textX, rect.y + TEXT_OFFSET_Y, textWidth, LINE_HEIGHT)
+        renderProgress(
+            ctx,
+            node.progress,
+            textX,
+            rect.y + TEXT_OFFSET_Y + 45,
+            textWidth
+        )
         ctx.restore()
     })
+}
+
+function renderProgress(ctx, progress, x, y, width) {
+    const percent = progress?.progressPercent || 0
+    const status = progress?.status || 'not-started'
+
+    const barHeight = 6
+    ctx.save()
+    ctx.fillRect(x, y, width, barHeight)
+    if(percent > 0) {
+        ctx.fillStyle = '#23979d'
+        ctx.fillRect(x, y, width * (percent / 100), barHeight)
+    }
+    const label = status === 'completed' ? 'Completed' : status === 'in_progress' ? `${percent}%` : 'Not Started'
+    drawSingleLineText(ctx, { x: x + width - 50, y: y - 20, text: label })
+    ctx.restore()
 }
 
 export function renderLesson(ctx, sections, viewport, lesson) {
@@ -340,22 +364,21 @@ export function renderQuiz(ctx, node,state, viewport, lesson) {
 
     if (answer) {
         const isCorrect = answer.selected === node.answer
-        const resultText = isCorrect
-            ? 'Correct!'
-            : `Incorrect. Correct answer: ${node.answer}`
-
+       
         ctx.fillStyle = isCorrect ? '#00aa00' : '#aa0000'
-        ctx.font = '16px Arial'
-        ctx.fillText(
-            resultText,
-            rect.x + padding,
-            rect.y + padding + 30
-        )
+        
+        const scoreText = `Score: ${lesson.quizScore}`
+ctx.save()
+        ctx.font = 'bold 16px Arial'
+        ctx.fillStyle = '#000'
+        ctx.textAlign = 'right'
+        ctx.textBaseline = 'top'
          ctx.fillText(
-            `Score: ${lesson.quizScore}`,
-            rect.x + rect.width - 100,
-            rect.y + 50
-        )
+    scoreText,
+    rect.x + rect.width - padding,
+    rect.y + padding
+)
+ctx.restore()
     }
 }
 export function renderQuizOption(ctx, node, viewport, lesson) {
