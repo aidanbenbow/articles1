@@ -41,6 +41,13 @@ export function getScreenRect(node, viewportOrScrollY) {
     }
 }
 
+function getScreenPosition(rect, viewportOrScrollY) {
+    return {
+        x: rect.x,
+        y: rect.worldY - resolveScrollY(viewportOrScrollY)
+    }
+}
+
 export function renderReportsToDo(ctx, node, viewport) {
     const rect = getScreenRect(node, viewport)
     drawRectLabel(ctx, rect, {showSelection: true})
@@ -85,9 +92,9 @@ export function renderReports(ctx, nodes, viewport, assetManager) {
         const rect = getScreenRect(node, viewport)
         drawRect(ctx, rect, {showSelection: true})
 
-        const hasThumbnail = !!rect.thumbnail
-        if (hasThumbnail) {
-            drawThumbnail(ctx, rect, assetManager)
+        const hasThumbnail = !!node.thumbnail
+        if (hasThumbnail) { 
+            drawThumbnail(ctx, node,rect, assetManager)
         }
 
         const textX = hasThumbnail
@@ -103,14 +110,14 @@ export function renderReports(ctx, nodes, viewport, assetManager) {
     ctx.rect(rect.x, rect.y, rect.width, rect.height)
     ctx.clip()
 
-            drawSingleLineText(ctx, { ...rect, x: textX })
+            drawSingleLineText(ctx, { ...rect, x: textX }, true)
             
-        drawTextBlock(ctx, node.excerpt || '', textX, rect.y + TEXT_OFFSET_Y, textWidth, LINE_HEIGHT)
+        drawTextBlock(ctx, node.description, textX, rect.y + TEXT_OFFSET_Y, textWidth, LINE_HEIGHT)
         renderProgress(
             ctx,
             node.progress,
             textX,
-            rect.y + TEXT_OFFSET_Y + 45,
+            rect.y + rect.height - 15,
             textWidth
         )
         ctx.restore()
@@ -123,13 +130,14 @@ function renderProgress(ctx, progress, x, y, width) {
 
     const barHeight = 6
     ctx.save()
+    ctx.fillStyle = '#d0d0d0'
     ctx.fillRect(x, y, width, barHeight)
     if(percent > 0) {
         ctx.fillStyle = '#23979d'
         ctx.fillRect(x, y, width * (percent / 100), barHeight)
     }
     const label = status === 'completed' ? 'Completed' : status === 'in_progress' ? `${percent}%` : 'Not Started'
-    drawSingleLineText(ctx, { x: x + width - 50, y: y - 20, text: label })
+    drawSingleLineText(ctx, { x: x + width - 80, y: y - 15, text: label }, true)
     ctx.restore()
 }
 
@@ -648,20 +656,22 @@ function renderContinueButton(
 }
 
 
-function drawThumbnail(ctx, rect, assetManager) {
+function drawThumbnail(ctx, node,pos, assetManager) {
 
-    if (!rect.thumbnail) return
+    if (!node.thumbnail) return
 
-    const img = assetManager.loadImage(rect.thumbnail)
+    const img = assetManager.loadImage(node.thumbnail)
+   
 
     if (!img.complete|| img.naturalWidth === 0) return
 
-    const size = rect.thumbnailSize || 80
+    const size = node.thumbnailSize || 80
+   
 
     ctx.drawImage(
         img,
-        rect.x + 15,
-        rect.y + 15,
+        node.x + 15,
+        pos.y+15,
         size,
         size
     )
@@ -710,9 +720,9 @@ function roundRect(ctx, x, y, width, height, radius) {
     ctx.closePath()
 }
 
-export function drawSingleLineText(ctx, rect) {
+export function drawSingleLineText(ctx, rect, bold=false) {
     ctx.fillStyle = TEXT_COLOR
-    ctx.font = FONT
+    ctx.font = bold ? `bold ${FONT}` : FONT
     ctx.fillText(rect.text || '', rect.x + TEXT_OFFSET_X, rect.y + TEXT_OFFSET_Y)
 }
 

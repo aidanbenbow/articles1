@@ -40,11 +40,11 @@ export function registerArticlesHandlers(app, articlesService) {
             const progressRecords = [
     {
         "lessonId": "tofu",
-        "status": "in_progress",
-        "progressPercent": 6,
-        "currentActivityId": "section-0",
+        "status": "intro",
+        "progressPercent": 0,
+        "currentActivityId": null,
         "completedActivityIds": [
-            "tried-tofu"
+            
         ]
     },
     {

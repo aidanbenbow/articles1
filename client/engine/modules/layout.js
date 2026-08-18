@@ -12,6 +12,7 @@ export class Layout {
         this.engine = engine
         this.id = 'layout'
         this.nodes = this.engine.context.nodes
+        
         this.nodeQuery = new NodeQuery(this.nodes)
         this.layoutNodes = new Map()
         this.width = null

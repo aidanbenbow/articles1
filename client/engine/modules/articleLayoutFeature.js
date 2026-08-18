@@ -130,16 +130,12 @@ for (const [id, rect] of this.layout.layoutNodes) {
                 const {  color } = getNodeStyle(node)
 
 const thumbnail = node.props?.articleData?.photo 
-
+const description = node.props.articleData?.description|| ''
 const { width, height, thumbnailSize } = this.getArticleCardSize(node)
 const articleId = node.props?.articleData?.articleId || null
 const progressStore = this.engine.context.getLessonProgressStore()
 const progress = articleId ? progressStore?.get(articleId) : null
-console.log(
-    'progress for articleId', articleId,
-    'is',
-    progress
-)
+
                 return {
                     id: node.id,
                     articleId: node.props?.articleData?.articleId || null,
@@ -157,6 +153,7 @@ console.log(
                    
                    excerpt: node.props?.articleData?.excerpt
                    || node.props?.articleData?.article?.substring(0, 100) || '',
+                   description: description,
                     type: 'text',
                     kind: 'article',
                     action: 'openLesson',
