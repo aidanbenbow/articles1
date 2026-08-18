@@ -38,15 +38,7 @@ export function registerArticlesHandlers(app, articlesService) {
     app.get('/api/lesson-progress', async (req, res) => {
         try {
             const progressRecords = [
-    {
-        "lessonId": "tofu",
-        "status": "intro",
-        "progressPercent": 0,
-        "currentActivityId": null,
-        "completedActivityIds": [
-            
-        ]
-    },
+   
     {
         "lessonId": "life-lessons-from-var",
         "status": "in_progress",

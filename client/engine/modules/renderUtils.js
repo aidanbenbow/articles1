@@ -344,7 +344,7 @@ export function renderLessonTitle(ctx, node, viewport) {
     ctx.fillText(
         node.text || 'Lesson Title',
         rect.x + 20,
-        rect.y + 10
+        rect.y + rect.height - 10
     )
 }
 

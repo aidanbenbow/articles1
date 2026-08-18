@@ -18,6 +18,8 @@ export class LessonService {
         const savedProgress = this.lessonProgressStore.get(
             this.lesson.articleId
         )
+        console.log('Saved progress:', savedProgress)
+        console.log('Starting lesson with data:', this.lesson)
 
         if( savedProgress) {
             this.lesson.restoreProgress(savedProgress)

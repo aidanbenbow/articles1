@@ -1,20 +1,11 @@
 export class LessonState {
 
     constructor(lesson={}) {
-console.log('Initializing LessonState')
-    console.log('articleId:', lesson.id)
-    console.log('sections:', lesson.sections)
+
         this.articleId = lesson.id
         this.title = lesson.title
         this.sections = lesson.sections || []
-         console.log(
-        'FIRST SECTION:',
-        this.sections[0]
-    )
-    console.log(
-        'FIRST SECTION ID:',
-        this.sections[0]?.id
-    )
+        
         this.description = lesson.description || ''
         this.currentSectionIndex = 0
         this.quizAnswers = {}
