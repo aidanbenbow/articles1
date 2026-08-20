@@ -46,11 +46,16 @@ export class LessonController {
         optionIndex
     ) {
 
-        return await this.lessonService.answerSurvey(
+        const result = await this.lessonService.answerSurvey(
             surveyId,
             optionIndex
         )
+        this.engine.emit('lessonStateChanged', {
+            currentSectionId:
+                this.lessonService.getLesson().currentSectionId
+        })
 
+        return result
     }
 
     getState() {

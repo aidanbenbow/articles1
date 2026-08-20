@@ -262,13 +262,22 @@ answerSurvey(surveyId, optionIndex) {
         }
     }
 
-    this.surveyResponses[surveyId] = optionIndex
+    
+const section =
+        this.sections.find(
+            section => section.id === surveyId
+        )
+        const response = {
+            selected: optionIndex,
+            feedback: section?.feedback ?? ''
+        }
+    this.surveyResponses[surveyId] = response
 
    // this.completeSection(surveyId)
 
     return {
         alreadyAnswered: false,
-        response: optionIndex
+        ...response
     }
 }
 setSurveyResults(surveyId, results) {

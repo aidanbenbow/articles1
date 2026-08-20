@@ -1,3 +1,4 @@
+
 import { getSurveyResult } from "../helpers/surveyResults.js";
 
 
@@ -525,14 +526,14 @@ export function renderSurveySingleChoice(
 ) {
 
     const rect = getScreenRect(section, viewport)
-console.log('renderSurveySingleChoice', section, state, viewport, lesson)
 
-    const survey =
+
+    const response =
         lesson.surveyResponses?.[section.surveyId] || {}
+const results = lesson.surveyResults?.[section.surveyId] || {}
 
-
-    const total =
-        survey.totalResponses || 0
+    const total = results.totalResponses || 0
+        
 
 
     drawRect(ctx, rect, {
@@ -558,6 +559,18 @@ console.log('renderSurveySingleChoice', section, state, viewport, lesson)
         section.responseWidth,
         16
     )
+
+    if (response) {
+
+        drawTextBlock(
+            ctx,
+            response.feedback,
+            section.feedbackX,
+            section.feedbackY,
+            section.feedbackWidth,
+            16
+        )
+    }
 }
 
 
