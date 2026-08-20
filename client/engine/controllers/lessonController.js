@@ -33,6 +33,10 @@ export class LessonController {
             optionIndex,
             answer
         )
+        this.engine.emit('lessonStateChanged', {
+            currentSectionId:
+                this.lessonService.getLesson().currentSectionId
+        })
 
     }
 
@@ -54,57 +58,58 @@ export class LessonController {
         return this.lessonService.getLesson()
 
     }
-  updateProgress() {
-    // LessonController
-console.log('updateProgress CALLED')
-const viewport = this.engine.context.getViewport()
-    const layoutNodes = this.engine.context.getLayout()
+//   updateProgress() {
+//     // LessonController
+// console.log('updateProgress CALLED')
+// const viewport = this.engine.context.getViewport()
+//     const layoutNodes = this.engine.context.getLayout()
 
-    let closest = null
+//     let closest = null
 
-    for(const node of layoutNodes.values()) {
+//     for(const node of layoutNodes.values()) {
 
-        if(node.kind !== 'lessonSection')
-            continue
-
-
-        if(!this.isVisible(node, viewport))
-            continue
+//         if(node.kind !== 'lessonSection')
+//             continue
 
 
-        if(!closest || node.worldY < closest.worldY) {
-            closest = node
-        }
-
-    }
+//         if(!this.isVisible(node, viewport))
+//             continue
 
 
-    if(closest) {
+//         if(!closest || node.worldY < closest.worldY) {
+//             closest = node
+//         }
 
-        const lesson =
-            this.lessonService.getLesson()
-
-
-        // complete the previous section
-        if(
-            lesson.currentSectionId &&
-            lesson.currentSectionId !== closest.sectionId
-        ) {
-
-            this.lessonService.completeSection(
-                lesson.currentSectionId
-            )
-
-        }
+//     }
 
 
-        // move current marker
-        this.lessonService.setCurrentSection(
-            closest.sectionId
-        )
-    }
+//     if(closest) {
 
-}   isVisible(node, viewport) {
+//         const lesson =
+//             this.lessonService.getLesson()
+
+
+//         // complete the previous section
+//         if(
+//             lesson.currentSectionId &&
+//             lesson.currentSectionId !== closest.sectionId
+//         ) {
+
+//             this.lessonService.completeSection(
+//                 lesson.currentSectionId
+//             )
+
+//         }
+
+
+//         // move current marker
+//         this.lessonService.setCurrentSection(
+//             closest.sectionId
+//         )
+//     }
+
+// }   
+isVisible(node, viewport) {
 
         const nodeTop = node.worldY
         const nodeBottom = node.worldY + node.height
@@ -132,13 +137,13 @@ const viewport = this.engine.context.getViewport()
 
 }
 startPhase() {
-    this.lessonService.lesson.startPhase()
+    this.lessonService.startPhase()
 }
    finishLesson() {
-    this.lessonService.lesson.end()
+    this.lessonService.finishLesson()
     this.engine.emit('lessonStateChanged', {
         currentSectionId:
-            this.lessonService.lesson.currentSectionId
+            this.lessonService.getLesson().currentSectionId
     })
 }
 }

@@ -42,6 +42,11 @@ this.lesson.start()
     }
     startPhase() {
         this.lesson.startPhase()
+        this.syncProgress()
+    }
+    finishLesson() {
+        this.lesson.end()
+        this.syncProgress()
     }
     syncProgress() {
 
@@ -107,34 +112,17 @@ this.lesson.start()
  
    
     answerQuiz(sectionId, quizId, optionIndex, answer) {
+    const result = this.lesson.answerQuiz(
+        sectionId,
+        quizId,
+        optionIndex,
+        answer
+    )
 
-        if (quizId in this.lesson.quizAnswers) {
-            return this.lesson.quizAnswers[quizId]
-        }
+    this.syncProgress()
 
-
-        const correct = optionIndex === answer
-
-        this.lesson.quizAnswers[quizId] = {
-            selected: optionIndex,
-            correctAnswer: answer,
-            correct
-        }
-
-        this.completeSection(sectionId)
-     
-        if (correct) {
-            this.lesson.quizScore++
-        }
-        
-      
-        return {
-            currentSection: this.lesson.currentSectionId,
-            correct,
-            score: this.lesson.quizScore,
-            progress: this.lesson.getProgress()
-        }
-    }
+    return result
+}
       completeSection(sectionId) {
 // LessonService
 
@@ -143,27 +131,33 @@ this.lesson.start()
 
     }
       async answerSurvey(surveyId, optionIndex) {
+    const result = this.lesson.answerSurvey(
+        surveyId,
+        optionIndex
+    )
 
-        // Already answered?
-        if (surveyId in this.lesson.surveyResponses) {
-            return
-        }
-
-        // Remember this user's answer
-        this.lesson.surveyResponses[surveyId] = optionIndex
-
-        this.completeSection(surveyId)
-       
-        // Save to server
-        const results =
-            await this.surveyApi.recordSurveyResponse(
-                surveyId,
-                optionIndex
-            )
-
-        // Cache updated totals
-        this.lesson.surveyResults[surveyId] = results
+    if (result.alreadyAnswered) {
+        return result
     }
+
+    const results =
+        await this.surveyApi.recordSurveyResponse(
+            surveyId,
+            optionIndex
+        )
+
+    this.lesson.setSurveyResults(
+        surveyId,
+        results
+    )
+
+    this.syncProgress()
+
+    return {
+        ...result,
+        results
+    }
+}
     updateCurrentSection(sectionId) {
 
     this.lesson.setCurrentSection(sectionId)

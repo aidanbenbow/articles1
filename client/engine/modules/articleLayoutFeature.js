@@ -225,7 +225,8 @@ this.clearLessonLayout(articleNode)
             x,
             width,
             padding,
-            color
+            color,
+            lesson
         )
     }
 
@@ -310,7 +311,8 @@ layoutSection( articleNode,
     x,
     width,
     padding,
-    color){
+    color,
+    lesson){
         switch(currentSection.type){
             
                 case 'lesson':
@@ -331,7 +333,8 @@ layoutSection( articleNode,
                     x,
                     width,
                     padding,
-                    color
+                    color,
+                    lesson
                 )
             case 'survey':
                 return this.layoutSurveySection(
@@ -387,58 +390,66 @@ layoutSection( articleNode,
 
     return currentY + 20
 }
-layoutHeadingSection(articleNode, section, currentY, x, width, padding, color) {
-    const headingHeight = 30
-    const headingRect = {
-        id: `${articleNode.id}-${section.id}`,
-        sectionId: section.id,
-        x,
-        worldY: currentY,
-        width,
-        height: headingHeight,
-        padding,
-        color: color,
-        selected: false,
-        text: section.text,
-        type: 'text',
-        kind: 'lessonSection',
-        sectionType: 'heading'
-    }
+// layoutHeadingSection(articleNode, section, currentY, x, width, padding, color) {
+//     const headingHeight = 30
+//     const headingRect = {
+//         id: `${articleNode.id}-${section.id}`,
+//         sectionId: section.id,
+//         x,
+//         worldY: currentY,
+//         width,
+//         height: headingHeight,
+//         padding,
+//         color: color,
+//         selected: false,
+//         text: section.text,
+//         type: 'text',
+//         kind: 'lessonSection',
+//         sectionType: 'heading'
+//     }
     
-    this.layout.layoutNodes.set(headingRect.id, headingRect)
-    return currentY + headingHeight + 10
-}
+//     this.layout.layoutNodes.set(headingRect.id, headingRect)
+//     return currentY + headingHeight + 10
+// }
 
-layoutParagraphSection(articleNode, section, currentY, x, width, padding, color) {
-    const paragraphHeight = this.measureParagraphText(section.text, width - padding * 2)
-    const paragraphRect = {
-        id: `${articleNode.id}-${section.id}`,
-        sectionId: section.id,
-        x,
-        worldY: currentY,
-        width,
-        height: paragraphHeight,
-        padding,
-        color: '#f0f0f0',
-        selected: false,
-        text: section.text,
-        type: 'text',
-        kind: 'lessonSection',
-        sectionType: 'paragraph'
-    }
-    this.layout.layoutNodes.set(paragraphRect.id, paragraphRect)
-    return currentY + paragraphHeight + 10
-}
-layoutQuizSection(articleNode, section, currentY, x, width, padding, color) {
+// layoutParagraphSection(articleNode, section, currentY, x, width, padding, color) {
+//     const paragraphHeight = this.measureParagraphText(section.text, width - padding * 2)
+//     const paragraphRect = {
+//         id: `${articleNode.id}-${section.id}`,
+//         sectionId: section.id,
+//         x,
+//         worldY: currentY,
+//         width,
+//         height: paragraphHeight,
+//         padding,
+//         color: '#f0f0f0',
+//         selected: false,
+//         text: section.text,
+//         type: 'text',
+//         kind: 'lessonSection',
+//         sectionType: 'paragraph'
+//     }
+//     this.layout.layoutNodes.set(paragraphRect.id, paragraphRect)
+//     return currentY + paragraphHeight + 10
+// }
+layoutQuizSection(articleNode, section, currentY, x, width, padding, color, lesson) {
     const questionHeight = 30
     const optionHeight = 30
     const optionGap = 10
     const quizTop = currentY
+    const answered = lesson.quizAnswers[section.id] || null
+    console.log('Answered:', answered)
+    const feedbackHeight = answered && answered.feedback ? 30 : 0
+    const feedbackGap = feedbackHeight > 0 ? 10 : 0
+    
 const quizHeight =
     padding * 2 +
     questionHeight +
     section.options.length * optionHeight
     + (section.options.length - 1) * optionGap
+    + feedbackHeight + feedbackGap
+
+    const feedbackY = quizTop + padding + questionHeight + section.options.length * (optionHeight + optionGap) + feedbackGap
 
     const quizRect = {
         id: `${articleNode.id}-${section.id}`,
@@ -456,7 +467,13 @@ const quizHeight =
         sectionType: 'quiz',
         options: section.options,
         answer: section.answer,
-        quizId: section.id
+        quizId: section.id,
+
+        feedback: answered?.feedback || '',
+        feedbackHeight,
+        feedbackY,
+        feedbackX: x + padding,
+        feedbackWidth: width - padding * 2
     }
     this.layout.layoutNodes.set(quizRect.id, quizRect)
 

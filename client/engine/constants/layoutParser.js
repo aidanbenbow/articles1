@@ -183,7 +183,8 @@ function parseSurvey(lines, startIndex) {
         surveyId: '',
         question: '',
         surveyType: 'single',
-        options: []
+        options: [],
+        feedback: ''
     }
 
     let i = startIndex + 1
@@ -206,6 +207,9 @@ function parseSurvey(lines, startIndex) {
         else if (line.startsWith('- ')) {
             survey.options.push(line.substring(2).trim())
         }
+        else if (line.startsWith('feedback:')) {
+            survey.feedback = line.substring('feedback:'.length).trim()
+        }
 
         i++
     }
@@ -221,7 +225,8 @@ function parseQuiz(lines, startIndex) {
         type: 'quiz',
         question: '',
         options: [],
-        answer: -1
+        answer: -1,
+        feedback: ''
     }
 
     let i = startIndex + 1
@@ -253,6 +258,10 @@ function parseQuiz(lines, startIndex) {
 
             quiz.options.push(option)
         }
+        else if (line.startsWith('feedback:')) {
+    quiz.feedback =
+        line.substring('feedback:'.length).trim()
+}
 
         i++
     }

@@ -387,6 +387,20 @@ ctx.save()
     rect.y + padding
 )
 ctx.restore()
+ctx.save()
+        ctx.font = 'italic 14px Arial'
+        ctx.fillStyle = '#000'
+        ctx.textAlign = 'left'
+        ctx.textBaseline = 'top'
+drawTextBlock(
+    ctx,
+    node.feedback || '',
+    node.feedbackX,
+    node.feedbackY,
+    node.feedbackWidth,
+    20
+)
+ctx.restore()
     }
 }
 export function renderQuizOption(ctx, node, viewport, lesson) {
@@ -493,9 +507,9 @@ export function renderSurvey(ctx, section,state, viewport, lesson) {
             renderSurveySingleChoice(ctx, section,state, viewport, lesson)
             break
 
-        // case 'multiple':
-        //     renderSurveyMultipleChoice(ctx, section, viewport, responses)
-        //     break
+        case 'multiple':
+            renderSurveySingleChoice(ctx, section,state, viewport, lesson)
+            break
 
        
     }
@@ -511,10 +525,10 @@ export function renderSurveySingleChoice(
 ) {
 
     const rect = getScreenRect(section, viewport)
-
+console.log('renderSurveySingleChoice', section, state, viewport, lesson)
 
     const survey =
-        lesson.surveyResults?.[section.surveyId] || {}
+        lesson.surveyResponses?.[section.surveyId] || {}
 
 
     const total =
@@ -545,6 +559,7 @@ export function renderSurveySingleChoice(
         16
     )
 }
+
 
 export function renderSurveyOption(
     ctx,

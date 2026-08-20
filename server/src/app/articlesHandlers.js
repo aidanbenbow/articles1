@@ -38,6 +38,20 @@ export function registerArticlesHandlers(app, articlesService) {
     app.get('/api/lesson-progress', async (req, res) => {
         try {
             const progressRecords = [
+//              {
+//         "lessonId": "tofu",
+//         "status": "in_progress",
+//         "progressPercent": 35,
+//         "currentActivityId": 
+// "coagulation",
+//         "completedActivityIds": [
+// "tried-tofu",
+// "section-0",
+// "tofu-intro",
+// "section-1",
+// "soymilk-process",
+// "section-2"],
+//     },   
    
     {
         "lessonId": "life-lessons-from-var",

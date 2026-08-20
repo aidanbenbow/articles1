@@ -222,4 +222,56 @@ restoreProgress(progress) {
         this.phase = 'active'
     }
 }
+answerQuiz(sectionId, quizId, optionIndex, answer) {
+    if (quizId in this.quizAnswers) {
+        return this.quizAnswers[quizId]
+    }
+
+    const correct = optionIndex === answer
+
+     const section =
+        this.sections.find(
+            section => section.id === sectionId
+        )
+
+    this.quizAnswers[quizId] = {
+        selected: optionIndex,
+        correctAnswer: answer,
+        correct,
+        feedback: section?.feedback ?? ''
+    }
+
+    if (correct) {
+        this.quizScore++
+    }
+
+   // this.completeSection(sectionId)
+
+    return {
+        currentSection: this.currentSectionId,
+        correct,
+        score: this.quizScore,
+        progress: this.getProgress()
+    }
+}
+answerSurvey(surveyId, optionIndex) {
+    if (surveyId in this.surveyResponses) {
+        return {
+            alreadyAnswered: true,
+            response: this.surveyResponses[surveyId]
+        }
+    }
+
+    this.surveyResponses[surveyId] = optionIndex
+
+   // this.completeSection(surveyId)
+
+    return {
+        alreadyAnswered: false,
+        response: optionIndex
+    }
+}
+setSurveyResults(surveyId, results) {
+    this.surveyResults[surveyId] = results
+}
 }

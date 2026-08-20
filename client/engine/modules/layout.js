@@ -34,7 +34,7 @@ export class Layout {
                 getCanvas: () => this.engine.context.canvas,
                 onDelta: (delta) => {
                     this.scroll.scrollBy(delta)
-                    this.engine.context.updateProgress()
+                 //   this.engine.context.updateProgress()
                     this.engine.emit('layoutChanged', { layout: this.layoutNodes })
                 }
             }
