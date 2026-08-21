@@ -3,6 +3,8 @@ import { renderInputBoxes, renderButtons, renderReports, renderReportsToDo, rend
 import { renderLessonHeader } from '../renderers/renderLessonHeader.js'
 import { renderLessonIntro } from '../renderers/renderLessonIntro.js'
 import { renderLessonComplete } from '../renderers/renderLessonComplete.js'
+import { renderHome } from '../renderers/homeRenderer.js'
+import { renderLessonScreen } from '../renderers/lessonScreenRenderer.js'
 
 export class Renderer {
     constructor(engine) {
@@ -36,7 +38,7 @@ this.bgColor = this.screen?.color || '#ffffff'
     }
     
     render() {
-       this.setScreen()
+      // this.setScreen()
         renderBackground(this.ctx, this.canvas.width, this.canvas.height, this.bgColor)
 
 
@@ -45,46 +47,58 @@ const viewport = this.engine.context.getViewport()
 
         const layout = this.engine.context.getLayout()
         const interactionState = this.engine.context.getInteractionState()
+        const appState = this.engine.context.app.getState()
         const lessonState = this.engine.context.getLesson()
         const allNodes = [...layout.values()]
         const assetManager = this.engine.context.getAssetManager()
        
         const view = createRendererViewModel(allNodes, interactionState, lessonState)
-        
-        if(!lessonState || lessonState.phase === 'not-started') {
-            renderReports(this.ctx, view.reportsNodes, viewport, assetManager)
+
+        switch (appState.screen) {
+            case 'home':
+                renderHome(this.ctx, view.homeNodes, viewport, assetManager)
+                break
+
+                case 'lesson':
+                renderLessonScreen(this.ctx, view, viewport, lessonState, assetManager)
+                break
+
+        }
+//         if(!lessonState || lessonState.phase === 'not-started') {
+//             renderReports(this.ctx, view.reportsNodes, viewport, assetManager)
             
-        renderHeader(this.ctx, view.headerNode, viewport)
-        renderInputBoxes(this.ctx, view.inputNodes, viewport, interactionState.searchTerm)
-        renderButtons(this.ctx, view.buttonNodes, viewport)
-        }
+//         renderHeader(this.ctx, view.headerNode, viewport)
+//         renderInputBoxes(this.ctx, view.inputNodes, viewport, interactionState.searchTerm)
+//         renderButtons(this.ctx, view.buttonNodes, viewport)
+//         }
 
-        switch (lessonState.phase) {
+//         switch (lessonState.phase) {
 
-    case 'intro':
-        renderLessonIntro(this.ctx, view, viewport)
-        break
+//     case 'intro':
+//         renderLessonIntro(this.ctx, view, viewport)
+//         break
 
-    case 'active':
+//     case 'active':
        
-        renderLesson(this.ctx, view.lessonSectionNodes, viewport, lessonState)
-        renderLessonHeader(this.ctx, lessonState, viewport)
-        break
+//         renderLesson(this.ctx, view.lessonSectionNodes, viewport, lessonState)
+//         renderLessonHeader(this.ctx, lessonState, viewport)
+//         break
 
-    case 'completed':
-        renderLessonComplete(this.ctx, view, viewport)
-        break
-}
+//     case 'completed':
+//         renderLessonComplete(this.ctx, view, viewport)
+//         break
+// }
 
-        if(view.reportsToDoNode) {
-            renderReportsToDo(this.ctx, view.reportsToDoNode, viewport)
-        }
+//         if(view.reportsToDoNode) {
+//             renderReportsToDo(this.ctx, view.reportsToDoNode, viewport)
+//         }
         
         
     }
     attach() {
         setTimeout(() =>{
             this.setCanvas()
+            this.setScreen()
               this._unsubscribe.push(this.engine.on('layoutChanged', this.render.bind(this)))
             this.render()
         }, 0)

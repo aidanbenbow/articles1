@@ -1,5 +1,6 @@
 
 import { getNodeStyle, layoutVerticalList } from "../constants/layoutConstants.js"
+import { HomeLayout } from "../layout/homeLayout.js"
 import { layoutBackButton } from "../layout/layoutBackButton.js"
 import { layoutContinueButton } from "../layout/layoutContinueButton.js"
 import { layoutFinishButton } from "../layout/layoutFinishButton.js"
@@ -15,10 +16,10 @@ export class ArticleLayoutFeature {
         this._unsubscribe = []
         this._lastFilter = ''
 
-   
+   this.homeLayout = null
         this.engine.on('lessonStateChanged', () => {
-            const state = this.engine.context.getInteractionState()
-            this.layoutArticles(null, state)
+            
+            this.layoutArticles()
         })
     }
     contextExports() {
@@ -30,6 +31,7 @@ export class ArticleLayoutFeature {
     }
     attach() {
         this.layout = this.engine.context.getLayoutManager()
+        this.homeLayout = new HomeLayout(this.engine, this.layout)
         this._unsubscribe.push(this.engine.on('searchChanged', (searchTerm) => {
             this.applyFilter(searchTerm)
         }))
@@ -87,26 +89,37 @@ export class ArticleLayoutFeature {
         this.engine.context.clearSelectedArticle()
     }
 
-    this.layoutArticles(filtered, state)
+    this.layoutArticles(filtered)
 }
 
-    layoutArticles(articleNodes = null, state) {
+    layoutArticles(articleNodes = null) {
         articleNodes ??= this.getArticleNodes()
+const appState = this.engine.context.app.getState()
 
-        if (state.view === 'list') {
-            this.layoutArticlesList(articleNodes)
-        } else {
+this.clearLessonLayout()
+switch (appState.screen) {
+    case 'home':
+        this.homeLayout.build(articleNodes)
+        break
+        case 'lesson':
+            this.layoutLesson(articleNodes, appState)
+            break
+}
+        // if (state.view === 'list') {
+        //     this.layoutArticlesList(articleNodes)
+        // } else {
           
-            const selected = articleNodes.find(
-                node => node.id === state.selectedNodeId
-            ) 
-            const lesson = this.engine.context.getLesson()
+        //     const selected = articleNodes.find(
+        //         node => node.id === state.selectedNodeId
+        //     ) 
+        //     const lesson = this.engine.context.getLesson()
           
-            this.layoutArticlesDetail(selected, lesson )
-        }
+        //     this.layoutArticlesDetail(selected, lesson )
+        // }
 
         this.engine.emit('layoutChanged', { layout: this.layout.layoutNodes })
     }
+   
 
     layoutArticlesList(articleNodes) {
         const startY = this.layout.height / 8

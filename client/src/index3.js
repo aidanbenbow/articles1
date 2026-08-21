@@ -9,6 +9,7 @@ import { Layout } from "../engine/modules/layout.js";
 import { Renderer } from "../engine/modules/Renderer.js";
 import { SceneModule } from "../engine/modules/SceneModule.js";
 import { SurveyFeature } from "../engine/modules/surveyFeature.js";
+import { AppFeature } from "./dorcasApp/app/appFeature.js";
 
 import { bootstrapDorcas2App } from "./dorcasApp/main.js";
 
@@ -26,7 +27,8 @@ InteractionManager,
 Input,
 ArticleLayoutFeature,
 SurveyFeature,
-LessonFeature
+LessonFeature,
+AppFeature
 
 ]
 }

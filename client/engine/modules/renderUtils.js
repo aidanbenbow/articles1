@@ -42,7 +42,7 @@ export function getScreenRect(node, viewportOrScrollY) {
     }
 }
 
-function getScreenPosition(rect, viewportOrScrollY) {
+export function getScreenPosition(rect, viewportOrScrollY) {
     return {
         x: rect.x,
         y: rect.worldY - resolveScrollY(viewportOrScrollY)
@@ -755,14 +755,14 @@ export function drawSingleLineText(ctx, rect, bold=false) {
 }
 
 
-export function drawTextBlock(ctx, text, x, y, maxWidth, lineHeight) {
+function drawTextBlock(ctx, text, x, y, maxWidth, lineHeight) {
     ctx.fillStyle = TEXT_COLOR
     ctx.font = FONT
     wrapText(ctx, text || '', x + TEXT_OFFSET_X, y + TEXT_OFFSET_Y, maxWidth - 20, lineHeight)
 }
 
 
-export function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
     const words = text.split(' ')
     let line = ''
 
