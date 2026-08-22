@@ -53,7 +53,7 @@ export class articlesModule {
                 color: color,
                 articleData: article,
                 width: 400,
-                height: 50,
+                height: 150,
             }
         );
         

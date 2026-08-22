@@ -1,4 +1,6 @@
+import { renderContinueLessonCard } from "./continueLessonCardRenderer.js"
 import { renderHomeWelcome } from "./homeWelcomeRenderer.js"
+import { renderLessonCard } from "./lessonCardRenderer.js"
 
 
 export function renderHome(
@@ -7,6 +9,7 @@ export function renderHome(
     viewport,
     assetManager
 ) {
+    
   for(const node of nodes) {
     switch(node.kind) {
         case 'homeWelcome':

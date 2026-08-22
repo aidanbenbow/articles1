@@ -1,7 +1,9 @@
+import { DRAWING_CONSTANTS } from "../constants/drawingConstants.js"
+
 export function drawTextBlock(ctx, text, x, y, maxWidth, lineHeight) {
-    ctx.fillStyle = TEXT_COLOR
-    ctx.font = FONT
-    wrapText(ctx, text || '', x + TEXT_OFFSET_X, y + TEXT_OFFSET_Y, maxWidth - 20, lineHeight)
+    ctx.fillStyle = DRAWING_CONSTANTS.colors.text
+    ctx.font = `${DRAWING_CONSTANTS.fontSizes.body}px Arial`
+    wrapText(ctx, text || '', x + DRAWING_CONSTANTS.spacing.padding, y + DRAWING_CONSTANTS.spacing.padding, maxWidth - 20, lineHeight)
 }
 
 
@@ -106,4 +108,185 @@ export function drawLessonCard(
         width - 40,
         14
     )
+}
+
+export function drawWrappedText(
+    ctx,
+    text,
+    x,
+    y,
+    maxWidth,
+    lineHeight,
+    maxLines = 2
+) {
+
+    if (!text) {
+        return
+    }
+
+    const words =
+        String(text).split(/\s+/)
+
+    const lines = []
+
+    let line = ''
+
+    for (const word of words) {
+
+        const test =
+            line
+                ? `${line} ${word}`
+                : word
+
+        if (
+            ctx.measureText(test).width >
+                maxWidth &&
+            line
+        ) {
+            lines.push(line)
+            line = word
+        } else {
+            line = test
+        }
+    }
+
+    if (line) {
+        lines.push(line)
+    }
+
+    const visible =
+        lines.slice(0, maxLines)
+
+    if (lines.length > maxLines) {
+
+        let last =
+            visible[maxLines - 1]
+
+        while (
+            ctx.measureText(
+                `${last}…`
+            ).width > maxWidth &&
+            last.length
+        ) {
+            last =
+                last.slice(0, -1)
+        }
+
+        visible[
+            maxLines - 1
+        ] = `${last}…`
+    }
+
+    visible.forEach(
+        (line, index) => {
+
+            ctx.fillText(
+                line,
+                x,
+                y + index * lineHeight
+            )
+        }
+    )
+}
+
+
+export function drawImage(
+    ctx,
+    node,
+    x,
+    y,
+    width,
+    height,
+    radius
+) {
+
+    if (!node._image) {
+
+        node._image =
+            new Image()
+
+        node._image.src =
+            node.image
+
+        return
+    }
+
+    const image =
+        node._image
+
+    if (!image.complete) {
+        return
+    }
+
+    ctx.save()
+
+    /*
+     * Clip image to rounded rectangle.
+     */
+
+    ctx.beginPath()
+
+    ctx.roundRect(
+        x,
+        y,
+        width,
+        height,
+        radius
+    )
+
+    ctx.clip()
+
+    const imageRatio =
+        image.width /
+        image.height
+
+    const boxRatio =
+        width /
+        height
+
+    let drawWidth
+    let drawHeight
+    let drawX
+    let drawY
+
+    if (imageRatio > boxRatio) {
+
+        drawHeight =
+            height
+
+        drawWidth =
+            height * imageRatio
+
+        drawX =
+            x +
+            (width - drawWidth) / 2
+
+        drawY =
+            y
+
+    } else {
+
+        drawWidth =
+            width
+
+        drawHeight =
+            width / imageRatio
+
+        drawX =
+            x
+
+        drawY =
+            y +
+            (height - drawHeight) / 2
+    }
+
+    ctx.drawImage(
+        image,
+        drawX,
+        drawY,
+        drawWidth,
+        drawHeight
+    )
+
+    ctx.restore()
 }

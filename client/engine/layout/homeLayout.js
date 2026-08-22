@@ -17,7 +17,7 @@ export class HomeLayout {
 
         currentY = this.layoutContinue(articleNodes, currentY)
 
-        currentY = this.layoutLessons(articleNodes, currentY)
+        currentY = this.layoutSuggestedLesson(articleNodes, currentY)
 
         this.layout.computeScrollBounds(
             this.layout.layoutNodes
@@ -54,11 +54,32 @@ export class HomeLayout {
     return currentY + 180
     }
     layoutContinue(articleNodes, currentY) {
-        const continueNode = articleNodes.find(node => node.props?.continue === true)
+        const progressStore =
+            this.engine.context.getLessonProgressStore()
+        const continueNode =
+            articleNodes.find(
+                node =>
+                {
+                    const articleId =
+                        node.props?.articleData
+                            ?.articleId
+                            if(!articleId) return false
 
-        if (!continueNode) {
-            return currentY
-        }
+                            const progress = progressStore.get(articleId)
+                            
+                            if(!progress) return false
+                            return progress.status === 'in_progress' && progress.progressPercent > 0
+                            && !progress.completed
+                }
+            )
+
+            if(!continueNode) return currentY
+
+            const articleData = continueNode.props?.articleData || {}
+            const progress = progressStore.get(articleData.articleId)
+
+            const progressPercent = progress?.progressPercent || 0
+       
 
         const style = getNodeStyle(continueNode)
 
@@ -71,9 +92,16 @@ export class HomeLayout {
                 kind: 'continueLessonCard',
 
                 articleId:
-                    continueNode.props?.articleData
-                        ?.articleId,
+                    articleData.articleId || null,
 
+                title:
+                    continueNode.props?.title ||
+                    articleData.title ||
+                    'Untitled lesson',
+
+                progressPercent,
+                image:
+                    articleData.photo || null,
                 x: 40,
                 worldY: currentY,
 
@@ -84,23 +112,116 @@ export class HomeLayout {
                     style.height || 120,
 
                 articleNode:
-                    continueNode
+                    continueNode,
+
+                    description:
+                    articleData.description ||
+                    articleData.excerpt ||
+                    '',
             }
         )
 
         return currentY +
             (style.height || 120) +
             30
+    }layoutSuggestedLesson(
+    articleNodes,
+    currentY
+) {
+
+    const progressStore =
+        this.engine.context.getLessonProgressStore()
+
+    const lessonNodes =
+        articleNodes.filter(
+            node =>
+                node?.props?.articleData?.articleId
+        )
+
+    const suggestedNode =
+        lessonNodes.find(node => {
+
+            const articleId =
+                node.props?.articleData
+                    ?.articleId
+
+            const progress =
+                progressStore?.progress
+                    ?.get(articleId)
+
+            return !progress ||
+                !progress.startedAt
+        })
+
+    if (!suggestedNode) {
+        return currentY
     }
+
+    const articleData =
+        suggestedNode.props?.articleData || {}
+
+    const height = 170
+
+    this.layout.layoutNodes.set(
+        'home-suggested',
+        {
+            id: 'home-suggested',
+
+            owner: 'home',
+            kind: 'lessonCard',
+
+            articleId:
+                articleData.articleId,
+
+            title:
+                suggestedNode.props?.title ||
+                articleData.title ||
+                'Suggested lesson',
+
+            description:
+                articleData.description ||
+                articleData.excerpt ||
+                'Explore this lesson.',
+
+            thumbnail:
+                articleData.photo || null,
+
+            progressPercent: 0,
+
+            action: 'openLesson',
+
+            actionLabel: 'Start lesson',
+
+            x: 40,
+            worldY: currentY,
+
+            width:
+                this.layout.width - 80,
+
+            height,
+
+            articleNode:
+                suggestedNode
+        }
+    )
+
+    return currentY +
+        height +
+        30
+}
     layoutLessons(
         articleNodes,
         currentY
     ) {
 
         const lessonNodes =
-            articleNodes.filter(
-                node =>
-                    node.kind === 'article'
+        articleNodes.filter(
+            node =>
+                node?.props?.articleData?.articleId
+        )
+            console.log(
+                'LESSON NODES',
+                lessonNodes
             )
 
         for (const node of lessonNodes) {
@@ -115,8 +236,7 @@ export class HomeLayout {
                 articleData.articleId || null
 
             const progressStore =
-                this.engine.context.lesson
-                    .getProgressStore()
+                this.engine.context.getLessonProgressStore()
 
             const progress =
                 articleId
