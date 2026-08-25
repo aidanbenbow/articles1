@@ -108,7 +108,13 @@ switch (appState.screen) {
         this.homeLayout.build(articleNodes)
         break
         case 'lesson':
-            this.layoutLesson(articleNodes, appState)
+            const articleNode = articleNodes.find(node => node.props?.articleData?.articleId === appState.activeLessonId)
+            console.log('Layout lesson for articleNode:', articleNode, 'with lesson state:', this.engine.context.getLesson())
+            if (articleNode) {
+                const lesson = this.engine.context.getLesson()
+                this.layoutArticlesDetail(articleNode, lesson)
+            }
+          //  this.layoutLesson(articleNodes, appState)
             break
             case 'lessonBrowser':
                 LessonListLayout(articleNodes, this.layout, this.engine)
@@ -121,66 +127,66 @@ switch (appState.screen) {
     }
    
 
-    layoutArticlesList(articleNodes) {
-        const startY = this.layout.height / 8
-        const spacingY = 30
+//     layoutArticlesList(articleNodes) {
+//         const startY = this.layout.height / 8
+//         const spacingY = 30
 
-for (const [id, rect] of this.layout.layoutNodes) {
-        if (rect.kind === 'article') {
-            this.layout.layoutNodes.delete(id)
-        }
-    }
+// for (const [id, rect] of this.layout.layoutNodes) {
+//         if (rect.kind === 'article') {
+//             this.layout.layoutNodes.delete(id)
+//         }
+//     }
     
-        const rects = layoutVerticalList(articleNodes, {
-            startX: Math.max(this.layout.width / 8, 20),
-            startY,
-            spacing: spacingY,
-            getItemHeight: (node) => {
-                const { height } = this.getArticleCardSize(node)
-                return height
-            },
-            create: (node, worldY, startX) => {
-                const {  color } = getNodeStyle(node)
+//         const rects = layoutVerticalList(articleNodes, {
+//             startX: Math.max(this.layout.width / 8, 20),
+//             startY,
+//             spacing: spacingY,
+//             getItemHeight: (node) => {
+//                 const { height } = this.getArticleCardSize(node)
+//                 return height
+//             },
+//             create: (node, worldY, startX) => {
+//                 const {  color } = getNodeStyle(node)
 
-const thumbnail = node.props?.articleData?.photo 
-const description = node.props.articleData?.description|| ''
-const { width, height, thumbnailSize } = this.getArticleCardSize(node)
-const articleId = node.props?.articleData?.articleId || null
-const progressStore = this.engine.context.getLessonProgressStore()
-const progress = articleId ? progressStore?.get(articleId) : null
+// const thumbnail = node.props?.articleData?.photo 
+// const description = node.props.articleData?.description|| ''
+// const { width, height, thumbnailSize } = this.getArticleCardSize(node)
+// const articleId = node.props?.articleData?.articleId || null
+// const progressStore = this.engine.context.getLessonProgressStore()
+// const progress = articleId ? progressStore?.get(articleId) : null
 
-                return {
-                    id: node.id,
-                    articleId: node.props?.articleData?.articleId || null,
-                    articleData: node.props?.articleData || null,
-                    progress: progress || null,
-                    x: startX,
-                    width,
-                    height,
-                    color,
-                    thumbnail,
-                    thumbnailSize,
-                    selected: false,
-                    text: node.props?.title || 'article',
-                    content: node.props?.articleData?.content || '',
+//                 return {
+//                     id: node.id,
+//                     articleId: node.props?.articleData?.articleId || null,
+//                     articleData: node.props?.articleData || null,
+//                     progress: progress || null,
+//                     x: startX,
+//                     width,
+//                     height,
+//                     color,
+//                     thumbnail,
+//                     thumbnailSize,
+//                     selected: false,
+//                     text: node.props?.title || 'article',
+//                     content: node.props?.articleData?.content || '',
                    
-                   excerpt: node.props?.articleData?.excerpt
-                   || node.props?.articleData?.article?.substring(0, 100) || '',
-                   description: description,
-                    type: 'text',
-                    kind: 'article',
-                    action: 'openLesson',
-                    worldY
-                }
-            }
-        })
+//                    excerpt: node.props?.articleData?.excerpt
+//                    || node.props?.articleData?.article?.substring(0, 100) || '',
+//                    description: description,
+//                     type: 'text',
+//                     kind: 'article',
+//                     action: 'openLesson',
+//                     worldY
+//                 }
+//             }
+//         })
 
-        for (const [id, rect] of rects.entries()) {
-            this.layout.layoutNodes.set(id, rect)
-        }
+//         for (const [id, rect] of rects.entries()) {
+//             this.layout.layoutNodes.set(id, rect)
+//         }
 
-        this.layout.computeScrollBounds(rects)
-    }
+//         this.layout.computeScrollBounds(rects)
+//     }
     clearLessonLayout(articleNode) {
 
     if (!articleNode) return
@@ -225,6 +231,7 @@ this.clearLessonLayout(articleNode)
 
     if(lesson.phase === 'intro') {
         this.layoutLessonIntro(articleNode,lesson, currentY, x, width, padding, color)
+        console.log('Layout lesson intro', articleNode, lesson)
         return
     }
 
@@ -250,13 +257,13 @@ this.clearLessonLayout(articleNode)
      currentY = layoutFinishButton(articleNode,this.layout, currentY, x, width, padding, color)
      currentY = layoutBackButton(articleNode,this.layout, currentY + 50, x, width, padding, color)
     }
-     const contentBottom = Math.max(
-    ...[...this.layout.layoutNodes.values()]
-        .filter(node => node.kind === 'lessonSection')
-        .map(node => node.worldY + node.height)
-)
+//      const contentBottom = Math.max(
+//     ...[...this.layout.layoutNodes.values()]
+//         .filter(node => node.kind === 'lessonSection')
+//         .map(node => node.worldY + node.height)
+// )
 
-this.layout.scroll.updateBounds(contentBottom + 20)
+this.layout.scroll.updateBounds(currentY + 50)
 }
 
 layoutLessonIntro(articleNode, lesson, currentY, x, width, padding, color) {

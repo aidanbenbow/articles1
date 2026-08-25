@@ -135,10 +135,7 @@ export function LessonListLayout(articleNodes, layout,engine ) {
             rect
         )
     }
-console.log(
-        'LessonListLayout',
-        rects
-    )
+
     layout.computeScrollBounds(
         layout.layoutNodes
     )

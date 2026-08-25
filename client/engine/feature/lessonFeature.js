@@ -1,5 +1,6 @@
 
 import { initializeLessonProgress } from "../api/initialiseLessonProgress.js"
+import { parseArticle } from "../constants/layoutParser.js"
 import { LessonController } from "../controllers/lessonController.js"
 import { SurveyApi } from "../modules/surveyApi.js"
 import { LessonService } from "../services/lessonService.js"
@@ -37,7 +38,21 @@ export class LessonFeature {
             startLessonPhase: () => this.lessonController.startPhase(),
             finishLesson: () => this.lessonController.finishLesson(),
             getLessonProgressStore: () => this.lessonProgressStore,
+            startLessonFromArticle: (article) => this.startLessonFromArticle(article)
         }
+    }
+    startLessonFromArticle(article) {
+
+        const lesson =
+            parseArticle(article)
+console.log('RAW ARTICLE:', article)
+
+        this.lessonController.start(
+            lesson
+        )
+
+
+        return lesson
     }
 
 }

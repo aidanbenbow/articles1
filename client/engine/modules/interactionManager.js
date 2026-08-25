@@ -52,15 +52,17 @@ async handleTargetNode(targetNode) {
                 this.emitLayoutChanged()
                 return
                 case 'openLesson':
-                  await  this.openLesson(targetNode)
+                    const article =
+                        targetNode.articleData || null
+                  this.engine.context.app.openLesson(article)
                     return
                     case 'browseLessons':
                         this.engine.context.app.openLessonBrowser()
-                        this.emitLayoutChanged()
+                    
                         return
                         case 'goHome':
-                            await this.engine.context.goHome()
-                            this.emitLayoutChanged()
+                             this.engine.context.app.goHome()
+                           
                             return
             default:
                 console.log('No action defined for target node', targetNode)
@@ -68,52 +70,52 @@ async handleTargetNode(targetNode) {
 
     }
 
-async openLesson(targetNode) {
-    const article =
-        targetNode.articleData || null
+// async openLesson(targetNode) {
+//     const article =
+//         targetNode.articleData || null
 
-    if (!article) {
-        console.warn(
-            'Cannot open lesson: no article data',
-            targetNode
-        )
+//     if (!article) {
+//         console.warn(
+//             'Cannot open lesson: no article data',
+//             targetNode
+//         )
 
-        return
-    }
+//         return
+//     }
 
-    const articleId =
-        targetNode.articleId ||
-        article.articleId ||
-        article.id ||
-        null
+//     const articleId =
+//         targetNode.articleId ||
+//         article.articleId ||
+//         article.id ||
+//         null
 
-    const lesson =
-        parseArticle(article)
+//     const lesson =
+//         parseArticle(article)
 
-    console.log(
-        'PARSED LESSON',
-        lesson
-    )
+//     console.log(
+//         'PARSED LESSON',
+//         lesson
+//     )
 
-    this.engine.context.startLesson(
-        lesson
-    )
+//     this.engine.context.startLesson(
+//         lesson
+//     )
 
-    this.engine.context.selectArticle(
-        articleId
-    )
+//     this.engine.context.selectArticle(
+//         articleId
+//     )
 
-    this.state = {
-        ...this.state,
-        view: 'article',
-        selectedNodeId: targetNode.id
-    }
+//     this.state = {
+//         ...this.state,
+//         view: 'article',
+//         selectedNodeId: targetNode.id
+//     }
 
-    this.engine.emit(
-        'lessonStateChanged',
-        this.engine.context.getLesson()
-    )
-}
+//     this.engine.emit(
+//         'lessonStateChanged',
+//         this.engine.context.getLesson()
+//     )
+// }
 appendSearchTerm(char) {
     const searchTerm = this.state.searchTerm + char
         this.state = {

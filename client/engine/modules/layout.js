@@ -48,8 +48,8 @@ export class Layout {
             getLayoutManager: () => this,
             applyReportFilter: this.reportFeature.applyFilter.bind(this.reportFeature),
            incrementArticleViews: this.incrementArticleViews.bind(this),
-            selectArticle: (id)=> this.setView('article', id),
-            clearSelectedArticle: () => this.setView('list'),
+            // selectArticle: (id)=> this.setView('article', id),
+            // clearSelectedArticle: () => this.setView('list'),
             scrollBy: this.scroll.scrollBy.bind(this.scroll),
             setScroll: this.scroll.setScroll.bind(this.scroll),
             getScroll: () => this.scroll.scrollY,
@@ -83,12 +83,12 @@ getViewPort() {
 this.engine.context.getArticleLayoutFeature().layoutArticles(null, state)
 
     }
-    setView(view, articleId = null) {
+//     setView(view, articleId = null) {
 
-this.incrementArticleViews(articleId)
-    this.scroll.scrollY = this.scroll.scrollByView[view] || 0
-    this.init()
-}
+// this.incrementArticleViews(articleId)
+//     this.scroll.scrollY = this.scroll.scrollByView[view] || 0
+//     this.init()
+// }
 
   
 
