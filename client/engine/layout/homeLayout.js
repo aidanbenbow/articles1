@@ -19,6 +19,8 @@ export class HomeLayout {
 
         currentY = this.layoutSuggestedLesson(articleNodes, currentY)
 
+        currentY = this.layoutBrowseAll(currentY)
+
         this.layout.computeScrollBounds(
             this.layout.layoutNodes
         )
@@ -113,11 +115,13 @@ export class HomeLayout {
 
                 articleNode:
                     continueNode,
+                    articleData: articleData,
 
                     description:
                     articleData.description ||
                     articleData.excerpt ||
                     '',
+                    action: 'openLesson'
             }
         )
 
@@ -201,7 +205,39 @@ export class HomeLayout {
             height,
 
             articleNode:
-                suggestedNode
+                suggestedNode,
+            articleData: articleData
+        }
+    )
+
+    return currentY +
+        height +
+        30
+}layoutBrowseAll(currentY) {
+
+    const height = 64
+
+    this.layout.layoutNodes.set(
+        'home-browse-all',
+        {
+            id: 'home-browse-all',
+
+            owner: 'home',
+            kind: 'browseAllLessons',
+
+            x: 40,
+            worldY: currentY,
+
+            width:
+                this.layout.width - 80,
+
+            height,
+
+            title:
+                'Browse all lessons',
+
+            action:
+                'browseLessons'
         }
     )
 

@@ -1,3 +1,4 @@
+import { renderBrowseAllLessons } from "./browseAllButton.js"
 import { renderContinueLessonCard } from "./continueLessonCardRenderer.js"
 import { renderHomeWelcome } from "./homeWelcomeRenderer.js"
 import { renderLessonCard } from "./lessonCardRenderer.js"
@@ -20,6 +21,9 @@ export function renderHome(
             break
             case 'lessonCard':
             renderLessonCard(ctx, node, viewport)
+            break
+            case 'browseAllLessons':
+            renderBrowseAllLessons(ctx, node, viewport)
             break
     }
 }

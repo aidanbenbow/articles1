@@ -7,7 +7,8 @@ export function createRendererViewModel( allnodes,state, lesson) {
    // const reportsToDoNode = allnodes.find(node => node.kind === 'reportsToDo')
     const homeNodes = allnodes.filter(node => node.owner === 'home')
     
-    const reportsNodes = allnodes.filter(node => node.type === 'text' && node.kind === 'article')
+    const lessonBrowserNodes = allnodes.filter(node => node.owner === 'lessonBrowser')
+    
     //const nodeSelected = allnodes.find(node => node.id === state.selectedNodeId)
     const lessonSectionNodes = allnodes.filter(node => node.kind === 'lessonSection')
     const lessonTitleNodes = allnodes.filter(node =>  node.kind === 'lessonTitle')
@@ -33,7 +34,7 @@ export function createRendererViewModel( allnodes,state, lesson) {
         textNodes,
         homeNodes,
        // reportsToDoNode,
-        reportsNodes,
+        lessonBrowserNodes,
         lessonSectionNodes,
         lessonTitleNodes,
         lessonDescriptionNodes,

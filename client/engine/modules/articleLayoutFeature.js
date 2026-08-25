@@ -6,6 +6,7 @@ import { layoutContinueButton } from "../layout/layoutContinueButton.js"
 import { layoutFinishButton } from "../layout/layoutFinishButton.js"
 import { layoutHeadingBlock } from "../layout/layoutHeadingBlock.js"
 import { layoutParagraphBlock } from "../layout/layoutParagraphBlock.js"
+import { LessonListLayout } from "../layout/lessonListLayout.js"
 
 import { matchesOrderedPrefix, normalize } from "./search.js"
 
@@ -21,12 +22,17 @@ export class ArticleLayoutFeature {
             
             this.layoutArticles()
         })
+        this.engine.on('appStateChanged', () => {
+            this.layoutArticles()
+        })
     }
     contextExports() {
         return {
             applyArticleFilter: this.applyFilter.bind(this),
             layoutArticles: this.layoutArticles.bind(this),
             getArticleLayoutFeature: () => this,
+            getArticleCardSize: this.getArticleCardSize.bind(this),
+            getContentHeight: this.getContentHeight.bind(this)
         }
     }
     attach() {
@@ -104,18 +110,12 @@ switch (appState.screen) {
         case 'lesson':
             this.layoutLesson(articleNodes, appState)
             break
+            case 'lessonBrowser':
+                LessonListLayout(articleNodes, this.layout, this.engine)
+               
+                break
 }
-        // if (state.view === 'list') {
-        //     this.layoutArticlesList(articleNodes)
-        // } else {
-          
-        //     const selected = articleNodes.find(
-        //         node => node.id === state.selectedNodeId
-        //     ) 
-        //     const lesson = this.engine.context.getLesson()
-          
-        //     this.layoutArticlesDetail(selected, lesson )
-        // }
+        
 
         this.engine.emit('layoutChanged', { layout: this.layout.layoutNodes })
     }

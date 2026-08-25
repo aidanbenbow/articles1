@@ -26,6 +26,8 @@ export class AppFeature {
                     this.appController.openLesson(
                         articleId
                     ),
+openLessonBrowser: () =>
+                    this.appController.openLessonBrowser(),
 
                 goHome: () =>
                     this.appController.goHome()

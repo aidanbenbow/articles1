@@ -54,6 +54,14 @@ async handleTargetNode(targetNode) {
                 case 'openLesson':
                   await  this.openLesson(targetNode)
                     return
+                    case 'browseLessons':
+                        this.engine.context.app.openLessonBrowser()
+                        this.emitLayoutChanged()
+                        return
+                        case 'goHome':
+                            await this.engine.context.goHome()
+                            this.emitLayoutChanged()
+                            return
             default:
                 console.log('No action defined for target node', targetNode)
         }
@@ -146,72 +154,72 @@ appendSearchTerm(char) {
             term
         )
     }
-handleQuizOption(targetNode) {
-console.log('handleQuizOption', targetNode)
-    const { quizId, optionIndex, answer } = targetNode
+// handleQuizOption(targetNode) {
+// console.log('handleQuizOption', targetNode)
+//     const { quizId, optionIndex, answer } = targetNode
 
-   if (quizId in this.state.quizAnswers) {
-    return
-}
+//    if (quizId in this.state.quizAnswers) {
+//     return
+// }
 
-    const correct = optionIndex === answer
+//     const correct = optionIndex === answer
 
-    this.state = {
-        ...this.state,
+//     this.state = {
+//         ...this.state,
 
-        quizAnswers: {
-            ...this.state.quizAnswers,
+//         quizAnswers: {
+//             ...this.state.quizAnswers,
 
-            [quizId]: {
-                selected: optionIndex,
-                correct
-            }
-        },
+//             [quizId]: {
+//                 selected: optionIndex,
+//                 correct
+//             }
+//         },
 
-        quizScore:
-            this.state.quizScore + (correct ? 1 : 0)
-    }
+//         quizScore:
+//             this.state.quizScore + (correct ? 1 : 0)
+//     }
 
-    this.emitLayoutChanged()
-}
+//     this.emitLayoutChanged()
+// }
 
-   async handleSurveyOption(targetNode) {
+//    async handleSurveyOption(targetNode) {
 
-    const { surveyId, optionIndex } = targetNode
-
-
-    // store this user's selection
-    this.state = {
-        ...this.state,
-
-        surveyResponses: {
-            ...this.state.surveyResponses,
-            [surveyId]: optionIndex
-        }
-    }
+//     const { surveyId, optionIndex } = targetNode
 
 
-    const updatedResults =
-        await this.engine.context.recordSurveyResponse(
-            surveyId,
-            optionIndex
-        )
+//     // store this user's selection
+//     this.state = {
+//         ...this.state,
+
+//         surveyResponses: {
+//             ...this.state.surveyResponses,
+//             [surveyId]: optionIndex
+//         }
+//     }
 
 
-    // update the cached results used by renderer
-    this.state = {
-        ...this.state,
-
-        surveyResults: {
-            ...this.state.surveyResults,
-
-            [surveyId]: updatedResults
-        }
-    }
+//     const updatedResults =
+//         await this.engine.context.recordSurveyResponse(
+//             surveyId,
+//             optionIndex
+//         )
 
 
-    this.emitLayoutChanged()
-}
+//     // update the cached results used by renderer
+//     this.state = {
+//         ...this.state,
+
+//         surveyResults: {
+//             ...this.state.surveyResults,
+
+//             [surveyId]: updatedResults
+//         }
+//     }
+
+
+//     this.emitLayoutChanged()
+// }
 emitLayoutChanged() {
     this.engine.emit(
         'layoutChanged',

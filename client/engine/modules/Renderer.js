@@ -5,6 +5,7 @@ import { renderLessonIntro } from '../renderers/renderLessonIntro.js'
 import { renderLessonComplete } from '../renderers/renderLessonComplete.js'
 import { renderHome } from '../renderers/homeRenderer.js'
 import { renderLessonScreen } from '../renderers/lessonScreenRenderer.js'
+import { renderLessonBrowser } from '../renderers/lessonBrowserRenderer.js'
 
 export class Renderer {
     constructor(engine) {
@@ -63,35 +64,13 @@ const viewport = this.engine.context.getViewport()
                 renderLessonScreen(this.ctx, view, viewport, lessonState, assetManager)
                 break
 
+                case 'lessonBrowser':
+                renderLessonBrowser(this.ctx, view.lessonBrowserNodes, viewport,  assetManager)
+                
+                break
+
         }
-//         if(!lessonState || lessonState.phase === 'not-started') {
-//             renderReports(this.ctx, view.reportsNodes, viewport, assetManager)
-            
-//         renderHeader(this.ctx, view.headerNode, viewport)
-//         renderInputBoxes(this.ctx, view.inputNodes, viewport, interactionState.searchTerm)
-//         renderButtons(this.ctx, view.buttonNodes, viewport)
-//         }
 
-//         switch (lessonState.phase) {
-
-//     case 'intro':
-//         renderLessonIntro(this.ctx, view, viewport)
-//         break
-
-//     case 'active':
-       
-//         renderLesson(this.ctx, view.lessonSectionNodes, viewport, lessonState)
-//         renderLessonHeader(this.ctx, lessonState, viewport)
-//         break
-
-//     case 'completed':
-//         renderLessonComplete(this.ctx, view, viewport)
-//         break
-// }
-
-//         if(view.reportsToDoNode) {
-//             renderReportsToDo(this.ctx, view.reportsToDoNode, viewport)
-//         }
         
         
     }

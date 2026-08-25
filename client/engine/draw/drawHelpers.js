@@ -290,3 +290,67 @@ export function drawImage(
 
     ctx.restore()
 }
+
+export function getProgressPercent(node) {
+
+    if (
+        typeof node.progressPercent ===
+        'number'
+    ) {
+        return Math.round(
+            node.progressPercent
+        )
+    }
+
+    if (
+        typeof node.progress?.progressPercent ===
+        'number'
+    ) {
+        return Math.round(
+            node.progress.progressPercent
+        )
+    }
+
+    return null
+}
+
+
+export function getActionLabel(node) {
+
+    const progress =
+        getProgressPercent(node)
+
+    if (progress === 100) {
+        return 'Review'
+    }
+
+    if (progress > 0) {
+        return 'Continue'
+    }
+
+    return 'Start'
+}
+
+
+export function drawImagePlaceholder(
+    ctx,
+    x,
+    y,
+    size
+) {
+
+    ctx.beginPath()
+
+    ctx.roundRect(
+        x,
+        y,
+        size,
+        size,
+        10
+    )
+
+    ctx.fillStyle =
+        '#f3f4f6'
+
+    ctx.fill()
+}
