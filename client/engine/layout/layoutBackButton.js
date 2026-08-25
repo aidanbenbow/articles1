@@ -15,7 +15,8 @@ export function layoutBackButton(articleNode, layout, currentY, x, width, paddin
         type: 'button',
         kind: 'lessonSection',
         sectionType: 'backButton',
-        action: 'returnToStartScreen'
+        action: 'goHome',
+        articleNode: articleNode
     }
 layout.layoutNodes.set(backRect.id, backRect)
     return backRect

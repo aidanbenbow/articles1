@@ -5,7 +5,7 @@ export function renderLessonIntro(ctx, view, viewport) {
    const titleNode = view.lessonTitleNodes[0]
    const descriptionNode = view.lessonDescriptionNodes[0]
    const statsNode = view.lessonStatsNodes[0]
-   const buttonNode = view.buttonNodes.find(node => node.kind === 'startLessonButton')
+   const buttonNode = view.buttonNodes.find(node => node.kind === 'lessonStartButton')
 
    if(titleNode) {
        renderLessonTitle(ctx, titleNode, viewport)

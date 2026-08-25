@@ -211,14 +211,25 @@ switch (appState.screen) {
         }
     }
 }
+clearScreenLayout() {
+    for (const [id, node] of this.layout.layoutNodes) {
 
+        if (
+            node.owner === 'home' ||
+            node.owner === 'lessonBrowser' ||
+            node.kind?.startsWith('lesson')
+        ) {
+            this.layout.layoutNodes.delete(id)
+        }
+    }
+}
    layoutArticlesDetail(articleNode, lesson) {
 
     if (!articleNode || !lesson) {
         return
     }
   
-this.clearLessonLayout(articleNode)
+this.clearScreenLayout()
     const padding = 20
     const x = this.layout.width / 8
     const worldY = this.layout.height / 8
@@ -608,7 +619,7 @@ layoutStartButton(articleNode, currentY, x, width, padding, color) {
         selected: false,
         text: 'Start',
         type: 'button',
-        kind: 'startLessonButton',
+        kind: 'lessonStartButton',
         sectionType: 'startButton',
         action: 'startLessonPhase'
     }

@@ -1,7 +1,9 @@
+import { getScreenPosition } from "../modules/renderUtils.js"
+
 export function renderLessonComplete(ctx, view, viewport) {
    const backButtonNode = view.buttonNodes.find(node => node.sectionType === 'backButton')
     ctx.clearRect(0, 0, viewport.width, viewport.height)
-   
+   console.log('Rendering lesson complete screen with view:', view, 'and backButtonNode:', backButtonNode)
     renderLessonCompleteScreen(ctx,view, viewport)
     renderBackButton(ctx, backButtonNode, viewport)
 }
@@ -85,30 +87,72 @@ const sectionCount = view.completedSections.length || 0
     )
 }
 
-function renderBackButton(ctx, backButtonNode, viewport) {
-    if (!backButtonNode) return
+function renderBackButton(
+    ctx,
+    node,
+    viewport
+) {
 
-    const buttonWidth = 120
-    const buttonHeight = 40
-    const buttonX = (viewport.width - buttonWidth) / 2
-    const buttonY = viewport.height - 80
+    if (!node) {
+        console.warn(
+            'No back button node available'
+        )
+        return
+    }
 
-    ctx.fillStyle = backButtonNode.props?.color || '#23979d'
-    ctx.fillRect(
-        buttonX,
-        buttonY,
-        buttonWidth,
-        buttonHeight
+    const rect =
+        getScreenPosition(
+            node,
+            viewport
+        )
+
+    if (!rect) {
+        return
+    }
+
+    const {
+        x,
+        y,
+    } = rect
+
+    const width = node.width || 120
+    const height = node.height || 40
+    const radius = 10
+
+    ctx.save()
+
+    ctx.beginPath()
+
+    ctx.roundRect(
+        x,
+        y,
+        width,
+        height,
+        radius
     )
 
-    ctx.font = '16px Arial'
-    ctx.fillStyle = '#fff'
-    ctx.textAlign = 'center'
-    ctx.textBaseline = 'middle'
+    ctx.fillStyle =
+        node.color || '#23979d'
+
+    ctx.fill()
+
+    ctx.font =
+        '600 15px Arial'
+
+    ctx.fillStyle =
+        '#fff'
+
+    ctx.textAlign =
+        'center'
+
+    ctx.textBaseline =
+        'middle'
+
     ctx.fillText(
-        backButtonNode.props?.text || 'Back',
-        buttonX + buttonWidth / 2,
-        buttonY + buttonHeight / 2
+        node.text || 'Back',
+        x + width / 2,
+        y + height / 2
     )
 
+    ctx.restore()
 }

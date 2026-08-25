@@ -61,6 +61,7 @@ async handleTargetNode(targetNode) {
                     
                         return
                         case 'goHome':
+                            console.log('InteractionManager: goHome action triggered')
                              this.engine.context.app.goHome()
                            
                             return
