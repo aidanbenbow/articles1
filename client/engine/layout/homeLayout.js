@@ -81,7 +81,11 @@ export class HomeLayout {
             const progress = progressStore.get(articleData.articleId)
 
             const progressPercent = progress?.progressPercent || 0
-       
+       const image = articleData.photo || null
+      
+        if (image) {
+            this.engine.context.getAssetManager()?.loadImage(image)
+          }
 
         const style = getNodeStyle(continueNode)
 
@@ -102,8 +106,7 @@ export class HomeLayout {
                     'Untitled lesson',
 
                 progressPercent,
-                image:
-                    articleData.photo || null,
+                thumbnail: image,
                 x: 40,
                 worldY: currentY,
 
@@ -128,7 +131,8 @@ export class HomeLayout {
         return currentY +
             (style.height || 120) +
             30
-    }layoutSuggestedLesson(
+    }
+    layoutSuggestedLesson(
     articleNodes,
     currentY
 ) {

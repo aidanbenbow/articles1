@@ -4,7 +4,8 @@ import { getScreenPosition } from "../modules/renderUtils.js"
 export function renderLessonCard(
     ctx,
     node,
-    viewport
+    viewport,
+    assetManager
 ) {
 
     const rect =
@@ -16,21 +17,13 @@ export function renderLessonCard(
     if (!rect) {
         return
     }
-console.log(
-        'LESSON CARD RECT',
-        
-    )
-    const {
-        x,
-        y,
-        
-    } = rect
+
+    const {  x, y,} = rect
 const width = node.width || 600
 const height = node.height || 160
     const radius = 16
 
     ctx.save()
-
 
     /*
      * ==================================================

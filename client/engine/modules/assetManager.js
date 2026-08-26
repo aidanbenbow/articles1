@@ -37,7 +37,9 @@ export class AssetManager {
 
         return this.images.get(url)
     }
-
+getImage(url) {
+    return this.images.get(url) || null
+}
 
     attach() {
         console.log("AssetManager attached")

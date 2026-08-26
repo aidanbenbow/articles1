@@ -91,20 +91,12 @@ quizTotal++
 }
 
     flushLesson()
-      const firstParagraph =
-        sections
-            .flatMap(section =>
-                section.type === 'lesson'
-                    ? section.blocks
-                    : []
-            )
+    
             
-            
-
     return {
         id: article.articleId || null,
         title: article.title || '',
-        description: article.description ||  firstParagraph?.text || '',
+        description: article.description || '',
         sections,
         lessonTotal,
         quizTotal,

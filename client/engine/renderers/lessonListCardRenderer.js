@@ -104,18 +104,11 @@ const height = node.height || 160
 
     if (node.thumbnail) {
 
-        const image =
-            assetManager?.getImage?.(
-                node.thumbnail
-            )
+        const image = assetManager?.getImage?.(node.thumbnail)
 
-        if (
-            image &&
-            image.complete
-        ) {
-
+        if (image?.complete && image.naturalWidth > 0) 
+            {
             ctx.save()
-
             ctx.beginPath()
 
             ctx.roundRect(

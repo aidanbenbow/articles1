@@ -192,37 +192,18 @@ export function drawWrappedText(
 
 export function drawImage(
     ctx,
-    node,
+    image,
     x,
     y,
     width,
     height,
     radius
 ) {
-
-    if (!node._image) {
-
-        node._image =
-            new Image()
-
-        node._image.src =
-            node.image
-
-        return
-    }
-
-    const image =
-        node._image
-
-    if (!image.complete) {
+    if (!image || !image.complete || image.naturalWidth === 0) {
         return
     }
 
     ctx.save()
-
-    /*
-     * Clip image to rounded rectangle.
-     */
 
     ctx.beginPath()
 
@@ -237,12 +218,11 @@ export function drawImage(
     ctx.clip()
 
     const imageRatio =
-        image.width /
-        image.height
+        image.naturalWidth /
+        image.naturalHeight
 
     const boxRatio =
-        width /
-        height
+        width / height
 
     let drawWidth
     let drawHeight
@@ -251,33 +231,27 @@ export function drawImage(
 
     if (imageRatio > boxRatio) {
 
-        drawHeight =
-            height
+        drawHeight = height
 
         drawWidth =
             height * imageRatio
 
         drawX =
-            x +
-            (width - drawWidth) / 2
+            x + (width - drawWidth) / 2
 
-        drawY =
-            y
+        drawY = y
 
     } else {
 
-        drawWidth =
-            width
+        drawWidth = width
 
         drawHeight =
             width / imageRatio
 
-        drawX =
-            x
+        drawX = x
 
         drawY =
-            y +
-            (height - drawHeight) / 2
+            y + (height - drawHeight) / 2
     }
 
     ctx.drawImage(

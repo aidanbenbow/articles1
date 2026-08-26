@@ -17,10 +17,10 @@ export function renderHome(
             renderHomeWelcome(ctx, node, viewport)
             break
             case 'continueLessonCard':
-            renderContinueLessonCard(ctx, node, viewport)
+            renderContinueLessonCard(ctx, node, viewport, assetManager)
             break
             case 'lessonCard':
-            renderLessonCard(ctx, node, viewport)
+            renderLessonCard(ctx, node, viewport, assetManager)
             break
             case 'browseAllLessons':
             renderBrowseAllLessons(ctx, node, viewport)

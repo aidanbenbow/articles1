@@ -1,7 +1,7 @@
 import { drawImage, drawWrappedText } from "../draw/drawHelpers.js"
 import { getScreenPosition } from "../modules/renderUtils.js"
 
-export function renderContinueLessonCard(ctx, node, viewport) {
+export function renderContinueLessonCard(ctx, node, viewport, assetManager) {
 
     const rect =
         getScreenPosition(node, viewport)
@@ -65,36 +65,38 @@ export function renderContinueLessonCard(ctx, node, viewport) {
      */
 
     const imageWidth = 190
+const image = assetManager.getImage(node.thumbnail)
+  
+    if (
+    image &&
+    image.complete &&
+    image.naturalWidth > 0
+) {
+    drawImage(
+        ctx,
+        image,
+        x,
+        y,
+        imageWidth,
+        height,
+        radius
+    )
 
-    if (node.image) {
+} else {
+    ctx.beginPath()
 
-        drawImage(
-            ctx,
-            node,
-            x,
-            y,
-            imageWidth,
-            height,
-            radius
-        )
+    ctx.roundRect(
+        x,
+        y,
+        imageWidth,
+        height,
+        radius
+    )
 
-    } else {
+    ctx.fillStyle = '#f1f3f5'
 
-        ctx.beginPath()
-
-        ctx.roundRect(
-            x,
-            y,
-            imageWidth,
-            height,
-            radius
-        )
-
-        ctx.fillStyle =
-            '#f1f3f5'
-
-        ctx.fill()
-    }
+    ctx.fill()
+}
 
 
     /*

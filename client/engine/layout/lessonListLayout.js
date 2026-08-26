@@ -55,8 +55,7 @@ export function LessonListLayout(articleNodes, layout,engine ) {
                         width,
                         height,
                         thumbnailSize
-                    } =
-                        engine.context.getArticleCardSize(node)
+                    } = engine.context.getArticleCardSize(node)
 
                     const progress =
                         articleId
@@ -65,6 +64,10 @@ export function LessonListLayout(articleNodes, layout,engine ) {
                                 ?.get(articleId)
                             : null
 
+                            const thumbnail = articleData.photo || null
+                            if (thumbnail) {
+                                engine.context.getAssetManager()?.loadImage(thumbnail)
+                              }
                     return {
 
                         id:
@@ -87,18 +90,12 @@ export function LessonListLayout(articleNodes, layout,engine ) {
 
                         color,
 
-                        thumbnail:
-                            articleData.photo ||
-                            null,
-
+                        thumbnail: thumbnail,
                         thumbnailSize,
 
-                        progress:
-                            progress || null,
+                        progress: progress || null,
 
-                            progressPercent:
-                            progress?.progressPercent ||
-                            null,
+                            progressPercent: progress?.progressPercent || null,
 
                         title:
                             node.props?.title ||
