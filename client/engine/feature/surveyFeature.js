@@ -1,4 +1,4 @@
-import { SurveyService } from "./surveyService.js"
+import { SurveyService } from "../services/surveyService.js"
 
 export class SurveyFeature {
 

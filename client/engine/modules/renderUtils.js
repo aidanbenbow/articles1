@@ -1,5 +1,6 @@
 
 import { getSurveyResult } from "../helpers/surveyResults.js";
+import { renderContinueButton } from "../renderers/buttons/continueButton.js";
 import { renderFinishButton } from "../renderers/buttons/finishButton.js";
 import { renderOrderingButton } from "../renderers/ordering/orderingButton.js";
 import { renderOrderingCheck } from "../renderers/ordering/orderingCheck.js";
@@ -7,6 +8,8 @@ import { renderOrderingItem } from "../renderers/ordering/orderingListRenderer.j
 import { renderOrdering } from "../renderers/ordering/orderingRenderer.js";
 import { renderQuizOption } from "../renderers/quiz/quizOption.js";
 import { renderQuiz } from "../renderers/quiz/quizRenderer.js";
+import { renderSurveyOption } from "../renderers/survey/surveyOption.js";
+import { renderSurvey } from "../renderers/survey/surveyRenderer.js";
 
 
 const DEFAULT_FILL_COLOR = '#791e1e';
@@ -395,189 +398,6 @@ export function renderLessonTitle(ctx, node, viewport) {
     )
 }
 
-
-export function renderSurvey(ctx, section,state, viewport, lesson) {
-
-    switch (section.surveyType) {
-
-        case 'single':
-            renderSurveySingleChoice(ctx, section,state, viewport, lesson)
-            break
-
-        case 'multiple':
-            renderSurveySingleChoice(ctx, section,state, viewport, lesson)
-            break
-
-       
-    }
-
-}
-
-export function renderSurveySingleChoice(
-    ctx,
-    section,
-    state,
-    viewport,
-   lesson
-) {
-
-    const rect = getScreenRect(section, viewport)
-
-
-    const response =
-        lesson.surveyResponses?.[section.surveyId] || {}
-const results = lesson.surveyResults?.[section.surveyId] || {}
-
-    const total = results.totalResponses || 0
-        
-
-
-    drawRect(ctx, rect, {
-        showSelection: true
-    })
-
-
-    drawTextBlock(
-        ctx,
-        section.question,
-        section.questionX,
-        section.questionY,
-        section.questionWidth,
-        22
-    )
-
-
-    drawTextBlock(
-        ctx,
-        `${total} responses`,
-        section.responseX,
-        section.responseY,
-        section.responseWidth,
-        16
-    )
-
-    if (response) {
-
-        drawTextBlock(
-            ctx,
-            response.feedback,
-            section.feedbackX,
-            section.feedbackY,
-            section.feedbackWidth,
-            16
-        )
-    }
-}
-
-
-export function renderSurveyOption(
-    ctx,
-    section,
-    viewport,
-    lesson
-) {
-
-    const rect = getScreenRect(section, viewport)
-
-
-    const selected =
-        lesson.surveyResponses?.[section.surveyId] === section.optionIndex
-
-    const { votes, percentage } = getSurveyResult(
-        lesson,
-        section.surveyId,
-        section.optionIndex
-    )
-
-
-    drawRect(ctx, {
-        ...rect,
-        color: selected
-            ? '#b8f5b8'
-            : '#d0d0d0'
-    })
-
-    // Percentage bar
-    const barHeight = 6
-    const barWidth =
-        rect.width * (percentage / 100)
-
-    ctx.fillStyle = '#23979d'
-
-    ctx.fillRect(
-        rect.x,
-        rect.y + rect.height - barHeight,
-        barWidth,
-        barHeight
-    )
-    ctx.save()
-if (selected) {
-    ctx.font = 'bold 18px Arial'
-    ctx.fillStyle = '#23979d'
-    ctx.textAlign = 'left'
-    ctx.textBaseline = 'middle'
-
-    ctx.fillText(
-        '✓',
-        rect.x + 12,
-        rect.y + rect.height / 2
-    )
-}
-    drawTextBlock(
-        ctx,
-        section.text,
-        rect.x + 10,
-        rect.y ,
-        rect.width - 20,
-        20
-    )
-
-      // Percentage
-    ctx.font = 'bold 16px Arial'
-    ctx.fillStyle = '#333'
-    ctx.textAlign = 'right'
-    ctx.textBaseline = 'middle'
-
-    ctx.fillText(
-        `${percentage}%`,
-        rect.x + rect.width - 15,
-        rect.y + rect.height / 2
-    )
-
-    // Vote count
-    ctx.font = '12px Arial'
-    ctx.fillStyle = '#777'
-
-    ctx.fillText(
-        `${votes} ${votes === 1 ? 'response' : 'responses'}`,
-        rect.x + rect.width - 15,
-        rect.y + rect.height / 2 + 18
-    )
-    ctx.restore()
-}
-
-function renderContinueButton(
-    ctx,
-    node,
-    viewport
-) {
-
-    const rect = getScreenRect(node, viewport)
-
-    drawRect(ctx, rect, {showSelection: true})
-
-    ctx.fillStyle = TEXT_COLOR
-    ctx.font = 'bold 18px Arial'
-
-    const textWidth = ctx.measureText(node.text || '').width
-    const textX = rect.x + rect.width / 2 - textWidth / 2
-
-    ctx.fillText(
-        node.text || 'Continue',
-        textX,
-        rect.y + 20
-    )
-}
 
 
 function drawThumbnail(ctx, node,pos, assetManager) {

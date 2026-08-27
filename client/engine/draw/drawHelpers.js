@@ -52,7 +52,7 @@ export function drawRect(
     )
 
     ctx.fillStyle =
-        rect.color || DEFAULT_FILL_COLOR
+        rect.color || DRAWING_CONSTANTS.colors.background
 
     ctx.fill()
 

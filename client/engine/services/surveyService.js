@@ -1,16 +1,17 @@
-import { SurveyApi } from "./surveyApi.js"
+import { SurveyApi } from "../api/surveyApi.js"
 
 export class SurveyService {
 
     constructor() {
         this.results = {}
         this.api = new SurveyApi()
+    
     }
 
 
     async getResults(surveyId) {
       const results = await this.api.getSurveyResults(surveyId)
-      console.log(`Fetched survey results for survey ${surveyId}:`, results)
+     this.results[surveyId] = results
         return this.results[surveyId] || {}
     }
 

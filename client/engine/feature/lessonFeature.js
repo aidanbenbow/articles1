@@ -2,7 +2,7 @@
 import { initializeLessonProgress } from "../api/initialiseLessonProgress.js"
 import { parseArticle } from "../constants/layoutParser.js"
 import { LessonController } from "../controllers/lessonController.js"
-import { SurveyApi } from "../modules/surveyApi.js"
+import { SurveyApi } from "../api/surveyApi.js"
 import { LessonService } from "../services/lessonService.js"
 import { LessonProgressStore } from "../state/lessonProgressStore.js"
 

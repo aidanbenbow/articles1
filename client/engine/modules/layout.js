@@ -1,5 +1,5 @@
 
-import { ArticleLayoutFeature } from "./articleLayoutFeature.js"
+
 import { NodeQuery } from "./nodeQuery.js"
 import { ReportLayoutFeature } from "./reportLayoutFeature.js"
 import { ScreenLayout } from "./screenLayout.js"
@@ -83,14 +83,6 @@ getViewPort() {
 this.engine.context.getArticleLayoutFeature().layoutArticles(null, state)
 
     }
-//     setView(view, articleId = null) {
-
-// this.incrementArticleViews(articleId)
-//     this.scroll.scrollY = this.scroll.scrollByView[view] || 0
-//     this.init()
-// }
-
-  
 
 computeScrollBounds(rects) {
     let maxBottom = 0
