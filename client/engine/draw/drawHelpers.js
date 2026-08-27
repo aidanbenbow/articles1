@@ -6,7 +6,6 @@ export function drawTextBlock(ctx, text, x, y, maxWidth, lineHeight) {
     wrapText(ctx, text || '', x + DRAWING_CONSTANTS.spacing.padding, y + DRAWING_CONSTANTS.spacing.padding, maxWidth - 20, lineHeight)
 }
 
-
 function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
     const words = text.split(' ')
     let line = ''
@@ -25,6 +24,46 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
         }
     }
     ctx.fillText(line, x, y)
+}
+
+export function drawRect(
+    ctx,
+    rect,
+    { showSelection = false } = {}
+) {
+    const { x, y, width, height } = rect
+    const radius = rect.borderRadius ?? 12
+
+    ctx.save()
+
+    if (rect.shadow) {
+        ctx.shadowColor = 'rgba(0,0,0,0.12)'
+        ctx.shadowBlur = 12
+        ctx.shadowOffsetY = 4
+    }
+
+    ctx.beginPath()
+    ctx.roundRect(
+        x,
+        y,
+        width,
+        height,
+        radius
+    )
+
+    ctx.fillStyle =
+        rect.color || DEFAULT_FILL_COLOR
+
+    ctx.fill()
+
+    if (showSelection && rect.selected) {
+        ctx.shadowColor = 'transparent'
+        ctx.strokeStyle = SELECTION_COLOR
+        ctx.lineWidth = 2
+        ctx.stroke()
+    }
+
+    ctx.restore()
 }
 
 export function drawButton(

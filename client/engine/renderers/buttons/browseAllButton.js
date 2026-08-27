@@ -1,4 +1,4 @@
-import { getScreenPosition } from "../modules/renderUtils.js"
+import { getScreenPosition } from "../../modules/renderUtils.js"
 
 export function renderBrowseAllLessons(
     ctx,

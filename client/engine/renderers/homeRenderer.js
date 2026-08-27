@@ -1,4 +1,4 @@
-import { renderBrowseAllLessons } from "./browseAllButton.js"
+import { renderBrowseAllLessons } from "./buttons/browseAllButton.js"
 import { renderContinueLessonCard } from "./continueLessonCardRenderer.js"
 import { renderHomeWelcome } from "./homeWelcomeRenderer.js"
 import { renderLessonCard } from "./lessonCardRenderer.js"

@@ -9,7 +9,20 @@ export const DRAWING_CONSTANTS = {
         lessonCardText: '#000000',
         lessonCardProgress: '#28a745',
     },
+fonts: {
+    header: 'bold 24px Arial',
+    subheader: 'bold 20px Arial',
+    body: '16px Arial',
+    small: '12px Arial',
 
+    quizQuestion: 'bold 18px Arial',
+    quizOption: '16px Arial',
+    feedback: 'italic 14px Arial',
+
+    orderingQuestion: 'bold 18px Arial',
+    orderingItem: '16px Arial',
+    orderingButton: 'bold 14px Arial',
+},
     // Font sizes
     fontSizes: {
         header: 24,

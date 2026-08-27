@@ -5,6 +5,8 @@ import { renderOrderingButton } from "../renderers/ordering/orderingButton.js";
 import { renderOrderingCheck } from "../renderers/ordering/orderingCheck.js";
 import { renderOrderingItem } from "../renderers/ordering/orderingListRenderer.js";
 import { renderOrdering } from "../renderers/ordering/orderingRenderer.js";
+import { renderQuizOption } from "../renderers/quiz/quizOption.js";
+import { renderQuiz } from "../renderers/quiz/quizRenderer.js";
 
 
 const DEFAULT_FILL_COLOR = '#791e1e';
@@ -394,156 +396,6 @@ export function renderLessonTitle(ctx, node, viewport) {
 }
 
 
-
-
-
-export function renderQuiz(ctx, node,state, viewport, lesson) {
-    const rect = getScreenRect(node, viewport)
-
-    drawRect(ctx, rect)
-
-    const padding = node.padding || 20
-
-    ctx.fillStyle = '#000'
-    ctx.font = 'bold 18px Arial'
-
-    ctx.fillText(
-        node.question,
-        rect.x + padding,
-        rect.y + padding
-    )
-
-    const answer = lesson.quizAnswers?.[node.quizId]
-
-    if (answer) {
-        const isCorrect = answer.selected === node.answer
-       
-        ctx.fillStyle = isCorrect ? '#00aa00' : '#aa0000'
-        
-        const scoreText = `Score: ${lesson.quizScore}`
-ctx.save()
-        ctx.font = 'bold 16px Arial'
-        ctx.fillStyle = '#000'
-        ctx.textAlign = 'right'
-        ctx.textBaseline = 'top'
-         ctx.fillText(
-    scoreText,
-    rect.x + rect.width - padding,
-    rect.y + padding
-)
-ctx.restore()
-ctx.save()
-        ctx.font = 'italic 14px Arial'
-        ctx.fillStyle = '#000'
-        ctx.textAlign = 'left'
-        ctx.textBaseline = 'top'
-drawTextBlock(
-    ctx,
-    node.feedback || '',
-    node.feedbackX,
-    node.feedbackY,
-    node.feedbackWidth,
-    20
-)
-ctx.restore()
-    }
-}
-export function renderQuizOption(ctx, node, viewport, lesson) {
-
-    const rect = getScreenRect(node, viewport)
-
-    const answer = lesson.quizAnswers?.[node.quizId]
-
-const answered = !!answer
-const isSelected = answer?.selected === node.optionIndex
-const isCorrect = node.optionIndex === node.answer
-
-
-    let color = '#d0d0d0'
-
-
-    if (answered) {
-
-        if (isCorrect) {
-            color = '#b8f5b8'
-        }
-
-        if (isSelected && !isCorrect) {
-            color = '#f5b8b8'
-        }
-
-    }
-
-
-    drawRect(ctx, {
-        ...rect,
-        color
-    })
-
-
-    // radio
-    ctx.beginPath()
-    ctx.arc(
-        rect.x + 12,
-        rect.y + rect.height / 2,
-        6,
-        0,
-        Math.PI * 2
-    )
-    ctx.stroke()
-
-
-    if (isSelected) {
-
-        ctx.beginPath()
-        ctx.arc(
-            rect.x + 12,
-            rect.y + rect.height / 2,
-            3,
-            0,
-            Math.PI * 2
-        )
-        ctx.fill()
-
-    }
-
-
-    // text
-    ctx.fillStyle = '#000'
-    ctx.font = FONT
-
-    ctx.fillText(
-        node.text,
-        rect.x + 28,
-        rect.y + rect.height / 2 + 5
-    )
-
-
-    // result marker
-    if(answered) {
-
-        if(isCorrect) {
-
-            ctx.fillText(
-                '✓',
-                rect.x + rect.width - 25,
-                rect.y + rect.height / 2 + 5
-            )
-
-        }
-
-        if(isSelected && !isCorrect) {
-
-            ctx.fillText(
-                '✗',
-                rect.x + rect.width - 25,
-                rect.y + rect.height / 2 + 5
-            )
-
-        }
-    }
-}
-
 export function renderSurvey(ctx, section,state, viewport, lesson) {
 
     switch (section.surveyType) {
@@ -754,7 +606,7 @@ export function drawRectLabel(ctx, rect, options = {}) {
     drawSingleLineText(ctx, rect)
 }
 
-export function drawRect(ctx, rect, { showSelection = false } = {}) {
+ function drawRect(ctx, rect, { showSelection = false } = {}) {
     const { x, y, width, height } = rect
     const radius = rect.borderRadius ?? 12
 
