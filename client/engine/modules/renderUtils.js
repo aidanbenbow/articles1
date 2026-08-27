@@ -1,5 +1,10 @@
 
 import { getSurveyResult } from "../helpers/surveyResults.js";
+import { renderFinishButton } from "../renderers/buttons/finishButton.js";
+import { renderOrderingButton } from "../renderers/ordering/orderingButton.js";
+import { renderOrderingCheck } from "../renderers/ordering/orderingCheck.js";
+import { renderOrderingItem } from "../renderers/ordering/orderingListRenderer.js";
+import { renderOrdering } from "../renderers/ordering/orderingRenderer.js";
 
 
 const DEFAULT_FILL_COLOR = '#791e1e';
@@ -227,6 +232,45 @@ export function renderLesson(ctx, sections, viewport, lesson) {
                 lesson
             )
             break
+             case 'ordering':
+            renderOrdering(
+                ctx,
+                section,
+                state,
+                viewport,
+                lesson
+            )
+            break
+
+        case 'orderingItem':
+            renderOrderingItem(
+                ctx,
+                section,
+                state,
+                viewport,
+                lesson
+            )
+            break
+
+        case 'orderingButton':
+            renderOrderingButton(
+                ctx,
+                section,
+                state,
+                viewport,
+                lesson
+            )
+            break
+
+        case 'orderingCheck':
+            renderOrderingCheck(
+                ctx,
+                section,
+                state,
+                viewport,
+                lesson
+            )
+            break
             case 'continueButton':
             renderContinueButton(
                 ctx,
@@ -235,7 +279,7 @@ export function renderLesson(ctx, sections, viewport, lesson) {
             )
             break
             case 'finishButton':
-            renderContinueButton(
+            renderFinishButton(
                 ctx,
                 section,
                 viewport

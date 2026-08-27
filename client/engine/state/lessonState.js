@@ -17,6 +17,8 @@ export class LessonState {
         this.surveyResponses = {}
         this.surveyResults = {}
 
+        this.orderingAnswers = {}
+
         this.phase = 'not-started'
         this.currentSectionId =
             this.sections[0]?.id ?? null
@@ -114,9 +116,7 @@ getCurrentSection() {
 
         this.completed = true
         this.currentSectionId = null
-      console.log(
-            'AFTER ADVANCE: LESSON COMPLETE'
-        )
+     
         return true
     }
 
@@ -126,11 +126,6 @@ getCurrentSection() {
     this.currentSectionId =
         next.id
 
- console.log(
-        'AFTER ADVANCE:',
-        this.currentSectionId,
-        this.currentSectionIndex
-    )
     return true
 }
 canUnlockNextSection() {
@@ -147,25 +142,19 @@ canUnlockNextSection() {
 
         case 'lesson':
             return true
-
-
         case 'quiz':
             return this.quizAnswers[current.id] !== undefined
 
-
         case 'survey':
             return this.surveyResponses[current.id] !== undefined
-
 
         default:
             return true
     }
 }
      getNextSection() {
-
         const nextIndex =
             this.currentSectionIndex + 1
-
 
         return (
             this.sections[nextIndex] || null
@@ -198,6 +187,8 @@ restoreProgress(progress) {
     this.surveyResponses = {
         ...(progress.surveyResponses ?? {})
     }
+    this.orderingAnswers =
+    progress.orderingAnswers || {}
 
     this.currentSectionId =
         progress.currentActivityId ?? this.sections[0]?.id ?? null
@@ -282,5 +273,116 @@ const section =
 }
 setSurveyResults(surveyId, results) {
     this.surveyResults[surveyId] = results
+}
+moveOrderingItem(
+    sectionId,
+    itemIndex,
+    direction
+) {
+    const section =
+        this.sections.find(
+            section => section.id === sectionId
+        )
+
+    if (!section) {
+        return {
+            success: false,
+            reason: 'section-not-found'
+        }
+    }
+
+    if (!this.orderingAnswers[sectionId]) {
+        this.orderingAnswers[sectionId] = {
+            items: [...section.items],
+            checked: false,
+            correct: false,
+            feedback: ''
+        }
+    }
+
+    const answer =
+        this.orderingAnswers[sectionId]
+
+    const items = answer.items
+
+    const targetIndex =
+        direction === 'up'
+            ? itemIndex - 1
+            : itemIndex + 1
+
+    if (
+        targetIndex < 0 ||
+        targetIndex >= items.length
+    ) {
+        return {
+            success: false,
+            reason: 'edge'
+        }
+    }
+
+    ;[
+        items[itemIndex],
+        items[targetIndex]
+    ] = [
+        items[targetIndex],
+        items[itemIndex]
+    ]
+
+    answer.checked = false
+    answer.correct = false
+    answer.feedback = ''
+
+    return {
+        success: true
+    }
+}checkOrdering(sectionId) {
+
+    const section =
+        this.sections.find(
+            section => section.id === sectionId
+        )
+
+    if (!section) {
+        return {
+            correct: false,
+            reason: 'section-not-found'
+        }
+    }
+
+    const answer =
+        this.orderingAnswers?.[sectionId]
+
+    if (!answer) {
+        return {
+            correct: false,
+            reason: 'not-started'
+        }
+    }
+
+    const correct =
+        section.items.length ===
+            answer.items.length &&
+        section.items.every(
+            (item, index) =>
+                item === answer.items[index]
+        )
+
+    answer.checked = true
+    answer.correct = correct
+
+    answer.feedback =
+        correct
+            ? section.feedback ||
+              "Great job! You've reconstructed the process."
+            : 'Not quite. Try rearranging the steps.'
+
+    if (correct) {
+        // potentially complete the activity here
+    }
+
+    return {
+        correct,
+        feedback: answer.feedback
+    }
 }
 }

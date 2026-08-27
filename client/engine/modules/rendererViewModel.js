@@ -26,6 +26,12 @@ export function createRendererViewModel( allnodes,state, lesson) {
     const surveyTotal = lesson?.surveyTotal || 0
     const completedSections = lesson?.completedSections || []
     const progress = lesson?.getProgress ? lesson.getProgress() : 0
+
+    const orderingAnswers =
+    lesson?.orderingAnswers || {}
+
+const orderingTotal =
+    lesson?.orderingTotal || 0
     
     return {
         inputNodes,
@@ -56,7 +62,10 @@ export function createRendererViewModel( allnodes,state, lesson) {
         surveyTotal,
 
         completedSections,
-        progress
+        progress,
+
+        orderingAnswers,
+        orderingTotal
        
     }
 }

@@ -146,21 +146,24 @@ export class HomeLayout {
                 node?.props?.articleData?.articleId
         )
 
-    const suggestedNode =
-        lessonNodes.find(node => {
+    const suggestedNode =lessonNodes[8]
+        // lessonNodes.find(node => {
 
-            const articleId =
-                node.props?.articleData
-                    ?.articleId
+        //     const articleId =
+        //         node.props?.articleData
+        //             ?.articleId
 
-            const progress =
-                progressStore?.progress
-                    ?.get(articleId)
+        //     const progress =
+        //         progressStore?.progress
+        //             ?.get(articleId)
 
-            return !progress ||
-                !progress.startedAt
-        })
-
+        //     return !progress ||
+        //         !progress.startedAt
+        //})
+console.log(
+    'SUGGESTED NODE',
+    suggestedNode
+)
     if (!suggestedNode) {
         return currentY
     }

@@ -51,15 +51,22 @@ export function registerArticlesHandlers(app, articlesService) {
 // "section-1",
 // "soymilk-process",
 // "section-2"],
-//     },   
-   
-    {
-        "lessonId": "life-lessons-from-var",
+//     },  
+{
+        "lessonId": "english-buffalo-mozzarella-an-unexpected-delicacy",
         "status": "in_progress",
         "progressPercent": 20,
-        "currentActivityId": null,
+        "currentActivityId": "mozzarella-process",
         "completedActivityIds": []
-    }
+    }, 
+   
+    // {
+    //     "lessonId": "life-lessons-from-var",
+    //     "status": "in_progress",
+    //     "progressPercent": 20,
+    //     "currentActivityId": null,
+    //     "completedActivityIds": []
+    // }
 ]
             res.json(progressRecords);
         } catch (error) {

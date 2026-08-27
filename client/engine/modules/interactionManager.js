@@ -51,6 +51,23 @@ async handleTargetNode(targetNode) {
                     targetNode.quizId, targetNode.optionIndex, targetNode.answer)
                 this.emitLayoutChanged()
                 return
+                case 'moveOrderingItem':
+    this.engine.context.moveOrderingItem(
+        targetNode.sectionId,
+        targetNode.itemIndex,
+        targetNode.direction
+    )
+
+    this.emitLayoutChanged()
+    return
+
+case 'checkOrdering':
+    this.engine.context.checkOrdering(
+        targetNode.sectionId
+    )
+
+    this.emitLayoutChanged()
+    return
                 case 'openLesson':
                     const article =
                         targetNode.articleData || null
@@ -71,52 +88,6 @@ async handleTargetNode(targetNode) {
 
     }
 
-// async openLesson(targetNode) {
-//     const article =
-//         targetNode.articleData || null
-
-//     if (!article) {
-//         console.warn(
-//             'Cannot open lesson: no article data',
-//             targetNode
-//         )
-
-//         return
-//     }
-
-//     const articleId =
-//         targetNode.articleId ||
-//         article.articleId ||
-//         article.id ||
-//         null
-
-//     const lesson =
-//         parseArticle(article)
-
-//     console.log(
-//         'PARSED LESSON',
-//         lesson
-//     )
-
-//     this.engine.context.startLesson(
-//         lesson
-//     )
-
-//     this.engine.context.selectArticle(
-//         articleId
-//     )
-
-//     this.state = {
-//         ...this.state,
-//         view: 'article',
-//         selectedNodeId: targetNode.id
-//     }
-
-//     this.engine.emit(
-//         'lessonStateChanged',
-//         this.engine.context.getLesson()
-//     )
-// }
 appendSearchTerm(char) {
     const searchTerm = this.state.searchTerm + char
         this.state = {
@@ -157,72 +128,7 @@ appendSearchTerm(char) {
             term
         )
     }
-// handleQuizOption(targetNode) {
-// console.log('handleQuizOption', targetNode)
-//     const { quizId, optionIndex, answer } = targetNode
 
-//    if (quizId in this.state.quizAnswers) {
-//     return
-// }
-
-//     const correct = optionIndex === answer
-
-//     this.state = {
-//         ...this.state,
-
-//         quizAnswers: {
-//             ...this.state.quizAnswers,
-
-//             [quizId]: {
-//                 selected: optionIndex,
-//                 correct
-//             }
-//         },
-
-//         quizScore:
-//             this.state.quizScore + (correct ? 1 : 0)
-//     }
-
-//     this.emitLayoutChanged()
-// }
-
-//    async handleSurveyOption(targetNode) {
-
-//     const { surveyId, optionIndex } = targetNode
-
-
-//     // store this user's selection
-//     this.state = {
-//         ...this.state,
-
-//         surveyResponses: {
-//             ...this.state.surveyResponses,
-//             [surveyId]: optionIndex
-//         }
-//     }
-
-
-//     const updatedResults =
-//         await this.engine.context.recordSurveyResponse(
-//             surveyId,
-//             optionIndex
-//         )
-
-
-//     // update the cached results used by renderer
-//     this.state = {
-//         ...this.state,
-
-//         surveyResults: {
-//             ...this.state.surveyResults,
-
-//             [surveyId]: updatedResults
-//         }
-//     }
-
-
-//     this.emitLayoutChanged()
-// }
 emitLayoutChanged() {
     this.engine.emit(
         'layoutChanged',

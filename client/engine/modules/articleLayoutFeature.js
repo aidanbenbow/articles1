@@ -5,6 +5,7 @@ import { layoutBackButton } from "../layout/layoutBackButton.js"
 import { layoutContinueButton } from "../layout/layoutContinueButton.js"
 import { layoutFinishButton } from "../layout/layoutFinishButton.js"
 import { layoutHeadingBlock } from "../layout/layoutHeadingBlock.js"
+import { layoutOrderingSection } from "../layout/layoutOrderingSection.js"
 import { layoutParagraphBlock } from "../layout/layoutParagraphBlock.js"
 import { LessonListLayout } from "../layout/lessonListLayout.js"
 
@@ -125,68 +126,7 @@ switch (appState.screen) {
 
         this.engine.emit('layoutChanged', { layout: this.layout.layoutNodes })
     }
-   
 
-//     layoutArticlesList(articleNodes) {
-//         const startY = this.layout.height / 8
-//         const spacingY = 30
-
-// for (const [id, rect] of this.layout.layoutNodes) {
-//         if (rect.kind === 'article') {
-//             this.layout.layoutNodes.delete(id)
-//         }
-//     }
-    
-//         const rects = layoutVerticalList(articleNodes, {
-//             startX: Math.max(this.layout.width / 8, 20),
-//             startY,
-//             spacing: spacingY,
-//             getItemHeight: (node) => {
-//                 const { height } = this.getArticleCardSize(node)
-//                 return height
-//             },
-//             create: (node, worldY, startX) => {
-//                 const {  color } = getNodeStyle(node)
-
-// const thumbnail = node.props?.articleData?.photo 
-// const description = node.props.articleData?.description|| ''
-// const { width, height, thumbnailSize } = this.getArticleCardSize(node)
-// const articleId = node.props?.articleData?.articleId || null
-// const progressStore = this.engine.context.getLessonProgressStore()
-// const progress = articleId ? progressStore?.get(articleId) : null
-
-//                 return {
-//                     id: node.id,
-//                     articleId: node.props?.articleData?.articleId || null,
-//                     articleData: node.props?.articleData || null,
-//                     progress: progress || null,
-//                     x: startX,
-//                     width,
-//                     height,
-//                     color,
-//                     thumbnail,
-//                     thumbnailSize,
-//                     selected: false,
-//                     text: node.props?.title || 'article',
-//                     content: node.props?.articleData?.content || '',
-                   
-//                    excerpt: node.props?.articleData?.excerpt
-//                    || node.props?.articleData?.article?.substring(0, 100) || '',
-//                    description: description,
-//                     type: 'text',
-//                     kind: 'article',
-//                     action: 'openLesson',
-//                     worldY
-//                 }
-//             }
-//         })
-
-//         for (const [id, rect] of rects.entries()) {
-//             this.layout.layoutNodes.set(id, rect)
-//         }
-
-//         this.layout.computeScrollBounds(rects)
-//     }
     clearLessonLayout(articleNode) {
 
     if (!articleNode) return
@@ -242,7 +182,7 @@ this.clearScreenLayout()
 
     if(lesson.phase === 'intro') {
         this.layoutLessonIntro(articleNode,lesson, currentY, x, width, padding, color)
-        console.log('Layout lesson intro', articleNode, lesson)
+        
         return
     }
 
@@ -268,11 +208,7 @@ this.clearScreenLayout()
      currentY = layoutFinishButton(articleNode,this.layout, currentY, x, width, padding, color)
      currentY = layoutBackButton(articleNode,this.layout, currentY + 50, x, width, padding, color)
     }
-//      const contentBottom = Math.max(
-//     ...[...this.layout.layoutNodes.values()]
-//         .filter(node => node.kind === 'lessonSection')
-//         .map(node => node.worldY + node.height)
-// )
+
 
 this.layout.scroll.updateBounds(currentY + 50)
 }
@@ -378,8 +314,22 @@ layoutSection( articleNode,
                     color,
                     lesson
                 )
+                case 'ordering':
+            return layoutOrderingSection(
+                articleNode,
+                this.layout,
+                currentSection,
+                currentY,
+                x,
+                width,
+                padding,
+                color,
+                lesson
+            )
+    
         }
-    }layoutLessonSection(
+    }
+    layoutLessonSection(
     articleNode,
     section,
     currentY,

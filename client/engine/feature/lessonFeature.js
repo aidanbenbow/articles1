@@ -38,20 +38,18 @@ export class LessonFeature {
             startLessonPhase: () => this.lessonController.startPhase(),
             finishLesson: () => this.lessonController.finishLesson(),
             getLessonProgressStore: () => this.lessonProgressStore,
-            startLessonFromArticle: (article) => this.startLessonFromArticle(article)
+            startLessonFromArticle: (article) => this.startLessonFromArticle(article),
+            moveOrderingItem: (sectionId, itemIndex,direction) =>
+    this.lessonController.moveOrderingItem(sectionId,itemIndex,direction),
+
+checkOrdering: (sectionId) =>
+    this.lessonController.checkOrdering(sectionId),
         }
     }
     startLessonFromArticle(article) {
+        const lesson = parseArticle(article)
 
-        const lesson =
-            parseArticle(article)
-console.log('RAW ARTICLE:', article)
-
-        this.lessonController.start(
-            lesson
-        )
-
-
+        this.lessonController.start(lesson)
         return lesson
     }
 

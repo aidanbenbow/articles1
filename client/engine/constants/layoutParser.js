@@ -1,3 +1,5 @@
+import { parseOrdering } from "./orderParser.js"
+
 export function parseArticle(article) {
     const content = article.content || article.article || ''
    
@@ -5,7 +7,7 @@ export function parseArticle(article) {
 
     const sections = []
 
-    let paragraph = []
+    let orderingTotal = 0
     let sectionIndex = 0
     let lessonTotal = 0
     let quizTotal = 0
@@ -40,12 +42,7 @@ lessonTotal++
     sections.push({
                 id: `section-${sectionIndex++}`,
                 type: 'lesson',
-                blocks: [
-                    {
-                        type: 'paragraph',
-                        text: lesson.text
-                    }
-                ]
+                blocks: lesson.blocks
             })
             lessonTotal++
 
@@ -83,6 +80,19 @@ quizTotal++
 
         continue
     }
+    if (text === ':::ordering') {
+    flushLesson()
+
+    const { ordering, nextIndex } = parseOrdering(lines, i)
+
+    ordering.id = ordering.id || `ordering-${sectionIndex++}`
+
+    sections.push(ordering)
+    orderingTotal++
+
+    i = nextIndex
+    continue
+}
 
  lessonBlocks.push({
         type: 'paragraph',
@@ -100,7 +110,8 @@ quizTotal++
         sections,
         lessonTotal,
         quizTotal,
-        surveyTotal
+        surveyTotal,
+        orderingTotal
     }
 }
 

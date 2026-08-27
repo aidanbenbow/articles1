@@ -6,10 +6,8 @@ export class LessonController {
     }
 
 
-    start(articleId, sections) {
-
-        return this.lessonService.startLesson(articleId, sections)
-
+    start(lessonData) {
+    return this.lessonService.startLesson(lessonData)
     }
     setCurrentSection(sectionId) {
 
@@ -18,7 +16,6 @@ export class LessonController {
     )
 
 }
-
 
     answerQuiz(
         sectionId,
@@ -40,7 +37,6 @@ export class LessonController {
 
     }
 
-
     async answerSurvey(
         surveyId,
         optionIndex
@@ -59,61 +55,9 @@ export class LessonController {
     }
 
     getState() {
-
         return this.lessonService.getLesson()
-
     }
-//   updateProgress() {
-//     // LessonController
-// console.log('updateProgress CALLED')
-// const viewport = this.engine.context.getViewport()
-//     const layoutNodes = this.engine.context.getLayout()
 
-//     let closest = null
-
-//     for(const node of layoutNodes.values()) {
-
-//         if(node.kind !== 'lessonSection')
-//             continue
-
-
-//         if(!this.isVisible(node, viewport))
-//             continue
-
-
-//         if(!closest || node.worldY < closest.worldY) {
-//             closest = node
-//         }
-
-//     }
-
-
-//     if(closest) {
-
-//         const lesson =
-//             this.lessonService.getLesson()
-
-
-//         // complete the previous section
-//         if(
-//             lesson.currentSectionId &&
-//             lesson.currentSectionId !== closest.sectionId
-//         ) {
-
-//             this.lessonService.completeSection(
-//                 lesson.currentSectionId
-//             )
-
-//         }
-
-
-//         // move current marker
-//         this.lessonService.setCurrentSection(
-//             closest.sectionId
-//         )
-//     }
-
-// }   
 isVisible(node, viewport) {
 
         const nodeTop = node.worldY
@@ -150,5 +94,31 @@ startPhase() {
         currentSectionId:
             this.lessonService.getLesson().currentSectionId
     })
+}
+moveOrderingItem(sectionId, itemIndex, direction) {
+    const result = this.lessonService.moveOrderingItem(
+        sectionId,
+        itemIndex,
+        direction
+    )
+
+    this.engine.emit('lessonStateChanged', {
+        currentSectionId:
+            this.lessonService.getLesson().currentSectionId
+    })
+
+    return result
+}
+
+checkOrdering(sectionId) {
+    const result =
+        this.lessonService.checkOrdering(sectionId)
+
+    this.engine.emit('lessonStateChanged', {
+        currentSectionId:
+            this.lessonService.getLesson().currentSectionId
+    })
+
+    return result
 }
 }

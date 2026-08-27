@@ -18,9 +18,7 @@ export class LessonService {
         const savedProgress = this.lessonProgressStore.get(
             this.lesson.articleId
         )
-        console.log('Saved progress:', savedProgress)
-        console.log('Starting lesson with data:', this.lesson)
-
+      
         if( savedProgress) {
             this.lesson.restoreProgress(savedProgress)
         } else {
@@ -82,6 +80,8 @@ this.lesson.start()
 
             surveyResponses:
                 { ...this.lesson.surveyResponses },
+                orderingAnswers:
+    { ...this.lesson.orderingAnswers },
 
             completedAt:
                 this.lesson.completed
@@ -110,14 +110,8 @@ this.lesson.start()
 
 }
  
-   
     answerQuiz(sectionId, quizId, optionIndex, answer) {
-    const result = this.lesson.answerQuiz(
-        sectionId,
-        quizId,
-        optionIndex,
-        answer
-    )
+    const result = this.lesson.answerQuiz(sectionId,quizId,optionIndex,answer)
 
     this.syncProgress()
 
@@ -125,7 +119,6 @@ this.lesson.start()
 }
       completeSection(sectionId) {
 // LessonService
-
         this.lesson.completeSection(sectionId)
         this.syncProgress()
 
@@ -173,5 +166,29 @@ advanceSection() {
     }
 
     return moved
+}
+moveOrderingItem(
+    sectionId,
+    itemIndex,
+    direction
+) {
+    const result =
+        this.lesson.moveOrderingItem(
+            sectionId,
+            itemIndex,
+            direction
+        )
+
+    this.syncProgress()
+
+    return result
+}
+checkOrdering(sectionId) {
+    const result =
+        this.lesson.checkOrdering(sectionId)
+
+    this.syncProgress()
+
+    return result
 }
 }
