@@ -112,7 +112,10 @@ this.lesson.start()
  
     answerQuiz(sectionId, quizId, optionIndex, answer) {
     const result = this.lesson.answerQuiz(sectionId,quizId,optionIndex,answer)
-
+console.log(
+    'ANSWER QUIZ RESULT:',
+    result
+)
     this.syncProgress()
 
     return result

@@ -26,6 +26,14 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
     ctx.fillText(line, x, y)
 }
 
+export function drawText(ctx, text, x, y, font = DRAWING_CONSTANTS.fonts.body, color = DRAWING_CONSTANTS.colors.text, align = 'center', baseline = 'middle') {
+    ctx.fillStyle = color
+    ctx.font = font
+    ctx.textAlign = align
+    ctx.textBaseline = baseline
+    ctx.fillText(text, x, y)
+}
+
 export function drawRect(
     ctx,
     rect,
@@ -43,18 +51,18 @@ export function drawRect(
     }
 
     ctx.beginPath()
-    ctx.roundRect(
-        x,
-        y,
-        width,
-        height,
-        radius
-    )
+    ctx.roundRect(x,y,width,height,radius)
 
-    ctx.fillStyle =
-        rect.color || DRAWING_CONSTANTS.colors.background
-
+    ctx.fillStyle = rect.color || DRAWING_CONSTANTS.colors.background
     ctx.fill()
+
+     if (rect.borderColor) {
+        ctx.shadowColor = 'transparent'
+        ctx.strokeStyle = rect.borderColor
+
+        ctx.lineWidth = rect.borderWidth ?? 1
+        ctx.stroke()
+    }
 
     if (showSelection && rect.selected) {
         ctx.shadowColor = 'transparent'
@@ -89,10 +97,7 @@ export function drawButton(
     ctx.textAlign = 'center'
     ctx.textBaseline = 'middle'
 
-    ctx.fillText(
-        text,
-        x + width / 2,
-        y + height / 2
+    ctx.fillText( text, x + width / 2, y + height / 2
     )
 }
 

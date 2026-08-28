@@ -1,3 +1,5 @@
+import { DRAWING_CONSTANTS } from "../../constants/drawingConstants.js"
+import { drawRect, drawText } from "../../draw/drawHelpers.js"
 import { getScreenPosition } from "../../modules/renderUtils.js"
 
 export function renderBrowseAllLessons(
@@ -6,95 +8,40 @@ export function renderBrowseAllLessons(
     viewport
 ) {
 
-    const rect =
-        getScreenPosition(
-            node,
-            viewport
-        )
+    const rect = getScreenPosition(node,viewport)
 
-    if (!rect) {
-        return
-    }
-
-    const {
-        x,
-        y,
-        
-    } = rect
+    if (!rect)  return
+    
+    const { x,y,} = rect
 const width = node.width || 600
 const height = node.height || 160
     const radius = 16
 
-    ctx.save()
-
-    /*
-     * Card
-     */
-
-    ctx.beginPath()
-
-    ctx.roundRect(
-        x,
-        y,
-        width,
-        height,
-        radius
+    drawRect(
+        ctx,
+        { x, y, width, height, radius },
+        { showSelection: true }
     )
 
-    ctx.fillStyle =
-        '#f8f7ff'
-
-    ctx.fill()
-
-    ctx.strokeStyle =
-        '#ded9f7'
-
-    ctx.lineWidth = 1
-
-    ctx.stroke()
-
-
-    /*
-     * Text
-     */
-
-    ctx.font =
-        '600 15px sans-serif'
-
-    ctx.fillStyle =
-        '#4c4670'
-
-    ctx.textAlign =
-        'left'
-
-    ctx.textBaseline =
-        'middle'
-
-    ctx.fillText(
-        node.title ||
-            'Browse all lessons',
-        x + 22,
-        y + height / 2
+    ctx.save()
+   drawText( ctx, node.text || 'Browse All Lessons',
+        x + width / 2,
+        y + height / 2,
+        DRAWING_CONSTANTS.fonts.button,
+        DRAWING_CONSTANTS.colors.buttonText
     )
 
 
     /*
      * Arrow
      */
-
-    ctx.font =
-        '600 20px sans-serif'
-
-    ctx.fillStyle =
-        '#9481ed'
-
-    ctx.textAlign =
-        'right'
-
-    ctx.fillText(
+drawText(
+        ctx,
         '→',
-        x + width - 22,
-        y + height / 2
+        x + width - 40,
+        y + height / 2,
+        DRAWING_CONSTANTS.fonts.button,
+        DRAWING_CONSTANTS.colors.accent
     )
 
     ctx.restore()

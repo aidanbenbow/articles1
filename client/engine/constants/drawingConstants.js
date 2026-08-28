@@ -1,10 +1,12 @@
 export const DRAWING_CONSTANTS = {
     // Colors
     colors: {
+        accent: '#007bff',
         background: '#f0f0f0',
         text: '#333333',
+        border: '#cccccc',
         button: '#007bff',
-        buttonText: '#ffffff',
+        buttonText: '#967d7d',
         lessonCardBackground: '#e0e0e0',
         lessonCardText: '#000000',
         lessonCardProgress: '#28a745',
@@ -14,6 +16,7 @@ fonts: {
     subheader: 'bold 20px Arial',
     body: '16px Arial',
     small: '12px Arial',
+    button: 'bold 16px Arial',
 
     quizQuestion: 'bold 18px Arial',
     quizOption: '16px Arial',

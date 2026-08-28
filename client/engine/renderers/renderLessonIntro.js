@@ -1,4 +1,6 @@
 import { getScreenRect, renderButtons, renderLessonTitle } from "../modules/renderUtils.js"
+import { renderButton } from "./buttons/buttonRenderer.js"
+import { renderStartButton } from "./buttons/startButton.js"
 
 export function renderLessonIntro(ctx, view, viewport) {
 
@@ -17,7 +19,9 @@ export function renderLessonIntro(ctx, view, viewport) {
         renderLessonStats(ctx, statsNode, viewport, view)
     }
     if(buttonNode) {
-        renderButtons(ctx, [buttonNode], viewport)
+        renderButton(ctx, buttonNode, viewport, {
+            defaultText: 'Start'
+        })
     }
 }
 

@@ -1,14 +1,12 @@
-
 import { renderButton } from "./buttonRenderer.js"
 
-export function renderContinueButton(
+export function renderStartButton(
     ctx,
     node,
     viewport
 ) {
 
     renderButton(ctx, node, viewport, {
-        defaultText: 'Continue'})
+        defaultText: 'Start'})
    
 }
- 

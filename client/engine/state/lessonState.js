@@ -1,3 +1,5 @@
+import { createActivityState } from "./stateFactory.js"
+
 export class LessonState {
 
     constructor(lesson={}) {
@@ -11,6 +13,15 @@ export class LessonState {
         this.quizAnswers = {}
         this.quizScore = 0
          this.quizTotal = lesson.quizTotal
+
+
+         this.activities = Object.fromEntries(
+            this.sections.map(section => [
+                section.id,
+                createActivityState(section)
+            ])
+        )
+console.log('LessonState initialized with activities:', this.activities)
             this.surveyTotal = lesson.surveyTotal
             this.lessonTotal = lesson.lessonTotal
 
@@ -214,36 +225,52 @@ restoreProgress(progress) {
     }
 }
 answerQuiz(sectionId, quizId, optionIndex, answer) {
-    if (quizId in this.quizAnswers) {
-        return this.quizAnswers[quizId]
-    }
+    const quiz = this.activities[sectionId]
 
-    const correct = optionIndex === answer
+    if (!quiz) {console.warn(
+            `No quiz found for sectionId: ${sectionId}`)
+        return}
 
-     const section =
-        this.sections.find(
-            section => section.id === sectionId
-        )
+           const result = quiz.answerQuestion(quizId, optionIndex, answer)
 
-    this.quizAnswers[quizId] = {
-        selected: optionIndex,
-        correctAnswer: answer,
-        correct,
-        feedback: section?.feedback ?? ''
-    }
+           return {
+            currentSection: this.currentSectionId,
+            correct: result.correct,
+            score: quiz.getScore(),
+            progress: this.getProgress(),
+            results: result
+        }
+           
 
-    if (correct) {
-        this.quizScore++
-    }
+    
+    // if (quizId in this.quizAnswers) {
+    //     return this.quizAnswers[quizId]
+    // }
 
-   // this.completeSection(sectionId)
+    // const correct = optionIndex === answer
 
-    return {
-        currentSection: this.currentSectionId,
-        correct,
-        score: this.quizScore,
-        progress: this.getProgress()
-    }
+    //  const section =
+    //     this.sections.find(
+    //         section => section.id === sectionId
+    //     )
+
+    // this.quizAnswers[quizId] = {
+    //     selected: optionIndex,
+    //     correctAnswer: answer,
+    //     correct,
+    //     feedback: section?.feedback ?? ''
+    // }
+
+    // if (correct) {
+    //     this.quizScore++
+    // }
+
+    // return {
+    //     currentSection: this.currentSectionId,
+    //     correct,
+    //     score: this.quizScore,
+    //     progress: this.getProgress()
+    // }
 }
 answerSurvey(surveyId, optionIndex) {
     if (surveyId in this.surveyResponses) {
