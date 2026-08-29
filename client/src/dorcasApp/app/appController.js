@@ -7,7 +7,7 @@ export class AppController {
     }
 
    openLesson(article) {
-console.log('AppController.openLesson', article)
+
     const articleId =
         article.articleId ||
         article.id

@@ -27,7 +27,7 @@ export class InteractionManager {
 async handleTargetNode(targetNode) {
 
         if(!targetNode) return
-        console.log('TARGET NODE', targetNode)
+       // console.log('TARGET NODE', targetNode)
 
         switch (targetNode.action) {
             case 'finishLessonSection':

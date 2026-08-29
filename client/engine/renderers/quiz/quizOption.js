@@ -6,7 +6,8 @@ export function renderQuizOption(ctx, node, viewport, lesson) {
 
     const rect = getScreenRect(node, viewport)
 
-    const answer = lesson.quizAnswers?.[node.quizId]
+    const quiz = lesson.activities?.[node.sectionId]
+    const answer = quiz?.getAnswer(node.sectionId)?? null
 
 const answered = !!answer
 const isSelected = answer?.selected === node.optionIndex
@@ -15,7 +16,7 @@ const isCorrect = node.optionIndex === node.answer
     let color = '#d0d0d0'
 
     if (answered) {
-
+console.log('Answered:', answered)
         if (isCorrect) {
             color = '#b8f5b8'
         }

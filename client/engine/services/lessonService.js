@@ -55,6 +55,42 @@ this.lesson.start()
     const progress =
         this.lesson.getProgress()
 
+        const quizAnswers = {}
+    let quizScore = 0
+
+    const surveyResponses = {}
+    const orderingAnswers = {}
+
+    for (const [sectionId, activity] of Object.entries(
+        this.lesson.activities
+    )) {
+        if (activity.type === 'quiz') {
+            Object.assign(
+                quizAnswers,
+                activity.getAnswers()
+            )
+
+            quizScore += activity.getScore()
+        }
+
+        if (activity.type === 'survey') {
+            const response = activity.getResponse()
+
+            if (response) {
+                surveyResponses[sectionId] = response
+            }
+        }
+
+        if (activity.type === 'ordering') {
+            orderingAnswers[sectionId] = {
+                items: activity.getItems(),
+                checked: activity.getChecked(),
+                correct: activity.isCorrect(),
+                feedback: activity.getFeedback()
+            }
+        }
+    }
+
  const result =   this.lessonProgressStore.update(
         this.lesson.articleId,
         {
@@ -72,16 +108,10 @@ this.lesson.start()
             completedActivityIds:
                 [...this.lesson.completedSections],
 
-            quizAnswers:
-                { ...this.lesson.quizAnswers },
-
-            quizScore:
-                this.lesson.quizScore,
-
-            surveyResponses:
-                { ...this.lesson.surveyResponses },
-                orderingAnswers:
-    { ...this.lesson.orderingAnswers },
+            quizAnswers,
+            quizScore,
+            surveyResponses,
+            orderingAnswers,
 
             completedAt:
                 this.lesson.completed

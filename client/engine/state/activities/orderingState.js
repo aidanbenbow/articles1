@@ -46,6 +46,13 @@ export class OrderingState extends ActivityState {
     getItems() {
         return this.items
     }
+    getChecked() {
+    return this.checked
+}
+
+getFeedback() {
+    return this.feedback
+}
 
     isCorrect() {
         return this.correct

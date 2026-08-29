@@ -10,7 +10,7 @@ export class LessonState {
         
         this.description = lesson.description || ''
         this.currentSectionIndex = 0
-        this.quizAnswers = {}
+       // this.quizAnswers = {}
         this.quizScore = 0
          this.quizTotal = lesson.quizTotal
 
@@ -21,7 +21,6 @@ export class LessonState {
                 createActivityState(section)
             ])
         )
-console.log('LessonState initialized with activities:', this.activities)
             this.surveyTotal = lesson.surveyTotal
             this.lessonTotal = lesson.lessonTotal
 
@@ -140,28 +139,10 @@ getCurrentSection() {
     return true
 }
 canUnlockNextSection() {
+    const activity =
+        this.activities[this.currentSectionId]
 
-    const current =
-        this.getCurrentSection()
-
-    if (!current) {
-        return false
-    }
-
-
-    switch(current.type) {
-
-        case 'lesson':
-            return true
-        case 'quiz':
-            return this.quizAnswers[current.id] !== undefined
-
-        case 'survey':
-            return this.surveyResponses[current.id] !== undefined
-
-        default:
-            return true
-    }
+    return activity?.isComplete() ?? false
 }
      getNextSection() {
         const nextIndex =
@@ -240,37 +221,7 @@ answerQuiz(sectionId, quizId, optionIndex, answer) {
             progress: this.getProgress(),
             results: result
         }
-           
-
-    
-    // if (quizId in this.quizAnswers) {
-    //     return this.quizAnswers[quizId]
-    // }
-
-    // const correct = optionIndex === answer
-
-    //  const section =
-    //     this.sections.find(
-    //         section => section.id === sectionId
-    //     )
-
-    // this.quizAnswers[quizId] = {
-    //     selected: optionIndex,
-    //     correctAnswer: answer,
-    //     correct,
-    //     feedback: section?.feedback ?? ''
-    // }
-
-    // if (correct) {
-    //     this.quizScore++
-    // }
-
-    // return {
-    //     currentSection: this.currentSectionId,
-    //     correct,
-    //     score: this.quizScore,
-    //     progress: this.getProgress()
-    // }
+  
 }
 answerSurvey(surveyId, optionIndex) {
     if (surveyId in this.surveyResponses) {

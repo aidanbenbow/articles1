@@ -147,23 +147,7 @@ export class HomeLayout {
         )
 
     const suggestedNode =lessonNodes[8]
-        // lessonNodes.find(node => {
-
-        //     const articleId =
-        //         node.props?.articleData
-        //             ?.articleId
-
-        //     const progress =
-        //         progressStore?.progress
-        //             ?.get(articleId)
-
-        //     return !progress ||
-        //         !progress.startedAt
-        //})
-console.log(
-    'SUGGESTED NODE',
-    suggestedNode
-)
+        
     if (!suggestedNode) {
         return currentY
     }

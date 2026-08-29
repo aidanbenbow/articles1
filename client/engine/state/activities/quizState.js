@@ -56,6 +56,9 @@ isComplete() {
     getAnsweredCount() {
         return Object.keys(this.answers).length
     }
+    getAnswer(questionId) {
+    return this.answers[questionId] ?? null
+}
 
 getAnswers() {
         return this.answers
