@@ -55,8 +55,8 @@ export function registerArticlesHandlers(app, articlesService) {
 {
         "lessonId": "english-buffalo-mozzarella-an-unexpected-delicacy",
         "status": "in_progress",
-        "progressPercent": 20,
-        "currentActivityId": "mozzarella-process",
+        "progressPercent": 30,
+        "currentActivityId": "section-3",
         "completedActivityIds": []
     }, 
    
