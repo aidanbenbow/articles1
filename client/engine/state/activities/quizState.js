@@ -33,9 +33,9 @@ export class QuizState extends ActivityState {
     }
 isComplete() {
     return (
-        this.getTotalQuestions() > 0 &&
-        this.getAnsweredCount() ===
-        this.getTotalQuestions()
+       
+        this.getAnsweredCount() === 1
+        
     )
 }
     getScore() {
@@ -43,7 +43,8 @@ isComplete() {
     }
 
     getTotalQuestions() {
-        return this.section?.questions?.length || 0
+        console.log('Total questions in section:', this.section) 
+        return this.section?.question?.length || 0
     }
 
     getAnsweredQuestions() {

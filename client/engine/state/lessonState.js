@@ -10,7 +10,7 @@ export class LessonState {
         
         this.description = lesson.description || ''
         this.currentSectionIndex = 0
-       // this.quizAnswers = {}
+     
         this.quizScore = 0
          this.quizTotal = lesson.quizTotal
 

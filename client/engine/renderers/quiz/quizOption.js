@@ -16,7 +16,7 @@ const isCorrect = node.optionIndex === node.answer
     let color = '#d0d0d0'
 
     if (answered) {
-console.log('Answered:', answered)
+
         if (isCorrect) {
             color = '#b8f5b8'
         }

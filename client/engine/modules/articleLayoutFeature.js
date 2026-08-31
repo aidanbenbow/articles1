@@ -8,6 +8,7 @@ import { layoutHeadingBlock } from "../layout/layoutHeadingBlock.js"
 import { layoutOrderingSection } from "../layout/layoutOrderingSection.js"
 import { layoutParagraphBlock } from "../layout/layoutParagraphBlock.js"
 import { LessonListLayout } from "../layout/lessonListLayout.js"
+import { layoutQuizSection } from "../layout/quizLayout.js"
 
 import { matchesOrderedPrefix, normalize } from "./search.js"
 
@@ -293,15 +294,7 @@ layoutSection( articleNode,
                         color
                     )
             case 'quiz':
-                return this.layoutQuizSection(
-                    articleNode,
-                    currentSection,
-                    currentY,
-                    x,
-                    width,
-                    padding,
-                    color,
-                    lesson
+                return layoutQuizSection( this.layout,articleNode,currentSection,currentY,x,width,padding,color,lesson
                 )
             case 'survey':
                 return this.layoutSurveySection(
@@ -343,105 +336,85 @@ layoutSection( articleNode,
     for (const block of blocks) {
 
         if (block.type === 'heading') {
-            currentY = layoutHeadingBlock(
-                this.layout,
-                articleNode,
-                section,
-                block,
-                currentY,
-                x,
-                width,
-                padding,
-                color
-            )
+            currentY = layoutHeadingBlock(this.layout,articleNode, section, block, currentY,x,width,padding,color)
 
         } else if (block.type === 'paragraph') {
-            currentY = layoutParagraphBlock(
-                this.layout,
-                articleNode,
-                section,
-                block,
-                currentY,
-                x,
-                width,
-                padding,
-                color
-            )
+            currentY = layoutParagraphBlock(this.layout,articleNode,section,block,currentY,x,width,padding,color)
         }
     }
 
     return currentY + 20
 }
 
-layoutQuizSection(articleNode, section, currentY, x, width, padding, color, lesson) {
-    const questionHeight = 30
-    const optionHeight = 30
-    const optionGap = 10
-    const quizTop = currentY
-    const answered = lesson.activities[section.id].answers || null
-    console.log(answered)
-    const feedbackHeight = answered && answered.feedback ? 30 : 0
-    const feedbackGap = feedbackHeight > 0 ? 10 : 0
+// layoutQuizSection(articleNode, section, currentY, x, width, padding, color, lesson) {
+//     const questionHeight = 30
+//     const optionHeight = 30
+//     const optionGap = 10
+//     const quizTop = currentY
+//     const answered = lesson.activities[section.id].answers || null
+//     console.log(answered)
+//     const feedbackHeight = answered && answered.feedback ? 30 : 0
+//     const feedbackGap = feedbackHeight > 0 ? 10 : 0
     
-const quizHeight =
-    padding * 2 +
-    questionHeight +
-    section.options.length * optionHeight
-    + (section.options.length - 1) * optionGap
-    + feedbackHeight + feedbackGap
+// const quizHeight =
+//     padding * 2 +
+//     questionHeight +
+//     section.options.length * optionHeight
+//     + (section.options.length - 1) * optionGap
+//     + feedbackHeight + feedbackGap
 
-    const feedbackY = quizTop + padding + questionHeight + section.options.length * (optionHeight + optionGap) + feedbackGap
+//     const feedbackY = quizTop + padding + questionHeight + section.options.length * (optionHeight + optionGap) + feedbackGap
 
-    const quizRect = {
-        id: `${articleNode.id}-${section.id}`,
-        sectionId: section.id,
-        x,
-        worldY: quizTop,
-        width,
-        height: quizHeight,
-        padding,
-        color: '#e0e0e0',
-        selected: false,
-        question: section.question,
-        type: 'quiz',
-        kind: 'lessonSection',
-        sectionType: 'quiz',
-        options: section.options,
-        answer: section.answer,
-        quizId: section.id,
+//     const quizRect = {
+//         id: `${articleNode.id}-${section.id}`,
+//         sectionId: section.id,
+//         x,
+//         worldY: quizTop,
+//         width,
+//         height: quizHeight,
+//         padding,
+//         color: '#e0e0e0',
+//         selected: false,
+//         question: section.question,
+//         type: 'quiz',
+//         kind: 'lessonSection',
+//         sectionType: 'quiz',
+//         options: section.options,
+//         answer: section.answer,
+//         quizId: section.id,
 
-        feedback: answered?.feedback || '',
-        feedbackHeight,
-        feedbackY,
-        feedbackX: x + padding,
-        feedbackWidth: width - padding * 2
-    }
-    this.layout.layoutNodes.set(quizRect.id, quizRect)
+//         feedback: answered?.feedback || '',
+//         feedbackHeight,
+//         feedbackY,
+//         feedbackX: x + padding,
+//         feedbackWidth: width - padding * 2
+//     }
+//     this.layout.layoutNodes.set(quizRect.id, quizRect)
 
-    for (let i = 0; i < section.options.length; i++) {
-        const optionRect = {
-            id: `${articleNode.id}-${section.id}-option-${i}`,
-            sectionId: section.id,
-            x: x + padding,
-            worldY: quizTop + padding + questionHeight + i * (optionHeight + optionGap),
-            width: width - padding * 2,
-            height: optionHeight,
-            padding,
-            color: '#d0d0d0',
-            selected: false,
-            text: section.options[i],
-            type: 'text',
-            kind: 'lessonSection',
-            sectionType: 'quizOption',
-            action: 'answerQuiz',
-            quizId: section.id,
-            optionIndex: i,
-            answer: section.answer
-        }
-        this.layout.layoutNodes.set(optionRect.id, optionRect)
-    }
-    return currentY + quizHeight + 10
-}
+//     for (let i = 0; i < section.options.length; i++) {
+//         const optionRect = {
+//             id: `${articleNode.id}-${section.id}-option-${i}`,
+//             sectionId: section.id,
+//             x: x + padding,
+//             worldY: quizTop + padding + questionHeight + i * (optionHeight + optionGap),
+//             width: width - padding * 2,
+//             height: optionHeight,
+//             padding,
+//             color: '#d0d0d0',
+//             selected: false,
+//             text: section.options[i],
+//             type: 'text',
+//             kind: 'lessonSection',
+//             sectionType: 'quizOption',
+//             action: 'answerQuiz',
+//             quizId: section.id,
+//             optionIndex: i,
+//             answer: section.answer
+//         }
+//         this.layout.layoutNodes.set(optionRect.id, optionRect)
+//     }
+//     return currentY + quizHeight + 10
+// }
 layoutSurveySection(articleNode, section, currentY, x, width, padding, color, lesson) {
     const questionHeight = 30
     const responseHeight = 20
