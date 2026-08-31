@@ -11,6 +11,7 @@ export function renderOrdering(
         section,
         viewport
     )
+    
     const { x, y } = rect
     const width = section.width || 600
     const height = section.height || 160
@@ -28,4 +29,16 @@ export function renderOrdering(
         x + section.padding,
         y + section.padding + 20
     )
+
+      // Feedback
+    if (section.feedback) {
+        ctx.fillStyle = '#c62828'
+        ctx.font = '16px sans-serif'
+
+        ctx.fillText(
+            section.feedback,
+            section.feedbackX,
+            section.feedbackY + 24
+        )
+    }
 }

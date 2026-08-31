@@ -15,7 +15,7 @@ export function renderOrderingButton(
     const { x, y } = rect
     const width = section.width || 600
     const height = section.height || 160
-console.log('RENDERING ORDERING BUTTON:', section, rect, width, height)
+
     ctx.fillStyle = section.color || '#bbbbbb'
 
     ctx.fillRect(x, y, width, height)

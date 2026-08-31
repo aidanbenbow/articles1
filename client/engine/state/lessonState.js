@@ -141,7 +141,11 @@ getCurrentSection() {
 canUnlockNextSection() {
     const activity =
         this.activities[this.currentSectionId]
-
+console.log(
+        'Checking if can unlock next section:',
+        this.currentSectionId,
+        activity?.isComplete()
+    )
     return activity?.isComplete() ?? false
 }
      getNextSection() {
@@ -252,115 +256,115 @@ const section =
 setSurveyResults(surveyId, results) {
     this.surveyResults[surveyId] = results
 }
-moveOrderingItem(
-    sectionId,
-    itemIndex,
-    direction
-) {
-    const section =
-        this.sections.find(
-            section => section.id === sectionId
-        )
+// moveOrderingItem(
+//     sectionId,
+//     itemIndex,
+//     direction
+// ) {
+//     const section =
+//         this.sections.find(
+//             section => section.id === sectionId
+//         )
 
-    if (!section) {
-        return {
-            success: false,
-            reason: 'section-not-found'
-        }
-    }
+//     if (!section) {
+//         return {
+//             success: false,
+//             reason: 'section-not-found'
+//         }
+//     }
 
-    if (!this.orderingAnswers[sectionId]) {
-        this.orderingAnswers[sectionId] = {
-            items: [...section.items],
-            checked: false,
-            correct: false,
-            feedback: ''
-        }
-    }
+//     if (!this.orderingAnswers[sectionId]) {
+//         this.orderingAnswers[sectionId] = {
+//             items: [...section.items],
+//             checked: false,
+//             correct: false,
+//             feedback: ''
+//         }
+//     }
 
-    const answer =
-        this.orderingAnswers[sectionId]
+//     const answer =
+//         this.orderingAnswers[sectionId]
 
-    const items = answer.items
+//     const items = answer.items
 
-    const targetIndex =
-        direction === 'up'
-            ? itemIndex - 1
-            : itemIndex + 1
+//     const targetIndex =
+//         direction === 'up'
+//             ? itemIndex - 1
+//             : itemIndex + 1
 
-    if (
-        targetIndex < 0 ||
-        targetIndex >= items.length
-    ) {
-        return {
-            success: false,
-            reason: 'edge'
-        }
-    }
+//     if (
+//         targetIndex < 0 ||
+//         targetIndex >= items.length
+//     ) {
+//         return {
+//             success: false,
+//             reason: 'edge'
+//         }
+//     }
 
-    ;[
-        items[itemIndex],
-        items[targetIndex]
-    ] = [
-        items[targetIndex],
-        items[itemIndex]
-    ]
+//     ;[
+//         items[itemIndex],
+//         items[targetIndex]
+//     ] = [
+//         items[targetIndex],
+//         items[itemIndex]
+//     ]
 
-    answer.checked = false
-    answer.correct = false
-    answer.feedback = ''
+//     answer.checked = false
+//     answer.correct = false
+//     answer.feedback = ''
 
-    return {
-        success: true
-    }
-}checkOrdering(sectionId) {
+//     return {
+//         success: true
+//     }
+// }checkOrdering(sectionId) {
 
-    const section =
-        this.sections.find(
-            section => section.id === sectionId
-        )
+//     const section =
+//         this.sections.find(
+//             section => section.id === sectionId
+//         )
 
-    if (!section) {
-        return {
-            correct: false,
-            reason: 'section-not-found'
-        }
-    }
+//     if (!section) {
+//         return {
+//             correct: false,
+//             reason: 'section-not-found'
+//         }
+//     }
 
-    const answer =
-        this.orderingAnswers?.[sectionId]
+//     const answer =
+//         this.orderingAnswers?.[sectionId]
 
-    if (!answer) {
-        return {
-            correct: false,
-            reason: 'not-started'
-        }
-    }
+//     if (!answer) {
+//         return {
+//             correct: false,
+//             reason: 'not-started'
+//         }
+//     }
 
-    const correct =
-        section.items.length ===
-            answer.items.length &&
-        section.items.every(
-            (item, index) =>
-                item === answer.items[index]
-        )
+//     const correct =
+//         section.items.length ===
+//             answer.items.length &&
+//         section.items.every(
+//             (item, index) =>
+//                 item === answer.items[index]
+//         )
 
-    answer.checked = true
-    answer.correct = correct
+//     answer.checked = true
+//     answer.correct = correct
 
-    answer.feedback =
-        correct
-            ? section.feedback ||
-              "Great job! You've reconstructed the process."
-            : 'Not quite. Try rearranging the steps.'
+//     answer.feedback =
+//         correct
+//             ? section.feedback ||
+//               "Great job! You've reconstructed the process."
+//             : 'Not quite. Try rearranging the steps.'
 
-    if (correct) {
-        // potentially complete the activity here
-    }
+//     if (correct) {
+//         // potentially complete the activity here
+//     }
 
-    return {
-        correct,
-        feedback: answer.feedback
-    }
-}
+//     return {
+//         correct,
+//         feedback: answer.feedback
+//     }
+// }
 }

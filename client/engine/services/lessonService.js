@@ -205,23 +205,50 @@ moveOrderingItem(
     itemIndex,
     direction
 ) {
-    const result =
-        this.lesson.moveOrderingItem(
-            sectionId,
-            itemIndex,
-            direction
-        )
+    const activity =
+        this.lesson.activities[sectionId]
 
-    this.syncProgress()
+    if (!activity || activity.type !== 'ordering') {
+        return {
+            success: false,
+            reason: 'activity-not-found-or-not-ordering'
+        }
+    }
 
-    return result
+const result =
+        activity.moveItem(itemIndex, direction)
+
+        if (result) {
+            this.syncProgress()
+        }
+
+        return result
 }
 checkOrdering(sectionId) {
+    const activity =
+        this.lesson.activities[sectionId]
+
+        const section = this.lesson.sections.find(
+            section => section.id === sectionId
+        )
+
+    if (!activity || !section || activity.type !== 'ordering') {
+        return {
+            success: false,
+            reason: 'activity-not-found-or-not-ordering'
+        }
+    }
+
     const result =
-        this.lesson.checkOrdering(sectionId)
+        activity.checkAnswer(section.items)
 
-    this.syncProgress()
+        this.syncProgress()
 
-    return result
+        return {
+            result,
+            feedback: activity.getFeedback()
+        }
+
+
 }
 }

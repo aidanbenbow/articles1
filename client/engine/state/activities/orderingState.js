@@ -6,9 +6,14 @@ export class OrderingState extends ActivityState {
     constructor(section) {
         super(section)
         this.items = [...(section.items || [])]
+        this.shuffleItems()
         this.checked = false
         this.correct = false
-        this.feedback = section.feedback || ''
+         this.correctFeedback =
+            section.feedback ||
+            "Great job! You've reconstructed the process."
+
+        this.feedback = ''
     }
 
     moveItem(itemIndex, direction) {
@@ -37,10 +42,17 @@ export class OrderingState extends ActivityState {
 
         this.checked = true
         this.feedback = this.correct
-            ? 'Great job! You\'ve reconstructed the process.'
+            ? this.correctFeedback
             : 'Not quite. Try rearranging the steps.'
 
         return this.correct
+    }
+
+    shuffleItems() {
+        for (let i = this.items.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1))
+            ;[this.items[i], this.items[j]] = [this.items[j], this.items[i]]
+        }
     }
 
     getItems() {
@@ -67,5 +79,6 @@ getFeedback() {
         this.checked = false
         this.correct = false
         this.feedback = ''
+        this.shuffleItems()
     }
 }

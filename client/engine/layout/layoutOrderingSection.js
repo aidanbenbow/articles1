@@ -18,7 +18,8 @@ export function layoutOrderingSection(
     const orderingTop = currentY
 
     const answer =
-        lesson.orderingAnswers?.[section.id] || null
+        lesson.activities[section.id]
+       
 
     const items =
         answer?.items || section.items
