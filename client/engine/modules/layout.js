@@ -34,7 +34,7 @@ export class Layout {
                 getCanvas: () => this.engine.context.canvas,
                 onDelta: (delta) => {
                     this.scroll.scrollBy(delta)
-                 //   this.engine.context.updateProgress()
+                 
                     this.engine.emit('layoutChanged', { layout: this.layoutNodes })
                 }
             }
@@ -48,8 +48,6 @@ export class Layout {
             getLayoutManager: () => this,
             applyReportFilter: this.reportFeature.applyFilter.bind(this.reportFeature),
            incrementArticleViews: this.incrementArticleViews.bind(this),
-            // selectArticle: (id)=> this.setView('article', id),
-            // clearSelectedArticle: () => this.setView('list'),
             scrollBy: this.scroll.scrollBy.bind(this.scroll),
             setScroll: this.scroll.setScroll.bind(this.scroll),
             getScroll: () => this.scroll.scrollY,
@@ -67,7 +65,6 @@ this._unsubscribe.push(() => this.scrollController.detach())
 getViewPort() {
     return this.scroll.getViewport()
 }
-
 
     init() {
        setTimeout(() => {

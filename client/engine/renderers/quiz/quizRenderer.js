@@ -23,8 +23,6 @@ export function renderQuiz(ctx, node,state, viewport, lesson) {
     const answer =
         quiz?.getAnswer(node.sectionId) ?? null
 
-    // console.log('Quiz:', quiz)
-    // console.log('Answer:', answer)
 
     if (answer !== null) {
         const isCorrect = answer.isCorrect

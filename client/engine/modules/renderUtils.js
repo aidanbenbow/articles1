@@ -53,6 +53,7 @@ export function getScreenRect(node, viewportOrScrollY) {
 }
 
 export function getScreenPosition(rect, viewportOrScrollY) {
+    
     return {
         x: rect.x,
         y: rect.worldY - resolveScrollY(viewportOrScrollY)

@@ -1,4 +1,4 @@
-import { getNodeStyle, layoutVerticalList } from "../constants/layoutConstants.js"
+import { getNodeStyle, getResponsiveLayout, layoutVerticalList } from "../constants/layoutConstants.js"
 
 
 export class HomeLayout {
@@ -7,12 +7,19 @@ export class HomeLayout {
         this.engine = engine
         this.layout = layout
     }
-
+getMetrics() {
+       return getResponsiveLayout(
+            this.layout.width,
+            this.layout.height
+        )
+    }
 
     build(articleNodes = []) {
+        const metrics = this.getMetrics()
+const {screenHeight} = metrics
 
         this.clear()
-        let currentY = 50
+        let currentY = Math.max(40, screenHeight * 0.05)
         currentY = this.layoutWelcome(currentY)
 
         currentY = this.layoutContinue(articleNodes, currentY)
@@ -28,6 +35,9 @@ export class HomeLayout {
     }
 
     layoutWelcome(currentY) {
+        const metrics = this.getMetrics()
+        const {  padding, contentWidth, gap, welcome } = metrics
+        const height = welcome?.height 
         this.layout.layoutNodes.set(
         'home-welcome',
         {
@@ -35,13 +45,13 @@ export class HomeLayout {
             owner: 'home',
             kind: 'homeWelcome',
 
-            x: 40,
+            x: padding,
             worldY: currentY,
 
             width:
-                this.layout.width - 80,
+                contentWidth,
 
-            height: 150,
+            height: height,
 
             title: 'Welcome',
 
@@ -53,7 +63,7 @@ export class HomeLayout {
         }
     )
 
-    return currentY + 180
+    return currentY + height + gap
     }
     layoutContinue(articleNodes, currentY) {
         const progressStore =
@@ -76,7 +86,9 @@ export class HomeLayout {
             )
 
             if(!continueNode) return currentY
-
+const metrics = this.getMetrics()
+const { padding, contentWidth, gap } = metrics
+const height = metrics.continueCard?.height || 120
             const articleData = continueNode.props?.articleData || {}
             const progress = progressStore.get(articleData.articleId)
 
@@ -86,8 +98,6 @@ export class HomeLayout {
         if (image) {
             this.engine.context.getAssetManager()?.loadImage(image)
           }
-
-        const style = getNodeStyle(continueNode)
 
         this.layout.layoutNodes.set(
             'home-continue',
@@ -107,14 +117,13 @@ export class HomeLayout {
 
                 progressPercent,
                 thumbnail: image,
-                x: 40,
+                x: (this.layout.width - contentWidth) / 2,
                 worldY: currentY,
 
                 width:
-                    this.layout.width - 80,
+                    contentWidth,
 
-                height:
-                    style.height || 120,
+                height ,
 
                 articleNode:
                     continueNode,
@@ -128,9 +137,7 @@ export class HomeLayout {
             }
         )
 
-        return currentY +
-            (style.height || 120) +
-            30
+        return currentY + height + gap
     }
     layoutSuggestedLesson(
     articleNodes,
@@ -139,6 +146,9 @@ export class HomeLayout {
 
     const progressStore =
         this.engine.context.getLessonProgressStore()
+
+const metrics = this.getMetrics()
+const { padding, contentWidth, gap } = metrics
 
     const lessonNodes =
         articleNodes.filter(
@@ -155,7 +165,7 @@ export class HomeLayout {
     const articleData =
         suggestedNode.props?.articleData || {}
 
-    const height = 170
+    const height = metrics.suggested?.height || 120
 
     this.layout.layoutNodes.set(
         'home-suggested',
@@ -187,11 +197,11 @@ export class HomeLayout {
 
             actionLabel: 'Start lesson',
 
-            x: 40,
+            x: padding,
             worldY: currentY,
 
             width:
-                this.layout.width - 80,
+                contentWidth,
 
             height,
 
@@ -201,12 +211,12 @@ export class HomeLayout {
         }
     )
 
-    return currentY +
-        height +
-        30
-}layoutBrowseAll(currentY) {
-
-    const height = 64
+    return currentY +height +gap
+}
+layoutBrowseAll(currentY) {
+const metrics = this.getMetrics()
+const { padding, contentWidth, gap, browseAll } = metrics
+const height = browseAll?.height || 120
 
     this.layout.layoutNodes.set(
         'home-browse-all',
@@ -216,11 +226,11 @@ export class HomeLayout {
             owner: 'home',
             kind: 'browseAllLessons',
 
-            x: 40,
+            x: padding,
             worldY: currentY,
 
             width:
-                this.layout.width - 80,
+                contentWidth,
 
             height,
 
@@ -232,93 +242,91 @@ export class HomeLayout {
         }
     )
 
-    return currentY +
-        height +
-        30
+    return currentY + height + gap
 }
-    layoutLessons(
-        articleNodes,
-        currentY
-    ) {
+    // layoutLessons(
+    //     articleNodes,
+    //     currentY
+    // ) {
 
-        const lessonNodes =
-        articleNodes.filter(
-            node =>
-                node?.props?.articleData?.articleId
-        )
-            console.log(
-                'LESSON NODES',
-                lessonNodes
-            )
+    //     const lessonNodes =
+    //     articleNodes.filter(
+    //         node =>
+    //             node?.props?.articleData?.articleId
+    //     )
+    //         console.log(
+    //             'LESSON NODES',
+    //             lessonNodes
+    //         )
 
-        for (const node of lessonNodes) {
+    //     for (const node of lessonNodes) {
 
-            const style =
-                getNodeStyle(node)
+    //         const style =
+    //             getNodeStyle(node)
 
-            const articleData =
-                node.props?.articleData || {}
+    //         const articleData =
+    //             node.props?.articleData || {}
 
-            const articleId =
-                articleData.articleId || null
+    //         const articleId =
+    //             articleData.articleId || null
 
-            const progressStore =
-                this.engine.context.getLessonProgressStore()
+    //         const progressStore =
+    //             this.engine.context.getLessonProgressStore()
 
-            const progress =
-                articleId
-                    ? progressStore?.get(
-                        articleId
-                    )
-                    : null
+    //         const progress =
+    //             articleId
+    //                 ? progressStore?.get(
+    //                     articleId
+    //                 )
+    //                 : null
 
-            const height =
-                style.height || 120
+    //         const height =
+    //             style.height || 120
 
-            this.layout.layoutNodes.set(
-                `home-${node.id}`,
-                {
-                    id: `home-${node.id}`,
+    //         this.layout.layoutNodes.set(
+    //             `home-${node.id}`,
+    //             {
+    //                 id: `home-${node.id}`,
 
-                    owner: 'home',
-                    kind: 'lessonCard',
+    //                 owner: 'home',
+    //                 kind: 'lessonCard',
 
-                    articleId,
+    //                 articleId,
 
-                    title:
-                        node.props?.title ||
-                        articleData.title ||
-                        'Untitled lesson',
+    //                 title:
+    //                     node.props?.title ||
+    //                     articleData.title ||
+    //                     'Untitled lesson',
 
-                    description:
-                        articleData.description ||
-                        articleData.excerpt ||
-                        '',
+    //                 description:
+    //                     articleData.description ||
+    //                     articleData.excerpt ||
+    //                     '',
 
-                    thumbnail:
-                        articleData.photo || null,
+    //                 thumbnail:
+    //                     articleData.photo || null,
 
-                    progress,
+    //                 progress,
 
-                    x: 40,
-                    worldY: currentY,
+    //                 x: 40,
+    //                 worldY: currentY,
 
-                    width:
-                        this.layout.width - 80,
+    //                 width:
+    //                     this.layout.width - 80,
 
-                    height,
+    //                 height,
 
-                    action: 'openLesson',
+    //                 action: 'openLesson',
 
-                    articleNode: node
-                }
-            )
+    //                 articleNode: node
+    //             }
+    //         )
 
-            currentY += height + 20
-        }
+    //         currentY += height + 20
+    //     }
 
-        return currentY
-    }
+    //     return currentY
+    // }
     clear() {
     for (const [id, node] of this.layout.layoutNodes) {
         if (node.owner === 'home') {

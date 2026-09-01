@@ -74,14 +74,7 @@ export function drawRect(
     ctx.restore()
 }
 
-export function drawButton(
-    ctx,
-    text,
-    x,
-    y,
-    width,
-    height
-) {
+export function drawButton(ctx, text,x,y,width,height) {
 
     ctx.fillStyle = '#333'
 
@@ -101,13 +94,7 @@ export function drawButton(
     )
 }
 
-export function drawLessonCard(
-    ctx,
-    lesson,
-    progress,
-    x,
-    y,
-    width
+export function drawLessonCard(ctx,lesson,progress,x,y,width
 ) {
 
     ctx.fillStyle = '#e0e0e0'
@@ -154,15 +141,7 @@ export function drawLessonCard(
     )
 }
 
-export function drawWrappedText(
-    ctx,
-    text,
-    x,
-    y,
-    maxWidth,
-    lineHeight,
-    maxLines = 2
-) {
+export function drawWrappedText(ctx,text,x,y,maxWidth,lineHeight,maxLines = 2) {
 
     if (!text) {
         return
@@ -234,15 +213,7 @@ export function drawWrappedText(
 }
 
 
-export function drawImage(
-    ctx,
-    image,
-    x,
-    y,
-    width,
-    height,
-    radius
-) {
+export function drawImage(ctx,image,x,y,width,height,radius) {
     if (!image || !image.complete || image.naturalWidth === 0) {
         return
     }
@@ -298,13 +269,7 @@ export function drawImage(
             y + (height - drawHeight) / 2
     }
 
-    ctx.drawImage(
-        image,
-        drawX,
-        drawY,
-        drawWidth,
-        drawHeight
-    )
+    ctx.drawImage(image,drawX,drawY,drawWidth,drawHeight)
 
     ctx.restore()
 }
@@ -350,12 +315,7 @@ export function getActionLabel(node) {
 }
 
 
-export function drawImagePlaceholder(
-    ctx,
-    x,
-    y,
-    size
-) {
+export function drawImagePlaceholder(ctx,x,y,size) {
 
     ctx.beginPath()
 
@@ -371,4 +331,129 @@ export function drawImagePlaceholder(
         '#f3f4f6'
 
     ctx.fill()
+}
+
+export function drawContinueContent( ctx, node, x, y, width, height, compact = false) {
+
+
+    /*
+     * EYEBROW
+     */
+
+    ctx.font ='600 11px sans-serif'
+
+    ctx.fillStyle ='#9481ed'
+
+    ctx.textAlign ='left'
+
+    ctx.textBaseline ='top'
+
+    ctx.fillText(
+        'CONTINUE LEARNING', x,y)
+
+    /*
+     * TITLE
+     */
+
+    ctx.font ='700 23px sans-serif'
+
+    ctx.fillStyle ='#171717'
+
+    drawWrappedText(ctx,node.title || '',x,
+        y + 22, width,27, 2
+    )
+
+    /*
+     * DESCRIPTION
+     */
+
+        ctx.font ='400 13px sans-serif'
+
+        ctx.fillStyle ='#6b7280'
+
+        drawWrappedText(
+            ctx,
+            node.description || '',
+            x,
+            y + 81,
+            width,
+            20,
+            2
+        )
+
+    /*
+     * PROGRESS
+     */
+
+    const progress =
+        Math.max(
+            0,
+            Math.min(
+                100,
+                node.progressPercent || 0
+            )
+        )
+
+    const progressHeight = 7
+
+    const progressY = y + height - 53
+    /*
+     * Track
+     */
+
+    ctx.beginPath()
+
+    ctx.roundRect(
+        x,
+        progressY,
+        width,
+        progressHeight,
+        4
+    )
+
+    ctx.fillStyle ='#e5e7eb'
+ ctx.fill()
+
+
+    /*
+     * Filled
+     */
+
+    const filledWidth = width * progress / 100
+
+    if (filledWidth > 0) {
+
+        ctx.beginPath()
+
+        ctx.roundRect(
+            x,
+            progressY,
+            filledWidth,
+            progressHeight,
+            4
+        )
+
+        ctx.fillStyle ='#9481ed'
+
+        ctx.fill()
+    }
+
+
+    /*
+     * Percentage
+     */
+
+    ctx.font ='600 11px sans-serif'
+
+    ctx.fillStyle ='#6b7280'
+
+    ctx.textAlign ='right'
+
+    ctx.textBaseline ='bottom'
+
+    ctx.fillText(
+        `${progress}%`,
+        x + width,
+        progressY - 5
+    )
 }
