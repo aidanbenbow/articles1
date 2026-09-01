@@ -6,7 +6,7 @@ export function renderContinueLessonCard(ctx, node, viewport, assetManager) {
 
     const rect =
         getScreenPosition(node, viewport)
-console.log('renderContinueLessonCard', node, rect, viewport)
+
     const {x, y,} = rect
     const width = node.width || 600
     const height = node.height || 160

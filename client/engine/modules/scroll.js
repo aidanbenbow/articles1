@@ -5,18 +5,18 @@ export class ScrollManager {
         
         this.scrollY = 0
         this.maxScrollY = 0
-        this.scrollByView = {
-            list: 0,
-            article: 0,
-        }
+        // this.scrollByView = {
+        //     list: 0,
+        //     article: 0,
+        // }
     }
     setScroll(y){
         const clamped = Math.max(0, Math.min(y, this.maxScrollY))
 if(clamped === this.scrollY) return
 this.scrollY = clamped
 
-const view = this.layout.viewState.view
-this.scrollByView[view] = this.scrollY
+// const view = this.layout.viewState.view
+// this.scrollByView[view] = this.scrollY
 this.layout.init()
 
     }
@@ -33,5 +33,10 @@ this.maxScrollY = Math.max(0, contentHeight - this.layout.height)
             width: this.layout.width,
             height: this.layout.height
         }
+    }
+    reset() {
+        this.scrollY = 0
+        this.maxScrollY = 0
+        this.layout.init()
     }
 }

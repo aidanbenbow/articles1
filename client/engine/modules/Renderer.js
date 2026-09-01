@@ -44,7 +44,7 @@ this.bgColor = this.screen?.color || '#ffffff'
 
 
 const viewport = this.engine.context.getViewport()
-
+console.log('Renderer render called with viewport:', viewport)
 
         const layout = this.engine.context.getLayout()
         const interactionState = this.engine.context.getInteractionState()

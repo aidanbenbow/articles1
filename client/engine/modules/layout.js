@@ -52,6 +52,7 @@ export class Layout {
             setScroll: this.scroll.setScroll.bind(this.scroll),
             getScroll: () => this.scroll.scrollY,
            getViewport: this.getViewPort.bind(this),
+           resetScroll: this.scroll.reset.bind(this.scroll)
         }
     }
     attach() {
@@ -63,6 +64,7 @@ this._unsubscribe.push(() => this.scrollController.detach())
     }
     
 getViewPort() {
+   
     return this.scroll.getViewport()
 }
 

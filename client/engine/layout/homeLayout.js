@@ -155,8 +155,11 @@ const { padding, contentWidth, gap } = metrics
             node =>
                 node?.props?.articleData?.articleId
         )
-
-    const suggestedNode =lessonNodes[8]
+console.log(
+            'LESSON NODES',
+            lessonNodes
+        )
+    const suggestedNode =lessonNodes[14]
         
     if (!suggestedNode) {
         return currentY

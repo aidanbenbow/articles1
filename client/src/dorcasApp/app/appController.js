@@ -20,16 +20,19 @@ export class AppController {
     this.appState.openLesson(
         articleId
     )
+    this.engine.context.resetScroll()
 
     this.emitStateChanged()
 }
     openLessonBrowser() {
         this.appState.openLessonBrowser()
+        this.engine.context.resetScroll()
         this.emitStateChanged()
     }
 
     goHome() {
         this.appState.goHome()
+        this.engine.context.resetScroll()
         this.emitStateChanged()
     }
 
