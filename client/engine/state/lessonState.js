@@ -11,27 +11,33 @@ export class LessonState {
         this.description = lesson.description || ''
         this.currentSectionIndex = 0
      
-        this.quizScore = 0
-         this.quizTotal = lesson.quizTotal
-
+        this.quizScore = null
+       
          this.activities = Object.fromEntries(
             this.sections.map(section => [
                 section.id,
                 createActivityState(section)
             ])
         )
-           // this.surveyTotal = lesson.surveyTotal
+            this.surveyTotal = lesson.surveyTotal
             this.lessonTotal = lesson.lessonTotal
-
-        // this.surveyResponses = {}
-        // this.surveyResults = {}
-
+  this.quizTotal = lesson.quizTotal
+    
         this.phase = 'not-started'
         this.currentSectionId =
             this.sections[0]?.id ?? null
         this.completedSections = []
          this.startedAt = new Date().toISOString()
         this.completed = false
+    }
+    getScoreTotal(){
+this.score = Object.values(this.activities).reduce((total, activity) => {
+            if (activity.type === 'quiz') {
+                return total + activity.getScore()
+            }
+            return total
+        }, 0)
+        return this.score
     }
     start(){
         this.phase = 'intro'
@@ -185,24 +191,6 @@ restoreProgress(progress) {
     } else if (progress.status === 'in_progress') {
         this.phase = 'active'
     }
-}
-answerQuiz(sectionId, quizId, optionIndex, answer) {
-    const quiz = this.activities[sectionId]
-
-    if (!quiz) {console.warn(
-            `No quiz found for sectionId: ${sectionId}`)
-        return}
-
-           const result = quiz.answerQuestion(quizId, optionIndex, answer)
-
-           return {
-            currentSection: this.currentSectionId,
-            correct: result.correct,
-            score: quiz.getScore(),
-            progress: this.getProgress(),
-            results: result
-        }
-  
 }
 
 }

@@ -19,7 +19,7 @@ export function createRendererViewModel( allnodes,state, lesson) {
     const currentLessonSection = lessonSectionNodes.find(node => node.props?.sectionIndex === currentSection) || null
 
     const quizAnswers = lesson?.quizAnswers || {}
-    const quizScore = lesson?.quizScore || 0
+    const quizScore = lesson?.getScoreTotal ? lesson.getScoreTotal() : 0
     const quizTotal = lesson?.quizTotal || 0
     const surveyResponses = lesson?.surveyResponses || {}
     const surveyResults = lesson?.surveyResults || {}

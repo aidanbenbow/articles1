@@ -9,8 +9,7 @@ export function renderLessonHeader(
 const currentActivity =
     lesson.activities[lesson.currentSectionId]
 
-const score =
-    currentActivity?.getScore?.() ?? 0
+const score = lesson.getScoreTotal()
 const x = 20
 const y = 20
 const width = viewport.width - 40

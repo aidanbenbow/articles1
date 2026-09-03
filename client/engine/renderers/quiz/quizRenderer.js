@@ -17,19 +17,17 @@ export function renderQuiz(ctx, node,state, viewport, lesson) {
         rect.y + padding
     )
 
-     const quiz =
-        lesson.activities?.[node.sectionId]
+     const quiz = lesson.activities?.[node.sectionId]
 
-    const answer =
-        quiz?.getAnswer(node.sectionId) ?? null
-
+    const answer = quiz?.getAnswer(node.sectionId) ?? null
+const score = lesson.getScoreTotal()
 
     if (answer !== null) {
         const isCorrect = answer.isCorrect
        
         ctx.fillStyle = isCorrect ? '#00aa00' : '#aa0000'
         
-        const scoreText = `Score: ${quiz.getScore(node.sectionId)} / ${lesson.quizTotal}`
+        const scoreText = `Score: ${score} / ${lesson.quizTotal}`
 ctx.save()
         ctx.font = 'bold 16px Arial'
         ctx.fillStyle = '#000'

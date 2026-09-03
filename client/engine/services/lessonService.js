@@ -131,14 +131,24 @@ this.lesson.start()
 }
  
     answerQuiz(sectionId, quizId, optionIndex, answer) {
-    const result = this.lesson.answerQuiz(sectionId,quizId,optionIndex,answer)
-console.log(
-    'ANSWER QUIZ RESULT:',
-    result
-)
+   // const result = this.lesson.answerQuiz(sectionId,quizId,optionIndex,answer)
+const quiz = this.lesson.activities[sectionId]
+
+    if (!quiz) {
+        console.warn( `No quiz found for sectionId: ${sectionId}`)
+        return
+    }
+    const result = quiz.answerQuestion(quizId, optionIndex, answer)
     this.syncProgress()
 
-    return result
+    return {
+        result,
+        score: quiz.getScore(),
+        progress: this.lesson.getProgress(),
+        currentSection: this.lesson.currentSectionId,
+        total: quiz.getTotalQuestions(),
+        complete: quiz.isComplete()
+    }
 }
       completeSection(sectionId) {
 // LessonService
