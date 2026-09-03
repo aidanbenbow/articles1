@@ -14,18 +14,17 @@ export class LessonState {
         this.quizScore = 0
          this.quizTotal = lesson.quizTotal
 
-
          this.activities = Object.fromEntries(
             this.sections.map(section => [
                 section.id,
                 createActivityState(section)
             ])
         )
-            this.surveyTotal = lesson.surveyTotal
+           // this.surveyTotal = lesson.surveyTotal
             this.lessonTotal = lesson.lessonTotal
 
-        this.surveyResponses = {}
-        this.surveyResults = {}
+        // this.surveyResponses = {}
+        // this.surveyResults = {}
 
         this.phase = 'not-started'
         this.currentSectionId =
@@ -83,16 +82,12 @@ getCurrentSection() {
 }
     
     getProgress() {
-
         if (!this.sections.length) {
             return 0
         }
 
         return Math.round(
-            (
-                this.getCompletedCount() /
-                this.sections.length
-            ) * 100
+            ( this.getCompletedCount() /  this.sections.length) * 100
         )
     }
    advanceSection() {
@@ -108,42 +103,30 @@ getCurrentSection() {
         return false
     }
 
-
     if (!this.canUnlockNextSection()) {
         return false
     }
 
-
     this.completeSection(current.id)
 
-
-    const next =
-        this.getNextSection()
+    const next =this.getNextSection()
 
     if (!next) {
-
         this.completed = true
         this.currentSectionId = null
-     
         return true
     }
 
-
     this.currentSectionIndex++
 
-    this.currentSectionId =
-        next.id
+    this.currentSectionId = next.id
 
     return true
 }
 canUnlockNextSection() {
     const activity =
         this.activities[this.currentSectionId]
-console.log(
-        'Checking if can unlock next section:',
-        this.currentSectionId,
-        activity?.isComplete()
-    )
+console.log( 'Checking if can unlock next section:', this.currentSectionId, activity?.isComplete())
     return activity?.isComplete() ?? false
 }
      getNextSection() {
@@ -175,17 +158,14 @@ restoreProgress(progress) {
         ...(progress.quizAnswers ?? {})
     }
 
-    this.quizScore =
-        progress.quizScore ?? 0
+    this.quizScore =  progress.quizScore ?? 0
 
     this.surveyResponses = {
         ...(progress.surveyResponses ?? {})
     }
-    this.orderingAnswers =
-    progress.orderingAnswers || {}
+    this.orderingAnswers = progress.orderingAnswers || {}
 
-    this.currentSectionId =
-        progress.currentActivityId ?? this.sections[0]?.id ?? null
+    this.currentSectionId =  progress.currentActivityId ?? this.sections[0]?.id ?? null
 
     this.currentSectionIndex =
         this.sections.findIndex(
@@ -198,8 +178,7 @@ restoreProgress(progress) {
             this.sections[0]?.id ?? null
     }
 
-    this.completed =
-        progress.status === 'completed'
+    this.completed =  progress.status === 'completed'
 
     if (this.completed) {
         this.phase = 'completed'
@@ -225,33 +204,5 @@ answerQuiz(sectionId, quizId, optionIndex, answer) {
         }
   
 }
-answerSurvey(surveyId, optionIndex) {
-    if (surveyId in this.surveyResponses) {
-        return {
-            alreadyAnswered: true,
-            response: this.surveyResponses[surveyId]
-        }
-    }
 
-    
-const section =
-        this.sections.find(
-            section => section.id === surveyId
-        )
-        const response = {
-            selected: optionIndex,
-            feedback: section?.feedback ?? ''
-        }
-    this.surveyResponses[surveyId] = response
-
-   // this.completeSection(surveyId)
-
-    return {
-        alreadyAnswered: false,
-        ...response
-    }
-}
-setSurveyResults(surveyId, results) {
-    this.surveyResults[surveyId] = results
-}
 }

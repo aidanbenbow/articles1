@@ -10,42 +10,24 @@ export class LessonController {
     return this.lessonService.startLesson(lessonData)
     }
     setCurrentSection(sectionId) {
-
     this.lessonService.setCurrentSection(
         sectionId
     )
 
-}
-
-    answerQuiz(
-        sectionId,
-        quizId,
-        optionIndex,
-        answer
+    }
+    answerQuiz( sectionId,quizId,optionIndex,answer
     ) {
-
-        this.lessonService.answerQuiz(
-            sectionId,
-            quizId,
-            optionIndex,
-            answer
-        )
+        this.lessonService.answerQuiz( sectionId, quizId, optionIndex, answer )
         this.engine.emit('lessonStateChanged', {
             currentSectionId:
                 this.lessonService.getLesson().currentSectionId
         })
-
     }
-
     async answerSurvey(
         surveyId,
         optionIndex
     ) {
-
-        const result = await this.lessonService.answerSurvey(
-            surveyId,
-            optionIndex
-        )
+        const result = await this.lessonService.answerSurvey( surveyId, optionIndex )
         this.engine.emit('lessonStateChanged', {
             currentSectionId:
                 this.lessonService.getLesson().currentSectionId

@@ -8,16 +8,10 @@ export function renderLessonCard(
     assetManager
 ) {
 
-    const rect =
-        getScreenPosition(
-            node,
-            viewport
-        )
+    const rect =getScreenPosition(node,viewport)
 
-    if (!rect) {
-        return
-    }
-
+    if (!rect) return
+    
     const {  x, y,} = rect
 const width = node.width || 600
 const height = node.height || 160
@@ -33,38 +27,27 @@ const height = node.height || 160
 
     ctx.beginPath()
 
-    ctx.roundRect(
-        x,
-        y,
-        width,
-        height,
-        radius
-    )
+    ctx.roundRect( x, y, width,height,radius)
 
-    ctx.fillStyle =
-        '#ffffff'
+    ctx.fillStyle ='#ffffff'
 
-    ctx.shadowColor =
-        'rgba(0, 0, 0, 0.07)'
+    ctx.shadowColor ='rgba(0, 0, 0, 0.07)'
 
     ctx.shadowBlur = 12
     ctx.shadowOffsetY = 4
 
     ctx.fill()
 
-    ctx.shadowColor =
-        'transparent'
+    ctx.shadowColor ='transparent'
 
     ctx.shadowBlur = 0
     ctx.shadowOffsetY = 0
 
-    ctx.strokeStyle =
-        '#e5e7eb'
+    ctx.strokeStyle ='#e5e7eb'
 
     ctx.lineWidth = 1
 
     ctx.stroke()
-
 
     /*
      * ==================================================
@@ -72,24 +55,15 @@ const height = node.height || 160
      * ==================================================
      */
 
-    const accent =
-        node.color || '#9481ed'
+    const accent = node.color || '#9481ed'
 
     ctx.beginPath()
 
-    ctx.roundRect(
-        x,
-        y,
-        5,
-        height,
-        radius
-    )
+    ctx.roundRect( x, y, 5, height, radius)
 
-    ctx.fillStyle =
-        accent
+    ctx.fillStyle = accent
 
     ctx.fill()
-
 
     /*
      * ==================================================
@@ -114,17 +88,13 @@ const height = node.height || 160
      * ==================================================
      */
 
-    ctx.textAlign =
-        'left'
+    ctx.textAlign = 'left'
 
-    ctx.textBaseline =
-        'top'
+    ctx.textBaseline = 'top'
 
-    ctx.font =
-        '600 10px sans-serif'
+    ctx.font = '600 10px sans-serif'
 
-    ctx.fillStyle =
-        accent
+    ctx.fillStyle = accent
 
     ctx.fillText(
         node.label ||
@@ -140,11 +110,9 @@ const height = node.height || 160
      * ==================================================
      */
 
-    ctx.font =
-        '700 20px sans-serif'
+    ctx.font ='700 20px sans-serif'
 
-    ctx.fillStyle =
-        '#171717'
+    ctx.fillStyle = '#171717'
 
     drawWrappedText(
         ctx,
@@ -157,7 +125,6 @@ const height = node.height || 160
         2
     )
 
-
     /*
      * ==================================================
      * DESCRIPTION
@@ -166,11 +133,9 @@ const height = node.height || 160
 
     if (node.description) {
 
-        ctx.font =
-            '400 13px sans-serif'
+        ctx.font = '400 13px sans-serif'
 
-        ctx.fillStyle =
-            '#6b7280'
+        ctx.fillStyle ='#6b7280'
 
         drawWrappedText(
             ctx,
@@ -198,10 +163,7 @@ const height = node.height || 160
      * Progress
      */
 
-    if (
-        typeof node.progressPercent ===
-        'number'
-    ) {
+    if (typeof node.progressPercent === 'number') {
 
         const progress =
             Math.max(
@@ -231,8 +193,7 @@ const height = node.height || 160
             3
         )
 
-        ctx.fillStyle =
-            '#e5e7eb'
+        ctx.fillStyle = '#e5e7eb'
 
         ctx.fill()
 
@@ -254,24 +215,19 @@ const height = node.height || 160
                 3
             )
 
-            ctx.fillStyle =
-                accent
+            ctx.fillStyle = accent
 
             ctx.fill()
         }
 
 
-        ctx.font =
-            '600 11px sans-serif'
+        ctx.font = '600 11px sans-serif'
 
-        ctx.fillStyle =
-            '#6b7280'
+        ctx.fillStyle = '#6b7280'
 
-        ctx.textAlign =
-            'left'
+        ctx.textAlign = 'left'
 
-        ctx.textBaseline =
-            'bottom'
+        ctx.textBaseline = 'bottom'
 
         ctx.fillText(
             `${progress}%`,

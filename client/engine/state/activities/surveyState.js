@@ -6,12 +6,16 @@ export class SurveyState extends ActivityState {
     constructor(section) {
         super(section)
         this.response = null
+        this.results = null
         this.feedback = section.feedback || ''
     }
 
     answerQuestion(selectedOptionIndex) {
         if (this.response !== null) {
-            return this.response
+            return {
+                alreadyAnswered: true,
+                response:this.response
+            }
         }
 
         this.response = {
@@ -19,7 +23,17 @@ export class SurveyState extends ActivityState {
             feedback: this.feedback
         }
 
-        return this.response
+        return {
+            alreadyAnswered: false,
+            response: this.response
+        }
+    }
+    setResults(results) {
+        this.results = results
+    }
+
+    getResults() {
+        return this.results
     }
 
     isComplete() {
@@ -32,6 +46,6 @@ export class SurveyState extends ActivityState {
 
     resetResponse() {
         this.response = null
-
+        this.results = null
     }
 }

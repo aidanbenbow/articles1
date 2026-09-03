@@ -11,16 +11,16 @@ export function renderSurveyOption(
 
     const rect = getScreenRect(section, viewport)
 
+    const survey = lesson.activities?.[section.surveyId]
 
-    const selected =
-        lesson.surveyResponses?.[section.surveyId] === section.optionIndex
+    const response = survey?.getResponse() || null
+
+    const selected = response?.selected === section.optionIndex
 
     const { votes, percentage } = getSurveyResult(
-        lesson,
-        section.surveyId,
+        survey,
         section.optionIndex
     )
-
 
     drawRect(ctx, {
         ...rect,

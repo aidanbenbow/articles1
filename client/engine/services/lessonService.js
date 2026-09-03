@@ -1,18 +1,12 @@
-
-
 import { LessonState } from "../state/lessonState.js"
 
 export class LessonService {
-
     constructor(surveyApi, lessonProgressStore) {
         this.surveyApi = surveyApi
         this.lessonProgressStore = lessonProgressStore
         this.lesson = new LessonState()
-
     }
-
     startLesson(lessonData) {
-
         this.lesson = new LessonState(lessonData)
 
         const savedProgress = this.lessonProgressStore.get(
@@ -23,7 +17,6 @@ export class LessonService {
             this.lesson.restoreProgress(savedProgress)
         } else {
 this.lesson.start()
-
   this.lessonProgressStore.update(
         this.lesson.articleId,
         {
@@ -47,16 +40,14 @@ this.lesson.start()
         this.syncProgress()
     }
     syncProgress() {
-
     if (!this.lesson?.articleId) {
         return
     }
 
-    const progress =
-        this.lesson.getProgress()
+    const progress = this.lesson.getProgress()
 
         const quizAnswers = {}
-    let quizScore = 0
+         let quizScore = 0
 
     const surveyResponses = {}
     const orderingAnswers = {}
@@ -75,7 +66,6 @@ this.lesson.start()
 
         if (activity.type === 'survey') {
             const response = activity.getResponse()
-
             if (response) {
                 surveyResponses[sectionId] = response
             }
@@ -157,10 +147,20 @@ console.log(
 
     }
       async answerSurvey(surveyId, optionIndex) {
-    const result = this.lesson.answerSurvey(
-        surveyId,
-        optionIndex
-    )
+        const survey = this.lesson.activities[surveyId]
+
+        if (!survey || survey.type !== 'survey') {
+            console.warn(
+                `No survey found for surveyId: ${surveyId}`
+            )
+            return {
+                success: false,
+                reason: 'survey-not-found'
+            }
+        }
+
+    
+    const result = survey.answerQuestion(optionIndex)
 
     if (result.alreadyAnswered) {
         return result
@@ -172,10 +172,7 @@ console.log(
             optionIndex
         )
 
-    this.lesson.setSurveyResults(
-        surveyId,
-        results
-    )
+    survey.setResults(results)
 
     this.syncProgress()
 

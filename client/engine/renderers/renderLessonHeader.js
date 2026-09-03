@@ -5,6 +5,12 @@ export function renderLessonHeader(
 ){
 
     if(!lesson) return
+
+const currentActivity =
+    lesson.activities[lesson.currentSectionId]
+
+const score =
+    currentActivity?.getScore?.() ?? 0
 const x = 20
 const y = 20
 const width = viewport.width - 40
@@ -56,7 +62,7 @@ ctx.fillStyle = '#000000'
 ctx.font = 'bold 16px Arial'
 
 ctx.fillText(
-    `${lesson.quizScore}/${lesson.quizTotal}`,
+    `${score}/${lesson.quizTotal}`,
     viewport.width - 40,
     50
 )

@@ -1,18 +1,13 @@
-export function getSurveyResult(lesson, surveyId, optionIndex) {
-    const survey =
-        lesson.surveyResults?.[surveyId] || {}
+export function getSurveyResult( survey, optionIndex) {
+    const results = survey.getResults() || {}
 
-    const responses =
-        survey.responses || {}
+    const responses = results.responses || {}
 
-    const total =
-        survey.totalResponses || 0
+    const total = results.totalResponses || 0
 
-    const votes =
-        responses[optionIndex] || 0
+    const votes =responses[optionIndex] || 0
 
-    const percentage =
-        total > 0
+    const percentage = total > 0
             ? Math.round((votes / total) * 100)
             : 0
 

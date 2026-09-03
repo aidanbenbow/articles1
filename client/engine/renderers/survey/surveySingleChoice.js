@@ -11,10 +11,10 @@ export function renderSurveySingleChoice(
 
     const rect = getScreenRect(section, viewport)
 
+     const survey = lesson.activities?.[section.surveyId]
 
-    const response =
-        lesson.surveyResponses?.[section.surveyId] || {}
-const results = lesson.surveyResults?.[section.surveyId] || {}
+    const response = survey?.getResponse() || null
+    const results = survey?.getResults() || {}
 
     const total = results.totalResponses || 0
         
@@ -43,7 +43,6 @@ const results = lesson.surveyResults?.[section.surveyId] || {}
     )
 
     if (response) {
-
         drawTextBlock(
             ctx,
             response.feedback,
