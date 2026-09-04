@@ -57,9 +57,7 @@ this.score = Object.values(this.activities).reduce((total, activity) => {
             )
 }
      completeSection(sectionId) {
-        if (
-            !this.completedSections.includes(sectionId)
-        ) {
+        if (  !this.completedSections.includes(sectionId) ) {
             this.completedSections.push(sectionId)
         }
     }
@@ -81,20 +79,14 @@ this.score = Object.values(this.activities).reduce((total, activity) => {
     return 'locked'
 }
 getCurrentSection() {
-
     return this.sections.find(
         s => s.id === this.currentSectionId
     ) ?? null
 }
-    
     getProgress() {
-        if (!this.sections.length) {
-            return 0
-        }
+        if (!this.sections.length)  return 0
 
-        return Math.round(
-            ( this.getCompletedCount() /  this.sections.length) * 100
-        )
+        return Math.round( ( this.getCompletedCount() /  this.sections.length) * 100)
     }
    advanceSection() {
  console.log(
@@ -133,10 +125,7 @@ console.log( 'Checking if can unlock next section:', this.currentSectionId, acti
      getNextSection() {
         const nextIndex =
             this.currentSectionIndex + 1
-
-        return (
-            this.sections[nextIndex] || null
-        )
+        return (   this.sections[nextIndex] || null )
 
     }
     hasNextSection() {

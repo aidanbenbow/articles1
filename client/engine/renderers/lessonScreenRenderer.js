@@ -10,30 +10,18 @@ export function renderLessonScreen(
     lessonState,
     assetManager
 ) {
-
-    if (!lessonState) {
-        return
-    }
+    if (!lessonState)   return
 
     switch (lessonState.phase) {
-
         case 'intro':
             renderLessonIntro( ctx, view, viewport)
             break
-
         case 'active':
             renderLesson(ctx,view.lessonSectionNodes,viewport,lessonState)
             renderLessonHeader(ctx,lessonState,viewport)
             break
-
         case 'completed':
-
-            renderLessonComplete(
-                ctx,
-                view,
-                viewport
-            )
-
+            renderLessonComplete(    ctx,   view,   viewport )
             break
     }
 }

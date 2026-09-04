@@ -1,8 +1,5 @@
 import { createRendererViewModel } from './rendererViewModel.js'
-import { renderInputBoxes, renderButtons, renderReports, renderReportsToDo, renderBackground, renderArticle, renderHeader, renderLesson, renderLessonTitle  } from './renderUtils.js'
-import { renderLessonHeader } from '../renderers/renderLessonHeader.js'
-import { renderLessonIntro } from '../renderers/renderLessonIntro.js'
-import { renderLessonComplete } from '../renderers/renderLessonComplete.js'
+import { renderBackground, } from './renderUtils.js'
 import { renderHome } from '../renderers/homeRenderer.js'
 import { renderLessonScreen } from '../renderers/lessonScreenRenderer.js'
 import { renderLessonBrowser } from '../renderers/lessonBrowserRenderer.js'
@@ -42,7 +39,6 @@ this.bgColor = this.screen?.color || '#ffffff'
       // this.setScreen()
         renderBackground(this.ctx, this.canvas.width, this.canvas.height, this.bgColor)
 
-
 const viewport = this.engine.context.getViewport()
 
         const layout = this.engine.context.getLayout()
@@ -58,20 +54,13 @@ const viewport = this.engine.context.getViewport()
             case 'home':
                 renderHome(this.ctx, view.homeNodes, viewport, assetManager)
                 break
-
                 case 'lesson':
                 renderLessonScreen(this.ctx, view, viewport, lessonState, assetManager)
                 break
-
                 case 'lessonBrowser':
-                renderLessonBrowser(this.ctx, view.lessonBrowserNodes, viewport,  assetManager)
-                
+                renderLessonBrowser(this.ctx, view.lessonBrowserNodes, viewport,  assetManager) 
                 break
-
         }
-
-        
-        
     }
     attach() {
         setTimeout(() =>{
@@ -91,24 +80,24 @@ const viewport = this.engine.context.getViewport()
     destroy() {
         this.detach()
     }
-    renderLessonHeaderOnly() {
-    const viewport = this.engine.context.getViewport()
-    const lessonState = this.engine.context.getLesson()
+//     renderLessonHeaderOnly() {
+//     const viewport = this.engine.context.getViewport()
+//     const lessonState = this.engine.context.getLesson()
 
-    // clear only header area
-    this.ctx.clearRect(
-        20,
-        20,
-        viewport.width - 40,
-        60
-    )
+//     // clear only header area
+//     this.ctx.clearRect(
+//         20,
+//         20,
+//         viewport.width - 40,
+//         60
+//     )
 
-    renderLessonHeader(
-        this.ctx,
-        lessonState,
-        viewport
-    )
-}
+//     renderLessonHeader(
+//         this.ctx,
+//         lessonState,
+//         viewport
+//     )
+// }
     
 }
 

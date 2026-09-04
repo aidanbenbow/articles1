@@ -157,31 +157,15 @@ function renderProgress(ctx, progress, x, y, width) {
 export function renderLesson(ctx, sections, viewport, lesson) {
    
     for (const section of sections) {
+        const state =  lesson.getSectionState(   section.sectionId)
 
-        const state =
-            lesson.getSectionState(
-                section.sectionId
-            )
-
-        renderLessonSection(
-            ctx,
-            section,
-            state,
-            viewport,
-            lesson
-        )
+        renderLessonSection( ctx, section, state, viewport, lesson)
     }
   
     }
 
-    function renderLessonSection(
-    ctx,
-    section,
-    state,
-    viewport,
-    lesson
-) {
-
+    function renderLessonSection( ctx, section, state, viewport, lesson) {
+        
     switch (section.sectionType) {
         case 'lessonHeading':
             renderHeading(ctx,section, state, viewport)

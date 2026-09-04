@@ -57,6 +57,7 @@ isVisible(node, viewport) {
     const moved =
         this.lessonService.advanceSection()
         if(moved) {
+            this.engine.context.resetScroll()
             this.engine.emit('lessonStateChanged', {
                 currentSectionId:
                     this.lessonService.getLesson().currentSectionId

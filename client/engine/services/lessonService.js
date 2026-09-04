@@ -122,13 +122,8 @@ this.lesson.start()
     }
     
    setCurrentSection(sectionId) {
-
-    if (!this.lesson) {
-        return
-    }
-
+    if (!this.lesson)       return 
     this.lesson.setCurrentSection(sectionId)
-
 }
  
     answerQuiz(sectionId, quizId, optionIndex, answer) {
@@ -153,7 +148,6 @@ const quiz = this.lesson.activities[sectionId]
       completeSection(sectionId) {
         this.lesson.completeSection(sectionId)
         this.syncProgress()
-
     }
       async answerSurvey(surveyId, optionIndex) {
         const survey = this.lesson.activities[surveyId]
@@ -191,9 +185,7 @@ const quiz = this.lesson.activities[sectionId]
     }
 }
     updateCurrentSection(sectionId) {
-
     this.lesson.setCurrentSection(sectionId)
-
 }
 advanceSection() {
     const moved =
