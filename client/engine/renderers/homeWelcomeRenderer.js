@@ -1,33 +1,18 @@
 import { drawWrappedText } from "../draw/drawHelpers.js"
 import { getScreenPosition } from "../modules/renderUtils.js"
 
-export function renderHomeWelcome(
-    ctx,
-    node,
-    viewport
-) {
+export function renderHomeWelcome( ctx, node, viewport) {
 
-    const rect =
-        getScreenPosition(
-            node,
-            viewport
-        )
+    const rect =  getScreenPosition(node, viewport)
 
-    if (!rect) {
-        return
-    }
-
-    const {
-        x,
-        y,
-        
-    } = rect
+    if (!rect)  return
+    
+    const { x, y,} = rect
 const width = node.width || 600
 const height = node.height || 160
     const radius = 20
 
     ctx.save()
-
 
     /*
      * ==================================================
@@ -36,39 +21,18 @@ const height = node.height || 160
      */
 
     ctx.beginPath()
-
-    ctx.roundRect(
-        x,
-        y,
-        width,
-        height,
-        radius
-    )
-
-    ctx.fillStyle =
-        '#ffffff'
-
-    ctx.shadowColor =
-        'rgba(0, 0, 0, 0.08)'
-
+    ctx.roundRect(  x, y, width, height, radius)
+    ctx.fillStyle = '#ffffff'
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.08)'
     ctx.shadowBlur = 16
     ctx.shadowOffsetY = 5
-
     ctx.fill()
-
-    ctx.shadowColor =
-        'transparent'
-
+    ctx.shadowColor = 'transparent'
     ctx.shadowBlur = 0
     ctx.shadowOffsetY = 0
-
-    ctx.strokeStyle =
-        '#e5e7eb'
-
+    ctx.strokeStyle = '#e5e7eb'
     ctx.lineWidth = 1
-
     ctx.stroke()
-
 
     /*
      * ==================================================
@@ -77,24 +41,12 @@ const height = node.height || 160
      */
 
     ctx.save()
-
     ctx.beginPath()
+    ctx.roundRect(   x,   y,   7,   height,   radius)
 
-    ctx.roundRect(
-        x,
-        y,
-        7,
-        height,
-        radius
-    )
-
-    ctx.fillStyle =
-        '#9481ed'
-
+    ctx.fillStyle = '#9481ed'
     ctx.fill()
-
     ctx.restore()
-
 
     /*
      * ==================================================
@@ -104,12 +56,9 @@ const height = node.height || 160
 
     const padding = 28
 
-    const contentX =
-        x + padding + 8
+    const contentX =   x + padding + 8
 
-    const contentWidth =
-        width - padding * 2 - 8
-
+    const contentWidth =   width - padding * 2 - 8
 
     /*
      * ==================================================
@@ -117,24 +66,15 @@ const height = node.height || 160
      * ==================================================
      */
 
-    ctx.textAlign =
-        'left'
+    ctx.textAlign =   'left'
 
-    ctx.textBaseline =
-        'top'
+    ctx.textBaseline =  'top'
 
-    ctx.font =
-        '600 11px sans-serif'
+    ctx.font =  '600 11px sans-serif'
 
-    ctx.fillStyle =
-        '#9481ed'
+    ctx.fillStyle = '#9481ed'
 
-    ctx.fillText(
-        'WELCOME',
-        contentX,
-        y + 23
-    )
-
+    ctx.fillText( 'WELCOME',  contentX,  y + 23)
 
     /*
      * ==================================================
@@ -142,18 +82,11 @@ const height = node.height || 160
      * ==================================================
      */
 
-    ctx.font =
-        '700 26px sans-serif'
+    ctx.font =  '700 26px sans-serif'
 
-    ctx.fillStyle =
-        '#171717'
+    ctx.fillStyle = '#171717'
 
-    ctx.fillText(
-        node.title || 'Welcome',
-        contentX,
-        y + 45
-    )
-
+    ctx.fillText( node.title || 'Welcome',  contentX,  y + 45)
 
     /*
      * ==================================================
@@ -161,16 +94,11 @@ const height = node.height || 160
      * ==================================================
      */
 
-    ctx.font =
-        '400 14px sans-serif'
+    ctx.font ='400 14px sans-serif'
 
-    ctx.fillStyle =
-        '#6b7280'
+    ctx.fillStyle ='#6b7280'
 
-    drawWrappedText(
-        ctx,
-        node.text ||
-            'Learn through interactive lessons.',
+    drawWrappedText( ctx, node.text || 'Learn through interactive lessons.',
         contentX,
         y + 82,
         contentWidth,

@@ -4,12 +4,7 @@ import { renderHomeWelcome } from "./homeWelcomeRenderer.js"
 import { renderLessonCard } from "./lessonCardRenderer.js"
 
 
-export function renderHome(
-    ctx,
-    nodes,
-    viewport,
-    assetManager
-) {
+export function renderHome(  ctx, nodes, viewport, assetManager) {
     
   for(const node of nodes) {
     switch(node.kind) {

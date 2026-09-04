@@ -1,4 +1,4 @@
-import { baseModule } from "./baseModule.js";
+import { baseModule } from "../client/engine/modules/baseModule.js";
 
 export class PasteButtonModule extends baseModule {
     static moduleName = 'pasteButtonModule'

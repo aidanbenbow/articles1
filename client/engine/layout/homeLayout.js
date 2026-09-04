@@ -2,7 +2,6 @@ import { getNodeStyle, getResponsiveLayout, layoutVerticalList } from "../consta
 
 
 export class HomeLayout {
-
     constructor(engine, layout) {
         this.engine = engine
         this.layout = layout
@@ -14,13 +13,13 @@ getMetrics() {
         )
     }
 
-    build(articleNodes = []) {
+    build(articleNodes = [], appState) {
         const metrics = this.getMetrics()
 const {screenHeight} = metrics
 
         this.clear()
         let currentY = Math.max(40, screenHeight * 0.05)
-        currentY = this.layoutWelcome(currentY)
+        currentY = this.layoutWelcome(currentY, appState)
 
         currentY = this.layoutContinue(articleNodes, currentY)
 
@@ -34,10 +33,13 @@ const {screenHeight} = metrics
 
     }
 
-    layoutWelcome(currentY) {
+    layoutWelcome(currentY, appState) {
         const metrics = this.getMetrics()
         const {  padding, contentWidth, gap, welcome } = metrics
         const height = welcome?.height 
+        const user = appState.user?.name || 'Guest'
+        const score = appState.user?.score || 0
+        const lessonsCompleted = appState.user?.lessonsCompleted || 0
         this.layout.layoutNodes.set(
         'home-welcome',
         {
@@ -48,42 +50,31 @@ const {screenHeight} = metrics
             x: padding,
             worldY: currentY,
 
-            width:
-                contentWidth,
+            width: contentWidth,
 
             height: height,
 
-            title: 'Welcome',
+            title: `Welcome ${user}`,
 
-            text:
-                'Learn through interactive lessons.',
+            text:  `Learn through interactive lessons. So far you have completed ${lessonsCompleted} lessons and earned ${score} points.`,
 
-            instructions:
-                'Read → Think → Answer → Complete'
+            instructions: 'Read → Think → Answer → Complete'
         }
     )
 
     return currentY + height + gap
     }
     layoutContinue(articleNodes, currentY) {
-        const progressStore =
-            this.engine.context.getLessonProgressStore()
-        const continueNode =
-            articleNodes.find(
+        const progressStore =this.engine.context.getLessonProgressStore()
+        const continueNode =articleNodes.find(
                 node =>
-                {
-                    const articleId =
-                        node.props?.articleData
-                            ?.articleId
+                {  const articleId = node.props?.articleData ?.articleId
                             if(!articleId) return false
-
-                            const progress = progressStore.get(articleId)
-                            
+                            const progress = progressStore.get(articleId) 
                             if(!progress) return false
                             return progress.status === 'in_progress' && progress.progressPercent > 0
                             && !progress.completed
-                }
-            )
+                } )
 
             if(!continueNode) return currentY
 const metrics = this.getMetrics()
@@ -107,63 +98,46 @@ const height = metrics.continueCard?.height || 120
                 owner: 'home',
                 kind: 'continueLessonCard',
 
-                articleId:
-                    articleData.articleId || null,
+                articleId:  articleData.articleId || null,
 
-                title:
-                    continueNode.props?.title ||
-                    articleData.title ||
-                    'Untitled lesson',
+                title:  continueNode.props?.title || articleData.title || 'Untitled lesson',
 
                 progressPercent,
                 thumbnail: image,
                 x: (this.layout.width - contentWidth) / 2,
                 worldY: currentY,
 
-                width:
-                    contentWidth,
+                width:  contentWidth,
 
                 height ,
 
-                articleNode:
-                    continueNode,
+                articleNode:  continueNode,
                     articleData: articleData,
 
-                    description:
-                    articleData.description ||
-                    articleData.excerpt ||
-                    '',
+                    description: articleData.description || articleData.excerpt || '',
                     action: 'openLesson'
             }
         )
 
         return currentY + height + gap
     }
-    layoutSuggestedLesson(
-    articleNodes,
-    currentY
-) {
-
-    const progressStore =
-        this.engine.context.getLessonProgressStore()
+    layoutSuggestedLesson(  articleNodes,  currentY) {
+   // const progressStore = this.engine.context.getLessonProgressStore()
 
 const metrics = this.getMetrics()
 const { padding, contentWidth, gap } = metrics
 
-    const lessonNodes =
-        articleNodes.filter(
-            node =>
-                node?.props?.articleData?.articleId
-        )
-
-    const suggestedNode =lessonNodes[14]
+    const lessonNodes = articleNodes.filter(  node =>   node?.props?.articleData?.articleId)
+const sortedNodes = lessonNodes.sort((a, b) => {
+    const aProgress = a.props?.articleData?.progress || 0
+    const bProgress = b.props?.articleData?.progress || 0
+    return aProgress - bProgress
+})
+    const suggestedNode =sortedNodes[0] || null
         
-    if (!suggestedNode) {
-        return currentY
-    }
+    if (!suggestedNode)  return currentY
 
-    const articleData =
-        suggestedNode.props?.articleData || {}
+    const articleData = suggestedNode.props?.articleData || {}
 
     const height = metrics.suggested?.height || 120
 
@@ -177,10 +151,7 @@ const { padding, contentWidth, gap } = metrics
 
             articleId:  articleData.articleId,
 
-            title:
-                suggestedNode.props?.title ||
-                articleData.title ||
-                'Suggested lesson',
+            title: suggestedNode.props?.title || articleData.title || 'Suggested lesson',
 
             description:
                 articleData.description ||

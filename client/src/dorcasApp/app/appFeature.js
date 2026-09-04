@@ -6,31 +6,20 @@ export class AppFeature {
     constructor(engine) {
         this.engine = engine
 
-        this.appState =
-            new AppState()
+        this.appState = new AppState()
 
-        this.appController =
-            new AppController(
-                this.appState,
-                engine
-            )
+        this.appController =  new AppController(  this.appState,  engine)
     }
 
     contextExports() {
         return {
             app: {
-                getState: () =>
-                    this.appController.getState(),
+                getState: () => this.appController.getState(),
 
-                openLesson: (articleId) =>
-                    this.appController.openLesson(
-                        articleId
-                    ),
-openLessonBrowser: () =>
-                    this.appController.openLessonBrowser(),
+                openLesson: (articleId) =>this.appController.openLesson(   articleId ),
+openLessonBrowser: () => this.appController.openLessonBrowser(),
 
-                goHome: () =>
-                    this.appController.goHome()
+                goHome: () => this.appController.goHome()
             }
         }
     }

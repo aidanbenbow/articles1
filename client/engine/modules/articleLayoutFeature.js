@@ -1,5 +1,5 @@
 
-import { getNodeStyle, layoutVerticalList } from "../constants/layoutConstants.js"
+
 import { HomeLayout } from "../layout/homeLayout.js"
 import { layoutBackButton } from "../layout/layoutBackButton.js"
 import { layoutContinueButton } from "../layout/layoutContinueButton.js"
@@ -21,8 +21,7 @@ export class ArticleLayoutFeature {
         this._lastFilter = ''
 
    this.homeLayout = null
-        this.engine.on('lessonStateChanged', () => {
-            
+        this.engine.on('lessonStateChanged', () => {    
             this.layoutArticles()
         })
         this.engine.on('appStateChanged', () => {
@@ -59,20 +58,11 @@ export class ArticleLayoutFeature {
         return this.layout.nodeQuery.getSearchBar()
     }
     getLessonProgress(articleId) {
-
-    const store =
-        this.engine.context.getLessonProgressStore()
-
+    const store =  this.engine.context.getLessonProgressStore()
     return store?.get(articleId) ?? null
 }
 
    applyFilter(searchTerm) {
-
-    console.log(
-        'ArticleLayoutFeature: applyFilter called with searchTerm:',
-        searchTerm
-    )
-
     const normalized = normalize(searchTerm)
 
     if (normalized === this._lastFilter) return
@@ -84,17 +74,9 @@ export class ArticleLayoutFeature {
             normalized
         )
     )
-
-    const state =
-        this.engine.context.getInteractionState()
-
+    const state =  this.engine.context.getInteractionState()
           // clear invalid selection
-    if (
-        state.selectedNodeId &&
-        !filtered.some(
-            node => node.id === state.selectedNodeId
-        )
-    ) {
+    if ( state.selectedNodeId &&  !filtered.some(   node => node.id === state.selectedNodeId)) {
         this.engine.context.clearSelectedArticle()
     }
 
@@ -108,7 +90,7 @@ const appState = this.engine.context.app.getState()
 this.clearLessonLayout()
 switch (appState.screen) {
     case 'home':
-        this.homeLayout.build(articleNodes)
+        this.homeLayout.build(articleNodes, appState)
         break
         case 'lesson':
             const articleNode = articleNodes.find(node => node.props?.articleData?.articleId === appState.activeLessonId)
@@ -116,16 +98,12 @@ switch (appState.screen) {
             if (articleNode) {
                 const lesson = this.engine.context.getLesson()
                 this.layoutArticlesDetail(articleNode, lesson)
-            }
-         
+            } 
             break
             case 'lessonBrowser':
-                LessonListLayout(articleNodes, this.layout, this.engine)
-               
+                LessonListLayout(articleNodes, this.layout, this.engine)        
                 break
 }
-        
-
         this.engine.emit('layoutChanged', { layout: this.layout.layoutNodes })
     }
 

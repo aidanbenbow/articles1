@@ -73,14 +73,9 @@ const height = node.height || 160
 
     const padding = 22
 
-    const contentX =
-        x + padding + 6
+    const contentX = x + padding + 6
 
-    const contentWidth =
-        width -
-        padding * 2 -
-        6
-
+    const contentWidth =width - padding * 2 - 6
 
     /*
      * ==================================================
@@ -96,13 +91,7 @@ const height = node.height || 160
 
     ctx.fillStyle = accent
 
-    ctx.fillText(
-        node.label ||
-            'LESSON',
-        contentX,
-        y + 19
-    )
-
+    ctx.fillText( node.label ||  'GET STARTED', contentX, y + 19)
 
     /*
      * ==================================================
