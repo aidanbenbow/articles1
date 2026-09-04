@@ -2,6 +2,7 @@
 import { getSurveyResult } from "../helpers/surveyResults.js";
 import { renderContinueButton } from "../renderers/buttons/continueButton.js";
 import { renderFinishButton } from "../renderers/buttons/finishButton.js";
+import { renderHeading } from "../renderers/lesson/headerRenderer.js";
 import { renderOrderingButton } from "../renderers/ordering/orderingButton.js";
 import { renderOrderingCheck } from "../renderers/ordering/orderingCheck.js";
 import { renderOrderingItem } from "../renderers/ordering/orderingListRenderer.js";
@@ -154,7 +155,7 @@ function renderProgress(ctx, progress, x, y, width) {
 }
 
 export function renderLesson(ctx, sections, viewport, lesson) {
-   //console.log('renderLesson', sections)
+   
     for (const section of sections) {
 
         const state =
@@ -182,34 +183,16 @@ export function renderLesson(ctx, sections, viewport, lesson) {
 ) {
 
     switch (section.sectionType) {
-
         case 'lessonHeading':
-            renderHeading(
-                ctx,
-                section,
-                state,
-                viewport
-            )
+            renderHeading(ctx,section, state, viewport)
             break
 
         case 'lessonParagraph':
-            renderParagraph(
-                ctx,
-                section,
-                state,
-                viewport,
-                lesson
-            )
+            renderParagraph( ctx,  section,  state,  viewport,  lesson)
             break
 
         case 'quiz':
-            renderQuiz(
-                ctx,
-                section,
-                state,
-                viewport,
-                lesson
-            )
+            renderQuiz(   ctx,   section,  state,  viewport,  lesson)
             break
 
             case 'quizOption':
@@ -296,130 +279,46 @@ export function renderLesson(ctx, sections, viewport, lesson) {
 
 }
 
-function renderHeading(
-    ctx,
-    node,
-    state,
-    viewport
-) {
-    const rect = getScreenRect(node, viewport)
-
-    let icon = ''
-
-switch (state) {
-
-    case 'completed':
-        icon = '✓'
-        break
-
-    case 'current':
-        icon = '▶'
-        break
-
-    case 'locked':
-        icon = '○'
-        break
-}ctx.save()
- 
-
-    // Draw the text
-    ctx.fillStyle = 'black'
-    ctx.font = 'bold 20px sans-serif'
-    ctx.textBaseline = 'top'
-ctx.fillText(
-    `${icon} ${node.text}`,
-    rect.x + 15,
-    rect.y + 20
-)
-ctx.restore()
-}
 
 function renderParagraph(ctx, node,state, viewport, lesson) {
-
     const rect = getScreenRect(node, viewport)
 
-    const sectionState =
-        lesson.getSectionState(node.sectionId)
-
+    const sectionState =   lesson.getSectionState(node.sectionId)
 
     if (sectionState === 'locked') {
-
         drawRect(ctx, {
             ...rect,
             color: '#eeeeee'
         })
-
         ctx.fillStyle = '#999'
         ctx.fillText(
             'Complete previous sections',
             rect.x + 20,
             rect.y + 30
         )
-
+       
         return
     }
 
-
-    drawTextBlock(
-        ctx,
-        node.text,
-        rect.x,
-        rect.y,
-        rect.width,
-        22
-    )
-
+    drawTextBlock( ctx, node.text, rect.x, rect.y, rect.width, 22)
 
     if(sectionState === 'current') {
-
         ctx.strokeStyle = '#00aa00'
-        ctx.strokeRect(
-            rect.x,
-            rect.y,
-            rect.width,
-            rect.height
-        )
-
+        ctx.strokeRect(  rect.x,  rect.y,  rect.width,  rect.height)
     }
-
 }
 
-
-
-
-export function renderLessonTitle(ctx, node, viewport) {
-    const rect = getScreenRect(node, viewport)
-    drawRect(ctx, rect, {showSelection: true})
-    ctx.fillStyle = TEXT_COLOR
-    ctx.font = 'bold 24px Arial'
-    ctx.fillText(
-        node.text || 'Lesson Title',
-        rect.x + 20,
-        rect.y + rect.height - 10
-    )
-}
 
 
 
 function drawThumbnail(ctx, node,pos, assetManager) {
-
     if (!node.thumbnail) return
-
     const img = assetManager.loadImage(node.thumbnail)
    
-
     if (!img.complete|| img.naturalWidth === 0) return
-
     const size = node.thumbnailSize || 80
    
-
-    ctx.drawImage(
-        img,
-        node.x + 15,
-        pos.y+15,
-        size,
-        size
-    )
+    ctx.drawImage( img, node.x + 15, pos.y+15, size, size)
 }
 
 export function drawRectLabel(ctx, rect, options = {}) {

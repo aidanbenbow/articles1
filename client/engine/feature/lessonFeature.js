@@ -13,19 +13,14 @@ export class LessonFeature {
         this.engine = engine
         this.lessonProgressStore = new LessonProgressStore()
         this.lessonService = new LessonService(new SurveyApi(), this.lessonProgressStore)
-        this.lessonController = new LessonController(this.lessonService, engine)
-        
-   
+        this.lessonController = new LessonController(this.lessonService, engine) 
     }
-
     async attach() {
-     const progress=   await initializeLessonProgress(this.lessonProgressStore)
-     console.log('Lesson progress initialized:', progress)
+    //  await initializeLessonProgress(this.lessonProgressStore)
+    
     }
-
     contextExports() {
-        return {
-           
+        return { 
             startLesson: (articleId, sections) => this.lessonController.start(articleId, sections),
             getLesson: () => this.lessonController.getState(),
             answerQuiz: (sectionId, quizId, optionIndex, answer) => this.lessonController.answerQuiz(sectionId, quizId, optionIndex, answer),
@@ -41,9 +36,7 @@ export class LessonFeature {
             startLessonFromArticle: (article) => this.startLessonFromArticle(article),
             moveOrderingItem: (sectionId, itemIndex,direction) =>
     this.lessonController.moveOrderingItem(sectionId,itemIndex,direction),
-
-checkOrdering: (sectionId) =>
-    this.lessonController.checkOrdering(sectionId),
+checkOrdering: (sectionId) => this.lessonController.checkOrdering(sectionId),
         }
     }
     startLessonFromArticle(article) {

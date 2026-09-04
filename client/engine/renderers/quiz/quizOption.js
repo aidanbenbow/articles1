@@ -35,18 +35,10 @@ const isCorrect = node.optionIndex === node.answer
 
     // radio
     ctx.beginPath()
-    ctx.arc(
-        rect.x + 12,
-        rect.y + rect.height / 2,
-        6,
-        0,
-        Math.PI * 2
-    )
+    ctx.arc( rect.x + 12, rect.y + rect.height / 2, 6, 0, Math.PI * 2)
     ctx.stroke()
 
-
     if (isSelected) {
-
         ctx.beginPath()
         ctx.arc(
             rect.x + 12,
@@ -56,18 +48,13 @@ const isCorrect = node.optionIndex === node.answer
             Math.PI * 2
         )
         ctx.fill()
-
     }
 
     // text
     ctx.fillStyle = '#000'
     ctx.font = DRAWING_CONSTANTS.fonts.quizOption
 
-    ctx.fillText(
-        node.text,
-        rect.x + 28,
-        rect.y + rect.height / 2 + 5
-    )
+    ctx.fillText( node.text, rect.x + 28, rect.y + rect.height / 2 + 5)
 
     // result marker
     if(answered) {

@@ -8,38 +8,29 @@ export class LessonProgress {
 
     constructor(data = {}) {
 
-        this.lessonId =
-            data.lessonId ?? null
+        this.lessonId = data.lessonId ?? null
 
-        this.status =
-            data.status ?? lessonProgressStatus.NOT_STARTED
+        this.status =data.status ?? lessonProgressStatus.NOT_STARTED
 
-        this.progressPercent =
-            data.progressPercent ?? 0
+        this.progressPercent = data.progressPercent ?? 0
 
-        this.currentActivityId =
-            data.currentActivityId ?? null
+        this.currentActivityId = data.currentActivityId ?? null
 
-        this.completedActivityIds =
-            data.completedActivityIds ?? []
+        this.completedActivityIds = data.completedActivityIds ?? []
 
-        this.quizAnswers =
-            data.quizAnswers ?? {}
+        this.quizAnswers = data.quizAnswers ?? {}
 
-        this.quizScore =
-            data.quizScore ?? 0
+        this.quizScore = data.quizScore ?? 0
 
-        this.surveyResponses =
-            data.surveyResponses ?? {}
+        this.surveyResponses = data.surveyResponses ?? {}
 
-        this.startedAt =
-            data.startedAt ?? null
+            this.orderingAnswers = data.orderingAnswers ?? {}
 
-        this.completedAt =
-            data.completedAt ?? null
+        this.startedAt = data.startedAt ?? null
 
-        this.lastAccessedAt =
-            data.lastAccessedAt ?? null
+        this.completedAt =data.completedAt ?? null
+
+        this.lastAccessedAt = data.lastAccessedAt ?? null
     }
 
     get completed() {

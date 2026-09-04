@@ -8,26 +8,13 @@ export function renderSurveyOption(
     viewport,
     lesson
 ) {
-
     const rect = getScreenRect(section, viewport)
-
     const survey = lesson.activities?.[section.surveyId]
-
     const response = survey?.getResponse() || null
-
     const selected = response?.selected === section.optionIndex
+    const { votes, percentage } = getSurveyResult( survey, section.optionIndex)
 
-    const { votes, percentage } = getSurveyResult(
-        survey,
-        section.optionIndex
-    )
-
-    drawRect(ctx, {
-        ...rect,
-        color: selected
-            ? '#b8f5b8'
-            : '#d0d0d0'
-    })
+    drawRect(ctx, { ...rect, color: selected ? '#b8f5b8' : '#d0d0d0'})
 
     // Percentage bar
     const barHeight = 6

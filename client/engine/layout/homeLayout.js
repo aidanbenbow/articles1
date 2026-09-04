@@ -155,10 +155,7 @@ const { padding, contentWidth, gap } = metrics
             node =>
                 node?.props?.articleData?.articleId
         )
-console.log(
-            'LESSON NODES',
-            lessonNodes
-        )
+
     const suggestedNode =lessonNodes[14]
         
     if (!suggestedNode) {
@@ -178,8 +175,7 @@ console.log(
             owner: 'home',
             kind: 'lessonCard',
 
-            articleId:
-                articleData.articleId,
+            articleId:  articleData.articleId,
 
             title:
                 suggestedNode.props?.title ||
@@ -191,8 +187,7 @@ console.log(
                 articleData.excerpt ||
                 'Explore this lesson.',
 
-            thumbnail:
-                articleData.photo || null,
+            thumbnail:  articleData.photo || null,
 
             progressPercent: 0,
 
@@ -203,13 +198,11 @@ console.log(
             x: padding,
             worldY: currentY,
 
-            width:
-                contentWidth,
+            width:  contentWidth,
 
             height,
 
-            articleNode:
-                suggestedNode,
+            articleNode: suggestedNode,
             articleData: articleData
         }
     )
@@ -225,111 +218,25 @@ const height = browseAll?.height || 120
         'home-browse-all',
         {
             id: 'home-browse-all',
-
             owner: 'home',
             kind: 'browseAllLessons',
 
             x: padding,
             worldY: currentY,
 
-            width:
-                contentWidth,
+            width: contentWidth,
 
             height,
 
-            title:
-                'Browse all lessons',
+            title:'Browse all lessons',
 
-            action:
-                'browseLessons'
+            action: 'browseLessons'
         }
     )
 
     return currentY + height + gap
 }
-    // layoutLessons(
-    //     articleNodes,
-    //     currentY
-    // ) {
-
-    //     const lessonNodes =
-    //     articleNodes.filter(
-    //         node =>
-    //             node?.props?.articleData?.articleId
-    //     )
-    //         console.log(
-    //             'LESSON NODES',
-    //             lessonNodes
-    //         )
-
-    //     for (const node of lessonNodes) {
-
-    //         const style =
-    //             getNodeStyle(node)
-
-    //         const articleData =
-    //             node.props?.articleData || {}
-
-    //         const articleId =
-    //             articleData.articleId || null
-
-    //         const progressStore =
-    //             this.engine.context.getLessonProgressStore()
-
-    //         const progress =
-    //             articleId
-    //                 ? progressStore?.get(
-    //                     articleId
-    //                 )
-    //                 : null
-
-    //         const height =
-    //             style.height || 120
-
-    //         this.layout.layoutNodes.set(
-    //             `home-${node.id}`,
-    //             {
-    //                 id: `home-${node.id}`,
-
-    //                 owner: 'home',
-    //                 kind: 'lessonCard',
-
-    //                 articleId,
-
-    //                 title:
-    //                     node.props?.title ||
-    //                     articleData.title ||
-    //                     'Untitled lesson',
-
-    //                 description:
-    //                     articleData.description ||
-    //                     articleData.excerpt ||
-    //                     '',
-
-    //                 thumbnail:
-    //                     articleData.photo || null,
-
-    //                 progress,
-
-    //                 x: 40,
-    //                 worldY: currentY,
-
-    //                 width:
-    //                     this.layout.width - 80,
-
-    //                 height,
-
-    //                 action: 'openLesson',
-
-    //                 articleNode: node
-    //             }
-    //         )
-
-    //         currentY += height + 20
-    //     }
-
-    //     return currentY
-    // }
+    
     clear() {
     for (const [id, node] of this.layout.layoutNodes) {
         if (node.owner === 'home') {

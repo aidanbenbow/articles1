@@ -53,8 +53,7 @@ isVisible(node, viewport) {
             nodeTop < viewBottom
         )
     }
-    advanceLesson() {
-    
+    advanceLesson() {    
     const moved =
         this.lessonService.advanceSection()
         if(moved) {
@@ -63,9 +62,7 @@ isVisible(node, viewport) {
                     this.lessonService.getLesson().currentSectionId
             })
         }
-
     return moved
-
 }
 startPhase() {
     this.lessonService.startPhase()

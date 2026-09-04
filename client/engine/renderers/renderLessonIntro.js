@@ -1,6 +1,7 @@
-import { getScreenRect, renderButtons, renderLessonTitle } from "../modules/renderUtils.js"
+import { getScreenRect, } from "../modules/renderUtils.js"
 import { renderButton } from "./buttons/buttonRenderer.js"
-import { renderStartButton } from "./buttons/startButton.js"
+import { renderLessonTitle } from "./lesson/lessonTitleRenderer.js"
+
 
 export function renderLessonIntro(ctx, view, viewport) {
 

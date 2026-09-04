@@ -9,6 +9,7 @@ import { layoutOrderingSection } from "../layout/layoutOrderingSection.js"
 import { layoutParagraphBlock } from "../layout/layoutParagraphBlock.js"
 import { LessonListLayout } from "../layout/lessonListLayout.js"
 import { layoutQuizSection } from "../layout/quizLayout.js"
+import { layoutSurveySection } from "../layout/surveyLayout.js"
 
 import { matchesOrderedPrefix, normalize } from "./search.js"
 
@@ -297,16 +298,7 @@ layoutSection( articleNode,
                 return layoutQuizSection( this.layout,articleNode,currentSection,currentY,x,width,padding,color,lesson
                 )
             case 'survey':
-                return this.layoutSurveySection(
-                    articleNode,
-                    currentSection,
-                    currentY,
-                    x,
-                    width,
-                    padding,
-                    color,
-                    lesson
-                )
+                return layoutSurveySection(this.layout, articleNode, currentSection, currentY, x,width, padding,color,  lesson)
                 case 'ordering':
             return layoutOrderingSection(
                 articleNode,
@@ -322,14 +314,7 @@ layoutSection( articleNode,
     
         }
     }
-    layoutLessonSection(
-    articleNode,
-    section,
-    currentY,
-    x,
-    width,
-    padding,
-    color
+    layoutLessonSection(  articleNode,  section,  currentY,  x,  width,  padding,  color
 ) {
     const blocks = section.blocks || section.text ||[]
 
@@ -346,57 +331,79 @@ layoutSection( articleNode,
     return currentY + 20
 }
 
-// layoutQuizSection(articleNode, section, currentY, x, width, padding, color, lesson) {
+// layoutSurveySection(articleNode, section, currentY, x, width, padding, color, lesson) {
 //     const questionHeight = 30
+//     const responseHeight = 20
 //     const optionHeight = 30
 //     const optionGap = 10
-//     const quizTop = currentY
-//     const answered = lesson.activities[section.id].answers || null
-//     console.log(answered)
-//     const feedbackHeight = answered && answered.feedback ? 30 : 0
+//     const surveyTop = currentY
+
+//     const answered = lesson.surveyResponses[section.id] || null
+//     const feedbackHeight = answered !== null && section.feedback ? 30 : 0
 //     const feedbackGap = feedbackHeight > 0 ? 10 : 0
-    
-// const quizHeight =
+
+// const surveyHeight =
 //     padding * 2 +
 //     questionHeight +
+//     responseHeight +
 //     section.options.length * optionHeight
-//     + (section.options.length - 1) * optionGap
+//     + (section.options.length - 1) * optionGap 
 //     + feedbackHeight + feedbackGap
 
-//     const feedbackY = quizTop + padding + questionHeight + section.options.length * (optionHeight + optionGap) + feedbackGap
+//     const feedbackY = surveyTop + padding + questionHeight + responseHeight + section.options.length * (optionHeight + optionGap) + feedbackGap
 
-//     const quizRect = {
+//      const questionX = x + padding
+//     const questionY = surveyTop + padding
+//     const responseX = x + width - width/4 - padding
+//     const responseY = questionY 
+//     const questionWidth = width - padding * 2
+//     const responseWidth = 100
+
+//     const surveyRect = {
 //         id: `${articleNode.id}-${section.id}`,
 //         sectionId: section.id,
 //         x,
-//         worldY: quizTop,
+//         worldY: surveyTop,
 //         width,
-//         height: quizHeight,
+//         height: surveyHeight,
 //         padding,
 //         color: '#e0e0e0',
 //         selected: false,
 //         question: section.question,
-//         type: 'quiz',
+//         type: 'survey',
+//         surveyType: section.surveyType,
 //         kind: 'lessonSection',
-//         sectionType: 'quiz',
+//         sectionType: 'survey',
 //         options: section.options,
-//         answer: section.answer,
-//         quizId: section.id,
+//         surveyId: section.id,
 
-//         feedback: answered?.feedback || '',
+//         questionX,
+//         questionY,
+//         questionWidth,
+//         responseX,
+//         responseY,
+//         responseWidth,
+
+//         feedback: section.feedback || '',
 //         feedbackHeight,
 //         feedbackY,
 //         feedbackX: x + padding,
 //         feedbackWidth: width - padding * 2
 //     }
-//     this.layout.layoutNodes.set(quizRect.id, quizRect)
-
+//     this.layout.layoutNodes.set(surveyRect.id, surveyRect)
 //     for (let i = 0; i < section.options.length; i++) {
+//         const optionY =
+//     surveyTop +
+//     padding +
+//     questionHeight +
+//     responseHeight +
+//     i * (optionHeight + optionGap)
+
 //         const optionRect = {
 //             id: `${articleNode.id}-${section.id}-option-${i}`,
 //             sectionId: section.id,
 //             x: x + padding,
-//             worldY: quizTop + padding + questionHeight + i * (optionHeight + optionGap),
+//             worldY: optionY,
 //             width: width - padding * 2,
 //             height: optionHeight,
 //             padding,
@@ -405,106 +412,15 @@ layoutSection( articleNode,
 //             text: section.options[i],
 //             type: 'text',
 //             kind: 'lessonSection',
-//             sectionType: 'quizOption',
-//             action: 'answerQuiz',
-//             quizId: section.id,
+//             sectionType: 'surveyOption',
+//             surveyId: section.id,
 //             optionIndex: i,
-//             answer: section.answer
+//             action: 'answerSurvey'
 //         }
 //         this.layout.layoutNodes.set(optionRect.id, optionRect)
 //     }
-//     return currentY + quizHeight + 10
+//     return currentY + surveyHeight + 10
 // }
-layoutSurveySection(articleNode, section, currentY, x, width, padding, color, lesson) {
-    const questionHeight = 30
-    const responseHeight = 20
-    const optionHeight = 30
-    const optionGap = 10
-    const surveyTop = currentY
-
-    const answered = lesson.surveyResponses[section.id] || null
-    const feedbackHeight = answered !== null && section.feedback ? 30 : 0
-    const feedbackGap = feedbackHeight > 0 ? 10 : 0
-
-const surveyHeight =
-    padding * 2 +
-    questionHeight +
-    responseHeight +
-    section.options.length * optionHeight
-    + (section.options.length - 1) * optionGap 
-    + feedbackHeight + feedbackGap
-
-    const feedbackY = surveyTop + padding + questionHeight + responseHeight + section.options.length * (optionHeight + optionGap) + feedbackGap
-
-     const questionX = x + padding
-    const questionY = surveyTop + padding
-    const responseX = x + width - width/4 - padding
-    const responseY = questionY 
-    const questionWidth = width - padding * 2
-    const responseWidth = 100
-
-    const surveyRect = {
-        id: `${articleNode.id}-${section.id}`,
-        sectionId: section.id,
-        x,
-        worldY: surveyTop,
-        width,
-        height: surveyHeight,
-        padding,
-        color: '#e0e0e0',
-        selected: false,
-        question: section.question,
-        type: 'survey',
-        surveyType: section.surveyType,
-        kind: 'lessonSection',
-        sectionType: 'survey',
-        options: section.options,
-        surveyId: section.id,
-
-        questionX,
-        questionY,
-        questionWidth,
-        responseX,
-        responseY,
-        responseWidth,
-
-        feedback: section.feedback || '',
-        feedbackHeight,
-        feedbackY,
-        feedbackX: x + padding,
-        feedbackWidth: width - padding * 2
-    }
-    this.layout.layoutNodes.set(surveyRect.id, surveyRect)
-    for (let i = 0; i < section.options.length; i++) {
-        const optionY =
-    surveyTop +
-    padding +
-    questionHeight +
-    responseHeight +
-    i * (optionHeight + optionGap)
-
-        const optionRect = {
-            id: `${articleNode.id}-${section.id}-option-${i}`,
-            sectionId: section.id,
-            x: x + padding,
-            worldY: optionY,
-            width: width - padding * 2,
-            height: optionHeight,
-            padding,
-            color: '#d0d0d0',
-            selected: false,
-            text: section.options[i],
-            type: 'text',
-            kind: 'lessonSection',
-            sectionType: 'surveyOption',
-            surveyId: section.id,
-            optionIndex: i,
-            action: 'answerSurvey'
-        }
-        this.layout.layoutNodes.set(optionRect.id, optionRect)
-    }
-    return currentY + surveyHeight + 10
-}
 
 layoutContinueButton(articleNode, currentY, x, width, padding, color) {
     const buttonHeight = 40

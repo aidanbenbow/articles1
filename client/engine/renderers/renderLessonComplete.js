@@ -3,7 +3,7 @@ import { getScreenPosition } from "../modules/renderUtils.js"
 export function renderLessonComplete(ctx, view, viewport) {
    const backButtonNode = view.buttonNodes.find(node => node.sectionType === 'backButton')
     ctx.clearRect(0, 0, viewport.width, viewport.height)
-   console.log('Rendering lesson complete screen with view:', view, 'and backButtonNode:', backButtonNode)
+ 
     renderLessonCompleteScreen(ctx,view, viewport)
     renderBackButton(ctx, backButtonNode, viewport)
 }

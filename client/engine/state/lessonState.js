@@ -102,17 +102,12 @@ getCurrentSection() {
         this.currentSectionId,
         this.currentSectionIndex
     )
-    const current =
-        this.getCurrentSection()
+    const current =  this.getCurrentSection()
 
-    if (!current) {
-        return false
-    }
-
-    if (!this.canUnlockNextSection()) {
-        return false
-    }
-
+    if (!current)     return false
+    
+    if (!this.canUnlockNextSection())     return false
+    
     this.completeSection(current.id)
 
     const next =this.getNextSection()

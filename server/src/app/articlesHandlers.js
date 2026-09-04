@@ -60,13 +60,13 @@ export function registerArticlesHandlers(app, articlesService) {
 //         "completedActivityIds": []
 //     }, 
    
-    {
-        "lessonId": "st-patrick-general",
-        "status": "in_progress",
-        "progressPercent": 20,
-        "currentActivityId": "patrick-survey-1",
-        "completedActivityIds": []
-    }
+    // {
+    //     "lessonId": "st-patrick-general",
+    //     "status": "in_progress",
+    //     "progressPercent": 20,
+    //     "currentActivityId": "patrick-survey-1",
+    //     "completedActivityIds": []
+    // }
 ]
             res.json(progressRecords);
         } catch (error) {

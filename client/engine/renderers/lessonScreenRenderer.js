@@ -23,7 +23,6 @@ export function renderLessonScreen(
 
         case 'active':
             renderLesson(ctx,view.lessonSectionNodes,viewport,lessonState)
-
             renderLessonHeader(ctx,lessonState,viewport)
             break
 

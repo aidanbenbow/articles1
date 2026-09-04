@@ -1,5 +1,5 @@
-import { dataStore } from "./appDataStore.js";
-import { baseModule } from "./baseModule.js";
+import { dataStore } from "../client/engine/modules/appDataStore.js";
+import { baseModule } from "../client/engine/modules/baseModule.js";
 
 export class SaveModule extends baseModule {
     static moduleName = 'saveModule'

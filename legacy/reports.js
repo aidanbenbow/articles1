@@ -1,4 +1,4 @@
-import { initializeDataStore } from "./appDataStore.js"
+import { initializeDataStore } from "../client/engine/modules/appDataStore.js"
 
 export class ReportsModule {
     constructor(engine) {

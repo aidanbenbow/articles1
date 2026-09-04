@@ -35,7 +35,6 @@ async handleTargetNode(targetNode) {
                 this.emitLayoutChanged()
                 return
             case 'advanceLessonSection':
-     
                 this.engine.context.advanceLessonSection()
                 return
             case 'startLessonPhase':
@@ -78,7 +77,7 @@ case 'checkOrdering':
                     
                         return
                         case 'goHome':
-                            console.log('InteractionManager: goHome action triggered')
+                       
                              this.engine.context.app.goHome()
                            
                             return
