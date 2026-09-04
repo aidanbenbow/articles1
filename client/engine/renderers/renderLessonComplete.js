@@ -3,7 +3,6 @@ import { getScreenPosition } from "../modules/renderUtils.js"
 export function renderLessonComplete(ctx, view, viewport) {
    const backButtonNode = view.buttonNodes.find(node => node.sectionType === 'backButton')
     ctx.clearRect(0, 0, viewport.width, viewport.height)
- 
     renderLessonCompleteScreen(ctx,view, viewport)
     renderBackButton(ctx, backButtonNode, viewport)
 }
@@ -14,12 +13,7 @@ function renderLessonCompleteScreen(ctx, view, viewport) {
 
     // Background
     ctx.fillStyle = '#f7fafb'
-    ctx.fillRect(
-        0,
-        0,
-        viewport.width,
-        viewport.height
-    )
+    ctx.fillRect(  0,  0,  viewport.width,  viewport.height)
 
     // Completion circle
     const circleRadius = 42

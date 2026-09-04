@@ -1,3 +1,4 @@
+import { DRAWING_CONSTANTS } from "../../constants/drawingConstants.js"
 import { drawText } from "../../draw/drawHelpers.js"
 import { getScreenPosition } from "../../modules/renderUtils.js"
 
@@ -23,7 +24,8 @@ switch (state) {
          `${icon} ${node.text}`,
         rect.x+15, rect.y + 20,
          'bold 20px sans-serif',
-         '#000',
+         DRAWING_CONSTANTS.colors.text,
+            'left',
     )
 
 ctx.restore()

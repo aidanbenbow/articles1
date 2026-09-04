@@ -34,9 +34,7 @@ export function drawText(ctx, text, x, y, font = DRAWING_CONSTANTS.fonts.body, c
     ctx.fillText(text, x, y)
 }
 
-export function drawRect(
-    ctx,
-    rect,
+export function drawRect( ctx, rect,
     { showSelection = false } = {}
 ) {
     const { x, y, width, height } = rect

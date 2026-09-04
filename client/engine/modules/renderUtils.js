@@ -158,14 +158,13 @@ export function renderLesson(ctx, sections, viewport, lesson) {
    
     for (const section of sections) {
         const state =  lesson.getSectionState(   section.sectionId)
-
         renderLessonSection( ctx, section, state, viewport, lesson)
     }
   
     }
 
     function renderLessonSection( ctx, section, state, viewport, lesson) {
-        
+
     switch (section.sectionType) {
         case 'lessonHeading':
             renderHeading(ctx,section, state, viewport)
@@ -245,11 +244,7 @@ export function renderLesson(ctx, sections, viewport, lesson) {
             )
             break
             case 'continueButton':
-            renderContinueButton(
-                ctx,
-                section,
-                viewport
-            )
+            renderContinueButton(  ctx,  section,  viewport)
             break
             case 'finishButton':
             renderFinishButton(
@@ -262,7 +257,6 @@ export function renderLesson(ctx, sections, viewport, lesson) {
     }
 
 }
-
 
 function renderParagraph(ctx, node,state, viewport, lesson) {
     const rect = getScreenRect(node, viewport)
