@@ -36,7 +36,10 @@ this.bgColor = this.screen?.color || '#ffffff'
     }
     
     render() {
-      // this.setScreen()
+        const animations = this.engine.context.getAnimationManager()
+
+    animations?.update()
+      
         renderBackground(this.ctx, this.canvas.width, this.canvas.height, this.bgColor)
 
 const viewport = this.engine.context.getViewport()
@@ -55,12 +58,16 @@ const viewport = this.engine.context.getViewport()
                 renderHome(this.ctx, view.homeNodes, viewport, assetManager)
                 break
                 case 'lesson':
-                renderLessonScreen(this.ctx, view, viewport, lessonState, assetManager)
+                renderLessonScreen(this.ctx, view, viewport, lessonState, assetManager, animations)
                 break
                 case 'lessonBrowser':
                 renderLessonBrowser(this.ctx, view.lessonBrowserNodes, viewport,  assetManager) 
                 break
         }
+        if (animations?.hasActiveAnimations()) {
+            console.log('Active animations, requesting next frame')
+        requestAnimationFrame(() => this.render())
+    }
     }
     attach() {
         setTimeout(() =>{
@@ -80,24 +87,7 @@ const viewport = this.engine.context.getViewport()
     destroy() {
         this.detach()
     }
-//     renderLessonHeaderOnly() {
-//     const viewport = this.engine.context.getViewport()
-//     const lessonState = this.engine.context.getLesson()
 
-//     // clear only header area
-//     this.ctx.clearRect(
-//         20,
-//         20,
-//         viewport.width - 40,
-//         60
-//     )
-
-//     renderLessonHeader(
-//         this.ctx,
-//         lessonState,
-//         viewport
-//     )
-// }
     
 }
 

@@ -1,34 +1,42 @@
 // animationManager.js
 
+import { animationDefinitions } from "../animations/animationDefinitions.js"
+
 export class AnimationManager {
     constructor() {
         this.animations = new Map()
+        this.definitions = animationDefinitions
     }
     contextExports() {
     return {
         getAnimationManager: () => this
     }
 }
-    animate(id, {
-        duration = 300,
-        from = 0,
-        to = 1,
-        easing = t => t,
-        onUpdate,
-        onComplete
-    }) {
+    animate(id, definition,options = {}) {
+    const animation = {
+        ...definition,
+        ...options
+    }
         const start = performance.now()
 
         this.animations.set(id, {
             start,
-            duration,
-            from,
-            to,
-            easing,
-            onUpdate,
-            onComplete
+            duration: animation.duration??300,
+            from: animation.from??0,
+            to: animation.to??1,
+            easing: animation.easing??(t => t),
+            onUpdate: animation.onUpdate??(() => {}),
+            onComplete: animation.onComplete
         })
     }
+    play(name, id, options={}) {
+    const definition = this.definitions[name]
+    if (!definition) {
+        console.warn(`Animation definition not found: ${name}`)
+        return
+    }
+    this.animate(id, definition,  options )
+}
 
     update(now = performance.now()) {
         for (const [id, animation] of this.animations) {
@@ -74,7 +82,7 @@ export class AnimationManager {
         (animation.to - animation.from) * eased
 }
 
-    isAnimating(id) {
-        return this.animations.has(id)
+    hasActiveAnimations() {
+    return this.animations.size > 0
     }
 }

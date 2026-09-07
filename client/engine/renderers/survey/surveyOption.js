@@ -2,33 +2,24 @@ import { drawRect, drawTextBlock } from "../../draw/drawHelpers.js"
 import { getSurveyResult } from "../../helpers/surveyResults.js"
 import { getScreenRect } from "../../modules/renderUtils.js"
 
-export function renderSurveyOption(
-    ctx,
-    section,
-    viewport,
-    lesson
-) {
+export function renderSurveyOption( ctx, section, viewport, lesson, assetManager, animations) {
     const rect = getScreenRect(section, viewport)
     const survey = lesson.activities?.[section.surveyId]
     const response = survey?.getResponse() || null
     const selected = response?.selected === section.optionIndex
     const { votes, percentage } = getSurveyResult( survey, section.optionIndex)
-
+const progress =  animations?.getValue(`survey-answer-${section.surveyId}`) ?? 1
+const animatedPercentage = percentage * progress
+console.log('renderSurveyOption', section.optionIndex, percentage, animatedPercentage, progress)
     drawRect(ctx, { ...rect, color: selected ? '#b8f5b8' : '#d0d0d0'})
 
     // Percentage bar
     const barHeight = 6
-    const barWidth =
-        rect.width * (percentage / 100)
+    const barWidth = rect.width * (animatedPercentage / 100)
 
     ctx.fillStyle = '#23979d'
 
-    ctx.fillRect(
-        rect.x,
-        rect.y + rect.height - barHeight,
-        barWidth,
-        barHeight
-    )
+    ctx.fillRect(rect.x, rect.y + rect.height - barHeight,barWidth,barHeight)
     ctx.save()
 if (selected) {
     ctx.font = 'bold 18px Arial'
@@ -58,7 +49,7 @@ if (selected) {
     ctx.textBaseline = 'middle'
 
     ctx.fillText(
-        `${percentage}%`,
+        `${Math.round(animatedPercentage)}%`,
         rect.x + rect.width - 15,
         rect.y + rect.height / 2
     )

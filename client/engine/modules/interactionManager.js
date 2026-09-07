@@ -42,7 +42,13 @@ async handleTargetNode(targetNode) {
                 this.engine.emit('lessonStateChanged', this.engine.context.getLesson())
                 return
                 case 'answerSurvey':
-                await this.engine.context.answerSurvey(targetNode.surveyId, targetNode.optionIndex)
+            const result = await this.engine.context.answerSurvey(targetNode.surveyId, targetNode.optionIndex)
+                if (!result.alreadyAnswered) {
+
+        this.engine.context
+            .getAnimationManager()
+            .play('surveyAnswer', `survey-answer-${targetNode.surveyId}`,)
+    }
                 this.emitLayoutChanged()
                 return
             case 'answerQuiz':
