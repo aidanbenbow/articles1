@@ -187,7 +187,7 @@ function parseSurvey(lines, startIndex) {
         question: '',
         surveyType: 'single',
         options: [],
-        feedback: ''
+        feedback: {}
     }
 
     let i = startIndex + 1
@@ -210,9 +210,19 @@ function parseSurvey(lines, startIndex) {
         else if (line.startsWith('- ')) {
             survey.options.push(line.substring(2).trim())
         }
-        else if (line.startsWith('feedback:')) {
-            survey.feedback = line.substring('feedback:'.length).trim()
-        }
+        else if (line.startsWith('feedback-')) {
+
+    const feedbackKey = line
+        .substring('feedback-'.length)
+        .split(':')[0]
+        .trim()
+
+    const feedbackText = line
+        .substring(line.indexOf(':') + 1)
+        .trim()
+
+    survey.feedback[feedbackKey] = feedbackText
+}
 
         i++
     }

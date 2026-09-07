@@ -13,6 +13,7 @@ export function renderSurveySingleChoice(
     const response = survey?.getResponse() || null
     const results = survey?.getResults() || {}
     const total = results.totalResponses || 0
+    const feedback = survey?.getFeedback() || null
         
     drawRect(ctx, rect, { showSelection: true})
 
@@ -22,6 +23,6 @@ export function renderSurveySingleChoice(
     
 
     if (response) {
-        drawTextBlock(  ctx,  response.feedback,  section.feedbackX, section.feedbackY, section.feedbackWidth, 16)
+        drawTextBlock(  ctx, feedback,  section.feedbackX, section.feedbackY, section.feedbackWidth, 16)
     }
 }

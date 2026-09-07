@@ -7,18 +7,20 @@ export function layoutSurveySection(layout,articleNode, section, currentY, x, wi
 
     const survey = lesson.activities[section.id]
     const answered = survey.getResponse() !== null ? survey.getResponse() : null
-    const feedbackHeight = answered !== null && section.feedback ? 30 : 0
+    const feedback = answered !== null ? survey.getFeedback() : null
+    console.log('survey feedback', feedback)
+    const feedbackHeight = answered !== null && feedback ? 30 : 0
     const feedbackGap = feedbackHeight > 0 ? 10 : 0
 
+    const optionsHeight = section.options.length * optionHeight + (section.options.length - 1) * optionGap
 const surveyHeight =
     padding * 2 +
     questionHeight +
     responseHeight +
-    section.options.length * optionHeight
-    + (section.options.length - 1) * optionGap 
+    optionsHeight
     + feedbackHeight + feedbackGap
 
-    const feedbackY = surveyTop + padding + questionHeight + responseHeight + section.options.length * (optionHeight + optionGap) + feedbackGap
+    const feedbackY = surveyTop + padding + questionHeight + responseHeight + optionsHeight + feedbackGap
 
      const questionX = x + padding
     const questionY = surveyTop + padding
@@ -52,7 +54,7 @@ const surveyHeight =
         responseY,
         responseWidth,
 
-        feedback: section.feedback || '',
+        feedback: feedback || '',
         feedbackHeight,
         feedbackY,
         feedbackX: x + padding,

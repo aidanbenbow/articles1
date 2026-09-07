@@ -12,6 +12,7 @@ import { SurveyFeature } from "../engine/feature/surveyFeature.js";
 import { AppFeature } from "./dorcasApp/app/appFeature.js";
 
 import { bootstrapDorcas2App } from "./dorcasApp/main.js";
+import { AnimationManager } from "../engine/managers/animationManager.js";
 
 
 
@@ -28,7 +29,8 @@ Input,
 ArticleLayoutFeature,
 SurveyFeature,
 LessonFeature,
-AppFeature
+AppFeature,
+AnimationManager
 
 ]
 }

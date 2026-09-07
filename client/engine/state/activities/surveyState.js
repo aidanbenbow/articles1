@@ -7,7 +7,7 @@ export class SurveyState extends ActivityState {
         super(section)
         this.response = null
         this.results = null
-        this.feedback = section.feedback || ''
+        this.feedback = section.feedback || {}
     }
 
     answerQuestion(selectedOptionIndex) {
@@ -35,6 +35,28 @@ export class SurveyState extends ActivityState {
     getResults() {
         return this.results
     }
+
+    getFeedback() {
+    if (!this.results) {
+        return this.feedback
+    }
+const responses = this.results.responses || []
+const counts = Object.values(responses)
+const max= Math.max(...counts)
+const majorityOptions = Object.keys(responses)
+        .filter(index => responses[index] === max)
+
+    if (majorityOptions.length > 1) {
+        return this.feedback.default || ''
+    }
+
+    const majorityOption = majorityOptions[0]
+
+    return this.feedback[`majority-${majorityOption}`]
+        || this.feedback.default
+        || ''
+
+}
 
     isComplete() {
         return this.response !== null
