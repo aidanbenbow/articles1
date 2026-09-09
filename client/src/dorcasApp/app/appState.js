@@ -23,10 +23,7 @@ export class AppState {
     openLessonBrowser() {
         this.activeLessonId = null
         this.screen = 'lessonBrowser'
-
-
     }
-
     goHome() {
         this.activeLessonId = null
         this.screen = 'home'

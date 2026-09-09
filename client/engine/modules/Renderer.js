@@ -13,6 +13,8 @@ export class Renderer {
         this._unsubscribe = []
         this.screen = null
         this.bgColor = null
+      this.animationManager = null
+        this.frameRequested = false
        
     }
     contextExports() {
@@ -36,10 +38,14 @@ this.bgColor = this.screen?.color || '#ffffff'
     }
     
     render() {
+     
         const animations = this.engine.context.getAnimationManager()
-
+console.log('Rendering frame, animations:', animations)
     animations?.update()
-      
+
+    const transitionManager = this.engine.context.getTransitionManager()
+    const screenOpacity = transitionManager?.getOpacity() ?? 1
+      console.log('Rendering with screen opacity:', screenOpacity)
         renderBackground(this.ctx, this.canvas.width, this.canvas.height, this.bgColor)
 
 const viewport = this.engine.context.getViewport()
@@ -53,6 +59,9 @@ const viewport = this.engine.context.getViewport()
        
         const view = createRendererViewModel(allNodes, interactionState, lessonState)
 
+this.ctx.save()
+this.ctx.globalAlpha = screenOpacity
+console.log('Rendering with opacity:', screenOpacity)
         switch (appState.screen) {
             case 'home':
                 renderHome(this.ctx, view.homeNodes, viewport, assetManager)
@@ -64,22 +73,26 @@ const viewport = this.engine.context.getViewport()
                 renderLessonBrowser(this.ctx, view.lessonBrowserNodes, viewport,  assetManager) 
                 break
         }
-        if (animations?.hasActiveAnimations()) {
-            console.log('Active animations, requesting next frame')
-        requestAnimationFrame(() => this.render())
-    }
+        this.ctx.restore()
+    
     }
     attach() {
-        setTimeout(() =>{
+       
+         this._unsubscribe.push(this.engine.on('layoutChanged', this.requestRender.bind(this)))
+            this._unsubscribe.push(this.engine.on('searchChanged', this.requestRender.bind(this)))
+             this._unsubscribe.push(this.engine.on('reportsDataReady', this.requestRender.bind(this))) 
+             this._unsubscribe.push(this.engine.on('assetLoaded', this.requestRender.bind(this)))
+             this._unsubscribe.push(this.engine.on('lessonStateChanged', this.requestRender.bind(this)))
+           
+            this._unsubscribe.push(  this.engine.on('appStateChanged', () => this.requestRender()))
+            this.animationManager = this.engine.context.getAnimationManager()
+            this.animationManager.setRequestFrame(() => this.requestRender())
+             setTimeout(() =>{
             this.setCanvas()
             this.setScreen()
-              this._unsubscribe.push(this.engine.on('layoutChanged', this.render.bind(this)))
-            this.render()
+             
+            this.requestRender()
         }, 0)
-            this._unsubscribe.push(this.engine.on('searchChanged', this.render.bind(this)))
-             this._unsubscribe.push(this.engine.on('reportsDataReady', () => this.render())) 
-             this._unsubscribe.push(this.engine.on('assetLoaded', () => this.render()))
-             this._unsubscribe.push(this.engine.on('lessonStateChanged', () => this.render()))
     }
     detach() {
         console.log('Renderer detached')
@@ -87,7 +100,25 @@ const viewport = this.engine.context.getViewport()
     destroy() {
         this.detach()
     }
+requestRender() {
 
+    if (this.frameRequested) {
+        return
+    }
+
+    this.frameRequested = true
+
+    requestAnimationFrame(() => {
+
+        this.frameRequested = false
+
+        this.render()
+
+        if (this.animationManager.hasActiveAnimations()) {
+            this.requestRender()
+        }
+    })
+}
     
 }
 

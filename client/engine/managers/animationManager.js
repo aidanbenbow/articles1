@@ -6,11 +6,15 @@ export class AnimationManager {
     constructor() {
         this.animations = new Map()
         this.definitions = animationDefinitions
+        this.requestFrame = null
     }
     contextExports() {
     return {
         getAnimationManager: () => this
     }
+}
+setRequestFrame(requestFrame) {
+    this.requestFrame = requestFrame
 }
     animate(id, definition,options = {}) {
     const animation = {
@@ -28,6 +32,7 @@ export class AnimationManager {
             onUpdate: animation.onUpdate??(() => {}),
             onComplete: animation.onComplete
         })
+        this.requestFrame?.()
     }
     play(name, id, options={}) {
     const definition = this.definitions[name]
@@ -46,6 +51,16 @@ export class AnimationManager {
                 elapsed / animation.duration,
                 1
             )
+              console.log({
+    id,
+    now,
+    start: animation.start,
+    duration: animation.duration,
+    elapsed,
+    progress,
+    from: animation.from,
+    to: animation.to
+})
 
             const eased = animation.easing(progress)
 
@@ -60,6 +75,7 @@ export class AnimationManager {
                 this.animations.delete(id)
             }
         }
+      
     }
     getValue(id, now = performance.now()) {
 

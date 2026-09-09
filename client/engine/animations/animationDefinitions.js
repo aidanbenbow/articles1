@@ -13,5 +13,9 @@ export const animationDefinitions = {
     sectionComplete: {
         duration: 300,
         easing: t => t
-    }
+    },
+    screenTransition: {
+    duration: 150,
+    easing: t => 1 - Math.pow(1 - t, 3)
+}
 }

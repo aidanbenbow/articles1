@@ -90,11 +90,9 @@ const height = metrics.continueCard?.height || 120
             this.engine.context.getAssetManager()?.loadImage(image)
           }
 
-        this.layout.layoutNodes.set(
-            'home-continue',
+        this.layout.layoutNodes.set( 'home-continue',
             {
                 id: 'home-continue',
-
                 owner: 'home',
                 kind: 'continueLessonCard',
 
@@ -113,7 +111,6 @@ const height = metrics.continueCard?.height || 120
 
                 articleNode:  continueNode,
                     articleData: articleData,
-
                     description: articleData.description || articleData.excerpt || '',
                     action: 'openLesson'
             }
@@ -122,8 +119,7 @@ const height = metrics.continueCard?.height || 120
         return currentY + height + gap
     }
     layoutSuggestedLesson(  articleNodes,  currentY) {
-   // const progressStore = this.engine.context.getLessonProgressStore()
-
+  
 const metrics = this.getMetrics()
 const { padding, contentWidth, gap } = metrics
 
@@ -159,20 +155,15 @@ const sortedNodes = lessonNodes.sort((a, b) => {
                 'Explore this lesson.',
 
             thumbnail:  articleData.photo || null,
-
             progressPercent: 0,
 
             action: 'openLesson',
-
             actionLabel: 'Start lesson',
 
             x: padding,
             worldY: currentY,
-
             width:  contentWidth,
-
             height,
-
             articleNode: suggestedNode,
             articleData: articleData
         }

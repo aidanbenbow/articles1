@@ -13,6 +13,7 @@ import { AppFeature } from "./dorcasApp/app/appFeature.js";
 
 import { bootstrapDorcas2App } from "./dorcasApp/main.js";
 import { AnimationManager } from "../engine/managers/animationManager.js";
+import { ScreenTransitionManager } from "../engine/managers/screenTransitionManager.js";
 
 
 
@@ -30,7 +31,8 @@ ArticleLayoutFeature,
 SurveyFeature,
 LessonFeature,
 AppFeature,
-AnimationManager
+AnimationManager,
+ScreenTransitionManager
 
 ]
 }
