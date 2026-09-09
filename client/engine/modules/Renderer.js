@@ -40,12 +40,12 @@ this.bgColor = this.screen?.color || '#ffffff'
     render() {
      
         const animations = this.engine.context.getAnimationManager()
-console.log('Rendering frame, animations:', animations)
+
     animations?.update()
 
     const transitionManager = this.engine.context.getTransitionManager()
     const screenOpacity = transitionManager?.getOpacity() ?? 1
-      console.log('Rendering with screen opacity:', screenOpacity)
+     
         renderBackground(this.ctx, this.canvas.width, this.canvas.height, this.bgColor)
 
 const viewport = this.engine.context.getViewport()
@@ -61,7 +61,7 @@ const viewport = this.engine.context.getViewport()
 
 this.ctx.save()
 this.ctx.globalAlpha = screenOpacity
-console.log('Rendering with opacity:', screenOpacity)
+
         switch (appState.screen) {
             case 'home':
                 renderHome(this.ctx, view.homeNodes, viewport, assetManager)

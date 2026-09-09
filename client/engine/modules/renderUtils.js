@@ -175,7 +175,7 @@ export function renderLesson(ctx, sections, viewport, lesson, assetManager, anim
             break
 
         case 'quiz':
-            renderQuiz(   ctx,   section,  state,  viewport,  lesson)
+            renderQuiz(   ctx,   section,  state,  viewport,  lesson, assetManager, animations)
             break
 
             case 'quizOption':

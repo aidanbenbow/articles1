@@ -17,11 +17,12 @@ export class LessonController {
     }
     answerQuiz( sectionId,quizId,optionIndex,answer
     ) {
-        this.lessonService.answerQuiz( sectionId, quizId, optionIndex, answer )
+      const answerQuiz =  this.lessonService.answerQuiz( sectionId, quizId, optionIndex, answer )
         this.engine.emit('lessonStateChanged', {
             currentSectionId:
                 this.lessonService.getLesson().currentSectionId
         })
+        return answerQuiz
     }
     async answerSurvey(
         surveyId,

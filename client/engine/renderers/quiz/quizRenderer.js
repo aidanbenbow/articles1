@@ -1,7 +1,7 @@
 import { drawRect, drawTextBlock } from "../../draw/drawHelpers.js"
 import { getScreenRect } from "../../modules/renderUtils.js"
 
-export function renderQuiz(ctx, node,state, viewport, lesson) {
+export function renderQuiz(ctx, node,state, viewport, lesson, assetManager, animations) {
     const rect = getScreenRect(node, viewport)
 
     drawRect(ctx, rect, { showSelection: true })
@@ -11,23 +11,26 @@ export function renderQuiz(ctx, node,state, viewport, lesson) {
     ctx.fillStyle = '#000'
     ctx.font = 'bold 18px Arial'
 
-    ctx.fillText(
-        node.question,
-        rect.x + padding,
-        rect.y + padding
-    )
+    ctx.fillText( node.question, rect.x + padding,rect.y + padding)
 
      const quiz = lesson.activities?.[node.sectionId]
 
     const answer = quiz?.getAnswer(node.sectionId) ?? null
-const score = lesson.getScoreTotal()
+const actualScore = lesson.getScoreTotal()
+const animationId = `quiz-answer-${node.quizId}-correct`
+const animatedScore = animations?.getValue(animationId) ?? actualScore
 
+console.log('QUIZ SCORE:', {
+    animationId,
+    actualScore,
+    animatedScore
+})
     if (answer !== null) {
         const isCorrect = answer.isCorrect
        
         ctx.fillStyle = isCorrect ? '#00aa00' : '#aa0000'
         
-        const scoreText = `Score: ${score} / ${lesson.quizTotal}`
+        const scoreText = `Score: ${Math.round(animatedScore)} / ${lesson.quizTotal}`
 ctx.save()
         ctx.font = 'bold 16px Arial'
         ctx.fillStyle = '#000'

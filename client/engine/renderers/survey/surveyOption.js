@@ -10,7 +10,7 @@ export function renderSurveyOption( ctx, section, viewport, lesson, assetManager
     const { votes, percentage } = getSurveyResult( survey, section.optionIndex)
 const progress =  animations?.getValue(`survey-answer-${section.surveyId}`) ?? 1
 const animatedPercentage = percentage * progress
-console.log('renderSurveyOption', section.optionIndex, percentage, animatedPercentage, progress)
+
     drawRect(ctx, { ...rect, color: selected ? '#b8f5b8' : '#d0d0d0'})
 
     // Percentage bar

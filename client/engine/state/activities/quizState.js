@@ -26,7 +26,7 @@ export class QuizState extends ActivityState {
         }
 
         if (isCorrect) {
-            this.score++
+            this.score+=10
         }
 
         return this.answers[questionId]

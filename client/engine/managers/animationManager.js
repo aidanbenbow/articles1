@@ -51,16 +51,6 @@ setRequestFrame(requestFrame) {
                 elapsed / animation.duration,
                 1
             )
-              console.log({
-    id,
-    now,
-    start: animation.start,
-    duration: animation.duration,
-    elapsed,
-    progress,
-    from: animation.from,
-    to: animation.to
-})
 
             const eased = animation.easing(progress)
 
