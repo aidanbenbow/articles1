@@ -7,6 +7,9 @@ export class AppFeature {
         this.engine = engine
 
         this.appState = new AppState()
+        this.engine.on('lessonCompleted', (data) => {
+            this.appState.completeLesson(data)
+        })
 
         this.appController =  new AppController(  this.appState,  engine)
     }

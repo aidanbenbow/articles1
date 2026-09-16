@@ -40,6 +40,7 @@ const {screenHeight} = metrics
         const user = appState.user?.name || 'Guest'
         const score = appState.user?.score || 0
         const lessonsCompleted = appState.user?.lessonsCompleted || 0
+        console.log(`User "${user}" has completed ${lessonsCompleted} lessons and earned ${score} points.`)
         this.layout.layoutNodes.set(
         'home-welcome',
         {

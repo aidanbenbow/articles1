@@ -155,7 +155,6 @@ function renderProgress(ctx, progress, x, y, width) {
 }
 
 export function renderLesson(ctx, sections, viewport, lesson, assetManager, animations) {
-   
     for (const section of sections) {
         const state =  lesson.getSectionState(   section.sectionId)
         renderLessonSection( ctx, section, state, viewport, lesson, assetManager, animations)
@@ -190,53 +189,25 @@ export function renderLesson(ctx, sections, viewport, lesson, assetManager, anim
             renderSurveyOption(ctx, section, viewport, lesson, assetManager, animations)
             break
              case 'ordering':
-            renderOrdering(
-                ctx,
-                section,
-                state,
-                viewport,
-                lesson
-            )
+            renderOrdering( ctx, section, state, viewport, lesson)
             break
 
         case 'orderingItem':
-            renderOrderingItem(
-                ctx,
-                section,
-                state,
-                viewport,
-                lesson
-            )
+            renderOrderingItem( ctx,section,state,viewport,lesson)
             break
 
         case 'orderingButton':
-            renderOrderingButton(
-                ctx,
-                section,
-                state,
-                viewport,
-                lesson
-            )
+            renderOrderingButton(ctx,section,state,viewport,lesson)
             break
 
         case 'orderingCheck':
-            renderOrderingCheck(
-                ctx,
-                section,
-                state,
-                viewport,
-                lesson
-            )
+            renderOrderingCheck(ctx,section,state,viewport,lesson)
             break
             case 'continueButton':
             renderContinueButton(  ctx,  section,  viewport)
             break
             case 'finishButton':
-            renderFinishButton(
-                ctx,
-                section,
-                viewport
-            )
+            renderFinishButton( ctx, section, viewport)
             break
             
     }

@@ -56,12 +56,14 @@ async handleTargetNode(targetNode) {
                 const prevScore = lessonState?.getScoreTotal() || 0
               const answer = this.engine.context.answerQuiz(targetNode.sectionId,
                     targetNode.quizId, targetNode.optionIndex, targetNode.answer)
-                
+                    const newScore = answer?.score + prevScore 
+                console.log('ANSWER QUIZ', answer)
+                console.log(prevScore, answer.score)
                     if(answer.result.isCorrect) {
                         this.engine.context.getAnimationManager().play('quizAnswer', `quiz-answer-${targetNode.quizId}-correct`,
                             {
                                 from: prevScore,
-                                to: answer.score
+                                to: newScore
                             }
                         )    
                     }
@@ -96,9 +98,7 @@ case 'checkOrdering':
                     
                         return
                         case 'goHome':
-                       
-                             this.engine.context.app.goHome()
-                           
+                             this.engine.context.app.goHome()   
                             return
             default:
                 console.log('No action defined for target node', targetNode)

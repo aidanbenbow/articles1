@@ -41,19 +41,19 @@ export class LessonController {
         return this.lessonService.getLesson()
     }
 
-isVisible(node, viewport) {
+// isVisible(node, viewport) {
 
-        const nodeTop = node.worldY
-        const nodeBottom = node.worldY + node.height
+//         const nodeTop = node.worldY
+//         const nodeBottom = node.worldY + node.height
 
-        const viewTop = viewport.y
-        const viewBottom = viewport.y + viewport.height
+//         const viewTop = viewport.y
+//         const viewBottom = viewport.y + viewport.height
 
-        return (
-            nodeBottom > viewTop &&
-            nodeTop < viewBottom
-        )
-    }
+//         return (
+//             nodeBottom > viewTop &&
+//             nodeTop < viewBottom
+//         )
+//     }
     advanceLesson() {    
     const moved =
         this.lessonService.advanceSection()
@@ -70,7 +70,9 @@ startPhase() {
     this.lessonService.startPhase()
 }
    finishLesson() {
-    this.lessonService.finishLesson()
+  const result=  this.lessonService.finishLesson()
+    this.engine.emit('lessonCompleted', result)
+
     this.engine.emit('lessonStateChanged', {
         currentSectionId:
             this.lessonService.getLesson().currentSectionId

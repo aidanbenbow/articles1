@@ -20,11 +20,11 @@ const actualScore = lesson.getScoreTotal()
 const animationId = `quiz-answer-${node.quizId}-correct`
 const animatedScore = animations?.getValue(animationId) ?? actualScore
 
-console.log('QUIZ SCORE:', {
-    animationId,
-    actualScore,
-    animatedScore
-})
+// console.log('QUIZ SCORE:', {
+//     animationId,
+//     actualScore,
+//     animatedScore
+// })
     if (answer !== null) {
         const isCorrect = answer.isCorrect
        

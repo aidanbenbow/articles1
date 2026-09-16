@@ -19,13 +19,7 @@ function renderLessonCompleteScreen(ctx, view, viewport) {
     const circleRadius = 42
 
     ctx.beginPath()
-    ctx.arc(
-        centerX,
-        centerY - 90,
-        circleRadius,
-        0,
-        Math.PI * 2
-    )
+    ctx.arc( centerX, centerY - 90, circleRadius, 0, Math.PI * 2)
 
     ctx.fillStyle = '#23979d'
     ctx.fill()
@@ -81,33 +75,17 @@ const sectionCount = view.completedSections.length || 0
     )
 }
 
-function renderBackButton(
-    ctx,
-    node,
-    viewport
-) {
-
+function renderBackButton( ctx,node,viewport) {
     if (!node) {
-        console.warn(
-            'No back button node available'
-        )
+        console.warn( 'No back button node available')
         return
     }
 
-    const rect =
-        getScreenPosition(
-            node,
-            viewport
-        )
+    const rect = getScreenPosition(node, viewport)
 
-    if (!rect) {
-        return
-    }
+    if (!rect)  return
 
-    const {
-        x,
-        y,
-    } = rect
+    const { x, y,} = rect
 
     const width = node.width || 120
     const height = node.height || 40
@@ -117,36 +95,21 @@ function renderBackButton(
 
     ctx.beginPath()
 
-    ctx.roundRect(
-        x,
-        y,
-        width,
-        height,
-        radius
-    )
+    ctx.roundRect( x, y, width, height, radius)
 
-    ctx.fillStyle =
-        node.color || '#23979d'
+    ctx.fillStyle = node.color || '#23979d'
 
     ctx.fill()
 
-    ctx.font =
-        '600 15px Arial'
+    ctx.font = '600 15px Arial'
 
-    ctx.fillStyle =
-        '#fff'
+    ctx.fillStyle ='#fff'
 
-    ctx.textAlign =
-        'center'
+    ctx.textAlign ='center'
 
-    ctx.textBaseline =
-        'middle'
+    ctx.textBaseline ='middle'
 
-    ctx.fillText(
-        node.text || 'Back',
-        x + width / 2,
-        y + height / 2
-    )
+    ctx.fillText( node.text || 'Back', x + width / 2, y + height / 2)
 
     ctx.restore()
 }

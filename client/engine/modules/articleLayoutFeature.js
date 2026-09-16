@@ -1,5 +1,3 @@
-
-
 import { HomeLayout } from "../layout/homeLayout.js"
 import { layoutBackButton } from "../layout/layoutBackButton.js"
 import { layoutContinueButton } from "../layout/layoutContinueButton.js"
@@ -94,7 +92,6 @@ switch (appState.screen) {
         break
         case 'lesson':
             const articleNode = articleNodes.find(node => node.props?.articleData?.articleId === appState.activeLessonId)
-            
             if (articleNode) {
                 const lesson = this.engine.context.getLesson()
                 this.layoutArticlesDetail(articleNode, lesson)

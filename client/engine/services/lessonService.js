@@ -39,6 +39,11 @@ this.lesson.start()
     finishLesson() {
         this.lesson.end()
         this.syncProgress()
+        return {
+            lessonId: this.lesson.articleId,
+            score: this.lesson.getScoreTotal(),
+            completedAt: new Date().toISOString()
+        }
     }
     syncProgress() {
     if (!this.lesson?.articleId) {
