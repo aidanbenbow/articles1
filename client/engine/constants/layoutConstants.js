@@ -12,6 +12,8 @@ export const LAYOUT = {
     maxPadding: 40,
     minContentWidth: 280,
     maxContentWidth: 760,
+    minContentHeight: 400,
+    maxContentHeight: 1200,
     spacingY: 24,
     marginTop: 24,
     breakPoints: {
@@ -91,6 +93,14 @@ export function getResponsiveLayout(screenWidth, screenHeight) {
         screenWidth - padding * 2
     )
 
+    const contentHeight = Math.min(
+        LAYOUT.maxContentHeight,
+        screenHeight - padding * 2
+    )
+
+    const optionWidth = 60
+    const optionHeight = 30
+
     return {
         screenWidth,
         screenHeight,
@@ -101,6 +111,9 @@ export function getResponsiveLayout(screenWidth, screenHeight) {
 
         padding,
         contentWidth,
+        contentHeight,
+        optionWidth,
+        optionHeight,
 
         gap: mobile ? 18 : 30,
 

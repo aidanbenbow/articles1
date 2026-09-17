@@ -43,7 +43,7 @@ isComplete() {
     }
 
     getTotalQuestions() {
-        console.log('Total questions in section:', this.section) 
+        
         return this.section?.question?.length || 0
     }
 

@@ -6,7 +6,7 @@ export function layoutQuizSection(layout,articleNode, section, currentY, x, widt
     
     const answered = lesson.activities[section.id].answers || null
    const feedback = answered?.[section.id]?.feedback || null
-   console.log('Layout quiz section:', section.id, 'Answered:', answered, 'Feedback:', feedback)
+   
     const feedbackHeight = answered && feedback ? 30 : 0
     const feedbackGap = feedbackHeight > 0 ? 10 : 0
     

@@ -19,13 +19,13 @@ const {screenHeight} = metrics
 
         this.clear()
         let currentY = Math.max(40, screenHeight * 0.05)
-        currentY = this.layoutWelcome(currentY, appState)
+        currentY = this.layoutWelcome(currentY, appState, articleNodes)
 
-        currentY = this.layoutContinue(articleNodes, currentY)
+        // currentY = this.layoutContinue(articleNodes, currentY)
 
-        currentY = this.layoutSuggestedLesson(articleNodes, currentY)
+        // currentY = this.layoutSuggestedLesson(articleNodes, currentY)
 
-        currentY = this.layoutBrowseAll(currentY)
+        // currentY = this.layoutBrowseAll(currentY)
 
         this.layout.computeScrollBounds(
             this.layout.layoutNodes
@@ -33,38 +33,77 @@ const {screenHeight} = metrics
 
     }
 
-    layoutWelcome(currentY, appState) {
+    layoutWelcome(currentY, appState, articleNodes) {
         const metrics = this.getMetrics()
-        const {  padding, contentWidth, gap, welcome } = metrics
-        const height = welcome?.height 
+        const {  padding, contentWidth, gap, welcome, contentHeight } = metrics
+        
         const user = appState.user?.name || 'Guest'
         const score = appState.user?.score || 0
         const lessonsCompleted = appState.user?.lessonsCompleted || 0
-        console.log(`User "${user}" has completed ${lessonsCompleted} lessons and earned ${score} points.`)
+        
         this.layout.layoutNodes.set(
         'home-welcome',
         {
             id: 'home-welcome',
             owner: 'home',
             kind: 'homeWelcome',
-
+interactive: false,
             x: padding,
             worldY: currentY,
 
             width: contentWidth,
 
-            height: height,
+            height: contentHeight,
 
             title: `Welcome ${user}`,
 
-            text:  `Learn through interactive lessons. So far you have completed ${lessonsCompleted} lessons and earned ${score} points.`,
+            text:  `Learn through interactive lessons. So far you have completed ${lessonsCompleted} lessons and earned ${score} points.\n 
+            What would you like to learn next?`,
 
             instructions: 'Read → Think → Answer → Complete'
         }
     )
+    
+const articleTofu = articleNodes.find(node => node.props?.articleData?.articleId === 'tofu')
 
-    return currentY + height + gap
+    const lessonOptions = [
+        articleTofu
+    ]
+
+    this.layoutLessonOptions(currentY + contentHeight/2, lessonOptions)
+console.log(this.layout.layoutNodes)
+    return currentY + contentHeight + gap
     }
+
+layoutLessonOptions(currentY, lessonOptions) {
+        const metrics = this.getMetrics()
+        const { padding, contentWidth, gap, optionWidth, optionHeight } = metrics
+       
+        for (let i = 0; i < lessonOptions.length; i++) {
+            const optionData = lessonOptions[i]?.props?.articleData || {}
+        
+            const title = optionData?.title || `Lesson ${i + 1}`
+            this.layout.layoutNodes.set(
+                `home-lesson-option-${i}`,
+                {
+                    id: `home-lesson-option-${i}`,
+                    articleId: optionData?.articleId || null,
+                    owner: 'home',
+                    interactive: true,
+                    kind: 'lessonOption',
+                    x: contentWidth/2 - optionWidth/2,
+                    worldY: currentY + i * (optionHeight + gap),
+                    width: optionWidth,
+                    height: optionHeight,
+                    title: `Learn about ${title}`,
+                    description: optionData?.description || '',
+                    article: optionData.article,
+                    action: 'openLesson',
+                    option: optionData
+                }
+            )
+        }
+}
     layoutContinue(articleNodes, currentY) {
         const progressStore =this.engine.context.getLessonProgressStore()
         const continueNode =articleNodes.find(

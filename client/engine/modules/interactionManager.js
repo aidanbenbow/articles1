@@ -57,8 +57,7 @@ async handleTargetNode(targetNode) {
               const answer = this.engine.context.answerQuiz(targetNode.sectionId,
                     targetNode.quizId, targetNode.optionIndex, targetNode.answer)
                     const newScore = answer?.score + prevScore 
-                console.log('ANSWER QUIZ', answer)
-                console.log(prevScore, answer.score)
+               
                     if(answer.result.isCorrect) {
                         this.engine.context.getAnimationManager().play('quizAnswer', `quiz-answer-${targetNode.quizId}-correct`,
                             {
@@ -89,8 +88,8 @@ case 'checkOrdering':
     this.emitLayoutChanged()
     return
                 case 'openLesson':
-                    const article =
-                        targetNode.articleData || null
+                    const article = targetNode.articleData || targetNode || null
+                    
                   this.engine.context.app.openLesson(article)
                     return
                     case 'browseLessons':

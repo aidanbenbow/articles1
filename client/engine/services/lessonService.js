@@ -8,28 +8,23 @@ export class LessonService {
     }
     startLesson(lessonData) {
         this.lesson = new LessonState(lessonData)
-
-        const savedProgress = this.lessonProgressStore.get(
-            this.lesson.articleId
-        )
-      console.log('Saved progress for lesson:', this.lesson.articleId, savedProgress)
-        if( savedProgress) {
-            console.log('Restoring saved progress for lesson:', this.lesson.articleId)
-            this.lesson.restoreProgress(savedProgress)
-        } else {
-this.lesson.start()
-  this.lessonProgressStore.update(
-        this.lesson.articleId,
-        {
-            status: 'in_progress',
-            progressPercent: 0,
-            currentActivityId:
-                this.lesson.currentSectionId,
-            startedAt:
-                this.lesson.startedAt
-        }
-    )
-}
+console.log('Starting lesson with data:', lessonData)
+        const savedProgress = this.lessonProgressStore.get( this.lesson.articleId)
+      this.lesson.start()
+//         if( savedProgress) {
+//             this.lesson.restoreProgress(savedProgress)
+//         } else {
+// this.lesson.start()
+//   this.lessonProgressStore.update(
+//         this.lesson.articleId,
+//         {
+//             status: 'in_progress',
+//             progressPercent: 0,
+//             currentActivityId: this.lesson.currentSectionId,
+//             startedAt: this.lesson.startedAt
+//         }
+//     )
+// }
         return this.lesson
     }
     startPhase() {
@@ -90,36 +85,22 @@ this.lesson.start()
  const result =   this.lessonProgressStore.update(
         this.lesson.articleId,
         {
-            status:
-                this.lesson.completed
-                    ? 'completed'
-                    : 'in_progress',
+            status: this.lesson.completed? 'completed': 'in_progress',
 
-            progressPercent:
-                progress,
+            progressPercent: progress,
 
-            currentActivityId:
-                this.lesson.currentSectionId,
+            currentActivityId:this.lesson.currentSectionId,
 
-            completedActivityIds:
-                [...this.lesson.completedSections],
+            completedActivityIds:[...this.lesson.completedSections],
 
             quizAnswers,
             quizScore,
             surveyResponses,
             orderingAnswers,
 
-            completedAt:
-                this.lesson.completed
-                    ? new Date().toISOString()
-                    : null
+            completedAt: this.lesson.completed? new Date().toISOString(): null
         }
     )
-     console.log(
-        'PROGRESS UPDATED:',
-        result
-    )
-    
 }
 
     getLesson() {
@@ -166,19 +147,13 @@ const quiz = this.lesson.activities[sectionId]
                 reason: 'survey-not-found'
             }
         }
-
-    
     const result = survey.answerQuestion(optionIndex)
 
     if (result.alreadyAnswered) {
         return result
     }
 
-    const results =
-        await this.surveyApi.recordSurveyResponse(
-            surveyId,
-            optionIndex
-        )
+    const results =await this.surveyApi.recordSurveyResponse( surveyId, optionIndex)
 
     survey.setResults(results)
 
@@ -193,20 +168,13 @@ const quiz = this.lesson.activities[sectionId]
     this.lesson.setCurrentSection(sectionId)
 }
 advanceSection() {
-    const moved =
-        this.lesson.advanceSection()
-    if (moved) {
-        this.syncProgress()
-    }
+    const moved =this.lesson.advanceSection()
+    if (moved) this.syncProgress()
     return moved
 }
-moveOrderingItem(
-    sectionId,
-    itemIndex,
-    direction
+moveOrderingItem( sectionId, itemIndex, direction
 ) {
-    const activity =
-        this.lesson.activities[sectionId]
+    const activity =this.lesson.activities[sectionId]
 
     if (!activity || activity.type !== 'ordering') {
         return {
@@ -215,22 +183,15 @@ moveOrderingItem(
         }
     }
 
-const result =
-        activity.moveItem(itemIndex, direction)
+const result = activity.moveItem(itemIndex, direction)
 
-        if (result) {
-            this.syncProgress()
-        }
-
+        if (result)   this.syncProgress()
         return result
 }
 checkOrdering(sectionId) {
-    const activity =
-        this.lesson.activities[sectionId]
+    const activity =this.lesson.activities[sectionId]
 
-        const section = this.lesson.sections.find(
-            section => section.id === sectionId
-        )
+        const section = this.lesson.sections.find( section => section.id === sectionId)
 
     if (!activity || !section || activity.type !== 'ordering') {
         return {
@@ -239,8 +200,7 @@ checkOrdering(sectionId) {
         }
     }
 
-    const result =
-        activity.checkAnswer(section.items)
+    const result = activity.checkAnswer(section.items)
 
         this.syncProgress()
 
@@ -248,7 +208,6 @@ checkOrdering(sectionId) {
             result,
             feedback: activity.getFeedback()
         }
-
 
 }
 }

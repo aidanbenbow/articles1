@@ -70,16 +70,17 @@ getViewPort() {
 
     init() {
        setTimeout(() => {
-        this.screenLayout.layoutScreenNodes()
-        this.screenLayout.layoutChildren()
-      
+       // this.screenLayout.layoutScreenNodes()
+      //  this.screenLayout.layoutChildren()
+      this.width = this.engine.context.canvasWidth
+      this.height = this.engine.context.canvasHeight
       this.layoutArticles()
-      this.engine.emit('layoutChanged', { layout: this.layoutNodes })
+      //this.engine.emit('layoutChanged', { layout: this.layoutNodes })
        }, 0)
     }
     layoutArticles() {
-        const state = this.engine.context.getInteractionState()
-this.engine.context.getArticleLayoutFeature().layoutArticles(null, state)
+       // const state = this.engine.context.getInteractionState()
+this.engine.context.getArticleLayoutFeature().layoutArticles()// state)
 
     }
 

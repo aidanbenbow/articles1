@@ -16,7 +16,7 @@ export class ArticleLayoutFeature {
         this.layout = null
         this.engine = engine
         this._unsubscribe = []
-        this._lastFilter = ''
+       // this._lastFilter = ''
 
    this.homeLayout = null
         this.engine.on('lessonStateChanged', () => {    
@@ -28,7 +28,7 @@ export class ArticleLayoutFeature {
     }
     contextExports() {
         return {
-            applyArticleFilter: this.applyFilter.bind(this),
+           // applyArticleFilter: this.applyFilter.bind(this),
             layoutArticles: this.layoutArticles.bind(this),
             getArticleLayoutFeature: () => this,
             getArticleCardSize: this.getArticleCardSize.bind(this),
@@ -38,9 +38,9 @@ export class ArticleLayoutFeature {
     attach() {
         this.layout = this.engine.context.getLayoutManager()
         this.homeLayout = new HomeLayout(this.engine, this.layout)
-        this._unsubscribe.push(this.engine.on('searchChanged', (searchTerm) => {
-            this.applyFilter(searchTerm)
-        }))
+        // this._unsubscribe.push(this.engine.on('searchChanged', (searchTerm) => {
+        //     this.applyFilter(searchTerm)
+        // }))
     }
 
     detach() {
@@ -60,32 +60,34 @@ export class ArticleLayoutFeature {
     return store?.get(articleId) ?? null
 }
 
-   applyFilter(searchTerm) {
-    const normalized = normalize(searchTerm)
+//    applyFilter(searchTerm) {
+//     const normalized = normalize(searchTerm)
 
-    if (normalized === this._lastFilter) return
-    this._lastFilter = normalized
+//     if (normalized === this._lastFilter) return
+//     this._lastFilter = normalized
 
-    const filtered = this.getArticleNodes().filter(node =>
-        matchesOrderedPrefix(
-            node.props?.title || '',
-            normalized
-        )
-    )
-    const state =  this.engine.context.getInteractionState()
-          // clear invalid selection
-    if ( state.selectedNodeId &&  !filtered.some(   node => node.id === state.selectedNodeId)) {
-        this.engine.context.clearSelectedArticle()
-    }
+//     const filtered = this.getArticleNodes().filter(node =>
+//         matchesOrderedPrefix(
+//             node.props?.title || '',
+//             normalized
+//         )
+//     )
+//     const state =  this.engine.context.getInteractionState()
+//           // clear invalid selection
+//     if ( state.selectedNodeId &&  !filtered.some(   node => node.id === state.selectedNodeId)) {
+//         this.engine.context.clearSelectedArticle()
+//     }
 
-    this.layoutArticles(filtered)
-}
+//     this.layoutArticles(filtered)
+// }
 
     layoutArticles(articleNodes = null) {
         articleNodes ??= this.getArticleNodes()
 const appState = this.engine.context.app.getState()
 
-this.clearLessonLayout()
+//this.clearLessonLayout()
+this.clearScreenLayout()
+console.log(this.layout.layoutNodes)
 switch (appState.screen) {
     case 'home':
         this.homeLayout.build(articleNodes, appState)
@@ -139,12 +141,14 @@ clearScreenLayout() {
             this.layout.layoutNodes.delete(id)
         }
     }
+    
 }
    layoutArticlesDetail(articleNode, lesson) {
 
     if (!articleNode || !lesson)  return
     
-this.clearScreenLayout()
+//this.clearScreenLayout()
+
     const padding = 20
     const x = this.layout.width / 8
     const worldY = this.layout.height / 8

@@ -10,10 +10,7 @@ export class LessonProgressStore {
 
     load(){
         const raw = this.storage.getItem('lessonProgress')
-        if (!raw) {
-            return
-        }
-
+        if (!raw)    return
         try {
             const records = JSON.parse(raw)
             for (const record of records) {
@@ -51,9 +48,7 @@ export class LessonProgressStore {
             )
         }
     }
-
     set(record) {
-
         const lessonProgress =
             record instanceof LessonProgress
                 ? record
@@ -67,9 +62,7 @@ export class LessonProgressStore {
         return lessonProgress
     }
      update(lessonId, changes = {}) {
-
-        const existing =
-            this.progress.get(lessonId)
+        const existing = this.progress.get(lessonId)
 
         return this.set({
             ...(existing ?? {}),

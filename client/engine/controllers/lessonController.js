@@ -41,19 +41,6 @@ export class LessonController {
         return this.lessonService.getLesson()
     }
 
-// isVisible(node, viewport) {
-
-//         const nodeTop = node.worldY
-//         const nodeBottom = node.worldY + node.height
-
-//         const viewTop = viewport.y
-//         const viewBottom = viewport.y + viewport.height
-
-//         return (
-//             nodeBottom > viewTop &&
-//             nodeTop < viewBottom
-//         )
-//     }
     advanceLesson() {    
     const moved =
         this.lessonService.advanceSection()

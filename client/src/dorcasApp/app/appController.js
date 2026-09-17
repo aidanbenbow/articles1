@@ -7,10 +7,7 @@ export class AppController {
     }
 
    openLesson(article) {
-
-    const articleId =
-        article.articleId ||
-        article.id
+    const articleId = article.articleId || article.id
        
 this.engine.context.getTransitionManager().transition(() => {
     this.engine.context.startLessonFromArticle(article)
@@ -19,8 +16,9 @@ this.engine.context.getTransitionManager().transition(() => {
 
     this.appState.openLesson( articleId)
     this.engine.context.resetScroll()
-console.log('AppController: openLesson called with articleId:', articleId)
+
     this.emitStateChanged()
+    
 })
 }
     openLessonBrowser() {
@@ -39,7 +37,6 @@ console.log('AppController: openLesson called with articleId:', articleId)
         return this.appState
     }
     emitStateChanged() {
-        console.log('Emitting appStateChanged event with state:', this.appState)
         this.engine.emit('appStateChanged', this.appState)
     }
 }

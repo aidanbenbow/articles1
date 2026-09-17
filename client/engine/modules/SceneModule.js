@@ -39,8 +39,7 @@ export class SceneModule {
     }
     detach() {
         console.log('SceneModule detached')
-        // Optionally, clear the scene graph when detaching
-        // this.engine.context.clearScene()
+        
     }
     destroy() {
         this.detach()

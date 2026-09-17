@@ -46,8 +46,8 @@ this.bgColor = this.screen?.color || '#ffffff'
     const transitionManager = this.engine.context.getTransitionManager()
     const screenOpacity = transitionManager?.getOpacity() ?? 1
      
-        renderBackground(this.ctx, this.canvas.width, this.canvas.height, this.bgColor)
-
+       // renderBackground(this.ctx, this.canvas.width, this.canvas.height, this.bgColor)
+this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
 const viewport = this.engine.context.getViewport()
 
         const layout = this.engine.context.getLayout()

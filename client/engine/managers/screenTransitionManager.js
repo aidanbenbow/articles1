@@ -35,8 +35,7 @@ export class ScreenTransitionManager {
                 }
             }
         )
-        console.log('Starting screen transition')
-       // this.engine.context.render()
+     
     }
     setOpacity(opacity) {
         this.opacity = opacity

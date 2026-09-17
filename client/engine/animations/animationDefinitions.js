@@ -19,7 +19,7 @@ export const animationDefinitions = {
         easing: t => t
     },
     screenTransition: {
-    duration: 150,
+    duration: 190,
     easing: t => 1 - Math.pow(1 - t, 3)
 }
 }

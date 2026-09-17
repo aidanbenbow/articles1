@@ -14,17 +14,9 @@ export function buildLessonProgress({
 }) {
     const now = new Date().toISOString()
 
-    const progress = Math.max(
-        0,
-        Math.min(100, Math.round(progressPercent))
-    )
+    const progress = Math.max( 0, Math.min(100, Math.round(progressPercent)) )
 
-    const resolvedStatus =
-        progress >= 100
-            ? 'completed'
-            : progress > 0
-                ? 'in_progress'
-                : 'not_started'
+    const resolvedStatus = progress >= 100 ? 'completed': progress > 0? 'in_progress': 'not_started'
 
     return {
         PK: `USER#${userId}`,
@@ -46,15 +38,9 @@ export function buildLessonProgress({
         quizScore,
         surveyResponses,
 
-        startedAt:
-            startedAt ??
-            (progress > 0 ? now : null),
+        startedAt: startedAt ?? (progress > 0 ? now : null),
 
-        completedAt:
-            completedAt ??
-            (resolvedStatus === 'completed'
-                ? now
-                : null),
+        completedAt:completedAt ??(resolvedStatus === 'completed' ? now: null),
 
         lastAccessedAt,
         updatedAt: now,

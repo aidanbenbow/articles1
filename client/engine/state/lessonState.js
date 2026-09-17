@@ -1,9 +1,7 @@
 import { createActivityState } from "./stateFactory.js"
 
 export class LessonState {
-
     constructor(lesson={}) {
-
         this.articleId = lesson.id
         this.title = lesson.title
         this.sections = lesson.sections || []
@@ -50,7 +48,6 @@ this.score = Object.values(this.activities).reduce((total, activity) => {
     }
    setCurrentSection(sectionId) {
     this.currentSectionId = sectionId
-
         this.currentSectionIndex =
             this.sections.findIndex(
                 section => section.id === sectionId
@@ -85,7 +82,6 @@ getCurrentSection() {
 }
     getProgress() {
         if (!this.sections.length)  return 0
-
         return Math.round( ( this.getCompletedCount() /  this.sections.length) * 100)
     }
    advanceSection() {
@@ -119,14 +115,11 @@ getCurrentSection() {
 canUnlockNextSection() {
     const activity =
         this.activities[this.currentSectionId]
-console.log( 'Checking if can unlock next section:', this.currentSectionId, activity?.isComplete())
     return activity?.isComplete() ?? false
 }
      getNextSection() {
-        const nextIndex =
-            this.currentSectionIndex + 1
+        const nextIndex =  this.currentSectionIndex + 1
         return (   this.sections[nextIndex] || null )
-
     }
     hasNextSection() {
     return this.getNextSection() !== null
