@@ -1,3 +1,4 @@
+import { getResponsiveLayout } from "../constants/layoutConstants.js"
 import { layoutDragDropSection } from "../layout/dragDropLayout.js"
 import { HomeLayout } from "../layout/homeLayout.js"
 import { layoutBackButton } from "../layout/layoutBackButton.js"
@@ -85,6 +86,7 @@ export class ArticleLayoutFeature {
     layoutArticles(articleNodes = null) {
         articleNodes ??= this.getArticleNodes()
 const appState = this.engine.context.app.getState()
+const responsive = getResponsiveLayout(this.layout.width, this.layout.height)
 
 //this.clearLessonLayout()
 this.clearScreenLayout()
@@ -97,7 +99,7 @@ switch (appState.screen) {
             const articleNode = articleNodes.find(node => node.props?.articleData?.articleId === appState.activeLessonId)
             if (articleNode) {
                 const lesson = this.engine.context.getLesson()
-                this.layoutArticlesDetail(articleNode, lesson)
+                this.layoutArticlesDetail(articleNode, lesson, responsive)
             } 
             break
             case 'lessonBrowser':
@@ -144,7 +146,7 @@ clearScreenLayout() {
     }
     
 }
-   layoutArticlesDetail(articleNode, lesson) {
+   layoutArticlesDetail(articleNode, lesson, responsive) {
 
     if (!articleNode || !lesson)  return
     
@@ -168,7 +170,7 @@ clearScreenLayout() {
     const section = lesson.getCurrentSection()
 
     if (section) {
-        currentY = this.layoutSection(  articleNode,  section,  currentY,  x,  width,  padding,  color,  lesson)
+        currentY = this.layoutSection(  articleNode,  section,  currentY,  x,  width,  padding,  color,  lesson, responsive)
     }
 
     if(!lesson.isLastSection()) {
@@ -240,7 +242,7 @@ currentY += 40
     return currentY
 }
 
-layoutSection( articleNode, currentSection, currentY, x, width, padding, color, lesson){
+layoutSection( articleNode, currentSection, currentY, x, width, padding, color, lesson, responsive) {
         switch(currentSection.type){
             
                 case 'lesson':
@@ -254,7 +256,7 @@ layoutSection( articleNode, currentSection, currentY, x, width, padding, color, 
                 case 'ordering':
             return layoutOrderingSection( articleNode,this.layout,currentSection,currentY,x,width,padding,color,lesson)
             case 'dragdrop':
-                return layoutDragDropSection(articleNode, this.layout, currentSection, currentY, x, width, padding, color, lesson)
+                return layoutDragDropSection(articleNode, this.layout, currentSection, currentY, x, width, padding, color, lesson, responsive)
         }
     }
     layoutLessonSection(  articleNode,  section,  currentY,  x,  width,  padding,  color

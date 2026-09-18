@@ -1,32 +1,24 @@
 import { layoutDragDropParagraph } from "./dragDropParagraphLayout.js"
 
-export function layoutDragDropSection(
-    articleNode,
-    layout,
-    section,
-    currentY,
-    x,
-    width,
-    padding,
-    color,
-    lesson
+export function layoutDragDropSection( articleNode,layout,section,currentY,x,width, padding, color, lesson, responsive
 ) {
-    const instructionHeight = 40
-
-    const wordHeight = 40
-    const wordGap = 8
-
-    const paragraphLineHeight = 42
-    const paragraphGap = 15
-
-    const gapWidth = 110
-    const gapHeight = 32
-
-    const checkButtonHeight = 40
-    const checkButtonGap = 15
-
-    const feedbackHeight = 40
-    const feedbackGap = 10
+    const {
+        instructionHeight,
+        wordHeight,
+        wordGap,
+        wordPaddingX,
+        wordMinWidth,
+       
+        paragraphLineHeight,
+        paragraphGap,
+        gapWidth,
+        gapHeight,
+        checkButtonHeight,
+        checkButtonGap,
+        feedbackHeight,
+        feedbackGap,
+        sectionGap
+    } = responsive.dragDrop
 
     const dragDropTop = currentY
 
@@ -36,22 +28,11 @@ export function layoutDragDropSection(
 
     const state = lesson.getCurrentSectionState?.() || {}
 
-    const wordbank =
-        state?.getWordbank?.() ||
-        section.wordbank ||
-        []
+    const wordbank = state?.getWordbank?.() || section.wordbank || []
 
-    const answers =
-        state?.getAnswers?.() ||
-        {}
+    const answers =state?.getAnswers?.() || {}
 
-    // --------------------------------
-    // Calculate wordbank height
-    // --------------------------------
-
-    const wordbankHeight =
-        wordbank.length * wordHeight +
-        Math.max(0, wordbank.length - 1) * wordGap
+   
 
     // --------------------------------
     // Calculate paragraph height
@@ -67,32 +48,15 @@ export function layoutDragDropSection(
     // Feedback
     // --------------------------------
 
-    const feedback =
-        state?.getFeedback?.() || ''
+    const feedback =state?.getFeedback?.() || ''
 
-    const actualFeedbackHeight =
-        feedback ? feedbackHeight : 0
+    const actualFeedbackHeight =feedback ? feedbackHeight : 0
 
-    const actualFeedbackGap =
-        feedback ? feedbackGap : 0
+    const actualFeedbackGap =feedback ? feedbackGap : 0
 
-    // --------------------------------
-    // Total height
-    // --------------------------------
+    
 
-    const dragDropHeight =
-        padding * 2 +
-        instructionHeight +
-        15 +
-        wordbankHeight +
-        25 +
-        paragraphsHeight +
-        checkButtonGap +
-        checkButtonHeight +
-        actualFeedbackGap +
-        actualFeedbackHeight
-
-    // --------------------------------
+       // --------------------------------
     // Main container
     // --------------------------------
 
@@ -104,7 +68,7 @@ export function layoutDragDropSection(
         x,
         worldY: dragDropTop,
         width,
-        height: dragDropHeight,
+        height: 0,
 
         padding,
 
@@ -168,24 +132,42 @@ export function layoutDragDropSection(
         instructionHeight +
         15
 
+        const availableWidth = width - padding * 2
+        let wordX = x + padding
+        let wordY = wordbankTop
+        let wordRows = 1
+
     for (let i = 0; i < wordbank.length; i++) {
 
-        const wordY =
-            wordbankTop +
-            i * (wordHeight + wordGap)
+        const word = wordbank[i]
+
+        const wordWidth = Math.max(
+            wordMinWidth,
+            word.length * 8 + wordPaddingX * 2
+        )
+
+if (
+        wordX !== x + padding &&
+        wordX + wordWidth >
+            x + padding + availableWidth
+    ) {
+        wordX = x + padding
+        wordY += wordHeight + wordGap
+        wordRows++
+    }
 
         const wordNode = {
             id: `${articleNode.id}-${section.id}-word-${i}`,
 
             sectionId: section.id,
 
-            x: x + padding,
+            x: wordX,
             worldY: wordY,
 
-            width: width - padding * 2,
+            width: wordWidth,
             height: wordHeight,
 
-            padding: 10,
+            padding: wordPaddingX,
 
             color: '#d0d0d0',
 
@@ -208,7 +190,12 @@ export function layoutDragDropSection(
             wordNode.id,
             wordNode
         )
+        wordX += wordWidth + wordGap
     }
+
+    const wordbankHeight =
+        wordRows * wordHeight +
+        Math.max(0, wordRows - 1) * wordGap
 
     // --------------------------------
     // Paragraphs
@@ -319,5 +306,23 @@ export function layoutDragDropSection(
         )
     }
 
-    return dragDropTop + dragDropHeight + 10
+    // --------------------------------
+    // Total height
+    // --------------------------------
+
+    const dragDropHeight =
+        padding * 2 +
+        instructionHeight +
+        15 +
+        wordbankHeight +
+        25 +
+        paragraphsHeight +
+        checkButtonGap +
+        checkButtonHeight +
+        actualFeedbackGap +
+        actualFeedbackHeight
+
+     dragDropRect.height = dragDropHeight
+
+    return dragDropTop + dragDropHeight + sectionGap
 }
