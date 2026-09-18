@@ -40,9 +40,7 @@ export function layoutDragDropSection( articleNode,layout,section,currentY,x,wid
 
     const paragraphs = section.paragraphs || []
 
-    const paragraphsHeight =
-        paragraphs.length * paragraphLineHeight +
-        Math.max(0, paragraphs.length - 1) * paragraphGap
+    
 
     // --------------------------------
     // Feedback
@@ -206,27 +204,35 @@ if (
         wordbankHeight +
         25
 
+        let paragraphY = paragraphsTop
+        let paragraphsHeight = 0
+
     for (let p = 0; p < paragraphs.length; p++) {
 
-        const paragraph = paragraphs[p]
-
-        const paragraphY =
-            paragraphsTop +
-            p * (paragraphLineHeight + paragraphGap)
-
-        layoutDragDropParagraph(
+        const result = layoutDragDropParagraph(
             articleNode,
             layout,
             section,
-            paragraph,
+            paragraphs[p],
             p,
             paragraphY,
             x + padding,
             width - padding * 2,
             gapWidth,
             gapHeight,
-            answers
+            answers,
+            responsive
         )
+        paragraphY += result.height
+
+        if(p < paragraphs.length - 1) {
+            paragraphY += paragraphGap
+        }
+        paragraphsHeight += result.height
+
+        if(p < paragraphs.length - 1) {
+            paragraphsHeight += paragraphGap
+        }
     }
 
     // --------------------------------

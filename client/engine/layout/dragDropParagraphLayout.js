@@ -11,28 +11,52 @@ export function layoutDragDropParagraph(
     width,
     gapWidth,
     gapHeight,
-    answers
+    answers,
+    responsive
 ) {
     const parts = parseDragDropText(paragraph)
 
+    const lineHeight = responsive.dragDrop.paragraphLineHeight
+    const paragraphGap = responsive.dragDrop.paragraphGap
     let cursorX = x
+    let cursorY = y
+    let lineCount = 1
+    const rightEdge = x + width
+
+    function moveToNextLine() {
+        cursorX = x
+        cursorY += lineHeight + paragraphGap
+        lineCount++
+    }
 
     for (const part of parts) {
 
         if (part.type === 'text') {
 
+            const words = part.text.split(/(\s+)/)
+
+for (const word of words) {
+
+                const wordWidth = word.length * 8
+                if (
+                    cursorX > x &&
+                    cursorX + wordWidth > rightEdge
+                ) {
+                    moveToNextLine()
+                }
+
             const textNode = {
-                id: `${articleNode.id}-${section.id}-text-${paragraphIndex}-${cursorX}`,
+                id: `${articleNode.id}-${section.id}-text-${paragraphIndex}-${cursorY}-${cursorX}`,
 
                 sectionId: section.id,
 
                 x: cursorX,
-                worldY: y,
+                worldY: cursorY,
 
-                width: part.text.length * 8,
-                height: 32,
+                width: wordWidth,
+                height: lineHeight,
 
-                text: part.text,
+                text: word,
 
                 type: 'text',
                 kind: 'lessonSection',
@@ -47,20 +71,27 @@ export function layoutDragDropParagraph(
                 textNode
             )
 
-            cursorX += textNode.width
-
+            cursorX += wordWidth
+        }
         } else if (part.type === 'gap') {
 
-            const answer =
-                answers?.[part.gapIndex] || ''
+            const answer = answers?.[part.gapIndex] || ''
+
+            const totalGapWidth = gapWidth + 5
+            if (
+                cursorX > x &&
+                cursorX + totalGapWidth > rightEdge
+            ) {
+                moveToNextLine()
+            }
 
             const gapNode = {
-                id: `${articleNode.id}-${section.id}-gap-${part.gapIndex}`,
+                id: `${articleNode.id}-${section.id}-gap-${paragraphIndex}-${part.gapIndex}`,
 
                 sectionId: section.id,
 
                 x: cursorX,
-                worldY: y,
+                worldY: cursorY,
 
                 width: gapWidth,
                 height: gapHeight,
@@ -88,7 +119,11 @@ export function layoutDragDropParagraph(
                 gapNode
             )
 
-            cursorX += gapWidth + 5
+            cursorX += totalGapWidth
         }
+    }
+    return {
+        height: lineCount * lineHeight,
+        lineCount
     }
 }
