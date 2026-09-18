@@ -27,6 +27,24 @@ export function createRendererViewModel( allnodes,state, lesson) {
     const completedSections = lesson?.completedSections || []
     const progress = lesson?.getProgress ? lesson.getProgress() : 0
 
+    const currentSectionState =
+    lesson?.getCurrentSectionState?.() || null
+
+const dragDropAnswers =
+    currentSectionState?.getAnswers?.() || {}
+
+const dragDropWordbank =
+    currentSectionState?.getWordbank?.() || []
+
+const dragDropChecked =
+    currentSectionState?.getChecked?.() || false
+
+const dragDropCorrect =
+    currentSectionState?.isCorrect?.() || false
+
+const dragDropFeedback =
+    currentSectionState?.getFeedback?.() || ''
+
     const orderingAnswers =
     lesson?.orderingAnswers || {}
 
@@ -65,7 +83,15 @@ const orderingTotal =
         progress,
 
         orderingAnswers,
-        orderingTotal
+        orderingTotal,
+
+        // Drag and Drop data
+        dragDropAnswers,
+        dragDropWordbank,
+        dragDropChecked,
+        dragDropCorrect,
+        dragDropFeedback
+        
        
     }
 }

@@ -1,3 +1,4 @@
+import { layoutDragDropSection } from "../layout/dragDropLayout.js"
 import { HomeLayout } from "../layout/homeLayout.js"
 import { layoutBackButton } from "../layout/layoutBackButton.js"
 import { layoutContinueButton } from "../layout/layoutContinueButton.js"
@@ -87,7 +88,7 @@ const appState = this.engine.context.app.getState()
 
 //this.clearLessonLayout()
 this.clearScreenLayout()
-console.log(this.layout.layoutNodes)
+
 switch (appState.screen) {
     case 'home':
         this.homeLayout.build(articleNodes, appState)
@@ -251,18 +252,9 @@ layoutSection( articleNode, currentSection, currentY, x, width, padding, color, 
             case 'survey':
                 return layoutSurveySection(this.layout, articleNode, currentSection, currentY, x,width, padding,color,  lesson)
                 case 'ordering':
-            return layoutOrderingSection(
-                articleNode,
-                this.layout,
-                currentSection,
-                currentY,
-                x,
-                width,
-                padding,
-                color,
-                lesson
-            )
-    
+            return layoutOrderingSection( articleNode,this.layout,currentSection,currentY,x,width,padding,color,lesson)
+            case 'dragdrop':
+                return layoutDragDropSection(articleNode, this.layout, currentSection, currentY, x, width, padding, color, lesson)
         }
     }
     layoutLessonSection(  articleNode,  section,  currentY,  x,  width,  padding,  color

@@ -3,11 +3,9 @@ export function renderLessonHeader(
     lesson,
     viewport
 ){
-
     if(!lesson) return
 
-const currentActivity =
-    lesson.activities[lesson.currentSectionId]
+const currentActivity = lesson.activities[lesson.currentSectionId]
 
 const score = lesson.getScoreTotal()
 const x = 20
@@ -16,21 +14,11 @@ const width = viewport.width - 40
 
     ctx.fillStyle = '#f8fafc'
 
-    ctx.fillRect(
-        x,
-        y,
-        width,
-        78
-    )
+    ctx.fillRect( x, y, width, 78)
 
     ctx.fillStyle = '#e2e8f0'
 
-ctx.fillRect(
-    x,
-    y + 78,
-    width,
-    1
-)
+ctx.fillRect(x,y + 78,width,1)
 
 // Current stage
     ctx.fillStyle = '#111827'
@@ -67,7 +55,6 @@ ctx.fillText(
 )
 
 ctx.textAlign = 'left'
-
 
     const progress = Math.max(
     0,

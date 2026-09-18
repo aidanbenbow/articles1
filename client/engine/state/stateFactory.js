@@ -1,4 +1,5 @@
 import { ActivityState } from "./activities/activityState.js"
+import { DragDropState } from "./activities/dragDropState.js"
 import { LessonActivityState } from "./activities/lessonActivityState.js"
 import { OrderingState } from "./activities/orderingState.js"
 import { QuizState } from "./activities/quizState.js"
@@ -16,6 +17,8 @@ export function createActivityState(section) {
             return new SurveyState(section)
             case 'ordering':
             return new OrderingState(section)
+            case 'dragdrop':
+            return new DragDropState(section)
         default:
             throw new Error(`Unknown section type: ${section.type}`)
     }

@@ -37,6 +37,13 @@ this.score = Object.values(this.activities).reduce((total, activity) => {
         }, 0)
         return this.score
     }
+    getCurrentSectionState() {
+    if (!this.currentSectionId) {
+        return null
+    }
+
+    return this.activities[this.currentSectionId] ?? null
+}
     start(){
         this.phase = 'intro'
     }
@@ -74,6 +81,9 @@ this.score = Object.values(this.activities).reduce((total, activity) => {
         return 'current'
     }
     return 'locked'
+}
+getSectionstate(sectionId) {
+    return this.activities[sectionId] ?? null
 }
 getCurrentSection() {
     return this.sections.find(

@@ -1,3 +1,4 @@
+import { parseDragDrop } from "../parsers/dragDrop.js"
 import { parseOrdering } from "./orderParser.js"
 
 export function parseArticle(article) {
@@ -50,9 +51,17 @@ lessonTotal++
     continue
 }
 
+if(text === ':::dragdrop') {
+    flushLesson()
+ const { dragdrop, nextIndex } = parseDragDrop(lines, i)
+    sections.push(dragdrop)
+    i = nextIndex
+    continue
+}
+
     if (text === ':::survey') {
     flushLesson()
-
+    
     const { survey, nextIndex } = parseSurvey(lines, i)
 survey.id = survey.surveyId || `survey-${sectionIndex++}`
     sections.push(survey)

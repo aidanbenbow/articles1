@@ -1,7 +1,14 @@
 
 import { getSurveyResult } from "../helpers/surveyResults.js";
+import { renderDragDrop} from "../renderers/dragDrop/dragDropRenderer.js";
 import { renderContinueButton } from "../renderers/buttons/continueButton.js";
 import { renderFinishButton } from "../renderers/buttons/finishButton.js";
+import { renderDragDropCheck } from "../renderers/dragDrop/dragDropCheckRenderer.js";
+import { renderDragDropFeedback } from "../renderers/dragDrop/dragDropFeedbackRenderer.js";
+import { renderDragDropGap } from "../renderers/dragDrop/dragDropGapRenderer.js";
+import { renderDragDropInstruction } from "../renderers/dragDrop/dragDropInstructionRenderer.js";
+import { renderDragDropText } from "../renderers/dragDrop/dragDropTextRenderer.js";
+import { renderDragDropWord } from "../renderers/dragDrop/dragDropWordRenderer.js";
 import { renderHeading } from "../renderers/lesson/headerRenderer.js";
 import { renderOrderingButton } from "../renderers/ordering/orderingButton.js";
 import { renderOrderingCheck } from "../renderers/ordering/orderingCheck.js";
@@ -209,6 +216,33 @@ export function renderLesson(ctx, sections, viewport, lesson, assetManager, anim
             case 'finishButton':
             renderFinishButton( ctx, section, viewport)
             break
+            case 'dragdrop':
+    renderDragDrop(ctx, section, state, viewport, lesson)
+    break
+
+case 'dragDropInstruction':
+    renderDragDropInstruction(ctx, section, viewport)
+    break
+
+case 'dragDropWord':
+    renderDragDropWord(ctx, section, state, viewport, lesson)
+    break
+
+case 'dragDropText':
+    renderDragDropText(ctx, section, viewport)
+    break
+
+case 'dragDropGap':
+    renderDragDropGap(ctx, section, state, viewport, lesson)
+    break
+
+case 'dragDropCheck':
+    renderDragDropCheck(ctx, section, state, viewport, lesson)
+    break
+
+case 'dragDropFeedback':
+    renderDragDropFeedback(ctx, section, viewport)
+    break
             
     }
 
