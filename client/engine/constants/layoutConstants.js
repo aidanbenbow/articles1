@@ -162,7 +162,7 @@ export function getResponsiveLayout(screenWidth, screenHeight) {
 
             paragraphLineHeight: compact ? 38 : 42,
 
-            paragraphGap: compact ? 10 : 15,
+            paragraphGap: compact ? 3 : 5,
 
             gapWidth: compact ? 90 : 110,
 
@@ -178,5 +178,9 @@ export function getResponsiveLayout(screenWidth, screenHeight) {
 
             sectionGap: compact ? 16 : 25
         },
+        heading: {
+    height: compact ? 40 : 45,
+    gap: compact ? 8 : 10
+},
     }
 }

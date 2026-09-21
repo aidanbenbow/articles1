@@ -246,7 +246,7 @@ layoutSection( articleNode, currentSection, currentY, x, width, padding, color, 
         switch(currentSection.type){
             
                 case 'lesson':
-                    return this.layoutLessonSection(  articleNode,  currentSection,  currentY,  x,  width,  padding,  color,  lesson
+                    return this.layoutLessonSection(  articleNode,  currentSection,  currentY,  x,  width,  padding,  color,  lesson, responsive
 )
             case 'quiz':
                 return layoutQuizSection( this.layout,articleNode,currentSection,currentY,x,width,padding,color,lesson
@@ -259,17 +259,17 @@ layoutSection( articleNode, currentSection, currentY, x, width, padding, color, 
                 return layoutDragDropSection(articleNode, this.layout, currentSection, currentY, x, width, padding, color, lesson, responsive)
         }
     }
-    layoutLessonSection(  articleNode,  section,  currentY,  x,  width,  padding,  color
+    layoutLessonSection(  articleNode,  section,  currentY,  x,  width,  padding,  color, lesson,responsive
 ) {
     const blocks = section.blocks || section.text ||[]
 
     for (const block of blocks) {
 
         if (block.type === 'heading') {
-            currentY = layoutHeadingBlock(this.layout,articleNode, section, block, currentY,x,width,padding,color)
+            currentY = layoutHeadingBlock(this.layout,articleNode, section, block, currentY,x,width,padding,color, responsive)
 
         } else if (block.type === 'paragraph') {
-            currentY = layoutParagraphBlock(this.layout,articleNode,section,block,currentY,x,width,padding,color)
+            currentY = layoutParagraphBlock(this.layout,articleNode,section,block,currentY,x,width,padding,color, responsive)
         }
     }
 

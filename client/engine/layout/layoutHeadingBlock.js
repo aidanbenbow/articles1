@@ -1,3 +1,5 @@
+import { createHeadingNode } from "./nodeFactories/headingNode.js"
+
 export function layoutHeadingBlock(
     layout,
     articleNode,
@@ -7,24 +9,23 @@ export function layoutHeadingBlock(
     x,
     width,
     padding,
-    color
+    color,
+    responsive
 ) {
-    const height = 45
+    console.log(responsive)
+    const { height, gap } = responsive.heading
 
-    const node = {
-        id: `${articleNode.id}-${section.id}-heading-${currentY}`,
-        sectionId: section.id,
+    const node = createHeadingNode(
+        `${articleNode.id}-${section.id}-heading-${currentY}`,
+        section.id,
         x,
-        worldY: currentY,
+        currentY,
         width,
         height,
         color,
-        text: block.text,
-        kind: 'lessonSection',
-        type: 'text',
-        sectionType: 'lessonHeading',
+        block.text,
         padding
-    }
+    )
 
     layout.layoutNodes.set(
         node.id,

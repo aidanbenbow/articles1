@@ -57,7 +57,7 @@ attach() {
         startY: y,
         moved: false
     }
-    console.log('POINTER DOWN', this.pointerState)
+   
 }
 
 _onPointerMove = (event) => {

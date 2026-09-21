@@ -1,3 +1,5 @@
+import { createParagraphNode } from "./nodeFactories/paragraphNode.js"
+
 export function layoutParagraphBlock(
     layout,
     articleNode,
@@ -7,10 +9,10 @@ export function layoutParagraphBlock(
     x,
     width,
     padding,
-    color
+    color,
+    responsive
 ) {
-    const lineHeight = 20
-    const paragraphGap = 6
+    const { paragraphLineHeight: lineHeight, paragraphGap } = responsive.dragDrop
     const verticalPadding = 8
     const textWidth = width - padding * 2
 
@@ -51,20 +53,17 @@ export function layoutParagraphBlock(
         lineHeight +
         verticalPadding * 2
 
-    const node = {
-        id: `${articleNode.id}-${section.id}-paragraph-${currentY}`,
-        sectionId: section.id,
+    const node = createParagraphNode(
+        `${articleNode.id}-${section.id}-paragraph-${currentY}`,
+        section.id,
         x,
-        worldY: currentY,
+        currentY,
         width,
         height,
         color,
-        text: block.text,
-        kind: 'lessonSection',
-        type: 'text',
-        sectionType: 'lessonParagraph',
+        block.text,
         padding
-    }
+    )
 
     layout.layoutNodes.set(
         node.id,

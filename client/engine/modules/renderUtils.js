@@ -18,6 +18,7 @@ import { renderQuizOption } from "../renderers/quiz/quizOption.js";
 import { renderQuiz } from "../renderers/quiz/quizRenderer.js";
 import { renderSurveyOption } from "../renderers/survey/surveyOption.js";
 import { renderSurvey } from "../renderers/survey/surveyRenderer.js";
+import { renderParagraph } from "../renderers/lesson/paragraphRenderer.js";
 
 
 const DEFAULT_FILL_COLOR = '#791e1e';
@@ -247,36 +248,6 @@ case 'dragDropFeedback':
     }
 
 }
-
-function renderParagraph(ctx, node,state, viewport, lesson) {
-    const rect = getScreenRect(node, viewport)
-
-    const sectionState =   lesson.getSectionState(node.sectionId)
-
-    if (sectionState === 'locked') {
-        drawRect(ctx, {
-            ...rect,
-            color: '#eeeeee'
-        })
-        ctx.fillStyle = '#999'
-        ctx.fillText(
-            'Complete previous sections',
-            rect.x + 20,
-            rect.y + 30
-        )
-       
-        return
-    }
-
-    drawTextBlock( ctx, node.text, rect.x, rect.y, rect.width, 22)
-
-    if(sectionState === 'current') {
-        ctx.strokeStyle = '#00aa00'
-        ctx.strokeRect(  rect.x,  rect.y,  rect.width,  rect.height)
-    }
-}
-
-
 
 
 function drawThumbnail(ctx, node,pos, assetManager) {
