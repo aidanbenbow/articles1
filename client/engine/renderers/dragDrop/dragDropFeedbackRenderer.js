@@ -1,6 +1,10 @@
 import { getScreenPosition } from "../../modules/renderUtils.js"
 
-export function renderDragDropFeedback(ctx, node, viewport) {
+export function renderDragDropFeedback(ctx, node, viewport, lesson) {
+    const activity = lesson.getCurrentSectionState?.()
+    if(!activity.getChecked?.()) {return}
+    const feedback = activity?.getFeedback?.() || null
+    if(!feedback) {return}
     const rect = getScreenPosition(node, viewport)
     const { x, y } = rect
 
@@ -9,7 +13,7 @@ export function renderDragDropFeedback(ctx, node, viewport) {
     ctx.textBaseline = 'middle'
 
     ctx.fillText(
-        node.text || '',
+        feedback || '',
         x,
         y + node.height / 2
     )

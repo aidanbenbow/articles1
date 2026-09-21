@@ -8,11 +8,7 @@ export function renderDragDropGap(ctx, node, state, viewport, lesson) {
     const answers = activity?.getAnswers?.() || []
     
     const answer = answers[node.gapIndex] || null
-        console.log('GAP RENDER', {
-        gapIndex: node.gapIndex,
-        answers,
-        answer: answers[node.gapIndex]
-    })
+    
 
     ctx.fillStyle = '#ffffff'
 

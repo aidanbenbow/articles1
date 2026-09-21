@@ -241,7 +241,7 @@ case 'dragDropCheck':
     break
 
 case 'dragDropFeedback':
-    renderDragDropFeedback(ctx, section, viewport)
+    renderDragDropFeedback(ctx, section, viewport, lesson)
     break
             
     }

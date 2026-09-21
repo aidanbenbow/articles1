@@ -37,6 +37,7 @@ export class LessonFeature {
             moveOrderingItem: (sectionId, itemIndex,direction) =>
     this.lessonController.moveOrderingItem(sectionId,itemIndex,direction),
 checkOrdering: (sectionId) => this.lessonController.checkOrdering(sectionId),
+checkDragDrop: (sectionId) => this.lessonController.checkDragDrop(sectionId)
         }
     }
     startLessonFromArticle(article) {

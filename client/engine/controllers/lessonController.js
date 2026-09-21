@@ -91,4 +91,15 @@ checkOrdering(sectionId) {
 
     return result
 }
+checkDragDrop(sectionId) {
+    const result =
+        this.lessonService.checkDragDrop(sectionId)
+
+    this.engine.emit('lessonStateChanged', {
+        currentSectionId:
+            this.lessonService.getLesson().currentSectionId
+    })
+
+    return result
+}
 }

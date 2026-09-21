@@ -81,6 +81,12 @@ case 'checkOrdering':
 
     this.emitLayoutChanged()
     return
+    case 'checkDragDrop':
+    this.engine.context.checkDragDrop(
+        targetNode.sectionId
+    )
+    this.emitLayoutChanged()
+    return
                 case 'openLesson':
                     const article = targetNode.articleData || targetNode || null
                     
@@ -144,7 +150,7 @@ emitLayoutChanged() {
     )
 }
 startDrag(node, pointer) {
-    console.log('START DRAG', node, pointer)
+    
     if(!node || !pointer) return
     this.dragState = {
 word: node.word,
@@ -163,7 +169,7 @@ updateDrag(pointer) {
         x: pointer.x,
         y: pointer.y,
     }
-    console.log('UPDATE DRAG', this.dragState)
+    
     this.engine.emit('dragChanged', this.dragState)
 }
 endDrag() {
@@ -186,16 +192,8 @@ completeDrop(drag, dropTarget) {
     const lesson = this.engine.context.getLesson()
     const activity = lesson.activities[sectionId]
 
-    console.log('BEFORE PLACE:', {
-        sectionId,
-        gapIndex,
-        word,
-        answers: activity?.getAnswers?.()
-    })
     activity.placeWord(gapIndex, word)
-console.log('AFTER PLACE:', {
-        answers: activity.getAnswers()
-    })
+
     this.dragState = null
 
     this.engine.emit('dragChanged', null)

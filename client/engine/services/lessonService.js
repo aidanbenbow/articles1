@@ -210,4 +210,24 @@ checkOrdering(sectionId) {
         }
 
 }
+checkDragDrop(sectionId) {
+    const activity = this.lesson.activities[sectionId]
+
+    if (!activity || activity.type !== 'dragdrop') {
+        return {
+            success: false,
+            reason: 'activity-not-found-or-not-dragdrop'
+        }
+    }
+
+    const result = activity.checkAnswers()
+
+    this.syncProgress()
+
+    return {
+        result,
+        feedback: activity.getFeedback(),
+        correct: activity.isCorrect()
+    }
+}
 }
