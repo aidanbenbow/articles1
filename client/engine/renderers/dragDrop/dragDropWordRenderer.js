@@ -1,8 +1,21 @@
 import { getScreenPosition } from "../../modules/renderUtils.js"
 
-export function renderDragDropWord(ctx, node, state, viewport, lesson) {
+export function renderDragDropWord(ctx, node, state, viewport, lesson, assetManager, animations, dragState) {
+    const activity = lesson.getCurrentSectionState?.()
+    const answers = activity?.getAnswers?.() || {}
+
+    const isPlaced = Object.values(answers).includes(node.word)
+
+    if (isPlaced && dragState?.wordNode !== node) {
+        return
+    }
     const rect = getScreenPosition(node, viewport)
-    const { x, y } = rect
+    let { x, y } = rect
+
+    if(dragState?.wordNode === node) {
+        x = dragState.x - node.width / 2
+        y = dragState.y - node.height / 2
+    }
 
     ctx.fillStyle = node.color || '#d0d0d0'
 

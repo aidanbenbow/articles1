@@ -161,15 +161,15 @@ function renderProgress(ctx, progress, x, y, width) {
     ctx.restore()
 }
 
-export function renderLesson(ctx, sections, viewport, lesson, assetManager, animations) {
+export function renderLesson(ctx, sections, viewport, lesson, assetManager, animations, dragState) {
     for (const section of sections) {
         const state =  lesson.getSectionState(   section.sectionId)
-        renderLessonSection( ctx, section, state, viewport, lesson, assetManager, animations)
+        renderLessonSection( ctx, section, state, viewport, lesson, assetManager, animations, dragState)
     }
   
     }
 
-    function renderLessonSection( ctx, section, state, viewport, lesson, assetManager, animations) {
+    function renderLessonSection( ctx, section, state, viewport, lesson, assetManager, animations, dragState) {
 
     switch (section.sectionType) {
         case 'lessonHeading':
@@ -225,7 +225,7 @@ case 'dragDropInstruction':
     break
 
 case 'dragDropWord':
-    renderDragDropWord(ctx, section, state, viewport, lesson)
+    renderDragDropWord(ctx, section, state, viewport, lesson, assetManager, animations, dragState)
     break
 
 case 'dragDropText':

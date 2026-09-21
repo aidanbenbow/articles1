@@ -9,7 +9,7 @@ export function renderLessonScreen(
     viewport,
     lessonState,
     assetManager,
-    animations
+    animations, dragState
 ) {
     if (!lessonState)   return
 
@@ -18,7 +18,7 @@ export function renderLessonScreen(
             renderLessonIntro( ctx, view, viewport)
             break
         case 'active':
-            renderLesson(ctx,view.lessonSectionNodes,viewport,lessonState, assetManager, animations)
+            renderLesson(ctx,view.lessonSectionNodes,viewport,lessonState, assetManager, animations, dragState)
             renderLessonHeader(ctx,lessonState,viewport)
             break
         case 'completed':

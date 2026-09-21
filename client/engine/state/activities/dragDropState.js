@@ -24,6 +24,10 @@ export class DragDropState extends ActivityState{
         }
     }
     placeWord(gapIndex,word) {
+        console.log('PLACE WORD:', {
+        gapIndex,
+        word
+    })
         this.answers[gapIndex] = word
         this.checked = false
         this.correct = false

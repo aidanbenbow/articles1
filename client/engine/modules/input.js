@@ -22,6 +22,7 @@ attach() {
             this.canvas.addEventListener('pointerdown', this._onPointerDown)
             this.canvas.addEventListener('pointermove', this._onPointerMove)
             this.canvas.addEventListener('pointerup', this._onPointerUp)
+            this.canvas.addEventListener('pointercancel', this._onPointerCancel)
         }
         window.addEventListener('keydown', this._onKeyDown)
     }
@@ -30,6 +31,8 @@ attach() {
             this.canvas.removeEventListener('pointerdown', this._onPointerDown)
             this.canvas.removeEventListener('pointermove', this._onPointerMove)
             this.canvas.removeEventListener('pointerup', this._onPointerUp)
+            this.canvas.removeEventListener('pointercancel', this._onPointerCancel)
+            this.interaction?.cancelDrag?.()
             window.removeEventListener('keydown', this._onKeyDown)
         }
     }
@@ -54,6 +57,7 @@ attach() {
         startY: y,
         moved: false
     }
+    console.log('POINTER DOWN', this.pointerState)
 }
 
 _onPointerMove = (event) => {
@@ -68,12 +72,35 @@ _onPointerMove = (event) => {
     if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
         this.pointerState.moved = true
     }
+
+    const target = this.pointerState.target
+
+    if(this.pointerState.moved && !this.interaction?.dragState && target?.type==='draggable') {
+        this.interaction.startDrag(target, 
+            {x:this.pointerState.x, y:this.pointerState.y})
+    }
+    if(this.interaction?.dragState) {
+        this.interaction.updateDrag({x,y})
+    }
+
 }
 _onPointerUp = () => {
 
     if (!this.pointerState.isDown) return
+const drag = this.interaction?.dragState
 
-    if (
+if(drag) {
+ const dropTarget = this.findDropTarget(drag)
+
+        if (dropTarget) {
+            this.interaction.completeDrop(
+                drag,
+                dropTarget
+            )
+        } else {
+            this.interaction.cancelDrag()
+        }
+} else if (
         !this.pointerState.moved &&
         this.pointerState.target
     ) {
@@ -82,6 +109,13 @@ _onPointerUp = () => {
         )
     }
 
+    this._resetPointerState()
+}
+_onPointerCancel = () => {
+    this.interaction?.cancelDrag?.()
+    this._resetPointerState()
+}
+_resetPointerState(){
     this.pointerState = {
         isDown:false,
         target:null,
@@ -92,7 +126,6 @@ _onPointerUp = () => {
         moved:false
     }
 }
-
     _onKeyDown = (event) => {
         const state = this.engine.context.getInteractionState()
         if(!state.focusedNodeId) return
@@ -135,6 +168,37 @@ if(node.kind === 'screen' || node.kind === 'header' || node.sectionType === 'qui
         }
     }
 
+    return null
+}
+rectsOverlap(rect1, rect2) {
+    return !(
+        rect1.x + rect1.width < rect2.x ||
+        rect1.x > rect2.x + rect2.width ||
+        rect1.y + rect1.height < rect2.y ||
+        rect1.y > rect2.y + rect2.height
+    )
+}
+findDropTarget(dragState) {
+    const layout = this.engine.context.getLayout()
+    const viewport = this.engine.context.getViewport()
+    const dragRect = {
+        x: dragState.x - dragState.wordNode.width / 2,
+        y: dragState.y - dragState.wordNode.height / 2,
+        width: dragState.wordNode.width,
+        height: dragState.wordNode.height
+    }
+    for(const node of layout.values()) {
+        if(node.sectionType !== 'dragDropGap'){continue}
+    
+    const gapRect = {
+        x: node.x,
+        y: (node.worldY ?? node.y ?? 0) - viewport.y,
+        width: node.width,
+        height: node.height
+    }
+    if(this.rectsOverlap(dragRect, gapRect)) {
+        return node
+    }}
     return null
 }
 }

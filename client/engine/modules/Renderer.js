@@ -52,6 +52,8 @@ const viewport = this.engine.context.getViewport()
 
         const layout = this.engine.context.getLayout()
         const interactionState = this.engine.context.getInteractionState()
+        const interactionManager = this.engine.context.getInteractionManager()
+        const dragState = interactionManager.dragState
         const appState = this.engine.context.app.getState()
         const lessonState = this.engine.context.getLesson()
         const allNodes = [...layout.values()]
@@ -67,7 +69,7 @@ this.ctx.globalAlpha = screenOpacity
                 renderHome(this.ctx, view.homeNodes, viewport, assetManager)
                 break
                 case 'lesson':
-                renderLessonScreen(this.ctx, view, viewport, lessonState, assetManager, animations)
+                renderLessonScreen(this.ctx, view, viewport, lessonState, assetManager, animations, dragState)
                 break
                 case 'lessonBrowser':
                 renderLessonBrowser(this.ctx, view.lessonBrowserNodes, viewport,  assetManager) 
@@ -85,6 +87,7 @@ this.ctx.globalAlpha = screenOpacity
              this._unsubscribe.push(this.engine.on('lessonStateChanged', this.requestRender.bind(this)))
            
             this._unsubscribe.push(  this.engine.on('appStateChanged', () => this.requestRender()))
+            this._unsubscribe.push(this.engine.on('dragChanged', () => this.requestRender()))
             this.animationManager = this.engine.context.getAnimationManager()
             this.animationManager.setRequestFrame(() => this.requestRender())
              setTimeout(() =>{

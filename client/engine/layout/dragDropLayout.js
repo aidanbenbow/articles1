@@ -62,7 +62,7 @@ export function layoutDragDropSection( articleNode,layout,section,currentY,x,wid
         id: `${articleNode.id}-${section.id}`,
 
         sectionId: section.id,
-
+interactive: false,
         x,
         worldY: dragDropTop,
         width,

@@ -4,9 +4,15 @@ export function renderDragDropGap(ctx, node, state, viewport, lesson) {
     const rect = getScreenPosition(node, viewport)
     const { x, y } = rect
 
-    const answers = lesson.getCurrentSectionState?.()?.getDragDropAnswers?.() || {}
-    const answer = answers[node.id] || null
-        
+    const activity = lesson.getCurrentSectionState?.()
+    const answers = activity?.getAnswers?.() || []
+    
+    const answer = answers[node.gapIndex] || null
+        console.log('GAP RENDER', {
+        gapIndex: node.gapIndex,
+        answers,
+        answer: answers[node.gapIndex]
+    })
 
     ctx.fillStyle = '#ffffff'
 

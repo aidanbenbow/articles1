@@ -11,11 +11,9 @@ export class InteractionManager {
             selectedNodeId: null,
             searchTerm: '',
             focusedNodeId: null,
-   
         }
+        this.dragState = null
     }
-
-
     contextExports() {
         return {
             getInteractionState: () => this.state,
@@ -25,10 +23,8 @@ export class InteractionManager {
         }
     }
 async handleTargetNode(targetNode) {
-
         if(!targetNode) return
        // console.log('TARGET NODE', targetNode)
-
         switch (targetNode.action) {
             case 'finishLessonSection':
                 this.engine.context.finishLesson()
@@ -65,9 +61,7 @@ async handleTargetNode(targetNode) {
                                 to: newScore
                             }
                         )    
-                    }
-
-            
+                    }    
                 this.emitLayoutChanged()
                 return
                 case 'moveOrderingItem':
@@ -131,8 +125,6 @@ appendSearchTerm(char) {
         searchTerm
     )
 }
-
-
     setSearchTerm(term = '') {
 
         this.state = {
@@ -145,11 +137,68 @@ appendSearchTerm(char) {
             term
         )
     }
-
 emitLayoutChanged() {
     this.engine.emit(
         'layoutChanged',
         { layout: this.engine.context.getLayout().layoutNodes }
     )
+}
+startDrag(node, pointer) {
+    console.log('START DRAG', node, pointer)
+    if(!node || !pointer) return
+    this.dragState = {
+word: node.word,
+wordNode: node,
+        startX: pointer.x,
+        startY: pointer.y,
+        x: pointer.x,
+        y: pointer.y,
+    }
+    this.engine.emit('dragChanged', this.dragState)
+}
+updateDrag(pointer) {
+    if(!this.dragState || !pointer) return
+    this.dragState = {
+        ...this.dragState,
+        x: pointer.x,
+        y: pointer.y,
+    }
+    console.log('UPDATE DRAG', this.dragState)
+    this.engine.emit('dragChanged', this.dragState)
+}
+endDrag() {
+    const completedDragState = this.dragState
+    this.dragState = null
+    this.engine.emit('dragChanged', null)
+    return completedDragState
+}
+cancelDrag(){
+    if(!this.dragState) return
+    this.engine.emit('dragChanged', null)
+    this.dragState = null
+}
+completeDrop(drag, dropTarget) {
+    const word = drag.word
+    const gapIndex = dropTarget.gapIndex
+
+    
+    const sectionId = dropTarget.sectionId
+    const lesson = this.engine.context.getLesson()
+    const activity = lesson.activities[sectionId]
+
+    console.log('BEFORE PLACE:', {
+        sectionId,
+        gapIndex,
+        word,
+        answers: activity?.getAnswers?.()
+    })
+    activity.placeWord(gapIndex, word)
+console.log('AFTER PLACE:', {
+        answers: activity.getAnswers()
+    })
+    this.dragState = null
+
+    this.engine.emit('dragChanged', null)
+    this.emitLayoutChanged()
 }
 }
