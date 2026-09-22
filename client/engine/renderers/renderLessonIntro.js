@@ -20,9 +20,7 @@ export function renderLessonIntro(ctx, view, viewport) {
         renderLessonStats(ctx, statsNode, viewport, view)
     }
     if(buttonNode) {
-        renderButton(ctx, buttonNode, viewport, {
-            defaultText: 'Start'
-        })
+        renderButton(ctx, buttonNode, viewport)
     }
 }
 

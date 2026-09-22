@@ -8,6 +8,8 @@ import { layoutHeadingBlock } from "../layout/layoutHeadingBlock.js"
 import { layoutOrderingSection } from "../layout/layoutOrderingSection.js"
 import { layoutParagraphBlock } from "../layout/layoutParagraphBlock.js"
 import { LessonListLayout } from "../layout/lessonListLayout.js"
+import { createButtonNode } from "../layout/nodeFactories/buttonNode.js"
+import { createTextNode } from "../layout/nodeFactories/textNode.js"
 import { layoutQuizSection } from "../layout/quizLayout.js"
 import { layoutSurveySection } from "../layout/surveyLayout.js"
 
@@ -162,7 +164,7 @@ clearScreenLayout() {
     currentY += 100
 
     if(lesson.phase === 'intro') {
-        this.layoutLessonIntro(articleNode,lesson, currentY, x, width, padding, color) 
+        this.layoutLessonIntro(articleNode,lesson, currentY, x, width, padding, color, responsive) 
         return
     }
 
@@ -182,11 +184,11 @@ clearScreenLayout() {
 this.layout.scroll.updateBounds(currentY + 50)
 }
 
-layoutLessonIntro(articleNode, lesson, currentY, x, width, padding, color) {
-    const titleHeight = 60
-    const descriptionHeight = lesson.description ? 60 : 0
-    const gap = 16
-    this.layout.layoutNodes.set(`${articleNode.id}-title`, {
+layoutLessonIntro(articleNode, lesson, currentY, x, width, padding, color, responsive) {
+    const titleHeight = responsive.lessonIntro.titleHeight
+    const descriptionHeight = lesson.description ? responsive.lessonIntro.descriptionHeight : 0
+    const gap = responsive.lessonIntro.gap
+    const titleNode = createTextNode({
         id: `${articleNode.id}-title`,
         sectionId: 'title',
         x,
@@ -199,10 +201,12 @@ layoutLessonIntro(articleNode, lesson, currentY, x, width, padding, color) {
         type: 'text',
         padding
     })
+    this.layout.layoutNodes.set(`${articleNode.id}-title`, titleNode)
+       
     currentY += titleHeight  + gap
 
      if (lesson.description) {
-        this.layout.layoutNodes.set(`${articleNode.id}-description`, {
+        const descriptionNode = createTextNode({
             id: `${articleNode.id}-description`,
             sectionId: 'description',
             x,
@@ -216,6 +220,9 @@ layoutLessonIntro(articleNode, lesson, currentY, x, width, padding, color) {
             padding
         })
 
+
+        this.layout.layoutNodes.set(`${articleNode.id}-description`, descriptionNode)
+
         currentY += descriptionHeight + gap
     }
      const lessonTotal = lesson.lessonTotal || 0
@@ -223,21 +230,26 @@ layoutLessonIntro(articleNode, lesson, currentY, x, width, padding, color) {
     const surveyCount = lesson.surveyTotal || 0
 
     const stats = [`${lessonTotal} learning blocks`, `${quizCount} quizzes`, `${surveyCount} surveys`].filter(Boolean).join(' • ')
-    this.layout.layoutNodes.set(`${articleNode.id}-stats`, {
+
+const statsNode = createTextNode({
     id: `${articleNode.id}-stats`,
-    type: 'text',
-    kind: 'lessonStats',
-    text: stats,
+    sectionId: 'stats',
     x,
     worldY: currentY,
     width,
     height: 30,
     color,
+    text: stats,
+    kind: 'lessonStats',
+    type: 'text',
     padding
-    })
-currentY += 40
+})
 
-    currentY = this.layoutStartButton(articleNode, currentY, x, width, padding, color)
+    this.layout.layoutNodes.set(`${articleNode.id}-stats`, statsNode)
+ 
+currentY += responsive.lessonIntro.statsHeight + gap
+
+    currentY = this.layoutStartButton(articleNode, currentY, x, width, padding, color, responsive)
     return currentY
 }
 
@@ -298,9 +310,9 @@ layoutContinueButton(articleNode, currentY, x, width, padding, color) {
     return currentY + buttonHeight + 10
 }
 
-layoutStartButton(articleNode, currentY, x, width, padding, color) {
-    const buttonHeight = 40
-    const buttonRect = {
+layoutStartButton(articleNode, currentY, x, width, padding, color, responsive) {
+    const buttonHeight = responsive.button.height
+    const buttonRect = createButtonNode({
         id: `${articleNode.id}-start-button`,
         sectionId: 'start-button',
         x,
@@ -309,13 +321,12 @@ layoutStartButton(articleNode, currentY, x, width, padding, color) {
         height: buttonHeight,
         padding,
         color: '#23979d',
-        selected: false,
         text: 'Start',
         type: 'button',
         kind: 'lessonStartButton',
         sectionType: 'startButton',
         action: 'startLessonPhase'
-    }
+    })
     this.layout.layoutNodes.set(buttonRect.id, buttonRect)
     return currentY + buttonHeight + 10
 }
