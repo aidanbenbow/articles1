@@ -4,8 +4,8 @@ import { getScreenPosition } from "../../modules/renderUtils.js"
 
 export function renderButton(ctx, node, viewport, { defaultText='Button', font= DRAWING_CONSTANTS.fonts.button,
     textColor= DRAWING_CONSTANTS.colors.buttonText, backgroundColor= DRAWING_CONSTANTS.colors.button, borderColor= DRAWING_CONSTANTS.colors.button, borderWidth=1, borderRadius=8, showSelection=false } = {}) {
+        
 const rect = getScreenPosition(node, viewport)
-
 if (!rect) return
 
 const { x,y,} = rect

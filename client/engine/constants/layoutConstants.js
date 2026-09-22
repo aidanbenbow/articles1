@@ -21,6 +21,62 @@ export const LAYOUT = {
         mobile: 520,
         tablet: 768,
     },
+    colors: {
+        surface: "#ffffff",
+        border: "#e5e7eb",
+        accent: "#9481ed",
+        accentLight: "#f0eefc",
+        heading: "#171717",
+        text: "#4b5563",
+        muted: "#6b7280",
+        sectionHeading: "#374151",
+        statBackground: "#f9fafb",
+        shadow: "rgba(0, 0, 0, 0.08)",
+    },
+
+    typography: {
+        family: "sans-serif",
+
+        eyebrow: 11,
+        title: 26,
+        sectionHeading: 14,
+        body: 13,
+        step: 12,
+
+        weights: {
+            regular: 400,
+            medium: 600,
+            bold: 700,
+        },
+    },
+
+    welcome: {
+        radius: 20,
+        accentWidth: 7,
+
+        padding: 28,
+        contentTop: 23,
+        titleTop: 45,
+        sectionGap: 27,
+
+        statHeight: 29,
+        statGap: 3,
+        statPaddingX: 10,
+        statRadius: 6,
+
+        promptGap: 8,
+        promptHeight: 29,
+
+        stepCircleRadius: 10,
+        stepCircleOffsetX: 12,
+        stepTextOffsetX: 32,
+        stepHeight: 25,
+        shadowBlur: 16,
+shadowOffsetY: 5,
+borderWidth: 1,
+connectorColor: "#e5e7eb"
+
+    },
 }
 
 // layoutHelpers.js
@@ -34,6 +90,10 @@ export function getNodeStyle(node) {
         height: size.height ?? 50,
         color: props.color ?? "#000000"
     }
+}
+
+export function setFont(ctx, typography, size, weight) {
+    ctx.font = `${weight} ${size}px ${typography.family}`
 }
 
 
@@ -133,11 +193,37 @@ export function getResponsiveLayout(screenWidth, screenHeight) {
         },
 
         welcome: {
-            height:
-                compact ? 160 :
-                mobile ? 130 :
-                180
-        },
+    height:
+        compact ? 380 :
+        mobile ? 360 :
+        tablet ? 340 :
+        320,
+
+    padding: compact ? 20 : LAYOUT.welcome.padding,
+
+    radius: LAYOUT.welcome.radius,
+    accentWidth: LAYOUT.welcome.accentWidth,
+
+    contentTop: LAYOUT.welcome.contentTop,
+    titleTop: LAYOUT.welcome.titleTop,
+    sectionGap: LAYOUT.welcome.sectionGap,
+
+    statHeight: LAYOUT.welcome.statHeight,
+    statGap: LAYOUT.welcome.statGap,
+    statPaddingX: LAYOUT.welcome.statPaddingX,
+
+    promptGap: LAYOUT.welcome.promptGap,
+    promptHeight: LAYOUT.welcome.promptHeight,
+
+    stepCircleRadius: LAYOUT.welcome.stepCircleRadius,
+    stepCircleOffsetX: LAYOUT.welcome.stepCircleOffsetX,
+    stepTextOffsetX: LAYOUT.welcome.stepTextOffsetX,
+    stepHeight: LAYOUT.welcome.stepHeight,
+
+    titleFontSize: compact ? 22 : LAYOUT.typography.title,
+    bodyFontSize: compact ? 12 : LAYOUT.typography.body,
+    stepFontSize: compact ? 11 : LAYOUT.typography.step,
+},
 
         suggested: {
             height:

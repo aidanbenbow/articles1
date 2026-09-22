@@ -149,8 +149,7 @@ clearScreenLayout() {
    layoutArticlesDetail(articleNode, lesson, responsive) {
 
     if (!articleNode || !lesson)  return
-    
-//this.clearScreenLayout()
+  
 
     const padding = 20
     const x = this.layout.width / 8

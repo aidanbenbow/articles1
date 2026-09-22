@@ -1,4 +1,5 @@
-import { getNodeStyle, getResponsiveLayout, layoutVerticalList } from "../constants/layoutConstants.js"
+import { getNodeStyle, getResponsiveLayout, LAYOUT, layoutVerticalList } from "../constants/layoutConstants.js"
+import { createButtonNode } from "./nodeFactories/buttonNode.js"
 
 
 export class HomeLayout {
@@ -35,11 +36,36 @@ const {screenHeight} = metrics
 
     layoutWelcome(currentY, appState, articleNodes) {
         const metrics = this.getMetrics()
-        const {  padding, contentWidth, gap, welcome, contentHeight } = metrics
+        const {  padding, contentWidth, gap, welcome } = metrics
         
+const statsCount = 3
+const stepsCount = 4
+
+const welcomeStyle = welcome
+
+const requiredHeight =
+    welcomeStyle.titleTop +
+    welcomeStyle.titleFontSize +
+    welcomeStyle.sectionGap * 3 +
+    welcomeStyle.bodyFontSize +
+    statsCount * (
+        welcomeStyle.statHeight +
+        welcomeStyle.statGap
+    ) +
+    welcomeStyle.promptGap +
+    welcomeStyle.promptHeight +
+    stepsCount * welcomeStyle.stepHeight +
+    welcomeStyle.stepCircleRadius * 2 +
+    padding
+
+const welcomeHeight = Math.max(
+    welcome.height,
+    requiredHeight
+)
         const user = appState.user?.name || 'Guest'
         const score = appState.user?.score || 0
         const lessonsCompleted = appState.user?.lessonsCompleted || 0
+        const lessonsAvailable = articleNodes.filter(node => node.props?.articleData?.articleId).length || 0
         
         this.layout.layoutNodes.set(
         'home-welcome',
@@ -50,17 +76,34 @@ const {screenHeight} = metrics
 interactive: false,
             x: padding,
             worldY: currentY,
-
             width: contentWidth,
-
-            height: contentHeight,
+            height: welcomeHeight,
+            padding: welcome?.padding || 28,
+            rowGap: welcome?.rowGap || 8,
 
             title: `Welcome ${user}`,
 
-            text:  `Learn through interactive lessons. So far you have completed ${lessonsCompleted} lessons and earned ${score} points.\n 
-            What would you like to learn next?`,
+            text: [
+                'Your learning progress:',
+                '',
+                `• Lessons completed: ${lessonsCompleted}`,
+                `• Lessons available: ${lessonsAvailable}`,
+                `• Points earned: ${score}`,
+                '',
+                'What would you like to learn next?'
+            ].join('\n'),
 
-            instructions: 'Read → Think → Answer → Complete'
+instructions: [
+        "How it works:",
+        "1. Read the lesson",
+        "2. Think about what you learned",
+        "3. Answer the questions",
+        "4. Complete the lesson"
+    ].join("\n"),            style: {
+                ...welcome,
+                colors: LAYOUT.colors,
+                typography: LAYOUT.typography
+            }
         }
     )
     
@@ -69,39 +112,42 @@ const articleTofu = articleNodes.find(node => node.props?.articleData?.articleId
     const lessonOptions = [
         articleTofu
     ]
+const cardBottom = currentY + welcomeHeight 
+const lessonOptionsY = cardBottom + gap
+  const nextY=  this.layoutLessonOptions(lessonOptionsY, lessonOptions)
 
-    this.layoutLessonOptions(currentY + contentHeight/2, lessonOptions)
-console.log(this.layout.layoutNodes)
-    return currentY + contentHeight + gap
+    return nextY + gap
     }
 
 layoutLessonOptions(currentY, lessonOptions) {
         const metrics = this.getMetrics()
         const { padding, contentWidth, gap, optionWidth, optionHeight } = metrics
-       
+       let nextY = currentY
         for (let i = 0; i < lessonOptions.length; i++) {
             const optionData = lessonOptions[i]?.props?.articleData || {}
         
             const title = optionData?.title || `Lesson ${i + 1}`
-            this.layout.layoutNodes.set(
-                `home-lesson-option-${i}`,
-                {
-                    id: `home-lesson-option-${i}`,
-                    articleId: optionData?.articleId || null,
-                    owner: 'home',
-                    interactive: true,
-                    kind: 'lessonOption',
-                    x: contentWidth/2 - optionWidth/2,
-                    worldY: currentY + i * (optionHeight + gap),
-                    width: optionWidth,
-                    height: optionHeight,
-                    title: `Learn about ${title}`,
-                    description: optionData?.description || '',
-                    article: optionData.article,
-                    action: 'openLesson',
-                    option: optionData
-                }
-            )
+
+            const button = createButtonNode({
+                id: `home-lesson-option-${i}`,
+                sectionId: null,
+                x: padding,
+                worldY: nextY,
+                width: contentWidth,
+                height: optionHeight,
+                color: '#23979d',
+                text: `Learn about ${title}`,
+                action: 'openLesson',
+                kind: 'lessonOption',
+                type: 'button',
+                sectionType: 'button',
+                owner: 'home',
+                articleId: optionData?.articleId || null,
+                articleData: optionData,
+                padding: 0
+            })
+            this.layout.layoutNodes.set(   button.id, button) 
+            nextY += optionHeight + gap
         }
 }
     layoutContinue(articleNodes, currentY) {
