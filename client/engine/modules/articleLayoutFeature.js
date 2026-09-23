@@ -199,7 +199,8 @@ layoutLessonIntro(articleNode, lesson, currentY, x, width, padding, color, respo
         text: lesson.title,
         kind: 'lessonTitle',
         type: 'text',
-        padding
+        padding,
+        typography: 'title'
     })
     this.layout.layoutNodes.set(`${articleNode.id}-title`, titleNode)
        
@@ -217,7 +218,8 @@ layoutLessonIntro(articleNode, lesson, currentY, x, width, padding, color, respo
             text: lesson.description,
             kind: 'lessonDescription',
             type: 'text',
-            padding
+            padding,
+            typography: 'body'
         })
 
 
@@ -242,7 +244,8 @@ const statsNode = createTextNode({
     text: stats,
     kind: 'lessonStats',
     type: 'text',
-    padding
+    padding,
+    typography: 'body'
 })
 
     this.layout.layoutNodes.set(`${articleNode.id}-stats`, statsNode)

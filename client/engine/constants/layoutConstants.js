@@ -35,20 +35,44 @@ export const LAYOUT = {
     },
 
     typography: {
-        family: "sans-serif",
+    family: "sans-serif",
 
-        eyebrow: 11,
-        title: 26,
-        sectionHeading: 14,
-        body: 13,
-        step: 12,
-
-        weights: {
-            regular: 400,
-            medium: 600,
-            bold: 700,
-        },
+    eyebrow: {
+        size: 11,
+        lineHeight: 16,
+        weight: 600,
     },
+
+    title: {
+        size: 26,
+        lineHeight: 32,
+        weight: 700,
+    },
+
+    sectionHeading: {
+        size: 14,
+        lineHeight: 20,
+        weight: 600,
+    },
+
+    body: {
+        size: 13,
+        lineHeight: 20,
+        weight: 400,
+    },
+
+    step: {
+        size: 12,
+        lineHeight: 18,
+        weight: 400,
+    },
+
+    weights: {
+        regular: 400,
+        medium: 600,
+        bold: 700,
+    }
+},
 
     welcome: {
         radius: 20,
@@ -92,8 +116,12 @@ export function getNodeStyle(node) {
     }
 }
 
-export function setFont(ctx, typography, size, weight) {
-    ctx.font = `${weight} ${size}px ${typography.family}`
+export function setFont(ctx, typography, role) {
+    const style = typography[role]
+
+    if (!style) return
+
+    ctx.font = `${style.weight} ${style.size}px ${typography.family}`
 }
 
 

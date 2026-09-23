@@ -1,5 +1,6 @@
 import { getNodeStyle, getResponsiveLayout, LAYOUT, layoutVerticalList } from "../constants/layoutConstants.js"
 import { createButtonNode } from "./nodeFactories/buttonNode.js"
+import { createTextNode } from "./nodeFactories/textNode.js"
 
 
 export class HomeLayout {
@@ -37,40 +38,45 @@ const {screenHeight} = metrics
     layoutWelcome(currentY, appState, articleNodes) {
         const metrics = this.getMetrics()
         const {  padding, contentWidth, gap, welcome } = metrics
-        
-const statsCount = 3
-const stepsCount = 4
-
-const welcomeStyle = welcome
-
-const requiredHeight =
-    welcomeStyle.titleTop +
-    welcomeStyle.titleFontSize +
-    welcomeStyle.sectionGap * 3 +
-    welcomeStyle.bodyFontSize +
-    statsCount * (
-        welcomeStyle.statHeight +
-        welcomeStyle.statGap
-    ) +
-    welcomeStyle.promptGap +
-    welcomeStyle.promptHeight +
-    stepsCount * welcomeStyle.stepHeight +
-    welcomeStyle.stepCircleRadius * 2 +
-    padding
-
-const welcomeHeight = Math.max(
-    welcome.height,
-    requiredHeight
-)
-        const user = appState.user?.name || 'Guest'
+         const user = appState.user?.name || 'Guest'
         const score = appState.user?.score || 0
         const lessonsCompleted = appState.user?.lessonsCompleted || 0
         const lessonsAvailable = articleNodes.filter(node => node.props?.articleData?.articleId).length || 0
+        const title = `Welcome ${user}`
+        const progress =[
+            'Your learning progress:',
+            '',
+            `Lessons completed: ${lessonsCompleted}`,
+            `Lessons available: ${lessonsAvailable}`,
+            `Points earned: ${score}`
+        ].join('\n')
+        const prompt = 'What would you like to learn next?'
+        const instruction = [
+            "How it works:",
+            "1. Read the lesson",
+            "2. Think about what you learned",
+            "3. Answer the questions",
+            "4. Complete the lesson"
+        ].join("\n")
+        const titleLineHeight = welcome?.titleFontSize?.lineHeight || 32
+        const bodyLineHeight = welcome?.bodyFontSize?.lineHeight || 20
+        const stepLineHeight = welcome?.stepFontSize?.lineHeight || 20
+        const titleHeight = titleLineHeight
+        const progressHeight = bodyLineHeight * 5
+        const promptHeight = bodyLineHeight
+        const stepHeight = stepLineHeight * 5
+const contentHeight = welcome.titleTop + titleHeight + welcome.sectionGap + progressHeight + welcome.promptGap + promptHeight + welcome.sectionGap + stepHeight
+
+const welcomeHeight = Math.max(
+    welcome.height,
+    contentHeight + welcome.padding * 2
+)
+      const nodes = this.layout.layoutNodes 
         
-        this.layout.layoutNodes.set(
+       nodes.set(
         'home-welcome',
         {
-            id: 'home-welcome',
+            id: 'home-welcome-background',
             owner: 'home',
             kind: 'homeWelcome',
 interactive: false,
@@ -78,40 +84,81 @@ interactive: false,
             worldY: currentY,
             width: contentWidth,
             height: welcomeHeight,
-            padding: welcome?.padding || 28,
-            rowGap: welcome?.rowGap || 8,
-
-            title: `Welcome ${user}`,
-
-            text: [
-                'Your learning progress:',
-                '',
-                `• Lessons completed: ${lessonsCompleted}`,
-                `• Lessons available: ${lessonsAvailable}`,
-                `• Points earned: ${score}`,
-                '',
-                'What would you like to learn next?'
-            ].join('\n'),
-
-instructions: [
-        "How it works:",
-        "1. Read the lesson",
-        "2. Think about what you learned",
-        "3. Answer the questions",
-        "4. Complete the lesson"
-    ].join("\n"),            style: {
+                   style: {
                 ...welcome,
                 colors: LAYOUT.colors,
-                typography: LAYOUT.typography
+                
             }
         }
     )
+const textX = padding + welcome.accentWidth + welcome.padding
+const textWidth = contentWidth - welcome.accentWidth - welcome.padding * 2
+    let y = currentY + welcome.padding+welcome.titleTop
+
+ const addText =  createTextNode({
+        id: 'home-welcome-title',
+        owner: 'home',
+        kind: 'text',
+        x: textX,
+        worldY: y,
+        width: textWidth,
+        height: titleHeight,
+        color: LAYOUT.colors.heading,
+        text: title,
+        typography: 'title'
+    })
+    nodes.set(addText.id, addText)
+    y += titleHeight + welcome.sectionGap
+
+  const addProgressText =  createTextNode({
+        id: 'home-welcome-progress',
+        owner: 'home',
+        kind: 'text',
+        x: textX,
+        worldY: y,
+        width: textWidth,
+        height: progressHeight,
+        color: LAYOUT.colors.text,
+        text: progress,
+        typography: 'body'
+    })
+    nodes.set(addProgressText.id, addProgressText)
+    y += progressHeight + welcome.promptGap
+
+    const addPromptText = createTextNode({
+        id: 'home-welcome-prompt',
+        owner: 'home',
+        kind: 'text',
+        x: textX,
+        worldY: y,
+        width: textWidth,
+        height: promptHeight,
+        color: LAYOUT.colors.text,
+        text: prompt,
+        typography: 'body'
+    })
+    nodes.set(addPromptText.id, addPromptText)
+    y += promptHeight + welcome.sectionGap
+
+   const addInstructionText = createTextNode({
+        id: 'home-welcome-instructions',
+        owner: 'home',
+        kind: 'text',
+        x: textX,
+        worldY: y,
+        width: textWidth,
+        height: stepHeight,
+        color: LAYOUT.colors.text,
+        text: instruction,
+        typography: 'step'
+    })
+    nodes.set(addInstructionText.id, addInstructionText)
     
 const articleTofu = articleNodes.find(node => node.props?.articleData?.articleId === 'tofu')
 
-    const lessonOptions = [
+    const lessonOptions = articleTofu ? [
         articleTofu
-    ]
+    ] : []
 const cardBottom = currentY + welcomeHeight 
 const lessonOptionsY = cardBottom + gap
   const nextY=  this.layoutLessonOptions(lessonOptionsY, lessonOptions)
@@ -149,6 +196,7 @@ layoutLessonOptions(currentY, lessonOptions) {
             this.layout.layoutNodes.set(   button.id, button) 
             nextY += optionHeight + gap
         }
+        return nextY
 }
     layoutContinue(articleNodes, currentY) {
         const progressStore =this.engine.context.getLessonProgressStore()

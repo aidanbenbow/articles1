@@ -1,5 +1,6 @@
 export function createTextNode({
     id,
+    owner=null,
     sectionId = null,
     x,
     worldY,
@@ -9,10 +10,12 @@ export function createTextNode({
     text,
     padding = 0,
     kind,
-    sectionType = null
+    sectionType = null,
+    typography = null,
 }) {
     return {
         id,
+        owner,
         sectionId,
         x,
         worldY,
@@ -23,6 +26,7 @@ export function createTextNode({
         kind,
         type: 'text',
         sectionType,
-        padding
+        padding,
+        typography
     };
 }
