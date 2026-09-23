@@ -7,8 +7,7 @@ import { renderText } from "./TextRenderer.js"
 export function renderHomeWelcome( ctx, node, viewport) {
 
 const style = node.style
-console.log("style", style)
-console.log("node", node)
+
 const { colors, typography,} = style
 
 const {

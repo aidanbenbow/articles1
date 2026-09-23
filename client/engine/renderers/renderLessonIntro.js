@@ -1,6 +1,8 @@
+import { LAYOUT } from "../constants/layoutConstants.js"
 import { getScreenRect, } from "../modules/renderUtils.js"
 import { renderButton } from "./buttons/buttonRenderer.js"
 import { renderLessonTitle } from "./lesson/lessonTitleRenderer.js"
+import { renderText } from "./TextRenderer.js"
 
 
 export function renderLessonIntro(ctx, view, viewport) {
@@ -11,13 +13,13 @@ export function renderLessonIntro(ctx, view, viewport) {
    const buttonNode = view.buttonNodes.find(node => node.kind === 'lessonStartButton')
 
    if(titleNode) {
-       renderLessonTitle(ctx, titleNode, viewport)
+       renderText(ctx, titleNode, viewport, LAYOUT.typography)
    }
     if(descriptionNode) {
-        renderLessonDescription(ctx, descriptionNode, viewport, view)
+        renderText(ctx, descriptionNode, viewport, LAYOUT.typography)
     }
     if(statsNode) {
-        renderLessonStats(ctx, statsNode, viewport, view)
+        renderText(ctx, statsNode, viewport, LAYOUT.typography)
     }
     if(buttonNode) {
         renderButton(ctx, buttonNode, viewport)
@@ -67,60 +69,60 @@ function renderLessonStats(ctx, node, viewport)  {
     )
 }
 
-function renderLessonIntroText(ctx, node, viewport, view) {
+// function renderLessonIntroText(ctx, node, viewport, view) {
 
-    const rect = getScreenRect(node, viewport)
+//     const rect = getScreenRect(node, viewport)
 
-    ctx.fillStyle = node.color
-    ctx.fillRect(
-        rect.x,
-        rect.y,
-        rect.width,
-        rect.height
-    )
+//     ctx.fillStyle = node.color
+//     ctx.fillRect(
+//         rect.x,
+//         rect.y,
+//         rect.width,
+//         rect.height
+//     )
 
-const padding = node.padding || 10
-let y = rect.y + padding
+// const padding = node.padding || 10
+// let y = rect.y + padding
 
-    ctx.fillStyle = '#000'
-    ctx.font = '16px Arial'
-   // ctx.textBaseline = 'top'
+//     ctx.fillStyle = '#000'
+//     ctx.font = '16px Arial'
+//    // ctx.textBaseline = 'top'
 
-   const description = view.lessonDescription || ''
+//    const description = view.lessonDescription || ''
 
-    const lines = getWrappedLines(ctx, description, rect.width - 2 * node.padding)
+//     const lines = getWrappedLines(ctx, description, rect.width - 2 * node.padding)
     
 
-    for(const line of lines) {
-        ctx.fillText(
-            line,
-            rect.x + node.padding,
-            y
-        )
+//     for(const line of lines) {
+//         ctx.fillText(
+//             line,
+//             rect.x + node.padding,
+//             y
+//         )
 
-        y += 20
-    }
+//         y += 20
+//     }
 
-    y += 10
-    const stats = []
-    if(view.lessonTotal>0) {
-        stats.push(`${view.lessonTotal} lessons`)
-    }
-    if(view.quizTotal>0) {
-        stats.push(`${view.quizTotal} quizzes`)
-    }
-    if(view.surveyTotal>0) {
-        stats.push(`${view.surveyTotal} surveys`)
-    }
-    if(stats.length>0) {
-        const statsText = stats.join(' • ')
-        ctx.fillText(
-            statsText,
-            rect.x + node.padding,
-            y
-        )
-    }
-}
+//     y += 10
+//     const stats = []
+//     if(view.lessonTotal>0) {
+//         stats.push(`${view.lessonTotal} lessons`)
+//     }
+//     if(view.quizTotal>0) {
+//         stats.push(`${view.quizTotal} quizzes`)
+//     }
+//     if(view.surveyTotal>0) {
+//         stats.push(`${view.surveyTotal} surveys`)
+//     }
+//     if(stats.length>0) {
+//         const statsText = stats.join(' • ')
+//         ctx.fillText(
+//             statsText,
+//             rect.x + node.padding,
+//             y
+//         )
+//     }
+// }
  
 export function getWrappedLines(ctx, text, maxWidth) {
 

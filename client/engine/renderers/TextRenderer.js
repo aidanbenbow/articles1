@@ -7,7 +7,7 @@ export function renderText(ctx, node, viewport, typography) {
     const rect = getScreenPosition(node, viewport);
 
     if (!rect) return;
-console.log("renderText", node, rect, typography)
+
     const padding = node.padding ?? 10;
 const typo = typography[node.typography]
     ctx.save();
