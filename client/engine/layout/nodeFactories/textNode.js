@@ -2,6 +2,7 @@ export function createTextNode({
     id,
     owner=null,
     sectionId = null,
+    surveyId = null,
     x,
     worldY,
     width,
@@ -15,6 +16,7 @@ export function createTextNode({
 }) {
     return {
         id,
+        surveyId,
         owner,
         sectionId,
         x,

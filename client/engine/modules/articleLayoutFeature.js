@@ -266,7 +266,7 @@ layoutSection( articleNode, currentSection, currentY, x, width, padding, color, 
                 return layoutQuizSection( this.layout,articleNode,currentSection,currentY,x,width,padding,color,lesson
                 )
             case 'survey':
-                return layoutSurveySection(this.layout, articleNode, currentSection, currentY, x,width, padding,color,  lesson)
+                return layoutSurveySection(this.layout, articleNode, currentSection, currentY, x,width, padding,color,  lesson, responsive)
                 case 'ordering':
             return layoutOrderingSection( articleNode,this.layout,currentSection,currentY,x,width,padding,color,lesson)
             case 'dragdrop':

@@ -66,6 +66,11 @@ export const LAYOUT = {
         lineHeight: 18,
         weight: 400,
     },
+    question: {
+        size: 14,
+        lineHeight: 20,
+        weight: 400,
+    },
 
     weights: {
         regular: 400,
@@ -305,5 +310,21 @@ height: compact ? 32 : 40,
     height: compact ? 40 : 45,
     gap: compact ? 8 : 10
 },
+survey: {
+    padding: compact ? 14 : 20,
+
+    questionHeight: compact ? 42 : 50,
+    responseHeight: compact ? 24 : 30,
+
+    optionHeight: compact ? 36 : 42,
+    optionGap: compact ? 8 : 10,
+
+    feedbackHeight: compact ? 36 : 40,
+    feedbackGap: compact ? 8 : 10,
+
+    responseWidth: compact ? 80 : 100,
+
+    sectionGap: compact ? 12 : 16
+}
     }
 }

@@ -162,15 +162,16 @@ function renderProgress(ctx, progress, x, y, width) {
     ctx.restore()
 }
 
-export function renderLesson(ctx, sections, viewport, lesson, assetManager, animations, dragState) {
-    for (const section of sections) {
-        const state =  lesson.getSectionState(   section.sectionId)
-        renderLessonSection( ctx, section, state, viewport, lesson, assetManager, animations, dragState)
+export function renderLesson(ctx, view, viewport, lesson, assetManager, animations, dragState) {
+    
+    for (const section of view.lessonSectionNodes) {
+        const state =  lesson.getSectionState(section.sectionId)
+        renderLessonSection( ctx, section, state, viewport, lesson, assetManager, animations, dragState, view)
     }
   
     }
 
-    function renderLessonSection( ctx, section, state, viewport, lesson, assetManager, animations, dragState) {
+    function renderLessonSection( ctx, section, state, viewport, lesson, assetManager, animations, dragState, view) {
 
     switch (section.sectionType) {
         case 'lessonHeading':
@@ -190,7 +191,7 @@ export function renderLesson(ctx, sections, viewport, lesson, assetManager, anim
             break
 
         case 'survey':
-            renderSurvey( ctx, section, state, viewport, lesson, assetManager, animations)
+            renderSurvey( ctx, section, state, viewport, lesson, assetManager, animations, view.surveys)
             
             break
             case 'surveyOption':

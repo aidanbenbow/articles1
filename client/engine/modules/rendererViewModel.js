@@ -4,12 +4,11 @@ export function createRendererViewModel( allnodes,state, lesson) {
     const buttonNodes = allnodes.filter(node => node.type === 'button')
     const headerNode = allnodes.find(node => node.type === 'header')
     const textNodes = allnodes.filter(node => node.type === 'text' && node.props?.text !== 'Reports To Do')
-   // const reportsToDoNode = allnodes.find(node => node.kind === 'reportsToDo')
+  
     const homeNodes = allnodes.filter(node => node.owner === 'home')
     
     const lessonBrowserNodes = allnodes.filter(node => node.owner === 'lessonBrowser')
     
-    //const nodeSelected = allnodes.find(node => node.id === state.selectedNodeId)
     const lessonSectionNodes = allnodes.filter(node => node.kind === 'lessonSection')
     const lessonTitleNodes = allnodes.filter(node =>  node.kind === 'lessonTitle')
     const lessonDescriptionNodes = allnodes.filter(node =>  node.kind === 'lessonDescription')
@@ -50,6 +49,8 @@ const dragDropFeedback =
 
 const orderingTotal =
     lesson?.orderingTotal || 0
+
+    const surveys = groupSurveyNodesBySurveyId(lessonSectionNodes)
     
     return {
         inputNodes,
@@ -90,8 +91,52 @@ const orderingTotal =
         dragDropWordbank,
         dragDropChecked,
         dragDropCorrect,
-        dragDropFeedback
+        dragDropFeedback,
+
+        surveys
         
        
     }
+}
+
+
+function groupSurveyNodesBySurveyId(allnodes) {
+const surveys = new Map()
+
+for(const node of allnodes) {
+    if(node.sectionType !== 'survey') continue
+
+    surveys.set(node.surveyId, {
+surveyId: node.surveyId,
+            survey: node,
+            question: null,
+            response: null,
+            options: [],
+            feedback: null
+        }
+    )
+}
+for(const node of allnodes) {
+const group = surveys.get(node.surveyId)
+if(!group) continue
+
+switch(node.sectionType) {
+    case 'surveyQuestion':
+        group.question = node
+        break
+    case 'surveyResponse':
+        group.response = node
+        break
+    case 'surveyOption':
+        group.options.push(node)
+        break
+    case 'surveyFeedback':
+        group.feedback = node
+        break 
+}
+}
+for(const group of surveys.values()) {
+    group.options.sort((a,b) => a.worldY - b.worldY)
+}
+return [...surveys.values()]
 }

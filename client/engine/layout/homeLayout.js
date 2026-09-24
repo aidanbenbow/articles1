@@ -23,11 +23,6 @@ const {screenHeight} = metrics
         let currentY = Math.max(40, screenHeight * 0.05)
         currentY = this.layoutWelcome(currentY, appState, articleNodes)
 
-        // currentY = this.layoutContinue(articleNodes, currentY)
-
-        // currentY = this.layoutSuggestedLesson(articleNodes, currentY)
-
-        // currentY = this.layoutBrowseAll(currentY)
 
         this.layout.computeScrollBounds(
             this.layout.layoutNodes

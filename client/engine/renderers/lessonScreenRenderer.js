@@ -18,7 +18,7 @@ export function renderLessonScreen(
             renderLessonIntro( ctx, view, viewport)
             break
         case 'active':
-            renderLesson(ctx,view.lessonSectionNodes,viewport,lessonState, assetManager, animations, dragState)
+            renderLesson(ctx,view,viewport,lessonState, assetManager, animations, dragState)
             renderLessonHeader(ctx,lessonState,viewport)
             break
         case 'completed':

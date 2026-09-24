@@ -1,12 +1,15 @@
+import { LAYOUT } from "../../constants/layoutConstants.js"
 import { drawRect, drawTextBlock } from "../../draw/drawHelpers.js"
 import { getScreenRect } from "../../modules/renderUtils.js"
+import { renderCard } from "../CardRenderer.js"
+import { renderText } from "../TextRenderer.js"
 
 export function renderSurveySingleChoice(
     ctx,
     section,
     state,
     viewport,
-   lesson
+   lesson, assetManager, animations, surveys
 ) {
     const rect = getScreenRect(section, viewport)
      const survey = lesson.activities?.[section.surveyId]
@@ -14,11 +17,13 @@ export function renderSurveySingleChoice(
     const results = survey?.getResults() || {}
     const total = results.totalResponses || 0
     const feedback = survey?.getFeedback() || null
-        
-    drawRect(ctx, rect, { showSelection: true})
-
-    drawTextBlock(  ctx,  section.question,  section.questionX, section.questionY, section.questionWidth, 22)
-
+    
+     const surveyBack = surveys[0].survey  
+     const surveyQuestion = surveys[0].question
+     console.log(surveys)
+    renderCard(ctx, surveyBack,viewport,surveyBack.style  )
+renderText(ctx, surveyQuestion, viewport, LAYOUT.typography)
+  
     drawTextBlock(  ctx,  `${total} responses`,  section.responseX, section.responseY, section.responseWidth, 16)
     
 
