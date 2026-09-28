@@ -1,4 +1,6 @@
 import { LAYOUT } from "../constants/layoutConstants.js"
+import { createSurveyNode } from "./nodeFactories/surveyNode.js"
+import { createSurveyOptionNode } from "./nodeFactories/surveyOptionNode.js"
 import { createTextNode } from "./nodeFactories/textNode.js"
 
 
@@ -29,37 +31,36 @@ const surveyHeight =
         question: null,
         response: null,
         options: [],
-        feedback: null
+        
     }
-    const surveyRect = {
-        id: `${articleNode.id}-${section.id}`,
-        sectionId: section.id,
-        surveyId: section.id,
-        x,
-        worldY: surveyTop,
-        width,
-        height: surveyHeight,
-        padding: r.padding,
-        color: '#e0e0e0',
-        selected: false,
-        question: section.question,
-        type: 'survey',
-        surveyType: section.surveyType,
-        kind: 'lessonSection',
-        sectionType: 'survey',
-        options: section.options,
-   
-        feedback,
-        children,
-        style: {
-            radius: 8,
-            shadowBlur: 4,
-            shadowOffsetX: 0,
-            borderWidth: 1,
-            colors: LAYOUT.colors,
-        }
-    }
-    layout.layoutNodes.set(surveyRect.id, surveyRect)
+    const surveyNode = createSurveyNode({
+    id: `${articleNode.id}-${section.id}`,
+    owner: articleNode.id,
+
+    sectionId: section.id,
+    surveyId: section.id,
+
+    x,
+    worldY: surveyTop,
+    width,
+    height: surveyHeight,
+
+    padding: r.padding,
+    color: '#e0e0e0',
+
+    surveyType: section.surveyType,
+
+    style: {
+        radius: 8,
+        shadowBlur: 4,
+        shadowOffsetX: 0,
+        borderWidth: 1,
+        colors: LAYOUT.colors
+    },
+
+    children
+});
+    layout.layoutNodes.set(surveyNode.id, surveyNode)
 
 const questionNode = createTextNode({
         id: `${articleNode.id}-${section.id}-question`,
@@ -77,9 +78,10 @@ const questionNode = createTextNode({
         sectionType: 'surveyQuestion',
         typography: 'question'
     })
-    layout.layoutNodes.set(questionNode.id, questionNode)
+   // layout.layoutNodes.set(questionNode.id, questionNode)
 children.question = questionNode
-    const responseNode = {
+
+const responseNode = createTextNode({
         id: `${articleNode.id}-${section.id}-response`,
         sectionId: section.id,
         surveyId: section.id,
@@ -91,38 +93,56 @@ children.question = questionNode
         kind: 'lessonSection',
         sectionType: 'surveyResponse',
         typography: 'body',
-    }
-    layout.layoutNodes.set(responseNode.id, responseNode)
+    })
+   
+   // layout.layoutNodes.set(responseNode.id, responseNode)
 children.response = responseNode
     const optionsTop = surveyTop + r.padding + r.questionHeight + r.responseHeight
-    for (let i = 0; i < section.options.length; i++) {
+
+    const options = section.options.map((option, index) => {
+    return createSurveyOptionNode({
+        id: `${surveyNode.id}-option-${index}`,
+
+        owner: surveyNode.id,
+        sectionId: section.id,
+        surveyId: section.id,
+
+        x: x + padding,
+        worldY: optionsTop + index * (r.optionHeight + r.optionGap),
+        width: width - padding * 2,
+        height: r.optionHeight,
+
+        optionIndex: index,
        
-        const optionRect = {
-            id: `${articleNode.id}-${section.id}-option-${i}`,
-            sectionId: section.id,
-            surveyId: section.id,
-            x: contentX,
-            worldY: optionsTop + i * (r.optionHeight + r.optionGap),
-            width: contentWidth,
-            height: r.optionHeight,
-            padding,
-            color: '#d0d0d0',
-            selected: false,
-            text: section.options[i],
-            type: 'text',
-            kind: 'lessonSection',
-            sectionType: 'surveyOption',
-            
-            optionIndex: i,
-            action: 'answerSurvey'
+        children: {
+            text: createTextNode({
+                id: `${surveyNode.id}-option-${index}-text`,
+                owner: `${surveyNode.id}-option-${index}`,
+
+                sectionId: section.id,
+                surveyId: section.id,
+
+                x: x + padding + 10,
+                worldY: optionsTop + index * (r.optionHeight + r.optionGap),
+                width: width - padding * 2 - 20,
+                height: r.optionHeight,
+
+                color: '#000',
+                text: option,
+
+                kind: 'surveyOptionText',
+                sectionType: 'surveyOptionText',
+                typography: 'body'
+            })
         }
-        layout.layoutNodes.set(optionRect.id, optionRect)
-children.options.push(optionRect)
-       
-    }
+    });
+});
+children.options = options
+   
      if( feedback) {
             const feedbackY = optionsTop + optionsHeight + feedbackGap
-            const feedbackNode = {
+
+            const feedbackNode = createTextNode({
                 id: `${articleNode.id}-${section.id}-feedback`,
                 sectionId: section.id,
                 surveyId: section.id,
@@ -138,8 +158,8 @@ children.options.push(optionRect)
                 kind: 'lessonSection',
                 sectionType: 'surveyFeedback',
                 typography: 'body',
-            }
-            layout.layoutNodes.set(feedbackNode.id, feedbackNode)
+            })
+       
 children.feedback = feedbackNode
         }
         return currentY + surveyHeight + r.sectionGap

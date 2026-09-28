@@ -18,6 +18,7 @@ export function createButtonNode({
         id,
         sectionId,
         x,
+        interactive: true,
         worldY,
         width,
         height,

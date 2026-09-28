@@ -1,35 +1,41 @@
-export function createTextNode({
+export function createCardNode({
     id,
-    owner=null,
+    owner = null,
+    type = 'card',
     sectionId = null,
     surveyId = null,
-    interactive = false,
     x,
     worldY,
     width,
     height,
-    color,
-    text,
+    selected = false,
+    color=null,
     padding = 0,
-    kind,
+    kind=null,
     sectionType = null,
-    typography = 'body',
+    style ={},
+    children = {}
 }) {
     return {
         id,
+        type,
         surveyId,
         owner,
         sectionId,
+
         x,
         worldY,
         width,
         height,
+
+        selected,
         color,
-        text,
-        kind,
-        type: 'text',
-        sectionType,
         padding,
-        typography
+
+        kind,
+        sectionType,
+
+        style,
+        children
     };
 }

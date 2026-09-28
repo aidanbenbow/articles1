@@ -1,6 +1,8 @@
+import { LAYOUT } from "../../constants/layoutConstants.js"
 import { drawRect, drawTextBlock } from "../../draw/drawHelpers.js"
 import { getSurveyResult } from "../../helpers/surveyResults.js"
 import { getScreenRect } from "../../modules/renderUtils.js"
+import { renderText } from "../TextRenderer.js"
 
 export function renderSurveyOption( ctx, section, viewport, lesson, assetManager, animations) {
     const rect = getScreenRect(section, viewport)
@@ -20,6 +22,15 @@ const animatedPercentage = percentage * progress
     ctx.fillStyle = '#23979d'
 
     ctx.fillRect(rect.x, rect.y + rect.height - barHeight,barWidth,barHeight)
+    // Option text
+    if (section.children?.text) {
+        renderText(
+            ctx,
+            section.children.text,
+            viewport,
+            LAYOUT.typography
+        );
+    }
     ctx.save()
 if (selected) {
     ctx.font = 'bold 18px Arial'
@@ -33,15 +44,7 @@ if (selected) {
         rect.y + rect.height / 2
     )
 }
-    drawTextBlock(
-        ctx,
-        section.text,
-        rect.x + 10,
-        rect.y ,
-        rect.width - 20,
-        20
-    )
-
+   
       // Percentage
     ctx.font = 'bold 16px Arial'
     ctx.fillStyle = '#333'

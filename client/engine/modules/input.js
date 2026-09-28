@@ -147,28 +147,65 @@ _normalisePointerEvent(event) {
     }
     hitTest(nodes, x, y) {
 
-    const viewport =
-        this.engine.context.getViewport()
+    const viewport = this.engine.context.getViewport()
+const hitNode = (node) => {
+        const nodeY =  (node.worldY ?? node.y ?? 0) - viewport.y;
+console.log(
+    'HIT TEST NODE',
+    node?.id,
+    node?.type,
+    node?.sectionType,
+    node?.interactive,
+    node?.x,
+    node?.worldY,
+    node?.width,
+    node?.height
+);
+        // Children should get first chance to handle the click.
+        if (node.children) {
+            const children = Array.isArray(node.children)
+                ? node.children
+                : Object.values(node.children).flat();
 
-    for(const node of nodes.values()) {
+            // Reverse order so visually topmost/later children win.
+            for (let i = children.length - 1; i >= 0; i--) {
+                const hit = hitNode(children[i]);
 
-      const nodeY =
-    (node.worldY ?? node.y ?? 0) - viewport.y
-if(node.kind === 'screen' || node.kind === 'header' || node.sectionType === 'quiz'
-    || node.sectionType === 'survey' || node.sectionType === 'ordering'||node.interactive === false) 
- continue
+                if (hit) {
+                    return hit;
+                }
+            }
+        }
 
-        if(
+        if (
+            node.kind === 'screen' ||
+            node.kind === 'header' ||
+            node.interactive !== true
+        ) {
+            return null;
+        }
+
+        if (
             x >= node.x &&
             x <= node.x + node.width &&
             y >= nodeY &&
             y <= nodeY + node.height
         ) {
-            return node
+            return node;
+        }
+
+        return null;}
+        // Test each root node.
+    for (const node of nodes.values()) {
+        const hit = hitNode(node);
+
+        if (hit) {
+            return hit;
         }
     }
 
-    return null
+    return null;
+
 }
 rectsOverlap(rect1, rect2) {
     return !(
