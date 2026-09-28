@@ -194,9 +194,9 @@ export function renderLesson(ctx, view, viewport, lesson, assetManager, animatio
             renderSurvey( ctx, section, state, viewport, lesson, assetManager, animations, view.surveys)
             
             break
-            case 'surveyOption':
-            renderSurveyOption(ctx, section, viewport, lesson, assetManager, animations)
-            break
+            // case 'surveyOption':
+            // renderSurveyOption(ctx, section, viewport, lesson, assetManager, animations)
+            // break
              case 'ordering':
             renderOrdering( ctx, section, state, viewport, lesson)
             break

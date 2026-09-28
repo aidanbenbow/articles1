@@ -50,7 +50,7 @@ const dragDropFeedback =
 const orderingTotal =
     lesson?.orderingTotal || 0
 
-    const surveys = groupSurveyNodesBySurveyId(lessonSectionNodes)
+    const surveys = allnodes.filter(node => node.kind === 'lessonSection' && node.sectionType === 'survey')
     
     return {
         inputNodes,
@@ -100,43 +100,43 @@ const orderingTotal =
 }
 
 
-function groupSurveyNodesBySurveyId(allnodes) {
-const surveys = new Map()
+// function groupSurveyNodesBySurveyId(allnodes) {
+// const surveys = new Map()
 
-for(const node of allnodes) {
-    if(node.sectionType !== 'survey') continue
+// for(const node of allnodes) {
+//     if(node.sectionType !== 'survey') continue
 
-    surveys.set(node.surveyId, {
-surveyId: node.surveyId,
-            survey: node,
-            question: null,
-            response: null,
-            options: [],
-            feedback: null
-        }
-    )
-}
-for(const node of allnodes) {
-const group = surveys.get(node.surveyId)
-if(!group) continue
+//     surveys.set(node.surveyId, {
+// surveyId: node.surveyId,
+//             survey: node,
+//             question: null,
+//             response: null,
+//             options: [],
+//             feedback: null
+//         }
+//     )
+// }
+// for(const node of allnodes) {
+// const group = surveys.get(node.surveyId)
+// if(!group) continue
 
-switch(node.sectionType) {
-    case 'surveyQuestion':
-        group.question = node
-        break
-    case 'surveyResponse':
-        group.response = node
-        break
-    case 'surveyOption':
-        group.options.push(node)
-        break
-    case 'surveyFeedback':
-        group.feedback = node
-        break 
-}
-}
-for(const group of surveys.values()) {
-    group.options.sort((a,b) => a.worldY - b.worldY)
-}
-return [...surveys.values()]
-}
+// switch(node.sectionType) {
+//     case 'surveyQuestion':
+//         group.question = node
+//         break
+//     case 'surveyResponse':
+//         group.response = node
+//         break
+//     case 'surveyOption':
+//         group.options.push(node)
+//         break
+//     case 'surveyFeedback':
+//         group.feedback = node
+//         break 
+// }
+// }
+// for(const group of surveys.values()) {
+//     group.options.sort((a,b) => a.worldY - b.worldY)
+// }
+// return [...surveys.values()]
+// }

@@ -2,7 +2,7 @@ import { LAYOUT } from "../constants/layoutConstants.js";
 import { getScreenPosition } from "../modules/renderUtils.js";
 import { getWrappedLines } from "./renderLessonIntro.js";
 
-export function renderText(ctx, node, viewport, typography) {
+export function renderText(ctx, node, viewport, typography, textOverride=null) {
 
     const rect = getScreenPosition(node, viewport);
 
@@ -10,6 +10,7 @@ export function renderText(ctx, node, viewport, typography) {
 
     const padding = node.padding ?? 10;
 const typo = typography[node.typography]
+const text = textOverride ?? node.text ?? '';
     ctx.save();
 
     ctx.fillStyle = node.color;
@@ -18,7 +19,7 @@ const typo = typography[node.typography]
 
     const lines = getWrappedLines(
         ctx,
-        node.text ?? '',
+        text,
         node.width - padding * 2
     );
 

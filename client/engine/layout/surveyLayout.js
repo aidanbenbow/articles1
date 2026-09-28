@@ -25,7 +25,12 @@ const surveyHeight =
 
      const contentX = x + r.padding
      const contentWidth = width - r.padding * 2    
-    
+    const children = {
+        question: null,
+        response: null,
+        options: [],
+        feedback: null
+    }
     const surveyRect = {
         id: `${articleNode.id}-${section.id}`,
         sectionId: section.id,
@@ -43,8 +48,9 @@ const surveyHeight =
         kind: 'lessonSection',
         sectionType: 'survey',
         options: section.options,
-        surveyId: section.id,
+   
         feedback,
+        children,
         style: {
             radius: 8,
             shadowBlur: 4,
@@ -55,22 +61,6 @@ const surveyHeight =
     }
     layout.layoutNodes.set(surveyRect.id, surveyRect)
 
-// const questionNode = {
-//         id: `${articleNode.id}-${section.id}-question`,
-//         sectionId: section.id,
-//         surveyId: section.id,
-//         x: contentX,
-//         worldY: surveyTop + r.padding,
-//         width: contentWidth,
-//         height: r.questionHeight,
-//         text: section.question,
-//         padding: 0,
-//         color: '#000000',
-//         type: 'text',
-//         kind: 'lessonSection',
-//         sectionType: 'surveyQuestion',
-//         typography: 'surveyQuestion'
-//     }
 const questionNode = createTextNode({
         id: `${articleNode.id}-${section.id}-question`,
         sectionId: section.id,
@@ -88,7 +78,7 @@ const questionNode = createTextNode({
         typography: 'question'
     })
     layout.layoutNodes.set(questionNode.id, questionNode)
-
+children.question = questionNode
     const responseNode = {
         id: `${articleNode.id}-${section.id}-response`,
         sectionId: section.id,
@@ -100,9 +90,10 @@ const questionNode = createTextNode({
         type: 'surveyResponse',
         kind: 'lessonSection',
         sectionType: 'surveyResponse',
+        typography: 'body',
     }
     layout.layoutNodes.set(responseNode.id, responseNode)
-
+children.response = responseNode
     const optionsTop = surveyTop + r.padding + r.questionHeight + r.responseHeight
     for (let i = 0; i < section.options.length; i++) {
        
@@ -126,7 +117,7 @@ const questionNode = createTextNode({
             action: 'answerSurvey'
         }
         layout.layoutNodes.set(optionRect.id, optionRect)
-
+children.options.push(optionRect)
        
     }
      if( feedback) {
@@ -149,6 +140,7 @@ const questionNode = createTextNode({
                 typography: 'body',
             }
             layout.layoutNodes.set(feedbackNode.id, feedbackNode)
+children.feedback = feedbackNode
         }
         return currentY + surveyHeight + r.sectionGap
     }

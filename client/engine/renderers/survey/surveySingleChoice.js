@@ -3,6 +3,7 @@ import { drawRect, drawTextBlock } from "../../draw/drawHelpers.js"
 import { getScreenRect } from "../../modules/renderUtils.js"
 import { renderCard } from "../CardRenderer.js"
 import { renderText } from "../TextRenderer.js"
+import { renderSurveyOption } from "./surveyOption.js"
 
 export function renderSurveySingleChoice(
     ctx,
@@ -18,16 +19,19 @@ export function renderSurveySingleChoice(
     const total = results.totalResponses || 0
     const feedback = survey?.getFeedback() || null
     
-     const surveyBack = surveys[0].survey  
-     const surveyQuestion = surveys[0].question
-     console.log(surveys)
-    renderCard(ctx, surveyBack,viewport,surveyBack.style  )
-renderText(ctx, surveyQuestion, viewport, LAYOUT.typography)
+     const surveyNode = section  
+     const questionNode = surveyNode.children.question
+     const responseNode = surveyNode.children.response
+     const feedbackNode = surveyNode.children.feedback
+    renderCard(ctx, surveyNode,viewport,surveyNode.style  )
+renderText(ctx, questionNode, viewport, LAYOUT.typography)
   
-    drawTextBlock(  ctx,  `${total} responses`,  section.responseX, section.responseY, section.responseWidth, 16)
-    
+    renderText(ctx, responseNode, viewport, LAYOUT.typography, `Responses: ${total}`)
 
-    if (response) {
-        drawTextBlock(  ctx, feedback,  section.feedbackX, section.feedbackY, section.feedbackWidth, 16)
+    for(const optionNode of surveyNode.children.options) {
+        renderSurveyOption(ctx, optionNode, viewport, lesson, assetManager, animations)
+    }
+    if(feedbackNode) {
+        renderText(ctx, feedbackNode, viewport, LAYOUT.typography)
     }
 }

@@ -26,48 +26,48 @@ export function renderLessonIntro(ctx, view, viewport) {
     }
 }
 
-function renderLessonDescription(ctx, node, viewport, view) {
-    const rect = getScreenRect(node, viewport)
-    const padding = node.padding || 10
+// function renderLessonDescription(ctx, node, viewport, view) {
+//     const rect = getScreenRect(node, viewport)
+//     const padding = node.padding || 10
 
-    ctx.fillStyle = node.color
-    ctx.fillRect(
-        rect.x,
-        rect.y,
-        rect.width,
-        rect.height
-    )
+//     ctx.fillStyle = node.color
+//     ctx.fillRect(
+//         rect.x,
+//         rect.y,
+//         rect.width,
+//         rect.height
+//     )
 
-    ctx.fillStyle = '#000'
-    ctx.font = '16px Arial'
-    const text = node.text || ''
-    const lines = getWrappedLines(ctx, text, rect.width - 2 * padding)
+//     ctx.fillStyle = '#000'
+//     ctx.font = '16px Arial'
+//     const text = node.text || ''
+//     const lines = getWrappedLines(ctx, text, rect.width - 2 * padding)
 
-    let y = rect.y + padding
-    for(const line of lines) {
-        ctx.fillText(
-            line,
-            rect.x + padding,
-            y
-        )
-        y += 20
-    }
+//     let y = rect.y + padding
+//     for(const line of lines) {
+//         ctx.fillText(
+//             line,
+//             rect.x + padding,
+//             y
+//         )
+//         y += 20
+//     }
 
-}
+// }
 
-function renderLessonStats(ctx, node, viewport)  {
-    const rect = getScreenRect(node, viewport)
-    const padding = node.padding || 10
+// function renderLessonStats(ctx, node, viewport)  {
+//     const rect = getScreenRect(node, viewport)
+//     const padding = node.padding || 10
 
-    ctx.fillStyle = node.color
-    ctx.font = '16px Arial'
-    const text = node.text || ''
-    ctx.fillText(
-        text,
-        rect.x + padding,
-        rect.y + padding
-    )
-}
+//     ctx.fillStyle = node.color
+//     ctx.font = '16px Arial'
+//     const text = node.text || ''
+//     ctx.fillText(
+//         text,
+//         rect.x + padding,
+//         rect.y + padding
+//     )
+// }
 
 // function renderLessonIntroText(ctx, node, viewport, view) {
 
