@@ -11,6 +11,7 @@ export function layoutSurveySection(layout,articleNode, section, currentY, x, wi
     const survey = lesson.activities[section.id]
     const answered = survey.getResponse() !== null ? survey.getResponse() : null
     const feedback = answered !== null ? survey.getFeedback() : null
+    const total = survey.getResults()?.totalResponses || 0
     
     const feedbackHeight = feedback ? r.feedbackHeight : 0
     const feedbackGap = feedback ? r.feedbackGap : 0
@@ -93,6 +94,7 @@ const responseNode = createTextNode({
         kind: 'lessonSection',
         sectionType: 'surveyResponse',
         typography: 'body',
+        text:`Responses: ${total}`
     })
    
    // layout.layoutNodes.set(responseNode.id, responseNode)

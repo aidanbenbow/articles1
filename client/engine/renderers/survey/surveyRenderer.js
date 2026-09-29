@@ -1,17 +1,29 @@
 import { renderSurveySingleChoice } from "./surveySingleChoice.js"
 
-export function renderSurvey(ctx, section,state, viewport, lesson, assetManager, animations, surveys) {
-
-    switch (section.surveyType) {
-
+export function renderSurvey(ctx, node, viewport, context) {
+    switch (node.surveyType) {
         case 'single':
-            renderSurveySingleChoice(ctx, section,state, viewport, lesson, assetManager, animations, surveys)
+            renderSurveySingleChoice(
+                ctx,
+                node,
+                viewport,
+                context
+            )
             break
 
         case 'multiple':
-            renderSurveySingleChoice(ctx, section,state, viewport, lesson, assetManager, animations, surveys)
+            renderSurveyMultipleChoice(
+                ctx,
+                node,
+                viewport,
+                context
+            )
             break
 
-       
+        default:
+            console.warn(
+                'Unknown survey type:',
+                node.surveyType
+            )
     }
 }

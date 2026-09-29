@@ -4,13 +4,13 @@ import { getSurveyResult } from "../../helpers/surveyResults.js"
 import { getScreenRect } from "../../modules/renderUtils.js"
 import { renderText } from "../TextRenderer.js"
 
-export function renderSurveyOption( ctx, section, viewport, lesson, assetManager, animations) {
-    const rect = getScreenRect(section, viewport)
-    const survey = lesson.activities?.[section.surveyId]
+export function renderSurveyOption( ctx, node, viewport, context) {
+    const rect = getScreenRect(node, viewport)
+    const survey = context.lesson.activities?.[node.surveyId]
     const response = survey?.getResponse() || null
-    const selected = response?.selected === section.optionIndex
-    const { votes, percentage } = getSurveyResult( survey, section.optionIndex)
-const progress =  animations?.getValue(`survey-answer-${section.surveyId}`) ?? 1
+    const selected = response?.selected === node.optionIndex
+    const { votes, percentage } = getSurveyResult( survey, node.optionIndex)
+const progress =  context.animations?.getValue(`survey-answer-${node.surveyId}`) ?? 1
 const animatedPercentage = percentage * progress
 
     drawRect(ctx, { ...rect, color: selected ? '#b8f5b8' : '#d0d0d0'})
@@ -23,12 +23,13 @@ const animatedPercentage = percentage * progress
 
     ctx.fillRect(rect.x, rect.y + rect.height - barHeight,barWidth,barHeight)
     // Option text
-    if (section.children?.text) {
+    if (node.children?.text) {
         renderText(
             ctx,
-            section.children.text,
+            node.children.text,
             viewport,
-            LAYOUT.typography
+            context
+
         );
     }
     ctx.save()
