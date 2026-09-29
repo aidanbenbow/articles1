@@ -1,5 +1,10 @@
 // layoutConstants.js
 
+import { getDragDropLayout } from "./LAYOUTS/dragDropLayoutGet.js"
+import { getLessonIntroLayout } from "./LAYOUTS/lessonIntroLayoutGet.js"
+import { getOrderingLayout } from "./LAYOUTS/orderingLayoutGet.js"
+import { getSurveyLayout } from "./LAYOUTS/surveyLayoutGet.js"
+
 export const LAYOUT = {
     padding: 20,
     
@@ -109,22 +114,15 @@ connectorColor: "#e5e7eb"
 }
 
 export function getResponsiveLayout(screenWidth, screenHeight) {
+    const compact = screenWidth < LAYOUT.breakPoints.compact
 
-    const compact =
-        screenWidth < LAYOUT.breakPoints.compact
+    const mobile =screenWidth < LAYOUT.breakPoints.mobile
 
-    const mobile =
-        screenWidth < LAYOUT.breakPoints.mobile
-
-    const tablet =
-        screenWidth < LAYOUT.breakPoints.tablet
+    const tablet = screenWidth < LAYOUT.breakPoints.tablet
 
     const padding = Math.max(
         LAYOUT.minPadding,
-        Math.min(
-            LAYOUT.maxPadding,
-            screenWidth * 0.05
-        )
+        Math.min( LAYOUT.maxPadding, screenWidth * 0.05 )
     )
 
     const contentWidth = Math.min(
@@ -203,13 +201,7 @@ export function getResponsiveLayout(screenWidth, screenHeight) {
     bodyFontSize: compact ? 12 : LAYOUT.typography.body,
     stepFontSize: compact ? 11 : LAYOUT.typography.step,
 },
-lessonIntro: {
-    titleHeight: compact ? 52 : 60,
-    descriptionHeight: compact ? 72 : 60,
-    statsHeight: 30,
-    gap: compact ? 12 : 16,
-    statsGap: compact ? 16 : 20
-},
+lessonIntro: getLessonIntroLayout(compact),
 button:{
 height: compact ? 32 : 40,
 },
@@ -223,55 +215,14 @@ height: compact ? 32 : 40,
         browseAll: {
             height: 64
         },
-         dragDrop: {
-            instructionHeight: compact ? 32 : 36,
-
-            wordHeight: compact ? 32 : 36,
-
-            wordGap: compact ? 6 : 8,
-
-            wordPaddingX: compact ? 8 : 12,
-
-            wordMinWidth: compact ? 65 : 80,
-
-            paragraphLineHeight: compact ? 38 : 42,
-
-            paragraphGap: compact ? 3 : 5,
-
-            gapWidth: compact ? 90 : 110,
-
-            gapHeight: compact ? 28 : 32,
-
-            checkButtonHeight: compact ? 36 : 40,
-
-            checkButtonGap: compact ? 12 : 15,
-
-            feedbackHeight: compact ? 36 : 40,
-
-            feedbackGap: compact ? 8 : 10,
-
-            sectionGap: compact ? 16 : 25
-        },
+         dragDrop: getDragDropLayout(compact),
         heading: {
     height: compact ? 40 : 45,
     gap: compact ? 8 : 10
 },
-survey: {
-    padding: compact ? 14 : 20,
+survey: getSurveyLayout(compact),
+ordering: getOrderingLayout(compact)
 
-    questionHeight: compact ? 42 : 50,
-    responseHeight: compact ? 24 : 30,
-
-    optionHeight: compact ? 36 : 42,
-    optionGap: compact ? 8 : 10,
-
-    feedbackHeight: compact ? 36 : 40,
-    feedbackGap: compact ? 8 : 10,
-
-    responseWidth: compact ? 80 : 100,
-
-    sectionGap: compact ? 12 : 16
-}
     }
 }
 

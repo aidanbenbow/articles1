@@ -2,15 +2,15 @@ import { LAYOUT } from "../constants/layoutConstants.js";
 import { getScreenPosition } from "../modules/renderUtils.js";
 import { getWrappedLines } from "./renderLessonIntro.js";
 
-export function renderText(ctx, node, viewport, typography, textOverride=null) {
+export function renderText(ctx, node, viewport,context) {
 
     const rect = getScreenPosition(node, viewport);
 
     if (!rect) return;
-
+const typography = context?.typography
     const padding = node.padding ?? 10;
 const typo = typography[node.typography]
-const text = textOverride ?? node.text ?? '';
+const text =node.text ?? '';
     ctx.save();
 
     ctx.fillStyle = node.color;
@@ -24,10 +24,13 @@ const text = textOverride ?? node.text ?? '';
     );
 
     let y = rect.y + padding;
-
+const lineHeight =
+    node.lineHeight ??
+    typo.lineHeight ??
+    20
     for (const line of lines) {
 
-        if (y + node.lineHeight > rect.y + node.height) {
+        if (y + lineHeight > rect.y + node.height) {
             break;
         }
 

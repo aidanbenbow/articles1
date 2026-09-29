@@ -149,18 +149,9 @@ _normalisePointerEvent(event) {
 
     const viewport = this.engine.context.getViewport()
 const hitNode = (node) => {
+    if(!node) return null
         const nodeY =  (node.worldY ?? node.y ?? 0) - viewport.y;
-console.log(
-    'HIT TEST NODE',
-    node?.id,
-    node?.type,
-    node?.sectionType,
-    node?.interactive,
-    node?.x,
-    node?.worldY,
-    node?.width,
-    node?.height
-);
+
         // Children should get first chance to handle the click.
         if (node.children) {
             const children = Array.isArray(node.children)
@@ -191,6 +182,7 @@ console.log(
             y >= nodeY &&
             y <= nodeY + node.height
         ) {
+       
             return node;
         }
 

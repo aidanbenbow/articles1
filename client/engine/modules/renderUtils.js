@@ -19,6 +19,8 @@ import { renderQuiz } from "../renderers/quiz/quizRenderer.js";
 import { renderSurveyOption } from "../renderers/survey/surveyOption.js";
 import { renderSurvey } from "../renderers/survey/surveyRenderer.js";
 import { renderParagraph } from "../renderers/lesson/paragraphRenderer.js";
+import { renderNode } from "../renderers/general/renderNode.js";
+import { LAYOUT } from "../constants/layoutConstants.js";
 
 
 const DEFAULT_FILL_COLOR = '#791e1e';
@@ -163,12 +165,17 @@ function renderProgress(ctx, progress, x, y, width) {
 }
 
 export function renderLesson(ctx, view, viewport, lesson, assetManager, animations, dragState) {
-    
-    for (const section of view.lessonSectionNodes) {
-        const state =  lesson.getSectionState(section.sectionId)
-        renderLessonSection( ctx, section, state, viewport, lesson, assetManager, animations, dragState, view)
+    const context ={
+        lesson,
+        assetManager,
+        animations,
+        dragState,
+        view,
+        typography: LAYOUT.typography
     }
-  
+for(const node of view.lessonSectionNodes) {
+   renderNode(ctx, node, viewport, context)
+}
     }
 
     function renderLessonSection( ctx, section, state, viewport, lesson, assetManager, animations, dragState, view) {
@@ -194,24 +201,21 @@ export function renderLesson(ctx, view, viewport, lesson, assetManager, animatio
             renderSurvey( ctx, section, state, viewport, lesson, assetManager, animations, view.surveys)
             
             break
-            // case 'surveyOption':
-            // renderSurveyOption(ctx, section, viewport, lesson, assetManager, animations)
-            // break
              case 'ordering':
             renderOrdering( ctx, section, state, viewport, lesson)
             break
 
-        case 'orderingItem':
-            renderOrderingItem( ctx,section,state,viewport,lesson)
-            break
+        // case 'orderingItem':
+        //     renderOrderingItem( ctx,section,state,viewport,lesson)
+        //     break
 
-        case 'orderingButton':
-            renderOrderingButton(ctx,section,state,viewport,lesson)
-            break
+        // case 'orderingButton':
+        //     renderOrderingButton(ctx,section,state,viewport,lesson)
+        //     break
 
-        case 'orderingCheck':
-            renderOrderingCheck(ctx,section,state,viewport,lesson)
-            break
+        // case 'orderingCheck':
+        //     renderOrderingCheck(ctx,section,state,viewport,lesson)
+        //     break
             case 'continueButton':
             renderContinueButton(  ctx,  section,  viewport)
             break

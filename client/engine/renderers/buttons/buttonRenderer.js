@@ -3,7 +3,7 @@ import { drawRect, drawText } from "../../draw/drawHelpers.js"
 import { getScreenPosition } from "../../modules/renderUtils.js"
 
 export function renderButton(ctx, node, viewport,) {
-        
+      
 const rect = getScreenPosition(node, viewport)
 if (!rect) return
 

@@ -1,28 +1,20 @@
-import { renderLesson } from "../modules/renderUtils.js"
-import { renderLessonComplete } from "./renderLessonComplete.js"
-import { renderLessonHeader } from "./renderLessonHeader.js"
-import { renderLessonIntro } from "./renderLessonIntro.js"
+
+import { renderNode } from "./general/renderNode.js"
 
 export function renderLessonScreen(
     ctx,
-    view,
     viewport,
-    lessonState,
-    assetManager,
-    animations, dragState
+    renderContext
 ) {
-    if (!lessonState)   return
+       
+    if (!renderContext.lesson)   return
 
-    switch (lessonState.phase) {
-        case 'intro':
-            renderLessonIntro( ctx, view, viewport)
-            break
-        case 'active':
-            renderLesson(ctx,view,viewport,lessonState, assetManager, animations, dragState)
-            renderLessonHeader(ctx,lessonState,viewport)
-            break
-        case 'completed':
-            renderLessonComplete(    ctx,   view,   viewport )
-            break
+    for(const node of renderContext.layout) {
+        renderNode(
+            ctx,
+            node,
+            viewport,
+            renderContext
+        )
     }
 }

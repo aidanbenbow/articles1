@@ -7,6 +7,7 @@ import { layoutFinishButton } from "../layout/layoutFinishButton.js"
 import { layoutHeadingBlock } from "../layout/layoutHeadingBlock.js"
 import { layoutOrderingSection } from "../layout/layoutOrderingSection.js"
 import { layoutParagraphBlock } from "../layout/layoutParagraphBlock.js"
+import { layoutLessonIntro } from "../layout/lessonIntroLayout.js"
 import { LessonListLayout } from "../layout/lessonListLayout.js"
 import { createButtonNode } from "../layout/nodeFactories/buttonNode.js"
 import { createTextNode } from "../layout/nodeFactories/textNode.js"
@@ -164,7 +165,7 @@ clearScreenLayout() {
     currentY += 100
 
     if(lesson.phase === 'intro') {
-        this.layoutLessonIntro(articleNode,lesson, currentY, x, width, padding, color, responsive) 
+        layoutLessonIntro(this.layout,articleNode,lesson, currentY, x, width, padding, color, responsive) 
         return
     }
 
@@ -184,79 +185,10 @@ clearScreenLayout() {
 this.layout.scroll.updateBounds(currentY + 50)
 }
 
-layoutLessonIntro(articleNode, lesson, currentY, x, width, padding, color, responsive) {
-    const titleHeight = responsive.lessonIntro.titleHeight
-    const descriptionHeight = lesson.description ? responsive.lessonIntro.descriptionHeight : 0
-    const gap = responsive.lessonIntro.gap
-    const titleNode = createTextNode({
-        id: `${articleNode.id}-title`,
-        sectionId: 'title',
-        x,
-        worldY: currentY,
-        width,
-        height: titleHeight,
-        color,
-        text: lesson.title,
-        kind: 'lessonTitle',
-        type: 'text',
-        padding,
-        typography: 'title'
-    })
-    this.layout.layoutNodes.set(`${articleNode.id}-title`, titleNode)
-       
-    currentY += titleHeight  + gap
 
-     if (lesson.description) {
-        const descriptionNode = createTextNode({
-            id: `${articleNode.id}-description`,
-            sectionId: 'description',
-            x,
-            worldY: currentY,
-            width,
-            height: descriptionHeight,
-            color,
-            text: lesson.description,
-            kind: 'lessonDescription',
-            type: 'text',
-            padding,
-            typography: 'body'
-        })
-
-
-        this.layout.layoutNodes.set(`${articleNode.id}-description`, descriptionNode)
-
-        currentY += descriptionHeight + gap
-    }
-     const lessonTotal = lesson.lessonTotal || 0
-    const quizCount = lesson.quizTotal || 0
-    const surveyCount = lesson.surveyTotal || 0
-
-    const stats = [`${lessonTotal} learning blocks`, `${quizCount} quizzes`, `${surveyCount} surveys`].filter(Boolean).join(' • ')
-
-const statsNode = createTextNode({
-    id: `${articleNode.id}-stats`,
-    sectionId: 'stats',
-    x,
-    worldY: currentY,
-    width,
-    height: 30,
-    color,
-    text: stats,
-    kind: 'lessonStats',
-    type: 'text',
-    padding,
-    typography: 'body'
-})
-
-    this.layout.layoutNodes.set(`${articleNode.id}-stats`, statsNode)
- 
-currentY += responsive.lessonIntro.statsHeight + gap
-
-    currentY = this.layoutStartButton(articleNode, currentY, x, width, padding, color, responsive)
-    return currentY
-}
 
 layoutSection( articleNode, currentSection, currentY, x, width, padding, color, lesson, responsive) {
+  
         switch(currentSection.type){
             
                 case 'lesson':
@@ -268,7 +200,7 @@ layoutSection( articleNode, currentSection, currentY, x, width, padding, color, 
             case 'survey':
                 return layoutSurveySection(this.layout, articleNode, currentSection, currentY, x,width, padding,color,  lesson, responsive)
                 case 'ordering':
-            return layoutOrderingSection( articleNode,this.layout,currentSection,currentY,x,width,padding,color,lesson)
+            return layoutOrderingSection( articleNode,this.layout,currentSection,currentY,x,width,padding,color,lesson, responsive)
             case 'dragdrop':
                 return layoutDragDropSection(articleNode, this.layout, currentSection, currentY, x, width, padding, color, lesson, responsive)
         }

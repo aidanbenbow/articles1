@@ -1,3 +1,8 @@
+import { createButtonNode } from "./nodeFactories/buttonNode.js"
+import { createTextNode } from "./nodeFactories/textNode.js"
+import { createOrderingItemNode } from "./nodeFactories/orderingItemNode.js";
+import { createOrderingNode } from "./nodeFactories/orderingNode.js";
+
 export function layoutOrderingSection(
     articleNode,
     layout,
@@ -7,36 +12,43 @@ export function layoutOrderingSection(
     width,
     padding,
     color,
-    lesson
+    lesson,
+    responsive
 ) {
-    const questionHeight = 40
-    const itemHeight = 45
-    const itemGap = 10
-    const buttonWidth = 35
-    const buttonGap = 8
+    const questionHeight = responsive.ordering.questionHeight
+    const itemHeight = responsive.ordering.itemHeight
+    const itemGap = responsive.ordering.itemGap
+    const buttonWidth = responsive.ordering.buttonWidth
+    const buttonGap = responsive.ordering.buttonGap
 
     const orderingTop = currentY
 
-    const answer =
-        lesson.activities[section.id]
-       
+    const answer = lesson.activities[section.id]
+    const hasChecked = answer?.checked === true
 
-    const items =
-        answer?.items || section.items
+const feedback = hasChecked
+    ? (answer?.feedback || section.feedback)
+    : null
+    const items = answer?.items || section.items
 
-    const feedbackHeight =
-        answer?.feedback ? 40 : 0
+    const itemsTop = orderingTop + padding + questionHeight + 15
 
-    const feedbackGap =
-        feedbackHeight > 0 ? 10 : 0
+    const feedbackHeight = feedback ? responsive.ordering.feedbackHeight : 0
+        
 
-    const checkButtonHeight = 40
-    const checkButtonGap = 15
+    const feedbackGap =   feedbackHeight > 0 ? responsive.ordering.feedbackGap : 0
 
+    const checkButtonHeight = responsive.ordering.checkButtonHeight
+    const checkButtonGap = responsive.ordering.checkButtonGap
+const itemWidth = width - padding * 2 - buttonWidth - buttonGap
+const textWidth = itemWidth - padding * 2
     const itemsHeight =
         items.length * itemHeight +
-        (items.length - 1) * itemGap
-
+        Math.max(0, items.length - 1) * itemGap
+const checkButtonY =
+        itemsTop + itemsHeight + checkButtonGap
+        const feedbackY =
+        checkButtonY + checkButtonHeight + feedbackGap
     const orderingHeight =
         padding * 2 +
         questionHeight +
@@ -46,217 +58,143 @@ export function layoutOrderingSection(
         checkButtonHeight +
         feedbackGap +
         feedbackHeight
+const buttonHeight = itemHeight / 2
+const buttonX = x + width - padding - buttonWidth
+        const children = {
+            question: createTextNode({
+                id: `${articleNode.id}-${section.id}-question`,
+                sectionId: section.id,
+                x: x + padding,
+                worldY: orderingTop + padding,
+                width: width - padding * 2,
+                height: questionHeight,
+                color,
+                text: section.question,
+                kind: 'lessonSection',
+    typography: 'question',
+                sectionType: 'orderingQuestion',
+            }),
+            items: [],
+            checkButton: null,
+            feedback: null
+        }
 
-    const orderingRect = {
-        id: `${articleNode.id}-${section.id}`,
-        sectionId: section.id,
-
-        x,
-        worldY: orderingTop,
-        width,
-        height: orderingHeight,
-
-        padding,
-        color: '#e0e0e0',
-
-        selected: false,
-
-        question: section.question,
-
-        type: 'ordering',
-        kind: 'lessonSection',
-        sectionType: 'ordering',
-
-        orderingId: section.id,
-
-        items,
-
-        feedback: answer?.feedback || '',
-        feedbackHeight,
-
-        feedbackY:
-            orderingTop +
-            padding +
-            questionHeight +
-            15 +
-            itemsHeight +
-            checkButtonGap +
-            checkButtonHeight +
-            feedbackGap,
-
-        feedbackX: x + padding,
-        feedbackWidth: width - padding * 2
-    }
-
-    layout.layoutNodes.set(
-        orderingRect.id,
-        orderingRect
-    )
+  
 
     // Create each ordering item
     for (let i = 0; i < items.length; i++) {
 
         const itemY =
-            orderingTop +
-            padding +
-            questionHeight +
-            15 +
+            itemsTop +
             i * (itemHeight + itemGap)
 
-        const itemRect = {
-            id: `${articleNode.id}-${section.id}-item-${i}`,
+            const item = createOrderingItemNode({
+                id: `${articleNode.id}-${section.id}-item-${i}`,
+                sectionId: section.id,
+                orderingId: section.id,
+                itemIndex: i,
+                x: x + padding,
+                worldY: itemY,
+                width: width - padding * 2 - buttonWidth - buttonGap,
+                height: itemHeight
+            })
 
-            sectionId: section.id,
+            item.children.text = createTextNode({
+                id: `${articleNode.id}-${section.id}-item-${i}-text`,
+                sectionId: section.id,
+                x: x + padding,
+                worldY: itemY,
+                width: textWidth,
+                height: itemHeight,
+                color: '#000000',
+                text: items[i],
+                kind: 'lessonSection',
+                sectionType: 'orderingItemText',
+                typography: 'body'
+            })
 
-            x: x + padding,
-            worldY: itemY,
+            item.children.upButton = createButtonNode({
+                id: `${articleNode.id}-${section.id}-up-${i}`,
+                sectionId: section.id,
+                x: buttonX,
+                worldY: itemY,
+                width: buttonWidth/2,
+                height: buttonHeight,
+                color: '#bbbbbb',
+                kind: 'lessonSection',
+                sectionType: 'orderingButton',
+                action: 'moveOrderingItem',
+                orderingId: section.id,
+                itemIndex: i,
+                text: '↑',
+                direction: 'up'
+            })
 
-            width:
-                width -
-                padding * 2 -
-                buttonWidth -
-                buttonGap,
+            item.children.downButton = createButtonNode({
+                id: `${articleNode.id}-${section.id}-down-${i}`,
+                sectionId: section.id,
+                x: buttonX,
+                worldY: itemY + buttonHeight,
+                width: buttonWidth/2,
+                height: buttonHeight,
+                color: '#bbbbbb',
+                kind: 'lessonSection',
+                sectionType: 'orderingButton',
+                action: 'moveOrderingItem',
+                orderingId: section.id,
+                itemIndex: i,
+               text: '↓',
+                direction: 'down'
+            })
+            children.items.push(item)
 
-            height: itemHeight,
-
-            padding,
-
-            color: '#d0d0d0',
-
-            selected: false,
-
-            text: items[i],
-
-            type: 'text',
-            kind: 'lessonSection',
-
-            sectionType: 'orderingItem',
-
-            orderingId: section.id,
-
-            itemIndex: i
-        }
-
-        layout.layoutNodes.set(
-            itemRect.id,
-            itemRect
-        )
-
-        // Up button
-        const upButton = {
-            id: `${articleNode.id}-${section.id}-up-${i}`,
-
-            sectionId: section.id,
-
-            x:
-                x +
-                width -
-                padding -
-                buttonWidth,
-
-            worldY: itemY,
-
-            width: buttonWidth,
-            height: 20,
-
-            color: '#bbbbbb',
-
-            type: 'button',
-            kind: 'lessonSection',
-
-            sectionType: 'orderingButton',
-
-            action: 'moveOrderingItem',
-
-            orderingId: section.id,
-
-            itemIndex: i,
-
-            direction: 'up'
-        }
-
-        layout.layoutNodes.set(
-            upButton.id,
-            upButton
-        )
-
-        // Down button
-        const downButton = {
-            id: `${articleNode.id}-${section.id}-down-${i}`,
-
-            sectionId: section.id,
-
-            x:
-                x +
-                width -
-                padding -
-                buttonWidth,
-
-            worldY:
-                itemY + 25,
-
-            width: buttonWidth,
-            height: 20,
-
-            color: '#bbbbbb',
-
-            type: 'button',
-            kind: 'lessonSection',
-
-            sectionType: 'orderingButton',
-
-            action: 'moveOrderingItem',
-
-            orderingId: section.id,
-
-            itemIndex: i,
-
-            direction: 'down'
-        }
-
-        layout.layoutNodes.set(
-            downButton.id,
-            downButton
-        )
+      
     }
 
-    // Check button
-    const checkButton = {
+    children.checkButton = createButtonNode({
         id: `${articleNode.id}-${section.id}-check`,
-
         sectionId: section.id,
-
         x: x + padding,
-
-        worldY:
-            orderingTop +
-            padding +
-            questionHeight +
-            15 +
-            itemsHeight +
-            checkButtonGap,
-
+        worldY: checkButtonY,
         width: width - padding * 2,
         height: checkButtonHeight,
-
         color: '#b0b0b0',
-
-        type: 'button',
         kind: 'lessonSection',
-
         sectionType: 'orderingCheck',
-
         action: 'checkOrdering',
-
         orderingId: section.id,
-
         text: 'Check answer'
-    }
+    })
 
-    layout.layoutNodes.set(
-        checkButton.id,
-        checkButton
-    )
-
+   if(feedback){
+    children.feedback = createTextNode({
+        id: `${articleNode.id}-${section.id}-feedback`,
+        sectionId: section.id,
+        x: x + padding,
+        worldY: feedbackY,
+        width: width - padding * 2,
+        height: feedbackHeight,
+        color: '#000000',
+        text: feedback,
+        kind: 'lessonSection',
+        sectionType: 'orderingFeedback',
+        typography: 'body'
+    })          
+   }
+   const orderingNode = createOrderingNode({
+        id: `${articleNode.id}-${section.id}`,
+        sectionId: section.id,
+        orderingId: section.id,
+        x,
+        worldY: orderingTop,
+        width,
+        height: orderingHeight,
+        padding,
+        color,
+        children
+    })
+    layout.layoutNodes.set(orderingNode.id, orderingNode)
+   
     return currentY + orderingHeight + 10
 }
+

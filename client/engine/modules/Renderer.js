@@ -3,6 +3,7 @@ import { renderBackground, } from './renderUtils.js'
 import { renderHome } from '../renderers/homeRenderer.js'
 import { renderLessonScreen } from '../renderers/lessonScreenRenderer.js'
 import { renderLessonBrowser } from '../renderers/lessonBrowserRenderer.js'
+import { LAYOUT } from '../constants/layoutConstants.js'
 
 export class Renderer {
     constructor(engine) {
@@ -38,7 +39,7 @@ this.bgColor = this.screen?.color || '#ffffff'
     }
     
     render() {
-     
+   
         const animations = this.engine.context.getAnimationManager()
 
     animations?.update()
@@ -60,16 +61,26 @@ const viewport = this.engine.context.getViewport()
         const assetManager = this.engine.context.getAssetManager()
        
         const view = createRendererViewModel(allNodes, interactionState, lessonState)
+        const renderContext = {
+    lesson: lessonState,
+    assetManager,
+    animations,
+    dragState,
+    interactionState,
+    view,
+    layout: allNodes,
+    typography: LAYOUT.typography
+}
 
 this.ctx.save()
 this.ctx.globalAlpha = screenOpacity
 
         switch (appState.screen) {
             case 'home':
-                renderHome(this.ctx, view.homeNodes, viewport, assetManager)
+                renderHome(this.ctx, view.homeNodes, viewport, renderContext)
                 break
                 case 'lesson':
-                renderLessonScreen(this.ctx, view, viewport, lessonState, assetManager, animations, dragState)
+                renderLessonScreen(this.ctx, viewport, renderContext)
                 break
                 case 'lessonBrowser':
                 renderLessonBrowser(this.ctx, view.lessonBrowserNodes, viewport,  assetManager) 
