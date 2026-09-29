@@ -1,13 +1,14 @@
 import { getScreenPosition } from "../../modules/renderUtils.js"
 
-export function renderDragDropGap(ctx, node, state, viewport, lesson) {
+export function renderDragDropGap(ctx, node,  viewport, context) {
+    const lesson = context.lesson
     const rect = getScreenPosition(node, viewport)
     const { x, y } = rect
 
-    const activity = lesson.getCurrentSectionState?.()
-    const answers = activity?.getAnswers?.() || []
+    const activity = lesson?.activities?.[node.sectionId] ?? null
+    const answers = activity?.getAnswers?.() ?? {}
     
-    const answer = answers[node.gapIndex] || null
+    const answer = answers[node.gapIndex] ?? null
     
 
     ctx.fillStyle = '#ffffff'

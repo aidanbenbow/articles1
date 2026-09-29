@@ -1,8 +1,10 @@
 import { parseDragDropText } from "../parsers/dragDropText.js"
+import { createDragDropGapNode } from "./nodeFactories/dragDropGapNode.js"
+import { createTextNode } from "./nodeFactories/textNode.js"
 
 export function layoutDragDropParagraph(
     articleNode,
-    layout,
+   
     section,
     paragraph,
     paragraphIndex,
@@ -22,7 +24,7 @@ export function layoutDragDropParagraph(
     let cursorY = y
     let lineCount = 1
     const rightEdge = x + width
-
+const children = []
     function moveToNextLine() {
         cursorX = x
         cursorY += lineHeight + paragraphGap
@@ -45,37 +47,29 @@ for (const word of words) {
                     moveToNextLine()
                 }
 
-            const textNode = {
-                id: `${articleNode.id}-${section.id}-text-${paragraphIndex}-${cursorY}-${cursorX}`,
-
+            const textNode = createTextNode({
+                id: `${articleNode.id}-${section.id}-paragraph-${paragraphIndex}-text-${children.length}`,
+                owner: articleNode.id,
                 sectionId: section.id,
-
                 x: cursorX,
                 worldY: cursorY,
-
                 width: wordWidth,
                 height: lineHeight,
-
+                color: '#000000',
                 text: word,
-
-                type: 'text',
                 kind: 'lessonSection',
-
-                sectionType: 'dragDropText',
-
-                dragDropId: section.id
-            }
-
-            layout.layoutNodes.set(
-                textNode.id,
-                textNode
-            )
+                sectionType: 'dragDropParagraphText',
+                typography: 'body'
+            })
+            textNode.dragDropId = section.id
+            textNode.paragraphIndex = paragraphIndex
+            children.push(textNode)
 
             cursorX += wordWidth
         }
         } else if (part.type === 'gap') {
 
-            const answer = answers?.[part.gapIndex] || ''
+            const answer = answers?.[part.gapIndex] ?? ''
 
             const totalGapWidth = gapWidth + 5
             if (
@@ -85,45 +79,58 @@ for (const word of words) {
                 moveToNextLine()
             }
 
-            const gapNode = {
-                id: `${articleNode.id}-${section.id}-gap-${paragraphIndex}-${part.gapIndex}`,
-
+            const gapNode = createDragDropGapNode({
+                id: `${articleNode.id}-${section.id}-paragraph-${paragraphIndex}-gap-${children.length}`,
+                owner: articleNode.id,
                 sectionId: section.id,
-
+                dragDropId: section.id,
+                paragraphIndex,
+                gapIndex: part.gapIndex,
                 x: cursorX,
                 worldY: cursorY,
-
                 width: gapWidth,
                 height: gapHeight,
-
                 color: '#ffffff',
-
-                text: answer,
-
-                type: 'dropzone',
-                kind: 'lessonSection',
-
-                sectionType: 'dragDropGap',
-
-                dragDropId: section.id,
-
-                gapIndex: part.gapIndex,
-
+                text: '',
                 answer,
-
-                action: 'dropDragDropWord'
-            }
-
-            layout.layoutNodes.set(
-                gapNode.id,
-                gapNode
-            )
+                kind: 'lessonSection',
+                sectionType: 'dragDropGap'
+            })
+            children.push(gapNode)
 
             cursorX += totalGapWidth
         }
     }
+    const height =
+        lineCount * lineHeight +
+        Math.max(0, lineCount - 1) * paragraphGap
+
+    const node = {
+        id:
+            `${articleNode.id}-` +
+            `${section.id}-` +
+            `paragraph-${paragraphIndex}`,
+
+        sectionId: section.id,
+        dragDropId: section.id,
+        paragraphIndex,
+
+        x,
+        worldY: y,
+        width,
+        height,
+
+        type: 'dragDropParagraph',
+        kind: 'lessonSection',
+        sectionType: 'dragDropParagraph',
+
+        interactive: false,
+
+        children
+    }
     return {
-        height: lineCount * lineHeight,
+        node,
+        height,
         lineCount
     }
 }

@@ -1,10 +1,13 @@
 import { getScreenPosition } from "../../modules/renderUtils.js"
 
-export function renderDragDropWord(ctx, node, state, viewport, lesson, assetManager, animations, dragState) {
-    const activity = lesson.getCurrentSectionState?.()
-    const answers = activity?.getAnswers?.() || {}
+export function renderDragDropWord(ctx, node, viewport, context) {
+    const lesson = context.lesson
+    const dragState = context.dragState
+    const activity = lesson?.activities?.[node.sectionId] ?? null
+    const answers = activity?.getAnswers?.() ?? {}
+   
 
-    const isPlaced = Object.values(answers).includes(node.word)
+    const isPlaced = Object.values(answers).includes(node.text)
 
     if (isPlaced && dragState?.wordNode !== node) {
         return
@@ -39,7 +42,7 @@ export function renderDragDropWord(ctx, node, state, viewport, lesson, assetMana
     ctx.textBaseline = 'middle'
 
     ctx.fillText(
-        node.word || '',
+        node.text || '',
         x + (node.padding || 10),
         y + node.height / 2
     )

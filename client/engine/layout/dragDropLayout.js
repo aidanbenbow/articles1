@@ -1,4 +1,8 @@
 import { layoutDragDropParagraph } from "./dragDropParagraphLayout.js"
+import { createButtonNode } from "./nodeFactories/buttonNode.js"
+import { createDragDropNode } from "./nodeFactories/dragDropNode.js"
+import { createDragDropWordNode } from "./nodeFactories/dragDropWordNode.js"
+import { createTextNode } from "./nodeFactories/textNode.js"
 
 export function layoutDragDropSection( articleNode,layout,section,currentY,x,width, padding, color, lesson, responsive
 ) {
@@ -21,16 +25,22 @@ export function layoutDragDropSection( articleNode,layout,section,currentY,x,wid
     } = responsive.dragDrop
 
     const dragDropTop = currentY
-
+const children = {
+    instruction: null,
+    wordbank: [],
+    paragraphs: [],
+    checkButton: null,
+    feedback: null
+}
     // --------------------------------
     // State
     // --------------------------------
 
-    const state = lesson.getCurrentSectionState?.() || {}
+    const state = lesson.activities?.[section.id] || null
 
-    const wordbank = state?.getWordbank?.() || section.wordbank || []
+    const wordbank = state?.getWordbank?.() ?? state.getWordbank() ?? section.wordbank ?? []
 
-    const answers =state?.getAnswers?.() || {}
+    const answers =state?.getAnswers?.() ?? state?.answers ?? {}
 
    
 
@@ -46,48 +56,11 @@ export function layoutDragDropSection( articleNode,layout,section,currentY,x,wid
     // Feedback
     // --------------------------------
 
-    const feedback =state?.getFeedback?.() || ''
+    const feedback =state?.getFeedback?.() ?? null
 
     const actualFeedbackHeight =feedback ? feedbackHeight : 0
 
     const actualFeedbackGap =feedback ? feedbackGap : 0
-
-    
-
-       // --------------------------------
-    // Main container
-    // --------------------------------
-
-    const dragDropRect = {
-        id: `${articleNode.id}-${section.id}`,
-
-        sectionId: section.id,
-interactive: false,
-        x,
-        worldY: dragDropTop,
-        width,
-        height: 0,
-
-        padding,
-
-        color: color || '#e0e0e0',
-
-        type: 'dragdrop',
-        kind: 'lessonSection',
-        sectionType: 'dragdrop',
-
-        dragDropId: section.id,
-
-        instruction: section.instruction,
-
-        wordbank,
-        answers
-    }
-
-    layout.layoutNodes.set(
-        dragDropRect.id,
-        dragDropRect
-    )
 
     // --------------------------------
     // Instruction
@@ -96,30 +69,20 @@ interactive: false,
     const instructionY =
         dragDropTop + padding
 
-    const instructionNode = {
+   children.instruction = createTextNode({
         id: `${articleNode.id}-${section.id}-instruction`,
-
         sectionId: section.id,
-
         x: x + padding,
         worldY: instructionY,
-
         width: width - padding * 2,
         height: instructionHeight,
-
         text: section.instruction,
-
-        type: 'text',
+        color: '#000000',
+        
         kind: 'lessonSection',
         sectionType: 'dragDropInstruction',
-
-        dragDropId: section.id
-    }
-
-    layout.layoutNodes.set(
-        instructionNode.id,
-        instructionNode
-    )
+        typography: 'body'
+    })
 
     // --------------------------------
     // Word bank
@@ -154,40 +117,23 @@ if (
         wordRows++
     }
 
-        const wordNode = {
+        const wordNode = createDragDropWordNode({
             id: `${articleNode.id}-${section.id}-word-${i}`,
-
             sectionId: section.id,
-
+            dragDropId: section.id,
+            wordIndex: i,
             x: wordX,
             worldY: wordY,
-
             width: wordWidth,
             height: wordHeight,
-
-            padding: wordPaddingX,
-
-            color: '#d0d0d0',
-
-            text: wordbank[i],
-            word: wordbank[i],
-
-            type: 'draggable',
+            color: '#23979d',
+            text: word,
             kind: 'lessonSection',
-
             sectionType: 'dragDropWord',
-
-            dragDropId: section.id,
-
-            wordIndex: i,
-
-            action: 'dragDropWord'
-        }
-
-        layout.layoutNodes.set(
-            wordNode.id,
-            wordNode
-        )
+            type: 'dragDropWord',
+            interactive: true,
+        })
+        children.wordbank.push(wordNode)
         wordX += wordWidth + wordGap
     }
 
@@ -211,7 +157,7 @@ if (
 
         const result = layoutDragDropParagraph(
             articleNode,
-            layout,
+            
             section,
             paragraphs[p],
             p,
@@ -223,6 +169,7 @@ if (
             answers,
             responsive
         )
+        children.paragraphs.push(result.node)
         paragraphY += result.height
 
         if(p < paragraphs.length - 1) {
@@ -244,35 +191,21 @@ if (
         paragraphsHeight +
         checkButtonGap
 
-    const checkNode = {
-        id: `${articleNode.id}-${section.id}-check`,
-
+    children.checkButton = createButtonNode({
+        id: `${articleNode.id}-${section.id}-checkButton`,
         sectionId: section.id,
-
         x: x + padding,
         worldY: checkY,
-
-        width: width - padding * 2,
+        width: 120,
         height: checkButtonHeight,
-
-        color: '#b0b0b0',
-
-        type: 'button',
+        text: 'Check',
+        color: '#000000',
         kind: 'lessonSection',
-
-        sectionType: 'dragDropCheck',
-
+        sectionType: 'dragDropCheckButton',
         dragDropId: section.id,
-
-        action: 'checkDragDrop',
-
-        text: 'Check answer'
-    }
-
-    layout.layoutNodes.set(
-        checkNode.id,
-        checkNode
-    )
+        typography: 'body',
+        action: 'checkDragDrop'
+    })
 
     // --------------------------------
     // Feedback
@@ -285,31 +218,20 @@ if (
             checkButtonHeight +
             feedbackGap
 
-        const feedbackNode = {
+        children.feedback = createTextNode({
             id: `${articleNode.id}-${section.id}-feedback`,
-
             sectionId: section.id,
-
             x: x + padding,
             worldY: feedbackY,
-
             width: width - padding * 2,
             height: feedbackHeight,
-
             text: feedback,
-
-            type: 'text',
+            color: '#000000',
             kind: 'lessonSection',
-
             sectionType: 'dragDropFeedback',
-
-            dragDropId: section.id
-        }
-
-        layout.layoutNodes.set(
-            feedbackNode.id,
-            feedbackNode
-        )
+            dragDropId: section.id,
+            typography: 'body'
+        })
     }
 
     // --------------------------------
@@ -328,7 +250,29 @@ if (
         actualFeedbackGap +
         actualFeedbackHeight
 
-     dragDropRect.height = dragDropHeight
+     const dragDropNode = createDragDropNode({
+        id: `${articleNode.id}-${section.id}`,
+        sectionId: section.id,
+        dragDropId: section.id,
+
+        x,
+        worldY: dragDropTop,
+        width,
+        height: dragDropHeight,
+
+        padding,
+        color: color || '#e0e0e0',
+
+        wordbank,
+        answers,
+
+        children
+    })
+
+    layout.layoutNodes.set(
+        dragDropNode.id,
+        dragDropNode
+    )
 
     return dragDropTop + dragDropHeight + sectionGap
 }

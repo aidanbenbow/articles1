@@ -1,15 +1,26 @@
 import { getScreenPosition } from "../../modules/renderUtils.js"
-export function renderDragDrop(ctx, node, viewport, assetManager, lesson) {
 
+export function renderDragDrop(
+    ctx,
+    node,
+    viewport,
+    context
+) {
     const rect = getScreenPosition(node, viewport)
-    const { x, y } = rect
 
-    ctx.fillStyle = node.color || '#e0e0e0'
+    if (!rect) return
+
+    ctx.save()
+
+    ctx.fillStyle =
+        node.color || '#e0e0e0'
 
     ctx.fillRect(
-        x,
-        y,
-        node.width,
-        node.height
+        rect.x,
+        rect.y,
+        rect.width,
+        rect.height
     )
+
+    ctx.restore()
 }
