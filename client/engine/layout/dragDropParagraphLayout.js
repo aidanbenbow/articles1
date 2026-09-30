@@ -1,3 +1,5 @@
+import { LAYOUT } from "../constants/layoutConstants.js"
+import { measureText } from "../helpers/textMeasure.js"
 import { parseDragDropText } from "../parsers/dragDropText.js"
 import { createDragDropGapNode } from "./nodeFactories/dragDropGapNode.js"
 import { createTextNode } from "./nodeFactories/textNode.js"
@@ -64,16 +66,11 @@ for (const word of words) {
             cursorX += wordWidth
         }
         } else if (part.type === 'gap') {
-const gapPadding = 5
+const gapPaddingX = 10
             const answer = answers?.[part.gapIndex] ?? ''
-const answerWidth = answer.length * 8
+const answerWidth = measureText(answer, LAYOUT.typography.body)
 const actualGapWidth = Math.max(
-    48,
-    Math.min(
-        gapWidth,
-        answerWidth + gapPadding
-    )
-)
+    48,  answerWidth + gapPaddingX*2)
             const totalGapWidth = actualGapWidth + 5
             if (
                 cursorX > x &&

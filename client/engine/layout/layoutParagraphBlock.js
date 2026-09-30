@@ -1,7 +1,8 @@
+import { measureText } from "../helpers/textMeasure.js"
 import { createParagraphNode } from "./nodeFactories/paragraphNode.js"
 
 export function layoutParagraphBlock(
-    layout,
+   
     articleNode,
     section,
     block,
@@ -10,12 +11,13 @@ export function layoutParagraphBlock(
     width,
     padding,
     color,
-    responsive
+    responsive,
+    typography
 ) {
     const { paragraphLineHeight: lineHeight, paragraphGap } = responsive.dragDrop
     const verticalPadding = 8
     const textWidth = width - padding * 2
-
+const typo = typography.body
     // Approximate height.
     // Ideally use the same wrapping logic as the renderer.
     const words = block.text.split(' ')
@@ -24,17 +26,13 @@ export function layoutParagraphBlock(
     let line = ''
 
     for (const word of words) {
-        const test =
-            line
-                ? `${line} ${word}`
-                : word
+        const test = line? `${line} ${word}`: word
 
         // Rough estimate for layout.
-        const estimatedWidth =
-            test.length * 8
+        const measuredWidth = measureText(test, typo)
 
         if (
-            estimatedWidth > textWidth &&
+            measuredWidth > textWidth &&
             line
         ) {
             lines.push(line)
@@ -65,10 +63,15 @@ export function layoutParagraphBlock(
         padding
     )
 
-    layout.layoutNodes.set(
-        node.id,
-        node
-    )
+    node.owner = articleNode.id
+    node.type = 'paragraph'
+    node.sectionType = 'lessonParagraph'
 
-    return currentY + height + paragraphGap
+    return {
+        node,
+        nextY:
+            currentY +
+            height +
+            paragraphGap
+    }
 }

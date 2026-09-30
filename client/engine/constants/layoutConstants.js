@@ -47,7 +47,16 @@ export const LAYOUT = {
         lineHeight: 16,
         weight: 600,
     },
-
+heading: {
+        size: 18,
+        lineHeight: 24,
+        weight: 600,
+    },
+    paragraph: {
+        size: 14,
+        lineHeight: 20,
+        weight: 400,
+    },
     title: {
         size: 26,
         lineHeight: 32,

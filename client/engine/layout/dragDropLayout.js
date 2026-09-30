@@ -1,3 +1,5 @@
+import { LAYOUT } from "../constants/layoutConstants.js"
+import { measureText } from "../helpers/textMeasure.js"
 import { layoutDragDropParagraph } from "./dragDropParagraphLayout.js"
 import { createButtonNode } from "./nodeFactories/buttonNode.js"
 import { createDragDropNode } from "./nodeFactories/dragDropNode.js"
@@ -91,20 +93,22 @@ const children = {
     const wordbankTop =
         instructionY +
         instructionHeight +
-        15
+        8
 
         const availableWidth = width - padding * 2
         let wordX = x + padding
         let wordY = wordbankTop
         let wordRows = 1
+        const wordTyporaphy = LAYOUT.typography.body
 
     for (let i = 0; i < wordbank.length; i++) {
 
         const word = wordbank[i]
+        const textWidth = measureText(word, wordTyporaphy)
 
         const wordWidth = Math.max(
             wordMinWidth,
-            word.length * 8 + wordPaddingX * 2
+            textWidth + wordPaddingX * 2
         )
 
 if (

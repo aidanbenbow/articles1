@@ -9,6 +9,7 @@ import { layoutOrderingSection } from "../layout/layoutOrderingSection.js"
 import { layoutParagraphBlock } from "../layout/layoutParagraphBlock.js"
 import { layoutLessonIntro } from "../layout/lessonIntroLayout.js"
 import { LessonListLayout } from "../layout/lessonListLayout.js"
+import { layoutLessonSection } from "../layout/lessonSectionLayout.js"
 import { createButtonNode } from "../layout/nodeFactories/buttonNode.js"
 import { createTextNode } from "../layout/nodeFactories/textNode.js"
 import { layoutQuizSection } from "../layout/quizLayout.js"
@@ -142,7 +143,8 @@ clearScreenLayout() {
         if (
             node.owner === 'home' ||
             node.owner === 'lessonBrowser' ||
-            node.kind?.startsWith('lesson')
+            node.kind?.startsWith('lesson') ||
+            node.type === 'dragDrop'
         ) {
             this.layout.layoutNodes.delete(id)
         }
@@ -192,7 +194,7 @@ layoutSection( articleNode, currentSection, currentY, x, width, padding, color, 
         switch(currentSection.type){
             
                 case 'lesson':
-                    return this.layoutLessonSection(  articleNode,  currentSection,  currentY,  x,  width,  padding,  color,  lesson, responsive
+                    return layoutLessonSection(  articleNode, this.layout, currentSection,  currentY,  x,  width,  padding,  color,  lesson, responsive
 )
             case 'quiz':
                 return layoutQuizSection( this.layout,articleNode,currentSection,currentY,x,width,padding,color,lesson
