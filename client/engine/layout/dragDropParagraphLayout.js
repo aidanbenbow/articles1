@@ -3,8 +3,7 @@ import { createDragDropGapNode } from "./nodeFactories/dragDropGapNode.js"
 import { createTextNode } from "./nodeFactories/textNode.js"
 
 export function layoutDragDropParagraph(
-    articleNode,
-   
+    articleNode, 
     section,
     paragraph,
     paragraphIndex,
@@ -32,11 +31,8 @@ const children = []
     }
 
     for (const part of parts) {
-
         if (part.type === 'text') {
-
             const words = part.text.split(/(\s+)/)
-
 for (const word of words) {
 
                 const wordWidth = word.length * 8
@@ -68,10 +64,17 @@ for (const word of words) {
             cursorX += wordWidth
         }
         } else if (part.type === 'gap') {
-
+const gapPadding = 5
             const answer = answers?.[part.gapIndex] ?? ''
-
-            const totalGapWidth = gapWidth + 5
+const answerWidth = answer.length * 8
+const actualGapWidth = Math.max(
+    48,
+    Math.min(
+        gapWidth,
+        answerWidth + gapPadding
+    )
+)
+            const totalGapWidth = actualGapWidth + 5
             if (
                 cursorX > x &&
                 cursorX + totalGapWidth > rightEdge
@@ -88,7 +91,7 @@ for (const word of words) {
                 gapIndex: part.gapIndex,
                 x: cursorX,
                 worldY: cursorY,
-                width: gapWidth,
+                width: actualGapWidth,
                 height: gapHeight,
                 color: '#ffffff',
                 text: '',

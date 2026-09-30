@@ -57,7 +57,11 @@ attach() {
         startY: y,
         moved: false
     }
-   
+   try{
+    this.canvas?.setPointerCapture(event.pointerId)
+   } catch(e) {
+    console.warn('Failed to set pointer capture', e)
+   }
 }
 
 _onPointerMove = (event) => {
@@ -75,7 +79,7 @@ _onPointerMove = (event) => {
 
     const target = this.pointerState.target
 
-    if(this.pointerState.moved && !this.interaction?.dragState && target?.type==='draggable') {
+    if(this.pointerState.moved && !this.interaction?.dragState && target?.type==='dragDropWord') {
         this.interaction.startDrag(target, 
             {x:this.pointerState.x, y:this.pointerState.y})
     }
@@ -84,13 +88,17 @@ _onPointerMove = (event) => {
     }
 
 }
-_onPointerUp = () => {
+_onPointerUp = (event) => {
 
     if (!this.pointerState.isDown) return
 const drag = this.interaction?.dragState
 
+const {x,y} = this._normalisePointerEvent(event)
+this.pointerState.x = x
+this.pointerState.y = y
+
 if(drag) {
- const dropTarget = this.findDropTarget(drag)
+ const dropTarget = this.findDropTarget(drag,x,y)
 
         if (dropTarget) {
             this.interaction.completeDrop(
@@ -107,6 +115,11 @@ if(drag) {
         this.interaction.handleTargetNode(
             this.pointerState.target
         )
+    }
+    try{
+        this.canvas?.releasePointerCapture(event.pointerId)
+    } catch(e) {
+        console.warn('Failed to release pointer capture', e)
     }
 
     this._resetPointerState()
@@ -187,16 +200,38 @@ const hitNode = (node) => {
         }
 
         return null;}
-        // Test each root node.
-    for (const node of nodes.values()) {
-        const hit = hitNode(node);
+       let rootNodes
 
-        if (hit) {
-            return hit;
+        if (Array.isArray(nodes)) {
+            rootNodes = nodes
+        } else if (nodes instanceof Map) {
+            rootNodes = [...nodes.values()]
+        } else if (nodes?.layoutNodes instanceof Map) {
+            rootNodes = [
+                ...nodes.layoutNodes.values()
+            ]
+        } else if (nodes?.layoutNodes) {
+            rootNodes = Array.isArray(nodes.layoutNodes)
+                ? nodes.layoutNodes
+                : Object.values(nodes.layoutNodes)
+        } else {
+            rootNodes = []
         }
-    }
 
-    return null;
+        for (
+            let i = rootNodes.length - 1;
+            i >= 0;
+            i--
+        ) {
+            const hit =
+                hitNode(rootNodes[i])
+
+            if (hit) {
+                return hit
+            }
+        }
+
+        return null
 
 }
 rectsOverlap(rect1, rect2) {
@@ -207,29 +242,132 @@ rectsOverlap(rect1, rect2) {
         rect1.y > rect2.y + rect2.height
     )
 }
-findDropTarget(dragState) {
-    const layout = this.engine.context.getLayout()
-    const viewport = this.engine.context.getViewport()
-    const dragRect = {
-        x: dragState.x - dragState.wordNode.width / 2,
-        y: dragState.y - dragState.wordNode.height / 2,
-        width: dragState.wordNode.width,
-        height: dragState.wordNode.height
+findDropTarget(
+        dragState,
+        pointerX = dragState.x,
+        pointerY = dragState.y
+    ) {
+        const layout =
+            this.engine.context.getLayout()
+
+        const viewport =
+            this.engine.context.getViewport()
+
+        const dragNode =
+            dragState.wordNode
+
+        if (!dragNode) {
+            return null
+        }
+
+        /*
+         * The dragged word follows the pointer by its
+         * centre, so create the screen-space rectangle.
+         */
+        const dragRect = {
+            x:
+                pointerX -
+                dragNode.width / 2,
+
+            y:
+                pointerY -
+                dragNode.height / 2,
+
+            width: dragNode.width,
+            height: dragNode.height
+        }
+
+        let dropTarget = null
+
+        const visit = (node) => {
+            if (!node || dropTarget) {
+                return
+            }
+
+            /*
+             * Check this node.
+             */
+            if (
+                node.type === 'dragDropGap' &&
+                node.interactive === true
+            ) {
+                const gapRect = {
+                    x: node.x,
+
+                    y:
+                        (node.worldY ?? node.y ?? 0) -
+                        viewport.y,
+
+                    width: node.width,
+                    height: node.height
+                }
+
+                if (
+                    this.rectsOverlap(
+                        dragRect,
+                        gapRect
+                    )
+                ) {
+                    dropTarget = node
+                    return
+                }
+            }
+
+            /*
+             * Then recursively inspect children.
+             */
+            if (!node.children) {
+                return
+            }
+
+            const children =
+                Array.isArray(node.children)
+                    ? node.children
+                    : Object.values(node.children)
+                        .flat()
+                        .filter(Boolean)
+
+            for (const child of children) {
+                visit(child)
+
+                if (dropTarget) {
+                    return
+                }
+            }
+        }
+
+        let rootNodes
+
+        if (Array.isArray(layout)) {
+            rootNodes = layout
+        } else if (layout instanceof Map) {
+            rootNodes = [...layout.values()]
+        } else if (layout?.layoutNodes) {
+            rootNodes =
+                layout.layoutNodes instanceof Map
+                    ? [...layout.layoutNodes.values()]
+                    : Object.values(layout.layoutNodes)
+        } else {
+            rootNodes = []
+        }
+
+        /*
+         * Search from the visually topmost root.
+         */
+        for (
+            let i = rootNodes.length - 1;
+            i >= 0;
+            i--
+        ) {
+            visit(rootNodes[i])
+
+            if (dropTarget) {
+                break
+            }
+        }
+
+        return dropTarget
     }
-    for(const node of layout.values()) {
-        if(node.sectionType !== 'dragDropGap'){continue}
-    
-    const gapRect = {
-        x: node.x,
-        y: (node.worldY ?? node.y ?? 0) - viewport.y,
-        width: node.width,
-        height: node.height
-    }
-    if(this.rectsOverlap(dragRect, gapRect)) {
-        return node
-    }}
-    return null
-}
 }
 
 function getCanvasColorAtPoint(ctx, x, y) {

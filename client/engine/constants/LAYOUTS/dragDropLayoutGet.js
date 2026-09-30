@@ -1,16 +1,16 @@
 export function getDragDropLayout(compact) {
     return {
-          instructionHeight: compact ? 32 : 36,
+          instructionHeight: compact ? 22 : 26,
 
-            wordHeight: compact ? 32 : 36,
+            wordHeight: compact ? 24 : 28,
 
-            wordGap: compact ? 6 : 8,
+            wordGap: compact ? 2 : 4,
 
             wordPaddingX: compact ? 8 : 12,
 
             wordMinWidth: compact ? 65 : 80,
 
-            paragraphLineHeight: compact ? 38 : 42,
+            paragraphLineHeight: compact ? 19 : 21,
 
             paragraphGap: compact ? 3 : 5,
 

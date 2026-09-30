@@ -153,8 +153,11 @@ startDrag(node, pointer) {
     
     if(!node || !pointer) return
     this.dragState = {
-word: node.word,
+word: node.text,
+wordIndex: node.wordIndex,
 wordNode: node,
+sectionId: node.sectionId,
+dragDropId: node.dragDropId,
         startX: pointer.x,
         startY: pointer.y,
         x: pointer.x,
