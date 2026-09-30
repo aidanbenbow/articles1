@@ -9,6 +9,8 @@ import { renderLessonTitle } from "../lesson/lessonTitleRenderer.js";
 import { renderParagraph } from "../lesson/paragraphRenderer.js";
 import { renderOrderingItem } from "../ordering/orderingListRenderer.js";
 import { renderOrdering } from "../ordering/orderingRenderer.js";
+import { renderQuizOption } from "../quiz/quizOption.js";
+import { renderQuiz } from "../quiz/quizRenderer.js";
 import { renderSurveyOption } from "../survey/surveyOption.js";
 import { renderSurvey } from "../survey/surveyRenderer.js";
 import { renderText } from "../TextRenderer.js";
@@ -28,4 +30,6 @@ export const nodeRenderers = {
     dragDrop: renderDragDrop,
     dragDropWord: renderDragDropWord,
     dragDropGap: renderDragDropGap,
+    quiz: renderQuiz,
+    quizOption: renderQuizOption
 }

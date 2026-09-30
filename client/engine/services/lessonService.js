@@ -112,14 +112,15 @@ console.log('Starting lesson with data:', lessonData)
     this.lesson.setCurrentSection(sectionId)
 }
  
-    answerQuiz(sectionId, quizId, optionIndex, answer) {
+    answerQuiz(sectionId, quizId, optionIndex, correctAnswerIndex) {
 const quiz = this.lesson.activities[sectionId]
 
     if (!quiz) {
         console.warn( `No quiz found for sectionId: ${sectionId}`)
         return
     }
-    const result = quiz.answerQuestion(quizId, optionIndex, answer)
+    const result = quiz.answerQuestion(quizId, optionIndex, correctAnswerIndex)
+       
     this.syncProgress()
 
     return {

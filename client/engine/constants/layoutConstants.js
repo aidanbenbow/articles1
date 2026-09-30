@@ -3,6 +3,7 @@
 import { getDragDropLayout } from "./LAYOUTS/dragDropLayoutGet.js"
 import { getLessonIntroLayout } from "./LAYOUTS/lessonIntroLayoutGet.js"
 import { getOrderingLayout } from "./LAYOUTS/orderingLayoutGet.js"
+import { getQuizLayout } from "./LAYOUTS/quizLayoutGet.js"
 import { getSurveyLayout } from "./LAYOUTS/surveyLayoutGet.js"
 
 export const LAYOUT = {
@@ -230,7 +231,8 @@ height: compact ? 32 : 40,
     gap: compact ? 8 : 10
 },
 survey: getSurveyLayout(compact),
-ordering: getOrderingLayout(compact)
+ordering: getOrderingLayout(compact),
+quiz: getQuizLayout(compact)
 
     }
 }

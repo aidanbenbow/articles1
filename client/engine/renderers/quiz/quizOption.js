@@ -1,13 +1,13 @@
-import { DRAWING_CONSTANTS } from "../../constants/drawingConstants.js"
+
 import { drawRect } from "../../draw/drawHelpers.js"
 import { getScreenRect } from "../../modules/renderUtils.js"
 
-export function renderQuizOption(ctx, node, viewport, lesson) {
+export function renderQuizOption(ctx, node, viewport, context) {
 
     const rect = getScreenRect(node, viewport)
-
+const lesson = context.lesson
     const quiz = lesson.activities?.[node.sectionId]
-    const answer = quiz?.getAnswer(node.sectionId)?? null
+    const answer = quiz?.getAnswer(node.quizId)
 
 const answered = !!answer
 const isSelected = answer?.selected === node.optionIndex
@@ -34,8 +34,14 @@ const isCorrect = node.optionIndex === node.answer
 
 
     // radio
+    ctx.save()
+    const centerX = rect.x + 12
+    const centerY = rect.y + rect.height / 2
+    ctx.fillStyle = '#ffffff'
+    ctx.strokeStyle = '#000000'
+    ctx.lineWidth = 1
     ctx.beginPath()
-    ctx.arc( rect.x + 12, rect.y + rect.height / 2, 6, 0, Math.PI * 2)
+    ctx.arc( centerX, centerY, 6, 0, Math.PI * 2)
     ctx.stroke()
 
     if (isSelected) {
@@ -51,31 +57,37 @@ const isCorrect = node.optionIndex === node.answer
     }
 
     // text
-    ctx.fillStyle = '#000'
-    ctx.font = DRAWING_CONSTANTS.fonts.quizOption
+    const typo = context.typography?.[node.typography] || context.typography.body
+    ctx.font = `${typo.fontWeight} ${typo.fontSize}px ${typo.fontFamily}`
+ctx.fillStyle = typo.color
+ctx.textBaseline = 'middle'
+ctx.textAlign = 'left'
+    ctx.fillText( node.text, rect.x + 28, centerY)
 
-    ctx.fillText( node.text, rect.x + 28, rect.y + rect.height / 2 + 5)
+     if (answered) {
+        let marker = null
 
-    // result marker
-    if(answered) {
-        if(isCorrect) {
-
-            ctx.fillText(
-                '✓',
-                rect.x + rect.width - 25,
-                rect.y + rect.height / 2 + 5
-            )
-
+        if (isCorrect) {
+            marker = '✓'
+        } else if (
+            isSelected &&
+            !isCorrect
+        ) {
+            marker = '✗'
         }
 
-        if(isSelected && !isCorrect) {
+        if (marker) {
+            ctx.textAlign = 'right'
 
             ctx.fillText(
-                '✗',
-                rect.x + rect.width - 25,
-                rect.y + rect.height / 2 + 5
+                marker,
+                rect.x +
+                    rect.width -
+                    15,
+                centerY
             )
-
         }
     }
+
+    ctx.restore()
 }

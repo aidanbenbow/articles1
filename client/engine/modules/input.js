@@ -112,6 +112,7 @@ if(drag) {
         !this.pointerState.moved &&
         this.pointerState.target
     ) {
+   
         this.interaction.handleTargetNode(
             this.pointerState.target
         )
@@ -162,6 +163,7 @@ _normalisePointerEvent(event) {
 
     const viewport = this.engine.context.getViewport()
 const hitNode = (node) => {
+
     if(!node) return null
         const nodeY =  (node.worldY ?? node.y ?? 0) - viewport.y;
 
@@ -223,6 +225,8 @@ const hitNode = (node) => {
             i >= 0;
             i--
         ) {
+    
+
             const hit =
                 hitNode(rootNodes[i])
 

@@ -1,71 +1,136 @@
-export function layoutQuizSection(layout,articleNode, section, currentY, x, width, padding, color, lesson) {
-    const questionHeight = 30
-    const optionHeight = 30
-    const optionGap = 10
+import { createTextNode } from "./nodeFactories/textNode.js"
+import { createQuizOptionNode } from "./nodeFactories/quizOptionNode.js"
+import { createCardNode } from "./nodeFactories/cardNode.js"
+
+export function layoutQuizSection(layout,articleNode, section, currentY, x, width, padding, color, lesson, responsive) {
+    const questionHeight = responsive.quiz.questionHeight || 60
+    const optionHeight = responsive.quiz.optionHeight || 40
+    const optionGap = responsive.quiz.optionGap || 10
     const quizTop = currentY
     
-    const answered = lesson.activities[section.id].answers || null
-   const feedback = answered?.[section.id]?.feedback || null
    
-    const feedbackHeight = answered && feedback ? 30 : 0
-    const feedbackGap = feedbackHeight > 0 ? 10 : 0
+    const feedbackHeight = responsive.quiz.feedbackHeight || 0
+    const feedbackGap = responsive.quiz.feedbackGap || 0
+
+    const activity =
+        lesson.activities?.[section.id] ?? null
+
+    const answers =
+        activity?.getAnswers?.() ??
+        activity?.answers ??
+        {}
+
+    const feedback =
+        activity?.getFeedback?.() ??
+        activity?.feedback ??
+        null
+
+    const hasFeedback =
+        Boolean(feedback)
+
+    const children = {
+        question: null,
+        options: [],
+        feedback: null
+    }
     
-const quizHeight =
+children.question = createTextNode({
+        id: `${articleNode.id}-${section.id}-question`,
+        sectionId: section.id,
+        owner: articleNode.id,
+        quizId: section.id,
+        x: x + padding,
+        worldY: quizTop + padding,
+        width: width - padding * 2,
+        height: questionHeight,
+        color: '#f0f0f0',
+        text: section.question,
+        padding: 0,
+        
+        kind: 'lessonSection',
+        sectionType: 'quizQuestion',
+        typography: 'body'
+    })
+
+    let optionY = quizTop + padding + questionHeight + optionGap
+
+    for (let i = 0; i < section.options.length; i++) {
+        const option = createQuizOptionNode({
+            id: `${articleNode.id}-${section.id}-option-${i}`,
+            sectionId: section.id,
+            owner: articleNode.id,
+            quizId: section.id,
+            optionIndex: i,
+            x: x + padding,
+            worldY: optionY,
+            width: width - padding * 2,
+            height: optionHeight,
+            color: '#d0d0d0',
+            text: section.options[i],
+            answer: section.answer,
+            padding: 0,
+            typography: 'body',
+            kind: 'lessonSection',
+            sectionType: 'quizOption'
+        })
+        children.options.push(option)
+        optionY += optionHeight + optionGap
+    }
+
+let quizHeight =
     padding * 2 +
     questionHeight +
     section.options.length * optionHeight
-    + (section.options.length - 1) * optionGap
-    + feedbackHeight + feedbackGap
+    + Math.max(0, (section.options.length - 1) * optionGap)
 
-    const feedbackY = quizTop + padding + questionHeight + section.options.length * (optionHeight + optionGap) + feedbackGap
+    if(hasFeedback) {
+        children.feedback = createTextNode({
+            id: `${articleNode.id}-${section.id}-feedback`,
+            sectionId: section.id,
+            owner: articleNode.id,
+            quizId: section.id,
+            x: x + padding,
+            worldY: quizTop + padding + questionHeight + section.options.length * (optionHeight + optionGap) + feedbackGap,
+            width: width - padding * 2,
+            height: feedbackHeight,
+            color: '#f0f0f0',
+            text: feedback,
+            padding: 0,
+            kind: 'lessonSection',
+            sectionType: 'quizFeedback',
+            typography: 'body'
+        })
+        quizHeight += feedbackGap + feedbackHeight
+    }
 
-    const quizRect = {
-        id: `${articleNode.id}-${section.id}`,
+
+    const quizNode = createCardNode({
+        id: `${articleNode.id}-${section.id}-quiz`,
         sectionId: section.id,
+        owner: articleNode.id,
+        type: 'quiz',
         x,
         worldY: quizTop,
         width,
         height: quizHeight,
+        color: '#ffffff',
         padding,
-        color: '#e0e0e0',
-        selected: false,
-        question: section.question,
-        type: 'quiz',
         kind: 'lessonSection',
         sectionType: 'quiz',
-        options: section.options,
-        answer: section.answer,
-        quizId: section.id,
-
-        feedback: feedback || '',
-        feedbackHeight,
-        feedbackY,
-        feedbackX: x + padding,
-        feedbackWidth: width - padding * 2
-    }
-    layout.layoutNodes.set(quizRect.id, quizRect)
-
-    for (let i = 0; i < section.options.length; i++) {
-        const optionRect = {
-            id: `${articleNode.id}-${section.id}-option-${i}`,
-            sectionId: section.id,
-            x: x + padding,
-            worldY: quizTop + padding + questionHeight + i * (optionHeight + optionGap),
-            width: width - padding * 2,
-            height: optionHeight,
-            padding,
-            color: '#d0d0d0',
-            selected: false,
-            text: section.options[i],
-            type: 'text',
-            kind: 'lessonSection',
-            sectionType: 'quizOption',
-            action: 'answerQuiz',
-            quizId: section.id,
-            optionIndex: i,
-            answer: section.answer
+        children,
+        style: {
+            radius: 8,
+            shadowBlur: 4,
+            shadowOffsetY: 2,
+            borderWidth: 1,
+            colors: {
+                background: '#ffffff',
+                border: '#cccccc',
+                shadow: 'rgba(0, 0, 0, 0.1)'
+            }
         }
-        layout.layoutNodes.set(optionRect.id, optionRect)
-    }
+    })
+    layout.layoutNodes.set(quizNode.id, quizNode)
+
     return currentY + quizHeight + 10
 }

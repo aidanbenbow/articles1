@@ -197,7 +197,7 @@ layoutSection( articleNode, currentSection, currentY, x, width, padding, color, 
                     return layoutLessonSection(  articleNode, this.layout, currentSection,  currentY,  x,  width,  padding,  color,  lesson, responsive
 )
             case 'quiz':
-                return layoutQuizSection( this.layout,articleNode,currentSection,currentY,x,width,padding,color,lesson
+                return layoutQuizSection( this.layout,articleNode,currentSection,currentY,x,width,padding,color,lesson, responsive
                 )
             case 'survey':
                 return layoutSurveySection(this.layout, articleNode, currentSection, currentY, x,width, padding,color,  lesson, responsive)
