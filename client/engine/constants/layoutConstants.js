@@ -1,6 +1,7 @@
 // layoutConstants.js
 
 import { getDragDropLayout } from "./LAYOUTS/dragDropLayoutGet.js"
+import { getLessonHeaderLayout } from "./LAYOUTS/lessonHeaderLayoutGet.js"
 import { getLessonIntroLayout } from "./LAYOUTS/lessonIntroLayoutGet.js"
 import { getOrderingLayout } from "./LAYOUTS/orderingLayoutGet.js"
 import { getQuizLayout } from "./LAYOUTS/quizLayoutGet.js"
@@ -212,6 +213,7 @@ export function getResponsiveLayout(screenWidth, screenHeight) {
     stepFontSize: compact ? 11 : LAYOUT.typography.step,
 },
 lessonIntro: getLessonIntroLayout(compact),
+lessonHeader: getLessonHeaderLayout(compact, mobile),
 button:{
 height: compact ? 32 : 40,
 },

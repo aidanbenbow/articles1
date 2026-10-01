@@ -1,85 +1,119 @@
+import { LAYOUT } from "../constants/layoutConstants.js"
+import { getScreenRect } from "../modules/renderUtils.js"
+
 export function renderLessonHeader(
     ctx,
-    lesson,
-    viewport
+    node,
+    viewport,
+    context
 ){
+     
+    const lesson = context.lesson
     if(!lesson) return
+const responsive = context.responsive
 
-const currentActivity = lesson.activities[lesson.currentSectionId]
+const layout = responsive.lessonHeader
 
+const rect = getScreenRect(node, viewport)
+const { x, y } = rect
+const width = node.width
+const height = node.height
 const score = lesson.getScoreTotal()
-const x = 20
-const y = 20
-const width = viewport.width - 40
-
+const totalScore = lesson.quizTotal
+const section = lesson.sections[lesson.currentSectionIndex]
+const sectionIndex = lesson.currentSectionIndex
+const sectionCount = lesson.sections.length
+const progress = Math.max(0, Math.min(1, lesson.getProgress() / 100))
+const px = layout.paddingX || 20
+const py = layout.paddingY || 20
+ctx.save()
     ctx.fillStyle = '#f8fafc'
 
-    ctx.fillRect( x, y, width, 78)
+    ctx.fillRect( x, y, width, height)
 
     ctx.fillStyle = '#e2e8f0'
 
-ctx.fillRect(x,y + 78,width,1)
+ctx.fillRect(x,y + height,width,1)
 
-// Current stage
+/*
+     * Header bottom border
+     */
+    ctx.fillStyle = '#e2e8f0'
+
+    ctx.fillRect(
+        x,
+        y + height,
+        width,
+        1
+    )
+
+    /*
+     * Current stage
+     */
     ctx.fillStyle = '#111827'
-    ctx.font = 'bold 16px Arial'
-
+    ctx.font = `700 ${layout.stageFontSize}px ${LAYOUT.typography.family}`
     ctx.textAlign = 'left'
+    ctx.textBaseline = 'alphabetic'
 
     ctx.fillText(
-        lesson.sections[lesson.currentSectionIndex]?.id || 'The Investigation',
-        x + 20,
-        y + 30
+        section?.id ||
+        'The Investigation',
+        x + px,
+        y + py
     )
 
-    // Step counter
+    /*
+     * Step counter
+     */
     ctx.fillStyle = '#64748b'
-    ctx.font = '14px Arial'
-
+    ctx.font = `${layout.stepFontSize}px ${LAYOUT.typography.family}`
     ctx.textAlign = 'left'
 
     ctx.fillText(
-        `${lesson.currentSectionIndex + 1} / ${lesson.sections.length}`,
-        x + width/2,
-        y + 30
+        `${sectionIndex + 1} / ${sectionCount}`,
+        x + width / 2,
+        y + py+1
     )
 
+    /*
+     * Score
+     */
+    ctx.fillStyle = '#000000'
+    ctx.font = `700 ${layout.scoreFontSize}px ${LAYOUT.typography.family}`
     ctx.textAlign = 'right'
-ctx.fillStyle = '#000000'
-ctx.font = 'bold 16px Arial'
 
-ctx.fillText(
-    `${score}/${lesson.quizTotal}`,
-    viewport.width - 40,
-    50
-)
+    ctx.fillText(
+        `${score}/${totalScore}`,
+        x + width - px,
+        y + py
+    )
 
-ctx.textAlign = 'left'
+    /*
+     * Progress bar
+     */
+    const barX = x + px
+    const barY = y + height - layout.progressHeight - layout.progressGap
+    const barWidth = width - 2 * px
+    const barHeight = layout.progressHeight
 
-    const progress = Math.max(
-    0,
-    Math.min(1, lesson.getProgress() / 100)
-)
+    ctx.fillStyle = '#e5e7eb'
 
-const barX = 40
-const barY = 62
-const barWidth = viewport.width - 80
-const barHeight = 8
+    ctx.fillRect(
+        barX,
+        barY,
+        barWidth,
+        barHeight
+    )
 
-ctx.fillStyle = '#e5e7eb'
-ctx.fillRect(
-    barX,
-    barY,
-    barWidth,
-    barHeight
-)
+    ctx.fillStyle = '#2563eb'
 
-ctx.fillStyle = '#2563eb'
-ctx.fillRect(
-    barX,
-    barY,
-    barWidth * progress,
-    barHeight
-)
+    ctx.fillRect(
+        barX,
+        barY,
+        barWidth * progress,
+        barHeight
+    )
+
+    ctx.restore()
 
 }

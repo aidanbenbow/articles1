@@ -1,3 +1,4 @@
+import { renderHeader } from "../../modules/renderUtils.js";
 import { renderButton } from "../buttons/buttonRenderer.js";
 import { renderCard } from "../CardRenderer.js";
 import { renderDragDropGap } from "../dragDrop/dragDropGapRenderer.js";
@@ -11,6 +12,7 @@ import { renderOrderingItem } from "../ordering/orderingListRenderer.js";
 import { renderOrdering } from "../ordering/orderingRenderer.js";
 import { renderQuizOption } from "../quiz/quizOption.js";
 import { renderQuiz } from "../quiz/quizRenderer.js";
+import { renderLessonHeader } from "../renderLessonHeader.js";
 import { renderSurveyOption } from "../survey/surveyOption.js";
 import { renderSurvey } from "../survey/surveyRenderer.js";
 import { renderText } from "../TextRenderer.js";
@@ -21,6 +23,7 @@ export const nodeRenderers = {
     heading: renderHeading,
     paragraph: renderParagraph,
     lessonTitle: renderLessonTitle,
+    lessonHeader: renderLessonHeader,
     card: renderCard,
     homeWelcome: renderHome,
     ordering: renderOrdering,

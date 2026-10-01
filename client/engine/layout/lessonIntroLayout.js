@@ -35,7 +35,7 @@ export function layoutLessonIntro(
             color,
             text: lesson.title,
             kind: 'lessonTitle',
-            padding,
+            padding: 0,
             typography: 'title'
         })
     }

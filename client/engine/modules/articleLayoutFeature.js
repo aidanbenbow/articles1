@@ -11,6 +11,7 @@ import { layoutLessonIntro } from "../layout/lessonIntroLayout.js"
 import { LessonListLayout } from "../layout/lessonListLayout.js"
 import { layoutLessonSection } from "../layout/lessonSectionLayout.js"
 import { createButtonNode } from "../layout/nodeFactories/buttonNode.js"
+import { createLessonHeaderNode } from "../layout/nodeFactories/lessonHeaderNode.js"
 import { createTextNode } from "../layout/nodeFactories/textNode.js"
 import { layoutQuizSection } from "../layout/quizLayout.js"
 import { layoutSurveySection } from "../layout/surveyLayout.js"
@@ -156,15 +157,34 @@ clearScreenLayout() {
     if (!articleNode || !lesson)  return
   
 
-    const padding = 20
-    const x = this.layout.width / 8
+    const padding = responsive.padding 
+    const width = responsive.contentWidth
+    const x = (this.layout.width-width) / 8
     const worldY = this.layout.height / 8
-    const width = Math.min(this.layout.width * 0.75, 600)
+    const header = responsive.lessonHeader
     const color = articleNode?.props?.color || '#ffffff'
 
     let currentY =0
 
-    currentY += 100
+
+    const headerNode =
+        createLessonHeaderNode({
+            id: `${articleNode.id}-lesson-header`,
+
+            owner: articleNode.id,
+            x: 0,
+            worldY: currentY,
+
+            width: this.layout.width,
+            height: header.height
+        })
+
+    this.layout.layoutNodes.set(
+        headerNode.id,
+        headerNode
+    )
+
+    currentY += header.height + header.bottomGap
 
     if(lesson.phase === 'intro') {
         layoutLessonIntro(this.layout,articleNode,lesson, currentY, x, width, padding, color, responsive) 

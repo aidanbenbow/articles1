@@ -3,7 +3,7 @@ import { renderBackground, } from './renderUtils.js'
 import { renderHome } from '../renderers/homeRenderer.js'
 import { renderLessonScreen } from '../renderers/lessonScreenRenderer.js'
 import { renderLessonBrowser } from '../renderers/lessonBrowserRenderer.js'
-import { LAYOUT } from '../constants/layoutConstants.js'
+import { getResponsiveLayout, LAYOUT } from '../constants/layoutConstants.js'
 
 export class Renderer {
     constructor(engine) {
@@ -46,8 +46,6 @@ this.bgColor = this.screen?.color || '#ffffff'
 
     const transitionManager = this.engine.context.getTransitionManager()
     const screenOpacity = transitionManager?.getOpacity() ?? 1
-     
-       // renderBackground(this.ctx, this.canvas.width, this.canvas.height, this.bgColor)
 this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
 const viewport = this.engine.context.getViewport()
 
@@ -59,6 +57,10 @@ const viewport = this.engine.context.getViewport()
         const lessonState = this.engine.context.getLesson()
         const allNodes = [...layout.values()]
         const assetManager = this.engine.context.getAssetManager()
+        const responsive = getResponsiveLayout(
+            this.canvas.width,
+            this.canvas.height
+        )
        
         const view = createRendererViewModel(allNodes, interactionState, lessonState)
         const renderContext = {
@@ -69,7 +71,8 @@ const viewport = this.engine.context.getViewport()
     interactionState,
     view,
     layout: allNodes,
-    typography: LAYOUT.typography
+    typography: LAYOUT.typography,
+    responsive
 }
 
 this.ctx.save()
