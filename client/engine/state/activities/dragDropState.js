@@ -12,6 +12,8 @@ export class DragDropState extends ActivityState{
         this.correctFeedback =
             section.feedback ||
             "Great job! You've completed the drag and drop activity."
+            this.scoreValue= 10
+            this.scoreAwarded = false
             this.shuffleWordbank()
     }  
     shuffleWordbank() {
@@ -44,7 +46,15 @@ export class DragDropState extends ActivityState{
        this.correct = correctKeys.length === answerKeys.length && correctKeys.every(key => this.answers[key] === this.correctAnswers[key])
        this.checked = true
        this.feedback = this.correct ? this.correctFeedback : "Some answers are incorrect. Please try again."
-       return this.correct
+
+       const justCompleted = this.correct && !this.scoreAwarded
+       if(justCompleted) {
+           this.scoreAwarded = true
+       }
+       return { correct: this.correct,
+        scoreAwarded: justCompleted,
+        score: this.getScore()
+        }
     }
     getAnswers() {
         return this.answers
@@ -58,17 +68,21 @@ export class DragDropState extends ActivityState{
     getFeedback() {
         return this.feedback
     }
+    getScore() {
+        return this.scoreAwarded ? this.scoreValue : 0
+    }
     isCorrect() {
         return this.correct
     }
     isComplete() {
-        return true//this.correct
+        return this.correct
     }
     reset() {
         this.answers = {}
         this.checked = false
         this.correct = false
         this.feedback = ''
+        this.scoreAwarded = false
         this.wordbank = [...(this.section.wordbank || [])]
         this.shuffleWordbank()
     }

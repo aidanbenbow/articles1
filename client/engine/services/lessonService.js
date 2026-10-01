@@ -226,9 +226,11 @@ checkDragDrop(sectionId) {
     this.syncProgress()
 
     return {
-        result,
-        feedback: activity.getFeedback(),
-        correct: activity.isCorrect()
+        ...result,
+        totalScore: this.lesson.getScoreTotal(),
+        progress: this.lesson.getProgress(),
+        complete: activity.isComplete(),
+        feedback: activity.getFeedback()
     }
 }
 }

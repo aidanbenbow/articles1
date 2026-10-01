@@ -18,7 +18,10 @@ const rect = getScreenRect(node, viewport)
 const { x, y } = rect
 const width = node.width
 const height = node.height
-const score = lesson.getScoreTotal()
+const actualScore = lesson.getScoreTotal()
+const animatedScore = context.animations.getValue(
+   'lesson-score')??actualScore
+    console.log('animatedScore', animatedScore)
 const totalScore = lesson.quizTotal
 const section = lesson.sections[lesson.currentSectionIndex]
 const sectionIndex = lesson.currentSectionIndex
@@ -83,7 +86,7 @@ ctx.fillRect(x,y + height,width,1)
     ctx.textAlign = 'right'
 
     ctx.fillText(
-        `${score}/${totalScore}`,
+        `${Math.round(animatedScore)}/${totalScore}`,
         x + width - px,
         y + py
     )

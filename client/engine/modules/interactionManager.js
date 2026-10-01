@@ -56,7 +56,7 @@ async handleTargetNode(targetNode) {
                     const newScore = answer?.score + prevScore 
                
                     if(answer.result.isCorrect) {
-                        this.engine.context.getAnimationManager().play('quizAnswer', `quiz-answer-${targetNode.quizId}-correct`,
+                        this.engine.context.getAnimationManager().play('quizAnswer', `lesson-score`,
                             {
                                 from: prevScore,
                                 to: newScore
@@ -82,12 +82,25 @@ case 'checkOrdering':
 
     this.emitLayoutChanged()
     return
-    case 'checkDragDrop':
-    this.engine.context.checkDragDrop(
-        targetNode.sectionId
-    )
-    this.emitLayoutChanged()
-    return
+    case 'checkDragDrop':{
+        const result = this.engine.context.checkDragDrop(
+            targetNode.sectionId
+        )
+        if(!result) return
+
+        if(result.scoreAwarded) {
+            const animations = this.engine.context.getAnimationManager()
+   const prevScore = result.totalScore - result.score
+            animations.play('dragDropComplete', `lesson-score`,
+                {
+                    from: prevScore,
+                    to: result.totalScore
+                }
+            )
+        }
+        this.emitLayoutChanged()
+        return
+    }
                 case 'openLesson':
                     const article = targetNode.articleData || targetNode || null
                     

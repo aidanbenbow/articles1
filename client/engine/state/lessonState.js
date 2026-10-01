@@ -30,10 +30,8 @@ export class LessonState {
     }
     getScoreTotal(){
 this.score = Object.values(this.activities).reduce((total, activity) => {
-            if (activity.type === 'quiz') {
-                return total + activity.getScore()
-            }
-            return total
+            
+            return total+(activity.getScore ? activity.getScore() : 0)
         }, 0)
         return this.score
     }

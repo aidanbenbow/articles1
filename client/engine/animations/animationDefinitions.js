@@ -13,6 +13,10 @@ export const animationDefinitions = {
         duration: 500,
         easing: t => t
     },
+    dragDropComplete: {
+        duration: 400,
+        easing: t => 1 - Math.pow(1 - t, 3)
+    },
 
     sectionComplete: {
         duration: 300,

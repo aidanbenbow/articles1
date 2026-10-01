@@ -4,17 +4,17 @@ import { renderNode } from "./general/renderNode.js"
 export function renderLessonScreen(
     ctx,
     viewport,
-    renderContext
+    context
 ) {
-       
-    if (!renderContext.lesson)   return
+ 
+    if (!context.lesson)   return
 
-    for(const node of renderContext.layout) {
+    for(const node of context.layout) {
         renderNode(
             ctx,
             node,
             viewport,
-            renderContext
+            context
         )
     }
 }
