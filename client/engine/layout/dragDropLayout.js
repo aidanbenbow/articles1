@@ -44,15 +44,11 @@ const children = {
 
     const answers =state?.getAnswers?.() ?? state?.answers ?? {}
 
-   
-
     // --------------------------------
     // Calculate paragraph height
     // --------------------------------
 
     const paragraphs = section.paragraphs || []
-
-    
 
     // --------------------------------
     // Feedback
@@ -68,8 +64,7 @@ const children = {
     // Instruction
     // --------------------------------
 
-    const instructionY =
-        dragDropTop + padding
+    const instructionY = dragDropTop + padding
 
    children.instruction = createTextNode({
         id: `${articleNode.id}-${section.id}-instruction`,
@@ -90,10 +85,7 @@ const children = {
     // Word bank
     // --------------------------------
 
-    const wordbankTop =
-        instructionY +
-        instructionHeight +
-        8
+    const wordbankTop = instructionY + instructionHeight + 8
 
         const availableWidth = width - padding * 2
         let wordX = x + padding
@@ -149,19 +141,14 @@ if (
     // Paragraphs
     // --------------------------------
 
-    const paragraphsTop =
-        wordbankTop +
-        wordbankHeight +
-        25
+    const paragraphsTop =  wordbankTop +  wordbankHeight +  25
 
         let paragraphY = paragraphsTop
         let paragraphsHeight = 0
 
     for (let p = 0; p < paragraphs.length; p++) {
-
         const result = layoutDragDropParagraph(
-            articleNode,
-            
+            articleNode,      
             section,
             paragraphs[p],
             p,
@@ -190,10 +177,7 @@ if (
     // Check button
     // --------------------------------
 
-    const checkY =
-        paragraphsTop +
-        paragraphsHeight +
-        checkButtonGap
+    const checkY = paragraphsTop + paragraphsHeight + checkButtonGap
 
     children.checkButton = createButtonNode({
         id: `${articleNode.id}-${section.id}-checkButton`,
@@ -216,11 +200,7 @@ if (
     // --------------------------------
 
     if (feedback) {
-
-        const feedbackY =
-            checkY +
-            checkButtonHeight +
-            feedbackGap
+        const feedbackY = checkY + checkButtonHeight + feedbackGap
 
         children.feedback = createTextNode({
             id: `${articleNode.id}-${section.id}-feedback`,

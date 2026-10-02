@@ -31,13 +31,17 @@ const children = []
         cursorY += lineHeight + paragraphGap
         lineCount++
     }
+    function placeItem(itemWidth) { if (cursorX > x && cursorX + itemWidth > rightEdge) { moveToNextLine() } }
 
     for (const part of parts) {
         if (part.type === 'text') {
             const words = part.text.split(/(\s+)/)
 for (const word of words) {
-
-                const wordWidth = word.length * 8
+const isWhitespace = /^\s+$/.test(word) 
+if (isWhitespace) { 
+    if (cursorX > x) { const spaceWidth = measureText(" ", LAYOUT.typography.body)
+        if (cursorX + spaceWidth <= rightEdge) { cursorX += spaceWidth } } continue }
+                const wordWidth = measureText(word, LAYOUT.typography.body)
                 if (
                     cursorX > x &&
                     cursorX + wordWidth > rightEdge
@@ -67,17 +71,16 @@ for (const word of words) {
         }
         } else if (part.type === 'gap') {
 const gapPaddingX = 10
-            const answer = answers?.[part.gapIndex] ?? ''
-const answerWidth = measureText(answer, LAYOUT.typography.body)
+            const currentAnswer = answers?.[part.gapIndex] ?? ''
+
+const correctAnswer = section.answers?.[part.gapIndex] ?? ''
+
+const answerWidth = measureText(correctAnswer, LAYOUT.typography.body)
+
 const actualGapWidth = Math.max(
     48,  answerWidth + gapPaddingX*2)
             const totalGapWidth = actualGapWidth + 5
-            if (
-                cursorX > x &&
-                cursorX + totalGapWidth > rightEdge
-            ) {
-                moveToNextLine()
-            }
+            placeItem(totalGapWidth)
 
             const gapNode = createDragDropGapNode({
                 id: `${articleNode.id}-${section.id}-paragraph-${paragraphIndex}-gap-${children.length}`,
@@ -92,7 +95,7 @@ const actualGapWidth = Math.max(
                 height: gapHeight,
                 color: '#ffffff',
                 text: '',
-                answer,
+                correctAnswer,
                 kind: 'lessonSection',
                 sectionType: 'dragDropGap'
             })

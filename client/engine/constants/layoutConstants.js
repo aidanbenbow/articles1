@@ -72,9 +72,9 @@ heading: {
     },
 
     body: {
-        size: 13,
+        size: 18,
         lineHeight: 20,
-        weight: 400,
+        weight: 500,
     },
 
     step: {

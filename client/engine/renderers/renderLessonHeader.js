@@ -21,7 +21,7 @@ const height = node.height
 const actualScore = lesson.getScoreTotal()
 const animatedScore = context.animations.getValue(
    'lesson-score')??actualScore
-    console.log('animatedScore', animatedScore)
+    
 const totalScore = lesson.quizTotal
 const section = lesson.sections[lesson.currentSectionIndex]
 const sectionIndex = lesson.currentSectionIndex

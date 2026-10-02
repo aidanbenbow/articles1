@@ -43,7 +43,7 @@ children.question = createTextNode({
         worldY: quizTop + padding,
         width: width - padding * 2,
         height: questionHeight,
-        color: '#f0f0f0',
+        color: '#cbb2b2',
         text: section.question,
         padding: 0,
         
@@ -93,7 +93,7 @@ let quizHeight =
             worldY: quizTop + padding + questionHeight + section.options.length * (optionHeight + optionGap) + feedbackGap,
             width: width - padding * 2,
             height: feedbackHeight,
-            color: '#f0f0f0',
+            color: '#635454',
             text: feedback,
             padding: 0,
             kind: 'lessonSection',
