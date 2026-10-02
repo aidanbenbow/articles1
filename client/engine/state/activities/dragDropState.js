@@ -9,10 +9,10 @@ export class DragDropState extends ActivityState{
         this.correct = false
         this.feedback = ''
         this.correctAnswers ={ ...(section.answers || {}) }
-        this.correctFeedback =
-            section.feedback ||
-            "Great job! You've completed the drag and drop activity."
-            this.scoreValue= 10
+        this.correctCount = 0
+        
+            this.pointsPerWord = 2
+            this.scoreValue= Object.keys(this.correctAnswers).length * this.pointsPerWord
             this.scoreAwarded = false
             this.shuffleWordbank()
     }  
@@ -41,20 +41,28 @@ export class DragDropState extends ActivityState{
         return true
     }
     checkAnswers() {
-       const correctKeys = Object.keys(this.correctAnswers)
-       const answerKeys = Object.keys(this.answers)
-       this.correct = correctKeys.length === answerKeys.length && correctKeys.every(key => this.answers[key] === this.correctAnswers[key])
-       this.checked = true
-       this.feedback = this.correct ? this.correctFeedback : "Some answers are incorrect. Please try again."
+       const totalCount = Object.keys(this.correctAnswers).length
+        const answerCount = Object.keys(this.answers).length
+      this.correctCount = Object.keys(this.correctAnswers)
+    .filter(key => this.answers[key] === this.correctAnswers[key])
+    .length
 
-       const justCompleted = this.correct && !this.scoreAwarded
-       if(justCompleted) {
-           this.scoreAwarded = true
-       }
+    const complete = answerCount === totalCount
+this.correct = complete && this.correctCount === totalCount
+       this.checked = true
+       this.feedback =  `You have ${this.correctCount} correct answers!`
+      const scoreAwarded = complete && !this.scoreAwarded 
+      if (scoreAwarded) { this.scoreAwarded = true } 
        return { correct: this.correct,
-        scoreAwarded: justCompleted,
-        score: this.getScore()
-        }
+        complete,
+        scoreAwarded: complete && !this.scoreAwarded,
+        score: this.getScore(),
+        correctCount: this.correctCount,
+        answerCount,
+        totalCount
+    }
+    
+        
     }
     getAnswers() {
         return this.answers
@@ -69,19 +77,23 @@ export class DragDropState extends ActivityState{
         return this.feedback
     }
     getScore() {
-        return this.scoreAwarded ? this.scoreValue : 0
+        const correctKeys = Object.keys(this.correctAnswers)
+        const correctCount = correctKeys.filter( key => this.answers[key] === this.correctAnswers[key] ).length
+        return correctCount * this.pointsPerWord
     }
     isCorrect() {
         return this.correct
     }
     isComplete() {
-        return this.correct
+        return Object.keys(this.answers).length ===
+           Object.keys(this.correctAnswers).length
     }
     reset() {
         this.answers = {}
         this.checked = false
         this.correct = false
         this.feedback = ''
+        this.correctCount = 0
         this.scoreAwarded = false
         this.wordbank = [...(this.section.wordbank || [])]
         this.shuffleWordbank()
