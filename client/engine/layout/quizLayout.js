@@ -25,8 +25,11 @@ export function layoutQuizSection(layout,articleNode, section, currentY, x, widt
         activity?.feedback ??
         null
 
-    const hasFeedback =
-        Boolean(feedback)
+   const hasAnswered =
+    activity?.hasAnswered?.(section.id) ?? false
+
+const hasFeedback =
+    hasAnswered && Boolean(feedback)
 
     const children = {
         question: null,

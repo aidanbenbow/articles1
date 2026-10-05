@@ -6,6 +6,7 @@ import { getLessonIntroLayout } from "./LAYOUTS/lessonIntroLayoutGet.js"
 import { getOrderingLayout } from "./LAYOUTS/orderingLayoutGet.js"
 import { getQuizLayout } from "./LAYOUTS/quizLayoutGet.js"
 import { getSurveyLayout } from "./LAYOUTS/surveyLayoutGet.js"
+import { getResponsiveTypography } from "./LAYOUTS/typographyLayoutGet.js"
 
 export const LAYOUT = {
     padding: 20,
@@ -164,6 +165,8 @@ export function getResponsiveLayout(screenWidth, screenHeight) {
         optionHeight,
 
         gap: mobile ? 18 : 30,
+
+        typography: getResponsiveTypography(compact),
 
         continueCard: {
             height:
