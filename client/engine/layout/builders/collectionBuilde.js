@@ -3,15 +3,15 @@ import { compileNode } from "../general/nodeComplier.js"
 
 export function buildCollectionNode(config, context) {
     const {
+        layout,
         currentY
     } = context
 
-    const items =
-        resolveValue(
-            config.source,
-            context
-        ) ?? []
-
+    const items = resolveValue(
+        config.source,
+        context
+    ) ?? []
+     
     let nextY = currentY
 
     for (let i = 0; i < items.length; i++) {
@@ -37,7 +37,8 @@ export function buildCollectionNode(config, context) {
                 index: i
             }
         )
-
+      
+   
         if (!result) continue
 
         nextY =

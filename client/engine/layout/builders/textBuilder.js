@@ -7,7 +7,10 @@ export function buildTextNode(config, context) {
         layout,
         metrics,
         owner,
-        currentY
+        currentY,
+        parent,
+        contentX,
+        contentWidth
     } = context
 
     const node = createTextNode({
@@ -15,16 +18,16 @@ export function buildTextNode(config, context) {
         owner: config.owner ?? owner,
         kind: config.kind ?? 'text',
 
-        x: config.x ?? context.contentX ?? metrics.padding,
+        x: config.x ?? contentX ?? metrics.padding,
         worldY: config.worldY ?? currentY,
 
         width:
-            config.width ?? context.contentWidth ?? 
+            config.width ?? contentWidth ?? 
             metrics.contentWidth,
 
         height:
             config.height ??
-            resolveTextHeight(config, metrics),
+            resolveTextHeight(config,context),
 
         color:
             resolveValue(
@@ -41,8 +44,6 @@ export function buildTextNode(config, context) {
         typography:
             config.typography ?? 'body'
     })
-
-   // layout.layoutNodes.set(node.id, node)
 
     return {node,
         currentY: node.worldY + node.height + metrics.padding

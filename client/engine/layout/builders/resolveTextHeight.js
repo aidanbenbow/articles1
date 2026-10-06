@@ -3,7 +3,7 @@ import { resolveValue } from "./resolveValue.js"
 export function resolveTextHeight(config, context) {
     const { metrics } = context
 
-    if (config.height!==null) {
+    if (config.height!=null) {
         return config.height
     }
 

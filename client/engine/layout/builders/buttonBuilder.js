@@ -4,11 +4,14 @@ import { resolveValue } from "./resolveValue.js"
 export function buildButtonNode(config, context) {
     const {
         layout,
-        metrics
+        metrics,
+        owner,
+        currentY,
+        parent
     } = context
     const node = createButtonNode({
         id: config.id,
-        owner: config.owner?? context.owner,
+        owner: config.owner?? owner,
         articleId:
     resolveValue(
         config.articleId,

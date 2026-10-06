@@ -9,50 +9,30 @@ export function buildCardNode(config, context) {
         currentY
     } = context
 const welcome = metrics.welcome
-    const x =
-        config.x ??
-        metrics.padding
+    const x =config.x ?? metrics.padding
 
-    const width =
-        config.width ??
-        metrics.contentWidth
+    const width = config.width ?? metrics.contentWidth
 
     const contentX = x + welcome.padding +welcome.accentWidth
     const contentWidth = width - welcome.padding*2 - welcome.accentWidth
     const contentTop = welcome.padding +welcome.titleTop
  const node = createCardNode({
         id: config.id,
-
         owner: config.owner ?? owner,
-
         type: 'card',
-
         x,
-
         worldY: config.worldY ?? currentY,
-
         width,
         height: config.height?? welcome.height,
-
-        color:
-            config.color ?? null,
-
-        padding:
-            config.padding ??
-            metrics.welcome.padding,
-
-        kind:
-            config.kind ??
-            'card',
-
-        sectionType:
-            config.sectionType ?? null,
-
-        style:
-            config.style ?? {},
-
+        color:  config.color ?? null,
+        padding:  config.padding ??  metrics.welcome.padding,
+        kind:  config.kind ??'card',
+        sectionType:   config.sectionType ?? null,
+        style:    config.style ?? {},
         children: {}
     })
+   
+
     let childY = node.worldY + contentTop
      
     for (const childConfig of config.children ?? []) {
@@ -68,27 +48,18 @@ const welcome = metrics.welcome
             }
         )
 
-        if (!result) continue
+        if (!result?.node) continue
 
         node.children[result.node.id] =
             result.node
 
         childY = result.currentY
     }
+     
 const contentBottom = childY - metrics.gap
-const contentHeight = contentBottom - currentY
-const calculatedHeight = config.layout === 'content'
-            ? Math.max(
-                welcome.height,
-                contentHeight +
-                welcome.padding
-            )
-            : (
-                config.height ??
-                metrics.contentHeight
-            )
-    if(config.height === null){
-        node.height = calculatedHeight
+const requiredHeight = contentBottom - node.worldY + welcome.padding 
+    if(config.height == null){
+        node.height = Math.max(requiredHeight, welcome.height)
     }
 
     layout.layoutNodes.set(
