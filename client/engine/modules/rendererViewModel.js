@@ -1,10 +1,5 @@
 export function createRendererViewModel( allnodes,state, lesson) {
-console.log(
-    'HOME BUTTONS IN VIEW:',
-    allnodes.filter(
-        node => node.kind === 'lessonOption'
-    )
-)
+
     const inputNodes = allnodes.filter(node => node.type === 'input')
     const buttonNodes = allnodes.filter(node => node.type === 'button')
     const headerNode = allnodes.find(node => node.type === 'header')

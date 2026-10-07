@@ -8,6 +8,7 @@ import { layoutHeadingBlock } from "../layout/layoutHeadingBlock.js"
 import { layoutOrderingSection } from "../layout/layoutOrderingSection.js"
 import { layoutParagraphBlock } from "../layout/layoutParagraphBlock.js"
 import { layoutLessonIntro } from "../layout/lessonIntroLayout.js"
+import { LessonLayout } from "../layout/lessonLayout.js"
 import { LessonListLayout } from "../layout/lessonListLayout.js"
 import { layoutLessonSection } from "../layout/lessonSectionLayout.js"
 import { createButtonNode } from "../layout/nodeFactories/buttonNode.js"
@@ -26,6 +27,7 @@ export class ArticleLayoutFeature {
        // this._lastFilter = ''
 
    this.homeLayout = null
+   this.lessonLayout = null
         this.engine.on('lessonStateChanged', () => {    
             this.layoutArticles()
         })
@@ -35,7 +37,7 @@ export class ArticleLayoutFeature {
     }
     contextExports() {
         return {
-           // applyArticleFilter: this.applyFilter.bind(this),
+           
             layoutArticles: this.layoutArticles.bind(this),
             getArticleLayoutFeature: () => this,
             getArticleCardSize: this.getArticleCardSize.bind(this),
@@ -45,9 +47,8 @@ export class ArticleLayoutFeature {
     attach() {
         this.layout = this.engine.context.getLayoutManager()
         this.homeLayout = new HomeLayout(this.engine, this.layout)
-        // this._unsubscribe.push(this.engine.on('searchChanged', (searchTerm) => {
-        //     this.applyFilter(searchTerm)
-        // }))
+        this.lessonLayout = new LessonLayout(this.engine, this.layout)
+    
     }
 
     detach() {
@@ -67,45 +68,31 @@ export class ArticleLayoutFeature {
     return store?.get(articleId) ?? null
 }
 
-//    applyFilter(searchTerm) {
-//     const normalized = normalize(searchTerm)
-
-//     if (normalized === this._lastFilter) return
-//     this._lastFilter = normalized
-
-//     const filtered = this.getArticleNodes().filter(node =>
-//         matchesOrderedPrefix(
-//             node.props?.title || '',
-//             normalized
-//         )
-//     )
-//     const state =  this.engine.context.getInteractionState()
-//           // clear invalid selection
-//     if ( state.selectedNodeId &&  !filtered.some(   node => node.id === state.selectedNodeId)) {
-//         this.engine.context.clearSelectedArticle()
-//     }
-
-//     this.layoutArticles(filtered)
-// }
 
     layoutArticles(articleNodes = null) {
         articleNodes ??= this.getArticleNodes()
 const appState = this.engine.context.app.getState()
-const responsive = getResponsiveLayout(this.layout.width, this.layout.height)
 
-//this.clearLessonLayout()
 this.clearScreenLayout()
+
+const context = {
+    layout: this.layout,
+    engine: this.engine,
+    articleNodes,
+    appState
+}
 
 switch (appState.screen) {
     case 'home':
-        this.homeLayout.build(articleNodes, appState)
+        this.homeLayout.build(context)
         break
         case 'lesson':
-            const articleNode = articleNodes.find(node => node.props?.articleData?.articleId === appState.activeLessonId)
-            if (articleNode) {
-                const lesson = this.engine.context.getLesson()
-                this.layoutArticlesDetail(articleNode, lesson, responsive)
-            } 
+            this.lessonLayout.build(context)
+            // const articleNode = articleNodes.find(node => node.props?.articleData?.articleId === appState.activeLessonId)
+            // if (articleNode) {
+            //     const lesson = this.engine.context.getLesson()
+            //     this.layoutArticlesDetail(articleNode, lesson, responsive)
+            // } 
             break
             case 'lessonBrowser':
                 LessonListLayout(articleNodes, this.layout, this.engine)        
@@ -144,7 +131,7 @@ clearScreenLayout() {
         if (
             node.owner === 'home' ||
             node.owner === 'lessonBrowser' ||
-            node.kind?.startsWith('lesson') ||
+            node.owner === 'lesson' ||
             node.type === 'dragDrop'
         ) {
             this.layout.layoutNodes.delete(id)

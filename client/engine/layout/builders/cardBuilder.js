@@ -1,5 +1,6 @@
 import { createCardNode } from "../nodeFactories/cardNode.js"
 import { compileNode } from "../general/nodeComplier.js"
+import { resolveValue } from "./resolveValue.js"
 
 export function buildCardNode(config, context) {
     const {
@@ -8,14 +9,21 @@ export function buildCardNode(config, context) {
         owner,
         currentY
     } = context
-const welcome = metrics.welcome
-    const x =config.x ?? metrics.padding
 
+const gap = resolveValue(
+        config.layout?.gap,
+        context
+    ) ?? metrics.gap
+
+    const padding = resolveValue(
+        config.padding,
+        context
+    ) ?? 0
+
+
+    const x =config.x ?? metrics.padding
     const width = config.width ?? metrics.contentWidth
 
-    const contentX = x + welcome.padding +welcome.accentWidth
-    const contentWidth = width - welcome.padding*2 - welcome.accentWidth
-    const contentTop = welcome.padding +welcome.titleTop
  const node = createCardNode({
         id: config.id,
         owner: config.owner ?? owner,
@@ -23,9 +31,9 @@ const welcome = metrics.welcome
         x,
         worldY: config.worldY ?? currentY,
         width,
-        height: config.height?? welcome.height,
+        height: config.height?? 0,
         color:  config.color ?? null,
-        padding:  config.padding ??  metrics.welcome.padding,
+        padding,
         kind:  config.kind ??'card',
         sectionType:   config.sectionType ?? null,
         style:    config.style ?? {},
@@ -33,7 +41,9 @@ const welcome = metrics.welcome
     })
    
 
-    let childY = node.worldY + contentTop
+   const contentX = node.x + padding
+    const contentWidth = node.width - (padding * 2)
+    let childY = node.worldY + padding
      
     for (const childConfig of config.children ?? []) {
         const result = compileNode(
@@ -41,7 +51,7 @@ const welcome = metrics.welcome
             {
                 ...context,
                 currentY: childY,
-                owner: config.owner ?? owner,
+                
                 parent: node,
                 contentX,
                 contentWidth
@@ -53,13 +63,11 @@ const welcome = metrics.welcome
         node.children[result.node.id] =
             result.node
 
-        childY = result.currentY
+        childY = result.node.worldY + result.node.height + gap
     }
      
-const contentBottom = childY - metrics.gap
-const requiredHeight = contentBottom - node.worldY + welcome.padding 
-    if(config.height == null){
-        node.height = Math.max(requiredHeight, welcome.height)
+if(config.height == null){
+        node.height = Math.max(0, childY - node.worldY-gap + padding)
     }
 
     layout.layoutNodes.set(
