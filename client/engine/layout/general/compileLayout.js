@@ -18,6 +18,7 @@ export function compileLayout(config, context) {
     )
 
     for (const child of config.nodes || []) {
+   
         const result = compileNode(
             child,
             {

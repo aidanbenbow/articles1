@@ -22,7 +22,7 @@ export const LESSON_LAYOUT = {
                 lesson.phase !== 'intro'
         },
 
-        {
+        {id: 'lesson-navigation',
             type: 'lessonNavigation',
             visible: ({ lesson }) =>
                 lesson.phase !== 'intro'

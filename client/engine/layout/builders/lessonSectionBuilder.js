@@ -8,15 +8,14 @@ export function buildLessonSectionNode(config, context) {
 
     const section =
         lesson.getCurrentSection()
-
+ 
     if (!section) {
         return {
             node: null,
             currentY
         }
     }
-
-    return compileSection(
+const result = compileSection(
         section,
         {
             ...context,
@@ -24,4 +23,6 @@ export function buildLessonSectionNode(config, context) {
             currentY
         }
     )
+    
+    return result
 }

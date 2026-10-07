@@ -17,14 +17,14 @@ export const lessonButtons = {
 
     finish: {
         text: 'Finish',
-        action: 'finishLesson',
+        action: 'finishLessonSection',
         kind: 'lessonButton',
         sectionType: 'finishButton'
     },
 
     back: {
         text: 'Back',
-        action: 'goBack',
+        action: 'goHome',
         kind: 'lessonButton',
         sectionType: 'backButton'
     }

@@ -219,6 +219,8 @@ lessonIntro: getLessonIntroLayout(compact),
 lessonHeader: getLessonHeaderLayout(compact, mobile),
 button:{
 height: compact ? 32 : 40,
+gap: compact ? 8 : 10,
+padding:0
 },
         suggested: {
             height:

@@ -135,10 +135,10 @@ let quizHeight = padding * 2 + questionHeight +
             quizNode.id,
             quizNode
         )
-
+const nextY = quizTop + quizHeight + metrics.gap
         return {
             node: quizNode,
-            currentY: quizTop + quizHeight + metrics.sectionGap
+            currentY: nextY
         }
     }
         
