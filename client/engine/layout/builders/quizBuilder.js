@@ -24,7 +24,7 @@ const x = padding
 const width = metrics.contentWidth
 const quizTop = currentY 
 const activity = lesson.activities?.[section.id] ?? null
-const answers = activity?.getAnswers?.() ?? activity?.answers ?? {}
+
 const feedback = activity?.getFeedback?.() ?? activity?.feedback ?? null
 const hasAnswered = activity?.hasAnswered?.(section.id) ?? false
 const hasFeedback = Boolean(feedback) && hasAnswered

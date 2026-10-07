@@ -87,6 +87,7 @@ heading: {
         size: 14,
         lineHeight: 20,
         weight: 400,
+        family: "sans-serif",
     },
 
     weights: {

@@ -44,6 +44,7 @@ export function getResponsiveTypography(compact) {
 
         question: {
             ...LAYOUT.typography.question
+            
         }
     }
 }

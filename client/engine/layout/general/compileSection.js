@@ -1,7 +1,9 @@
 import { buildQuizSectionNode } from "../builders/quizBuilder.js"
+import { buildSurveySectionNode } from "../builders/surveyBuilder.js"
 
 const sectionBuilders = {
-    quiz: buildQuizSectionNode
+    quiz: buildQuizSectionNode,
+    survey: buildSurveySectionNode
 }
 
 export function compileSection(section, context) {

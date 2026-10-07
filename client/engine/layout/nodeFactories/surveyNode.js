@@ -14,7 +14,7 @@ interactive = false,
     padding = 0,
     color = '#e0e0e0',
 
-    surveyType,
+    surveyType = 'single',
 
     kind = 'lessonSection',
     sectionType = 'survey',

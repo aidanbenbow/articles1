@@ -8,7 +8,7 @@ export function renderNode(ctx, node, viewport, context) {
     if (renderer) {
         renderer(ctx, node, viewport, context)
     }
-
+  
     renderNodeChildren(
         ctx,
         node,
