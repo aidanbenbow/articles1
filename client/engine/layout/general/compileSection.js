@@ -1,22 +1,30 @@
 import { buildQuizSectionNode } from "../builders/quizBuilder.js"
 import { buildSurveySectionNode } from "../builders/surveyBuilder.js"
+import { QUIZ_LAYOUT } from "../config/quizConfig.js"
 
-const sectionBuilders = {
-    quiz: buildQuizSectionNode,
-    survey: buildSurveySectionNode
+export const SECTION_LAYOUTS = {
+    quiz: QUIZ_LAYOUT,
+    // survey: SURVEY_LAYOUT,
+    // ordering: ORDERING_LAYOUT,
+    // dragdrop: DRAGDROP_LAYOUT
 }
 
-export function compileSection(section, context) {
-    const builder =
-        sectionBuilders[section.type]
+// const sectionBuilders = {
+//     quiz: buildQuizSectionNode,
+//     survey: buildSurveySectionNode
+// }
 
-    if (!builder) {
-        throw new Error(
-            `No section builder for ${section.type}`
-        )
-    }
+// export function compileSection(section, context) {
+//     const builder =
+//         sectionBuilders[section.type]
 
-    return builder(
-        context
-    )
-}
+//     if (!builder) {
+//         throw new Error(
+//             `No section builder for ${section.type}`
+//         )
+//     }
+
+//     return builder(
+//         context
+//     )
+// }

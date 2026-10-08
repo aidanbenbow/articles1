@@ -28,15 +28,11 @@ export class QuizState extends ActivityState {
         if (isCorrect) {
             this.score+=10
         }
-
+this.completed = true
         return this.answers[questionId]
     }
 isComplete() {
-    return (
-       
-        this.getAnsweredCount() === 1
-        
-    )
+    return this.completed
 }
     getScore() {
         return this.score

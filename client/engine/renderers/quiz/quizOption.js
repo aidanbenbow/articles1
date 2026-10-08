@@ -9,9 +9,9 @@ const lesson = context.lesson
     const quiz = lesson.activities?.[node.sectionId]
     const answer = quiz?.getAnswer(node.quizId)
 
-const answered = !!answer
-const isSelected = answer?.selected === node.optionIndex
-const isCorrect = node.optionIndex === node.answer
+const answered = node.answered
+const isSelected = node.selected
+const isCorrect = node.correct
 
     let color = '#d0d0d0'
 

@@ -1,3 +1,4 @@
+
 import { LESSON_LAYOUT } from "./config/lessonConfig.js"
 import { compileLayout } from "./general/compileLayout.js"
 
@@ -12,13 +13,17 @@ export class LessonLayout {
         if(!articleNode) return
         const lesson = this.engine.context.getLesson()
         if(!lesson) return
-
+const section = lesson.getCurrentSection()
+const activity = section ? lesson.activities[section.id] : null
+console.log('lesson layout build', {lesson,section,activity})
         compileLayout(
             LESSON_LAYOUT,
             {
                 ...context,
                 articleNode,
                 lesson,
+                section,
+                activity,
                 owner: 'lesson'
             }
         )

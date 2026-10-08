@@ -14,7 +14,9 @@ export function createQuizOptionNode({
     text = '',
 
     answer = null,
-
+selected = false,
+answered = false,
+correct = false,
     interactive = true,
     action = 'answerQuiz',
 
@@ -40,7 +42,9 @@ export function createQuizOptionNode({
         color,
         text,
         answer,
-
+selected,
+answered,
+correct,
         padding,
 
         type: 'quizOption',

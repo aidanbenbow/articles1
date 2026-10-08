@@ -15,6 +15,10 @@ export function compileNode(config, context) {
             `No layout builder for ${config.type}`
         )
     }
-
-    return builder(config, context)
+const result = builder(config, context)
+if(!result) return null
+    return {
+        nodes: result.nodes ?? (result.node ? [result.node] : []),
+        currentY: result.currentY
+    }
 }

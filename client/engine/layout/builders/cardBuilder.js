@@ -37,7 +37,7 @@ const gap = resolveValue(
         kind:  config.kind ??'card',
         sectionType:   config.sectionType ?? null,
         style:    config.style ?? {},
-        children: {}
+        children: []
     })
    
 
@@ -58,14 +58,23 @@ const gap = resolveValue(
             }
         )
 
-        if (!result?.node) continue
+        if (!result) continue
+node.children.push(...result.nodes)
+childY = result.currentY
 
-        node.children[result.node.id] =
-            result.node
-
-        childY = result.node.worldY + result.node.height + gap
     }
-     
+     console.log('CARD HEIGHT DEBUG', {
+    id: node.id,
+    childY,
+    worldY: node.worldY,
+    padding,
+    children: node.children.map(child => ({
+        id: child.id,
+        type: child.type,
+        worldY: child.worldY,
+        height: child.height
+    }))
+})
 if(config.height == null){
         node.height = Math.max(0, childY - node.worldY-gap + padding)
     }
