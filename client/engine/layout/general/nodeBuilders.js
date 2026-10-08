@@ -6,6 +6,7 @@ import { buildLessonHeaderNode } from "../builders/lessonHeaderBuilder.js";
 
 import { buildLessonNavigationNode } from "../builders/lessonNavigationBuilder.js";
 import { buildQuizOptionNode } from "../builders/quizOptionBuilder.js";
+import { buildSurveyOptionNode } from "../builders/surveyOptionBuilder.js";
 
 import { buildTextNode } from "../builders/textBuilder.js";
 
@@ -15,6 +16,7 @@ export const nodeBuilders = {
     card: buildCardNode,
     collection: buildCollectionNode,
 quizOption: buildQuizOptionNode,
+surveyOption: buildSurveyOptionNode,
     lessonHeader: buildLessonHeaderNode,
   //  lessonSection: buildLessonSectionNode,
     lessonNavigation: buildLessonNavigationNode,

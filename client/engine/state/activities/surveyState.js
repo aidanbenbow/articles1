@@ -42,6 +42,9 @@ export class SurveyState extends ActivityState {
     }
 const responses = this.results.responses || []
 const counts = Object.values(responses)
+if (!counts.length) {
+        return this.feedback?.default ?? ''
+    }
 const max= Math.max(...counts)
 const majorityOptions = Object.keys(responses)
         .filter(index => responses[index] === max)
@@ -53,8 +56,8 @@ const majorityOptions = Object.keys(responses)
     const majorityOption = majorityOptions[0]
 
     return this.feedback[`majority-${majorityOption}`]
-        || this.feedback.default
-        || ''
+        ?? this.feedback.default
+        ?? ''
 
 }
 

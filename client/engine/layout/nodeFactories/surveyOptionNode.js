@@ -10,12 +10,14 @@ interactive = true,
     height,
 
     optionIndex,
-  
+  text='',
+  selected = false,
+  answered = false,
 
     padding = 0,
     color = null,
 
-    children = {},
+    children = [],
 
     style = {}
 }) {
@@ -33,7 +35,9 @@ interactive,
         height,
 
         optionIndex,
-     
+     text,
+  selected,
+  answered,
 
         padding,
         color,

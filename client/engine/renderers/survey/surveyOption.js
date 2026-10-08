@@ -8,13 +8,38 @@ export function renderSurveyOption( ctx, node, viewport, context) {
     const rect = getScreenRect(node, viewport)
     const survey = context.lesson.activities?.[node.surveyId]
     const response = survey?.getResponse() || null
-    const selected = response?.selected === node.optionIndex
+    const selected = node.selected === true
+    const answered = node.answered === true
     const { votes, percentage } = getSurveyResult( survey, node.optionIndex)
 const progress =  context.animations?.getValue(`survey-answer-${node.surveyId}`) ?? 1
 const animatedPercentage = percentage * progress
 
     drawRect(ctx, { ...rect, color: selected ? '#b8f5b8' : '#d0d0d0'})
 
+    const typography =
+        context.typography?.[
+            node.typography
+        ] ??
+        context.typography?.body ??
+        {}
+
+    ctx.font =
+        `${typography.weight ?? 400} ` +
+        `${typography.size ?? 14}px ` +
+        `${typography.family ?? 'Arial'}`
+
+    ctx.fillStyle =
+        node.textColor ??
+        '#333'
+
+    ctx.textAlign = 'left'
+    ctx.textBaseline = 'middle'
+
+    ctx.fillText(
+        node.text ?? '',
+        rect.x + 32,
+        rect.y + rect.height / 2
+    )
     // Percentage bar
     const barHeight = 6
     const barWidth = rect.width * (animatedPercentage / 100)
