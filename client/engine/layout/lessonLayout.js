@@ -15,7 +15,7 @@ export class LessonLayout {
         if(!lesson) return
 const section = lesson.getCurrentSection()
 const activity = section ? lesson.activities[section.id] : null
-console.log('lesson layout build', {lesson,section,activity})
+
         compileLayout(
             LESSON_LAYOUT,
             {

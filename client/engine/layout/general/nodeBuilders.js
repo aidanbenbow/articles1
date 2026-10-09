@@ -1,6 +1,8 @@
 import { buildButtonNode } from "../builders/buttonBuilder.js";
 import { buildCardNode } from "../builders/cardBuilder.js";
 import { buildCollectionNode } from "../builders/collectionBuilde.js";
+import { buildDragDropNode } from "../builders/dragDropNodeBuilder.js";
+import { buildDragDropParagraphNode } from "../builders/dragDropParagraphBuilder.js";
 import { buildDynamicSectionNode } from "../builders/dynamicSectionBuilder.js";
 import { buildLessonHeaderNode } from "../builders/lessonHeaderBuilder.js";
 
@@ -18,9 +20,10 @@ export const nodeBuilders = {
 quizOption: buildQuizOptionNode,
 surveyOption: buildSurveyOptionNode,
     lessonHeader: buildLessonHeaderNode,
-  //  lessonSection: buildLessonSectionNode,
     lessonNavigation: buildLessonNavigationNode,
-
     dynamicSection: buildDynamicSectionNode,
+
+    dragDropWord: buildDragDropNode,
+    dragDropParagraph: buildDragDropParagraphNode
     
 }

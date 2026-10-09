@@ -16,7 +16,7 @@ export function getDragDropLayout(compact) {
 
             gapWidth: compact ? 90 : 110,
 
-            gapHeight: compact ? 20 : 24,
+            gapHeight: compact ? 22 : 26,
 
             checkButtonHeight: compact ? 36 : 40,
 
