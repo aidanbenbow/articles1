@@ -12,14 +12,9 @@ export function buildButtonNode(config, context) {
     const node = createButtonNode({
         id: config.id,
         owner: config.owner?? owner,
-        articleId:
-    resolveValue(
-        config.articleId,
-        context
-    ),
+        articleId: resolveValue( config.articleId, context ),
 
-articleData:
-    resolveValue(
+articleData: resolveValue(
         config.articleData,
         context
     ),
@@ -29,9 +24,7 @@ articleData:
         width: 
             config.width ??
             metrics.contentWidth,
-        height: 
-            config.height ??
-            metrics.button.height,
+        height: resolveValue(config.height, context) ?? metrics.button.height,
         color:
             resolveValue(
                 config.color,
@@ -46,7 +39,16 @@ articleData:
         typography:
             config.typography ?? 'body'
     })
-
+console.log("BUTTON NODE", {
+    id: node.id,
+    type: node.type,
+    x: node.x,
+    worldY: node.worldY,
+    width: node.width,
+    height: node.height,
+    text: node.text,
+    action: node.action
+})
    if (!parent) {
         layout.layoutNodes.set(
             node.id,

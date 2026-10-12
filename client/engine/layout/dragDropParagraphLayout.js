@@ -68,9 +68,8 @@ const answerWidth = measureText(correctAnswer, LAYOUT.typography.body)
 
 const actualGapWidth = Math.max(
     48,  answerWidth + gapPaddingX*2)
-            placeItem(actualGapWidth)
-
-placeItem(actualGapWidth + horizontalGap+actualGapHeight)
+            
+placeItem(actualGapWidth + horizontalGap)
             const gapNode =createDragDropGapNode({
                 id: `${id}-${id}-gap-${gapIndex}`,
                 owner: owner,
@@ -81,7 +80,7 @@ placeItem(actualGapWidth + horizontalGap+actualGapHeight)
                 x: cursorX,
                 worldY: cursorY,
                 width: actualGapWidth,
-                height: gapHeight,
+                height: actualGapHeight,
                 color: '#ffffff',
                 text: currentAnswer,
                 correctAnswer,
@@ -139,7 +138,7 @@ owner,
         interactive: false,
         children
     }
-    console.log('layoutDragDropParagraph', node)
+   
     return {
         node,
         height,

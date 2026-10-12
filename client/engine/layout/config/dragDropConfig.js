@@ -48,7 +48,7 @@ children: [
     type: 'collection',
     source: ({section})=>section.paragraphs??[],
     layout:{
-        gp: ({metrics})=>metrics.dragDrop.paragraphGap,
+        gap: ({metrics})=>metrics.dragDrop.paragraphGap,
     },
     item: {
         type: 'dragDropParagraph',
