@@ -117,10 +117,7 @@ const node = createCardNode({
     sectionType: 'lessonNavigation',
     children
 })
-console.log(
-    'LESSON NAVIGATION',
-    node
-)
+
 layout.layoutNodes.set(
     node.id,
     node

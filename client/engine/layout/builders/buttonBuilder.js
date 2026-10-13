@@ -39,16 +39,7 @@ articleData: resolveValue(
         typography:
             config.typography ?? 'body'
     })
-console.log("BUTTON NODE", {
-    id: node.id,
-    type: node.type,
-    x: node.x,
-    worldY: node.worldY,
-    width: node.width,
-    height: node.height,
-    text: node.text,
-    action: node.action
-})
+
    if (!parent) {
         layout.layoutNodes.set(
             node.id,

@@ -1,4 +1,4 @@
-import { DRAWING_CONSTANTS } from "../../constants/drawingConstants.js"
+
 import { drawText } from "../../draw/drawHelpers.js"
 import { getScreenPosition } from "../../modules/renderUtils.js"
 

@@ -2,6 +2,7 @@ import { getResponsiveLayout } from "../../constants/layoutConstants.js"
 import { compileNode } from "./nodeComplier.js"
 
 export function compileLayout(config, context) {
+    
     const metrics = getResponsiveLayout(
         context.layout.width,
         context.layout.height

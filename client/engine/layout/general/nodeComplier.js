@@ -8,14 +8,19 @@ export function compileNode(config, context) {
     ) {
         return null
     }
-    const builder = nodeBuilders[config.type]
+    // Resolve dynamic types before looking up the builder.
+    const type = resolveValue(config.type, context)
+    const resolvedConfig = { ...config, type }
+    const builder = nodeBuilders[type]
 
     if (!builder) {
         throw new Error(
-            `No layout builder for ${config.type}`
+            `No layout builder for ${type}`
         )
     }
-const result = builder(config, context)
+    
+const result = builder(resolvedConfig, context)
+console.log(result)
 if(!result) return null
     return {
         nodes: result.nodes ?? (result.node ? [result.node] : []),

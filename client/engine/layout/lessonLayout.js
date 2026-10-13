@@ -27,6 +27,7 @@ const activity = section ? lesson.activities[section.id] : null
                 owner: 'lesson'
             }
         )
+        
         this.layout.computeScrollBounds(
             this.layout.layoutNodes
         )

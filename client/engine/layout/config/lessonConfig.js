@@ -15,12 +15,6 @@ export const LESSON_LAYOUT = {
                 lesson.phase === 'intro'
         },
 
-        // {
-        //     id: 'lesson-section',
-        //     type: 'lessonSection',
-        //     visible: ({ lesson }) =>
-        //         lesson.phase !== 'intro'
-        // },
         {
     id: 'lesson-section',
     type: 'dynamicSection',

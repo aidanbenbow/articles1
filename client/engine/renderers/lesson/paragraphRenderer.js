@@ -1,8 +1,17 @@
-import { DRAWING_CONSTANTS } from "../../constants/drawingConstants.js"
-import { drawText, drawTextBlock } from "../../draw/drawHelpers.js"
+
+import {  drawTextBlock } from "../../draw/drawHelpers.js"
 import { getScreenPosition } from "../../modules/renderUtils.js"
 
 export function renderParagraph(ctx, node, viewport, context) {
+    console.log("[renderParagraph]", {
+        type: node.type,
+        text: node.text,
+        x: node.x,
+        worldY: node.worldY,
+        width: node.width,
+        height: node.height,
+        typography: node.typography,
+    })
     const rect = getScreenPosition(node, viewport)
 const padding = node.padding || 0
     const typography = context.typography?.[node.typography] || context.typography.body

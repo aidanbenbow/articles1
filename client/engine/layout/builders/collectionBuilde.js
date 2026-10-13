@@ -5,6 +5,7 @@ export function buildCollectionNode(config, context) {
     const { currentY} = context
 
     const items = resolveValue( config.source, context) ?? []
+
     const layout = config.layout ?? {}
 
     if(layout.mode === 'wrap'){
@@ -27,7 +28,7 @@ export function buildCollectionNode(config, context) {
                  item,
                 index: i
             } )
-      
+
         if (!result) continue
         if (result.nodes?.length) {
             nodes.push(...result.nodes)

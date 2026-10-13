@@ -14,6 +14,8 @@ import { buildTextNode } from "../builders/textBuilder.js";
 
 export const nodeBuilders = {
     text: buildTextNode,
+    heading: buildTextNode,
+    paragraph: buildTextNode,
     button: buildButtonNode,
     card: buildCardNode,
     collection: buildCollectionNode,
