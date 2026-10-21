@@ -1,8 +1,9 @@
 import { getResponsiveLayout } from "../../constants/layoutConstants.js"
 import { compileNode } from "./nodeComplier.js"
+import { normalizeNodeConfig } from "./normalizeNodeConfig.js"
 
 export function compileLayout(config, context) {
-    
+    const normalizedConfig = normalizeNodeConfig(config)
     const metrics = getResponsiveLayout(
         context.layout.width,
         context.layout.height
@@ -18,8 +19,7 @@ export function compileLayout(config, context) {
         metrics.screenHeight * 0.05
     )
 
-    for (const child of config.nodes || []) {
-   
+    for (const child of normalizedConfig.nodes || normalizedConfig.children || []) {
         const result = compileNode(
             child,
             {

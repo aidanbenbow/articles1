@@ -1,16 +1,19 @@
 import { resolveValue } from "../builders/resolveValue.js"
 import { nodeBuilders } from "./nodeBuilders.js"
+import { normalizeNodeConfig } from "./normalizeNodeConfig.js"
 
 export function compileNode(config, context) {
+    const normalizedConfig = normalizeNodeConfig(config)
+
     if (
-        config.visible != null &&
-        !resolveValue(config.visible, context)
+        normalizedConfig.visible != null &&
+        !resolveValue(normalizedConfig.visible, context)
     ) {
         return null
     }
-    // Resolve dynamic types before looking up the builder.
-    const type = resolveValue(config.type, context)
-    const resolvedConfig = { ...config, type }
+
+    const type = resolveValue(normalizedConfig.type, context)
+    const resolvedConfig = { ...normalizedConfig, type }
     const builder = nodeBuilders[type]
 
     if (!builder) {
@@ -18,10 +21,10 @@ export function compileNode(config, context) {
             `No layout builder for ${type}`
         )
     }
-    
-const result = builder(resolvedConfig, context)
-console.log(result)
-if(!result) return null
+
+    const result = builder(resolvedConfig, context)
+    if (!result) return null
+
     return {
         nodes: result.nodes ?? (result.node ? [result.node] : []),
         currentY: result.currentY
