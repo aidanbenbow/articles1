@@ -2,7 +2,7 @@
 
 import { NodeQuery } from "./nodeQuery.js"
 import { ReportLayoutFeature } from "./reportLayoutFeature.js"
-import { ScreenLayout } from "./screenLayout.js"
+
 import { ScrollManager } from "./scroll.js"
 import { ScrollController } from "./scrollController.js"
 
@@ -19,8 +19,6 @@ export class Layout {
         this.height = null
         this._unsubscribe = []
         this.reportFeature = new ReportLayoutFeature(this)
-     
-        this.screenLayout = new ScreenLayout(this)
         
         this.viewState = {
             view: 'list',
@@ -69,19 +67,14 @@ getViewPort() {
 }
 
     init() {
-       setTimeout(() => {
-       // this.screenLayout.layoutScreenNodes()
-      //  this.screenLayout.layoutChildren()
+       setTimeout(() => { 
       this.width = this.engine.context.canvasWidth
       this.height = this.engine.context.canvasHeight
       this.layoutArticles()
-      //this.engine.emit('layoutChanged', { layout: this.layoutNodes })
        }, 0)
     }
     layoutArticles() {
-       // const state = this.engine.context.getInteractionState()
-this.engine.context.getArticleLayoutFeature().layoutArticles()// state)
-
+this.engine.context.getArticleLayoutFeature().layoutArticles()
     }
 
 computeScrollBounds(rects) {

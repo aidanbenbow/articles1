@@ -29,7 +29,7 @@ children: [
         source: ({activity})=>activity.getWordbank(),
         layout:{
             mode: 'wrap',
-            gap: ({metrics})=>metrics.dragDrop.wordBankGap,
+            gap: ({metrics})=>metrics.dragDrop.wordGap,
             rowGap:12
         },
         item: {
@@ -78,7 +78,12 @@ children: [
     sectionType: 'dragDrop',
     typography: 'step',
     color: '#000',
-    value: ({activity})=>activity?.getFeedback()??'',
+    value: ({activity})=>{
+        console.log('FEEDBACK ACTIVITY:', activity)
+        console.log('FEEDBACK TEXT:', activity?.getFeedback?.())
+        console.log('FEEDBACK CHECKED:', activity?.getChecked?.())
+        return activity?.getFeedback?.() ?? 'NO FEEDBACK'
+    },
     visible:({activity})=>activity?.getChecked?.()===true,
     height: ({metrics})=>metrics.dragDrop.feedbackHeight,
 }

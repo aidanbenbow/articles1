@@ -7,6 +7,8 @@ export class SurveyState extends ActivityState {
         super(section)
         this.response = null
         this.results = null
+        this.scoreValue = 5
+        this.scoreAwarded = false
         this.feedback = section.feedback || {}
     }
 
@@ -14,7 +16,9 @@ export class SurveyState extends ActivityState {
         if (this.response !== null) {
             return {
                 alreadyAnswered: true,
-                response:this.response
+                response:this.response,
+                scoreAwarded: false,
+                score: this.getScore()
             }
         }
 
@@ -23,9 +27,13 @@ export class SurveyState extends ActivityState {
             feedback: this.feedback
         }
 
+        this.scoreAwarded = true
+
         return {
             alreadyAnswered: false,
-            response: this.response
+            response: this.response,
+            scoreAwarded: this.scoreAwarded,
+            score: this.getScore()
         }
     }
     setResults(results) {
@@ -65,6 +73,10 @@ const majorityOptions = Object.keys(responses)
         return this.response !== null
     }
 
+    getScore() {
+        return this.scoreAwarded ? this.scoreValue : 0
+    }
+
     getResponse() {
         return this.response
     }
@@ -72,5 +84,6 @@ const majorityOptions = Object.keys(responses)
     resetResponse() {
         this.response = null
         this.results = null
+        this.scoreAwarded = false
     }
 }

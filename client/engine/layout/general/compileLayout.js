@@ -13,23 +13,15 @@ export function compileLayout(config, context) {
         metrics
     }
 
-    let currentY = Math.max(
-        40,
-        metrics.screenHeight * 0.05
-    )
+    let currentY = Math.max(  40, metrics.screenHeight * 0.05)
 
     for (const child of config.nodes || []) {
-   
         const result = compileNode(
             child,
-            {
-                ...compileContext,
-                currentY
-            }
+            {   ...compileContext,  currentY}
         )
 
         if (!result) continue
-
         currentY = result.currentY
     }
 

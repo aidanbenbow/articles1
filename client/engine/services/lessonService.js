@@ -214,7 +214,7 @@ checkOrdering(sectionId) {
 checkDragDrop(sectionId) {
     const activity = this.lesson.activities[sectionId]
 
-    if (!activity || activity.type !== 'dragdrop') {
+    if (!activity || activity.type !== 'dragDrop') {
         return {
             success: false,
             reason: 'activity-not-found-or-not-dragdrop'

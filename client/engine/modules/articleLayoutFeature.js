@@ -1,4 +1,4 @@
-import { getResponsiveLayout } from "../constants/layoutConstants.js"
+
 import { layoutDragDropSection } from "../layout/dragDropLayout.js"
 import { HomeLayout } from "../layout/homeLayout.js"
 import { layoutBackButton } from "../layout/layoutBackButton.js"
@@ -13,7 +13,7 @@ import { LessonListLayout } from "../layout/lessonListLayout.js"
 import { layoutLessonSection } from "../layout/lessonSectionLayout.js"
 import { createButtonNode } from "../layout/nodeFactories/buttonNode.js"
 import { createLessonHeaderNode } from "../layout/nodeFactories/lessonHeaderNode.js"
-import { createTextNode } from "../layout/nodeFactories/textNode.js"
+
 import { layoutQuizSection } from "../layout/quizLayout.js"
 import { layoutSurveySection } from "../layout/surveyLayout.js"
 
@@ -88,11 +88,7 @@ switch (appState.screen) {
         break
         case 'lesson':
             this.lessonLayout.build(context)
-            // const articleNode = articleNodes.find(node => node.props?.articleData?.articleId === appState.activeLessonId)
-            // if (articleNode) {
-            //     const lesson = this.engine.context.getLesson()
-            //     this.layoutArticlesDetail(articleNode, lesson, responsive)
-            // } 
+          
             break
             case 'lessonBrowser':
                 LessonListLayout(articleNodes, this.layout, this.engine)        

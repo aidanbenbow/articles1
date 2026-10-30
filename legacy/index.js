@@ -1,5 +1,5 @@
-import { Node } from '../engine/nodes/node.js'
-import { bootstrapDorcasApp } from './dorcasApp/main.js'
+import { Node } from '../client/engine/nodes/node.js'
+import { bootstrapDorcasApp } from '../client/src/dorcasApp/main.js'
 
 const eng = bootstrapDorcasApp()
 

@@ -15,7 +15,9 @@ export function layoutDragDropParagraph({
     width,
     gapHeight,
     answers={},
+    feedback='',
     metrics,
+    typography
 }
 ) {
     const {paragraphLineHeight:lineHeight, paragraphGap} = metrics.dragDrop

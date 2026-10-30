@@ -1,12 +1,12 @@
-import { CanvasModule } from "../engine/modules/canvasModule.js";
-import { CommandModule } from "../engine/modules/commandModule.js";
-import { Input } from "../engine/modules/input.js";
-import { Layout } from "../engine/modules/layout.js";
-import { Renderer } from "../engine/modules/Renderer.js";
+import { CanvasModule } from "../client/engine/modules/canvasModule.js";
+import { CommandModule } from "../client/engine/modules/commandModule.js";
+import { Input } from "../client/engine/modules/input.js";
+import { Layout } from "../client/engine/modules/layout.js";
+import { Renderer } from "../client/engine/modules/Renderer.js";
 import { ReportsModule } from "../engine/modules/reports.js";
-import { SceneModule } from "../engine/modules/SceneModule.js";
-import { TextInputModule } from "../engine/modules/textInput.js";
-import { bootstrapDorcas2App } from "./dorcasApp/main.js";
+import { SceneModule } from "../client/engine/modules/SceneModule.js";
+import { TextInputModule } from "../client/engine/modules/textInput.js";
+import { bootstrapDorcas2App } from "../client/src/dorcasApp/main.js";
 
 
 const eng = bootstrapDorcas2App({

@@ -2,6 +2,7 @@ import { layoutDragDropParagraph } from "../dragDropParagraphLayout.js"
 import { resolveValue } from "./resolveValue.js"
 
 export function buildDragDropParagraphNode(config, context) {
+    
     const {section, metrics, owner,currentY} = context
     const y = resolveValue(config.worldY, context) ?? currentY
     const x = resolveValue(config.x, context) ?? context.contentX
@@ -15,8 +16,9 @@ export function buildDragDropParagraphNode(config, context) {
         y: y,
         x: x,
         width: width,
-        gapHeight: metrics.dragDrop.paragraphGap,
+        gapHeight: metrics.dragDrop.gapHeight,
         answers: resolveValue(config.answers, context)??{},
+        feedback: resolveValue(config.feedback, context)??'',
         metrics,
         typography: context.typography,
     })

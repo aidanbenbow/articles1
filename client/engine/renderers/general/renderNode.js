@@ -2,7 +2,7 @@ import { nodeRenderers } from "./nodeRenderers.js"
 
 export function renderNode(ctx, node, viewport, context) {
     if (!node) return
-console.log(node.type)
+
     const renderer = nodeRenderers[node.type]
 
     if (renderer) {

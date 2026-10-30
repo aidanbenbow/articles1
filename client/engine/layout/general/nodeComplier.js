@@ -20,7 +20,7 @@ export function compileNode(config, context) {
     }
     
 const result = builder(resolvedConfig, context)
-console.log(result)
+
 if(!result) return null
     return {
         nodes: result.nodes ?? (result.node ? [result.node] : []),

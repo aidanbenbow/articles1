@@ -14,6 +14,7 @@ export const HOME_LAYOUT = {
                 {
                     id: 'title',
                     type: 'text',
+                    
                     typography: 'title',
                     color: 'heading',
                     value: getWelcomeTitle
@@ -41,31 +42,39 @@ export const HOME_LAYOUT = {
                     typography: 'step',
                     color: 'text',
                     value: getInstructions
-                }
+                },
+                {
+                    id: 'start-button',
+                    type: 'button',
+                    kind: 'setPlayerState',
+                    action: 'playerState',
+                    text: 'Get Started'
+                },
+                
             ]
         },
 
-        {
-            id: 'lesson-options',
-            type: 'collection',
-            owner: 'home',
+        // {
+        //     id: 'lesson-options',
+        //     type: 'collection',
+        //     owner: 'home',
 
-            source: 'availableLessons',
+        //     source: 'availableLessons',
 
-            item: {
-                type: 'button',
-                kind: 'lessonOption',
-                action: 'openLesson',
+        //     item: {
+        //         type: 'button',
+        //         kind: 'lessonOption',
+        //         action: 'openLesson',
 
-                text: ({ item }) =>
-                    `Learn about ${item.title}`,
+        //         text: ({ item }) =>
+        //             `Learn about ${item.title}`,
 
-                articleId: ({ item }) =>
-                    item.articleId,
+        //         articleId: ({ item }) =>
+        //             item.articleId,
 
-                articleData: ({ item }) =>
-                    item
-            }
-        }
+        //         articleData: ({ item }) =>
+        //             item
+        //     }
+        // }
     ]
 }

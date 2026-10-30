@@ -51,11 +51,12 @@ export class DragDropState extends ActivityState{
 this.correct = complete && this.correctCount === totalCount
        this.checked = true
        this.feedback =  `You have ${this.correctCount} correct answers!`
+    
       const scoreAwarded = complete && !this.scoreAwarded 
       if (scoreAwarded) { this.scoreAwarded = true } 
        return { correct: this.correct,
         complete,
-        scoreAwarded: complete && !this.scoreAwarded,
+        scoreAwarded,
         score: this.getScore(),
         correctCount: this.correctCount,
         answerCount,

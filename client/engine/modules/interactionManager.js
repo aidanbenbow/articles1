@@ -87,7 +87,7 @@ case 'checkOrdering':
             targetNode.sectionId
         )
         if(!result) return
-
+console.log('CHECK DRAG DROP RESULT', result)
         if(result.scoreAwarded) {
             const animations = this.engine.context.getAnimationManager()
    const prevScore = result.totalScore - result.score
