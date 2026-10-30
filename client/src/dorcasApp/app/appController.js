@@ -5,6 +5,16 @@ export class AppController {
    
         this.engine = engine
     }
+     navigate(screen, data = {}) {
+        this.appState.navigate(screen, data)
+
+        this.engine.context.resetScroll()
+
+        this.emitStateChanged()
+    }
+    openPlayerSelect() {
+        this.navigate('playerSelect')
+    }
 
    openLesson(article) {
     const articleId = article.articleId || article.id

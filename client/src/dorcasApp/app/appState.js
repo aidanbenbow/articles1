@@ -5,6 +5,7 @@ export class AppState {
 
     constructor() {
         this.screen = 'home'
+        this.articleId = null
         this.activeLessonId = null
         this.user = null
         this.userService = new UserService()
@@ -15,6 +16,16 @@ export class AppState {
     }
     logout() {
         this.user = null
+    }
+     navigate(screen, data = {}) {
+        this.screen = screen
+
+        if ('articleId' in data) {
+            this.articleId = data.articleId
+        }
+    }
+    openPlayerSelect() {
+        this.navigate('playerSelect')
     }
 
     openLesson(lessonId) {

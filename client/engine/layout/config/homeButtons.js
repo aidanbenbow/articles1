@@ -17,15 +17,7 @@ export const HOME_LAYOUT = {
                     
                     typography: 'title',
                     color: 'heading',
-                    value: getWelcomeTitle
-                },
-
-                {
-                    id: 'progress',
-                    type: 'text',
-                    typography: 'body',
-                    color: 'text',
-                    value: getProgressText
+                    value: 'Welcome to the Educational Lessons App'
                 },
 
                 {
@@ -47,7 +39,7 @@ export const HOME_LAYOUT = {
                     id: 'start-button',
                     type: 'button',
                     kind: 'setPlayerState',
-                    action: 'playerState',
+                    action: 'openPlayerSelect',
                     text: 'Get Started'
                 },
                 

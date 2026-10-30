@@ -61,7 +61,7 @@ const viewport = this.engine.context.getViewport()
             this.canvas.width,
             this.canvas.height
         )
-       
+       console.log(allNodes)
         const view = createRendererViewModel(allNodes, interactionState, lessonState)
         const renderContext = {
     lesson: lessonState,

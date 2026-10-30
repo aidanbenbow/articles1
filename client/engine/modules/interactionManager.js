@@ -1,11 +1,12 @@
-import { parseArticle } from "../constants/layoutParser.js"
+import { ActionDispatcher } from "../actions/actionDispatcher.js"
+
 
 export class InteractionManager {
 
     constructor(engine) {
         this.engine = engine
         this.id = 'interactionState'
-
+this.actionDispatcher = new ActionDispatcher(engine)
         this.state = {
             view: 'list',
             selectedNodeId: null,
@@ -22,102 +23,106 @@ export class InteractionManager {
             removeSearchTerm: this.removeSearchTerm.bind(this),
         }
     }
-async handleTargetNode(targetNode) {
- 
+    handleTargetNode(targetNode) {
         if(!targetNode) return
-       // console.log('TARGET NODE', targetNode)
-        switch (targetNode.action) {
-            case 'finishLessonSection':
-                this.engine.context.finishLesson()
-                this.emitLayoutChanged()
-                return
-            case 'advanceLessonSection':
-                this.engine.context.advanceLessonSection()
-                return
-            case 'startLessonPhase':
-                this.engine.context.startLessonPhase()
-                this.engine.emit('lessonStateChanged', this.engine.context.getLesson())
-                return
-                case 'answerSurvey':
-            const result = await this.engine.context.answerSurvey(targetNode.surveyId, targetNode.optionIndex)
-                if (!result.alreadyAnswered) {
-
-        this.engine.context
-            .getAnimationManager()
-            .play('surveyAnswer', `survey-answer-${targetNode.surveyId}`,)
+        this.actionDispatcher.execute(targetNode)
     }
-                this.emitLayoutChanged()
-                return
-            case 'answerQuiz':
-                const lessonState = this.engine.context.getLesson()
-                const prevScore = lessonState?.getScoreTotal() || 0
-              const answer = this.engine.context.answerQuiz(targetNode.sectionId,
-                    targetNode.quizId, targetNode.optionIndex, targetNode.answer)
-                    const newScore = answer?.score + prevScore 
+// async handleTargetNode(targetNode) {
+ 
+//         if(!targetNode) return
+//        // console.log('TARGET NODE', targetNode)
+//         switch (targetNode.action) {
+//             case 'finishLessonSection':
+//                 this.engine.context.finishLesson()
+//                 this.emitLayoutChanged()
+//                 return
+//             case 'advanceLessonSection':
+//                 this.engine.context.advanceLessonSection()
+//                 return
+//             case 'startLessonPhase':
+//                 this.engine.context.startLessonPhase()
+//                 this.engine.emit('lessonStateChanged', this.engine.context.getLesson())
+//                 return
+//                 case 'answerSurvey':
+//             const result = await this.engine.context.answerSurvey(targetNode.surveyId, targetNode.optionIndex)
+//                 if (!result.alreadyAnswered) {
+
+//         this.engine.context
+//             .getAnimationManager()
+//             .play('surveyAnswer', `survey-answer-${targetNode.surveyId}`,)
+//     }
+//                 this.emitLayoutChanged()
+//                 return
+//             case 'answerQuiz':
+//                 const lessonState = this.engine.context.getLesson()
+//                 const prevScore = lessonState?.getScoreTotal() || 0
+//               const answer = this.engine.context.answerQuiz(targetNode.sectionId,
+//                     targetNode.quizId, targetNode.optionIndex, targetNode.answer)
+//                     const newScore = answer?.score + prevScore 
                
-                    if(answer.result.isCorrect) {
-                        this.engine.context.getAnimationManager().play('quizAnswer', `lesson-score`,
-                            {
-                                from: prevScore,
-                                to: newScore
-                            }
-                        )    
-                    }    
-                this.emitLayoutChanged()
-                return
-                case 'moveOrderingItem':
-    this.engine.context.moveOrderingItem(
-        targetNode.sectionId,
-        targetNode.itemIndex,
-        targetNode.direction
-    )
+//                     if(answer.result.isCorrect) {
+//                         this.engine.context.getAnimationManager().play('quizAnswer', `lesson-score`,
+//                             {
+//                                 from: prevScore,
+//                                 to: newScore
+//                             }
+//                         )    
+//                     }    
+//                 this.emitLayoutChanged()
+//                 return
+//                 case 'moveOrderingItem':
+//     this.engine.context.moveOrderingItem(
+//         targetNode.sectionId,
+//         targetNode.itemIndex,
+//         targetNode.direction
+//     )
 
-    this.emitLayoutChanged()
-    return
+//     this.emitLayoutChanged()
+//     return
 
-case 'checkOrdering':
-    this.engine.context.checkOrdering(
-        targetNode.sectionId
-    )
+// case 'checkOrdering':
+//     this.engine.context.checkOrdering(
+//         targetNode.sectionId
+//     )
 
-    this.emitLayoutChanged()
-    return
-    case 'checkDragDrop':{
-        const result = this.engine.context.checkDragDrop(
-            targetNode.sectionId
-        )
-        if(!result) return
-console.log('CHECK DRAG DROP RESULT', result)
-        if(result.scoreAwarded) {
-            const animations = this.engine.context.getAnimationManager()
-   const prevScore = result.totalScore - result.score
-            animations.play('dragDropComplete', `lesson-score`,
-                {
-                    from: prevScore,
-                    to: result.totalScore
-                }
-            )
-        }
-        this.emitLayoutChanged()
-        return
-    }
-                case 'openLesson':
-                    const article = targetNode.articleData || targetNode || null
+//     this.emitLayoutChanged()
+//     return
+//     case 'checkDragDrop':{
+//         const result = this.engine.context.checkDragDrop(
+//             targetNode.sectionId
+//         )
+//         if(!result) return
+// console.log('CHECK DRAG DROP RESULT', result)
+//         if(result.scoreAwarded) {
+//             const animations = this.engine.context.getAnimationManager()
+//    const prevScore = result.totalScore - result.score
+//             animations.play('dragDropComplete', `lesson-score`,
+//                 {
+//                     from: prevScore,
+//                     to: result.totalScore
+//                 }
+//             )
+//         }
+//         this.emitLayoutChanged()
+//         return
+//     }
+//                 case 'openLesson':
+//                     const article = targetNode.articleData || targetNode || null
                     
-                  this.engine.context.app.openLesson(article)
-                    return
-                    case 'browseLessons':
-                        this.engine.context.app.openLessonBrowser()
+//                   this.engine.context.app.openLesson(article)
+//                     return
+//                     case 'browseLessons':
+//                         this.engine.context.app.openLessonBrowser()
                     
-                        return
-                        case 'goHome':
-                             this.engine.context.app.goHome()   
-                            return
-            default:
-                console.log('No action defined for target node', targetNode)
-        }
+//                         return
+//                         case 'goHome':
+//                              this.engine.context.app.goHome()   
+//                             return
+//             default:
+//                 console.log('No action defined for target node', targetNode)
+//         }
 
-    }
+//     }
 
 appendSearchTerm(char) {
     const searchTerm = this.state.searchTerm + char

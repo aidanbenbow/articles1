@@ -18,7 +18,7 @@ export class AppFeature {
         return {
             app: {
                 getState: () => this.appController.getState(),
-
+                openPlayerSelect: () => this.appController.openPlayerSelect(),
                 openLesson: (articleId) =>this.appController.openLesson(   articleId ),
 openLessonBrowser: () => this.appController.openLessonBrowser(),
 

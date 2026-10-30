@@ -6,6 +6,8 @@ export function createRendererViewModel( allnodes,state, lesson) {
     const textNodes = allnodes.filter(node => node.type === 'text' && node.props?.text !== 'Reports To Do')
   
     const homeNodes = allnodes.filter(node => node.owner === 'home')
+
+    const playerSelectNodes = allnodes.filter(node => node.owner === 'playerSelect')
     
     const lessonBrowserNodes = allnodes.filter(node => node.owner === 'lessonBrowser')
     
@@ -58,6 +60,7 @@ const orderingTotal =
         headerNode,
         textNodes,
         homeNodes,
+        playerSelectNodes,
        // reportsToDoNode,
         lessonBrowserNodes,
         lessonSectionNodes,
@@ -99,44 +102,3 @@ const orderingTotal =
     }
 }
 
-
-// function groupSurveyNodesBySurveyId(allnodes) {
-// const surveys = new Map()
-
-// for(const node of allnodes) {
-//     if(node.sectionType !== 'survey') continue
-
-//     surveys.set(node.surveyId, {
-// surveyId: node.surveyId,
-//             survey: node,
-//             question: null,
-//             response: null,
-//             options: [],
-//             feedback: null
-//         }
-//     )
-// }
-// for(const node of allnodes) {
-// const group = surveys.get(node.surveyId)
-// if(!group) continue
-
-// switch(node.sectionType) {
-//     case 'surveyQuestion':
-//         group.question = node
-//         break
-//     case 'surveyResponse':
-//         group.response = node
-//         break
-//     case 'surveyOption':
-//         group.options.push(node)
-//         break
-//     case 'surveyFeedback':
-//         group.feedback = node
-//         break 
-// }
-// }
-// for(const group of surveys.values()) {
-//     group.options.sort((a,b) => a.worldY - b.worldY)
-// }
-// return [...surveys.values()]
-// }

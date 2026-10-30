@@ -1,6 +1,6 @@
 
 import { layoutDragDropSection } from "../layout/dragDropLayout.js"
-import { HomeLayout } from "../layout/homeLayout.js"
+
 import { layoutBackButton } from "../layout/layoutBackButton.js"
 import { layoutContinueButton } from "../layout/layoutContinueButton.js"
 import { layoutFinishButton } from "../layout/layoutFinishButton.js"
@@ -8,13 +8,16 @@ import { layoutHeadingBlock } from "../layout/layoutHeadingBlock.js"
 import { layoutOrderingSection } from "../layout/layoutOrderingSection.js"
 import { layoutParagraphBlock } from "../layout/layoutParagraphBlock.js"
 import { layoutLessonIntro } from "../layout/lessonIntroLayout.js"
-import { LessonLayout } from "../layout/lessonLayout.js"
-import { LessonListLayout } from "../layout/lessonListLayout.js"
+
+
 import { layoutLessonSection } from "../layout/lessonSectionLayout.js"
 import { createButtonNode } from "../layout/nodeFactories/buttonNode.js"
 import { createLessonHeaderNode } from "../layout/nodeFactories/lessonHeaderNode.js"
 
 import { layoutQuizSection } from "../layout/quizLayout.js"
+import { HomeLayout } from "../layout/screens/homeScreen.js"
+import { LessonLayout } from "../layout/screens/lessonScreenLayout.js"
+import { PlayerSelectLayout } from "../layout/screens/playerSelectLayout.js"
 import { layoutSurveySection } from "../layout/surveyLayout.js"
 
 import { matchesOrderedPrefix, normalize } from "./search.js"
@@ -26,8 +29,7 @@ export class ArticleLayoutFeature {
         this._unsubscribe = []
        // this._lastFilter = ''
 
-   this.homeLayout = null
-   this.lessonLayout = null
+   
         this.engine.on('lessonStateChanged', () => {    
             this.layoutArticles()
         })
@@ -46,8 +48,18 @@ export class ArticleLayoutFeature {
     }
     attach() {
         this.layout = this.engine.context.getLayoutManager()
-        this.homeLayout = new HomeLayout(this.engine, this.layout)
-        this.lessonLayout = new LessonLayout(this.engine, this.layout)
+        this.screens = {
+        home: new HomeLayout(this.engine, this.layout),
+
+        playerSelect: new PlayerSelectLayout(
+            this.engine,
+            this.layout
+        ),
+
+        lesson: new LessonLayout(this.engine, this.layout),
+    }
+        // this.homeLayout = new HomeLayout(this.engine, this.layout)
+        // this.lessonLayout = new LessonLayout(this.engine, this.layout)
     
     }
 
@@ -82,18 +94,27 @@ const context = {
     appState
 }
 
-switch (appState.screen) {
-    case 'home':
-        this.homeLayout.build(context)
-        break
-        case 'lesson':
-            this.lessonLayout.build(context)
-          
-            break
-            case 'lessonBrowser':
-                LessonListLayout(articleNodes, this.layout, this.engine)        
-                break
-}
+const screen = this.screens[appState.screen]
+
+    if (!screen) {
+        console.warn(`Unknown screen: ${appState.screen}`)
+        return
+    }
+
+    screen.build(context)
+
+// switch (appState.screen) {
+//     case 'home':
+//         this.homeLayout.build(context)
+//         break
+//         case 'lesson':
+//             this.lessonLayout.build(context)
+//             break
+//             case 'playerSelect':
+//             // case 'lessonBrowser':
+//             //     LessonListLayout(articleNodes, this.layout, this.engine)        
+//             //     break
+// }
         this.engine.emit('layoutChanged', { layout: this.layout.layoutNodes })
     }
 
