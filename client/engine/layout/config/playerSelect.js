@@ -22,8 +22,9 @@ export const PLAYER_SELECT_LAYOUT = {
             id: 'first-lesson-button',
             type: 'button',
             kind: 'lessonOption',
-            action: 'startFirstLesson',
-            text: 'Start First Lesson'
+            action: 'openLesson',
+            text: 'Start First Lesson',
+            articleId: 'tofu',
         },
     ]
 }

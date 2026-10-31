@@ -61,7 +61,7 @@ const viewport = this.engine.context.getViewport()
             this.canvas.width,
             this.canvas.height
         )
-       console.log(allNodes)
+    
         const view = createRendererViewModel(allNodes, interactionState, lessonState)
         const renderContext = {
     lesson: lessonState,
@@ -81,6 +81,9 @@ this.ctx.globalAlpha = screenOpacity
         switch (appState.screen) {
             case 'home':
                 renderHome(this.ctx, view.homeNodes, viewport, renderContext)
+                break
+                case 'playerSelect':
+                renderHome(this.ctx, view.playerSelectNodes, viewport, renderContext)
                 break
                 case 'lesson':
                 renderLessonScreen(this.ctx, viewport, renderContext)

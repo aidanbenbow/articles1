@@ -103,18 +103,7 @@ const screen = this.screens[appState.screen]
 
     screen.build(context)
 
-// switch (appState.screen) {
-//     case 'home':
-//         this.homeLayout.build(context)
-//         break
-//         case 'lesson':
-//             this.lessonLayout.build(context)
-//             break
-//             case 'playerSelect':
-//             // case 'lessonBrowser':
-//             //     LessonListLayout(articleNodes, this.layout, this.engine)        
-//             //     break
-// }
+
         this.engine.emit('layoutChanged', { layout: this.layout.layoutNodes })
     }
 
@@ -147,6 +136,7 @@ clearScreenLayout() {
 
         if (
             node.owner === 'home' ||
+            node.owner === 'playerSelect' ||
             node.owner === 'lessonBrowser' ||
             node.owner === 'lesson' ||
             node.type === 'dragDrop'

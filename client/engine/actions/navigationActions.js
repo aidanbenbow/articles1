@@ -15,9 +15,12 @@ export class NavigationActions {
     }
 
     openLesson(node) {
-        this.engine.context.app.openLesson(
-            node.articleData || node
-        )
+        const article = this.engine.context.getArticleById(node.articleId) || node
+        if (!article) {
+            console.log('No article found for node', node)
+            return
+        }
+        this.engine.context.app.openLesson( article)
     }
 
     browseLessons() {

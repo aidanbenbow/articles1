@@ -31,6 +31,10 @@ export class articlesModule {
     contextExports() {
         return {
             getArticles: () => this.dataStore.articles,
+            getArticleById: (articleId) =>
+            this.dataStore.articles.find(
+                article => article.articleId === articleId
+            ),
         }
     }
     async attach() {
