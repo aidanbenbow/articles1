@@ -21,12 +21,6 @@ const CATEGORY_KEYWORDS = [
     }
 ]
 
-const DIFFICULTY_ORDER = {
-    beginner: 0,
-    intermediate: 1,
-    advanced: 2
-}
-
 export const dataStore = {
     articles: [],
     setArticles(articles) {
