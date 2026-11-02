@@ -36,8 +36,23 @@ articleData: resolveValue(
                 context
             ),
             action: config.action ?? null,
-        typography:
-            config.typography ?? 'body'
+        typography: config.typography ?? 'body',
+        sectionId: resolveValue(
+    config.sectionId ?? (({ section }) => section?.id),
+    context
+),
+itemIndex: resolveValue(
+    config.itemIndex ?? (({ index }) => index),
+    context
+),
+direction: resolveValue(
+    config.direction ?? (({ direction }) => direction),
+    context
+),
+disabled: resolveValue(
+    config.disabled ?? (({ disabled }) => disabled),
+    context
+),
     })
 
    if (!parent) {

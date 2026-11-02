@@ -6,6 +6,8 @@ export function getLessonStats({ lesson }) {
     return [
         `${lessonTotal} learning blocks`,
         `${quizCount} quizzes`,
-        `${surveyCount} surveys`
+        `${surveyCount} surveys`,
+        `difficulty: medium`,
+        `estimated time: 15 minutes`
     ].join(' • ')
 }

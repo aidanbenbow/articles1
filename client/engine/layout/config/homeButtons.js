@@ -36,6 +36,13 @@ export const HOME_LAYOUT = {
                     value: getInstructions
                 },
                 {
+                    id: 'name',
+                    type: 'text',
+                    typography: 'body',
+                    color: 'text',
+                    value: 'enter your name to get started'
+                },
+                {
                     id: 'start-button',
                     type: 'button',
                     kind: 'setPlayerState',

@@ -6,6 +6,7 @@ export function buildCollectionNode(config, context) {
 
     const items = resolveValue( config.source, context) ?? []
 
+
     const layout = config.layout ?? {}
 
     if(layout.mode === 'wrap'){

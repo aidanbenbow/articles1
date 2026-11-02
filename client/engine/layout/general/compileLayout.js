@@ -12,10 +12,13 @@ export function compileLayout(config, context) {
         ...context,
         metrics
     }
-
+// Support both static and dynamic node configurations
+    const nodes = typeof config.nodes === 'function'
+        ? config.nodes(compileContext)
+        : config.nodes || []
     let currentY = Math.max(  40, metrics.screenHeight * 0.05)
 
-    for (const child of config.nodes || []) {
+    for (const child of nodes) {
         const result = compileNode(
             child,
             {   ...compileContext,  currentY}

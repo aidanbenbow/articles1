@@ -18,6 +18,7 @@ const worldY = resolveValue(config.worldY, context) ??
 currentY
 const width = resolveValue(config.width, context) ?? contentWidth ?? metrics.contentWidth
 const typography = resolveValue(config.typography, context) ?? (type === "heading" ? "heading" : "body")
+
 const text = resolveValue(config.value ?? config.text, context)
 const height = resolveValue(config.height, context) ?? resolveTextHeight({...config, typography, value:text, text}, context)
     const node = createTextNode({
@@ -43,6 +44,7 @@ node.type = resolveValue(config.type, context) ?? "text"
     if (!parent && layout?.layoutNodes instanceof Map) {
         layout.layoutNodes.set(node.id, node)
     }
+    
     return {node,
         currentY: node.worldY + node.height + metrics.padding
     }

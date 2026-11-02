@@ -21,14 +21,18 @@ export class ActivityActions {
     }
 
     checkOrdering(node) {
-        this.engine.context.checkOrdering(node.sectionId)
+         console.log('CHECK ORDERING CLICKED', node)
+
+    const result = this.engine.context.checkOrdering(node.sectionId)
+
+    console.log('CHECK ORDERING RESULT', result)
         this.emitLayoutChanged()
     }
 
     checkDragDrop(node) {
-        const result = this.engine.context.checkDragDrop(
-            node.sectionId
-        )
+        console.log('CHECK DRAG DROP NODE:', node)
+        const sectionId = node.dragDropId || node.sectionId
+        const result = this.engine.context.checkDragDrop(sectionId)
 
         if (!result) return
 

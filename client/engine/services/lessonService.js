@@ -222,6 +222,9 @@ checkDragDrop(sectionId) {
     }
 
     const result = activity.checkAnswers()
+       console.log('CHECK ANSWERS RESULT:', result)
+    console.log('FEEDBACK AFTER:', activity.getFeedback())
+    console.log('CHECKED AFTER:', activity.getChecked())
 
     this.syncProgress()
 

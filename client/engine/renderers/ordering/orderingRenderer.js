@@ -1,6 +1,6 @@
 import { getScreenPosition } from "../../modules/renderUtils.js"
 
-export function renderOrdering(ctx, node, viewport) {
+export function renderOrdering(ctx, node, viewport, context) {
     const rect = getScreenPosition(node, viewport)
 
     if (!rect) return

@@ -22,13 +22,13 @@ export function getProgressText({
         'Your learning progress:',
         '',
         `Lessons completed: ${lessonsCompleted}`,
-        `Lessons available: ${lessonsAvailable}`,
-        `Points earned: ${score}`
+        `    Lessons available: ${lessonsAvailable}`,
+        `    Points earned: ${score}`
     ].join('\n')
 }
 
 export function getPromptText() {
-    return 'What would you like to learn next?'
+    return 'A series of educational lessons to help you learn and grow. Start your learning journey today!'
 }
 
 export function getInstructions() {

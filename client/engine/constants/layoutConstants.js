@@ -169,53 +169,53 @@ export function getResponsiveLayout(screenWidth, screenHeight) {
 
         typography: getResponsiveTypography(compact),
 
-        continueCard: {
-            height:
-                compact ? 220 :
-                mobile ? 200 :
-                160,
+        // continueCard: {
+        //     height:
+        //         compact ? 220 :
+        //         mobile ? 200 :
+        //         160,
 
-            imageWidth:
-                mobile ? 0 : 190,
+        //     imageWidth:
+        //         mobile ? 0 : 190,
 
-            imageHeight:
-                compact ? 90 :
-                mobile ? 105 :
-                160
-        },
+        //     imageHeight:
+        //         compact ? 90 :
+        //         mobile ? 105 :
+        //         160
+        // },
 
-        welcome: {
-    height:
-        compact ? 380 :
-        mobile ? 360 :
-        tablet ? 340 :
-        320,
+//         welcome: {
+//     height:
+//         compact ? 380 :
+//         mobile ? 360 :
+//         tablet ? 340 :
+//         320,
 
-    padding: compact ? 20 : LAYOUT.welcome.padding,
+//     padding: compact ? 20 : LAYOUT.welcome.padding,
 
-    radius: LAYOUT.welcome.radius,
-    accentWidth: LAYOUT.welcome.accentWidth,
+//     radius: LAYOUT.welcome.radius,
+//     accentWidth: LAYOUT.welcome.accentWidth,
 
-    contentTop: LAYOUT.welcome.contentTop,
-    titleTop: LAYOUT.welcome.titleTop,
-    sectionGap: LAYOUT.welcome.sectionGap,
+//     contentTop: LAYOUT.welcome.contentTop,
+//     titleTop: LAYOUT.welcome.titleTop,
+//     sectionGap: LAYOUT.welcome.sectionGap,
 
-    statHeight: LAYOUT.welcome.statHeight,
-    statGap: LAYOUT.welcome.statGap,
-    statPaddingX: LAYOUT.welcome.statPaddingX,
+//     statHeight: LAYOUT.welcome.statHeight,
+//     statGap: LAYOUT.welcome.statGap,
+//     statPaddingX: LAYOUT.welcome.statPaddingX,
 
-    promptGap: LAYOUT.welcome.promptGap,
-    promptHeight: LAYOUT.welcome.promptHeight,
+//     promptGap: LAYOUT.welcome.promptGap,
+//     promptHeight: LAYOUT.welcome.promptHeight,
 
-    stepCircleRadius: LAYOUT.welcome.stepCircleRadius,
-    stepCircleOffsetX: LAYOUT.welcome.stepCircleOffsetX,
-    stepTextOffsetX: LAYOUT.welcome.stepTextOffsetX,
-    stepHeight: LAYOUT.welcome.stepHeight,
+//     stepCircleRadius: LAYOUT.welcome.stepCircleRadius,
+//     stepCircleOffsetX: LAYOUT.welcome.stepCircleOffsetX,
+//     stepTextOffsetX: LAYOUT.welcome.stepTextOffsetX,
+//     stepHeight: LAYOUT.welcome.stepHeight,
 
-    titleFontSize: compact ? 22 : LAYOUT.typography.title,
-    bodyFontSize: compact ? 12 : LAYOUT.typography.body,
-    stepFontSize: compact ? 11 : LAYOUT.typography.step,
-},
+//     titleFontSize: compact ? 22 : LAYOUT.typography.title,
+//     bodyFontSize: compact ? 12 : LAYOUT.typography.body,
+//     stepFontSize: compact ? 11 : LAYOUT.typography.step,
+// },
 lessonIntro: getLessonIntroLayout(compact),
 lessonHeader: getLessonHeaderLayout(compact, mobile),
 button:{
@@ -223,16 +223,16 @@ height: compact ? 32 : 40,
 gap: compact ? 8 : 10,
 padding:0
 },
-        suggested: {
-            height:
-                compact ? 150 :
-                mobile ? 120 :
-                170
-        },
+        // suggested: {
+        //     height:
+        //         compact ? 150 :
+        //         mobile ? 120 :
+        //         170
+        // },
 
-        browseAll: {
-            height: 64
-        },
+        // browseAll: {
+        //     height: 64
+        // },
          dragDrop: getDragDropLayout(compact),
         heading: {
     height: compact ? 40 : 45,
