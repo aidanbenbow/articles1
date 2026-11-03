@@ -36,12 +36,11 @@ export const HOME_LAYOUT = {
                     value: getInstructions
                 },
                 {
-                    id: 'name',
-                    type: 'text',
-                    typography: 'body',
-                    color: 'text',
-                    value: 'enter your name to get started'
-                },
+    id: 'name',
+    type: 'nameInput',
+    placeholder: 'Enter your name...',
+    
+},
                 {
                     id: 'start-button',
                     type: 'button',
@@ -53,27 +52,5 @@ export const HOME_LAYOUT = {
             ]
         },
 
-        // {
-        //     id: 'lesson-options',
-        //     type: 'collection',
-        //     owner: 'home',
-
-        //     source: 'availableLessons',
-
-        //     item: {
-        //         type: 'button',
-        //         kind: 'lessonOption',
-        //         action: 'openLesson',
-
-        //         text: ({ item }) =>
-        //             `Learn about ${item.title}`,
-
-        //         articleId: ({ item }) =>
-        //             item.articleId,
-
-        //         articleData: ({ item }) =>
-        //             item
-        //     }
-        // }
     ]
 }

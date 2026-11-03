@@ -205,17 +205,6 @@ for(const node of view.lessonSectionNodes) {
             renderOrdering( ctx, section, state, viewport, lesson)
             break
 
-        // case 'orderingItem':
-        //     renderOrderingItem( ctx,section,state,viewport,lesson)
-        //     break
-
-        // case 'orderingButton':
-        //     renderOrderingButton(ctx,section,state,viewport,lesson)
-        //     break
-
-        // case 'orderingCheck':
-        //     renderOrderingCheck(ctx,section,state,viewport,lesson)
-        //     break
             case 'continueButton':
             renderContinueButton(  ctx,  section,  viewport)
             break

@@ -1,4 +1,5 @@
 import { ActivityActions } from "./activityActions.js"
+import { InputActions } from "./inputActions.js"
 import { LessonActions } from "./lessonActions.js"
 import { NavigationActions } from "./navigationActions.js"
 import { QuizActions } from "./quizActions.js"
@@ -13,6 +14,7 @@ export class ActionDispatcher {
              ...new QuizActions(engine).handlers,
              ...new ActivityActions(engine).handlers,
             ...new NavigationActions(engine).handlers,
+            ...new InputActions(engine).handlers,
         }
     }
 

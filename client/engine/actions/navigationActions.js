@@ -11,8 +11,28 @@ export class NavigationActions {
         }
     }
     openPlayerSelect(node) {
-        this.engine.context.app.openPlayerSelect()
+    
+
+    const nameNode = this.engine.context.getNode?.('name');
+    const playerName = nameNode?.value?.trim();
+
+    
+
+    const app = this.engine.context.app;
+
+    if (!playerName) {
+        console.warn('Please enter your name first');
+        return;
     }
+
+    if (typeof app?.openPlayerSelect !== 'function') {
+        console.error('openPlayerSelect is not available on app');
+        return;
+    }
+
+    app.openPlayerSelect(playerName);
+
+}
 
     openLesson(node) {
         const article = this.engine.context.getArticleById(node.articleId) || node

@@ -58,9 +58,6 @@ export class ArticleLayoutFeature {
 
         lesson: new LessonLayout(this.engine, this.layout),
     }
-        // this.homeLayout = new HomeLayout(this.engine, this.layout)
-        // this.lessonLayout = new LessonLayout(this.engine, this.layout)
-    
     }
 
     detach() {

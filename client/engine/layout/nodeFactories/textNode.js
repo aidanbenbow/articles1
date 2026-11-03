@@ -1,3 +1,5 @@
+import { createBaseNode } from "./baseNode.js";
+
 export function createTextNode({
     id,
     owner=null,
@@ -8,28 +10,36 @@ export function createTextNode({
     worldY,
     width,
     height,
-    color,
+    color=null,
     text,
     padding = 0,
-    kind,
+    kind='text',
     sectionType = null,
     typography = 'body',
+    ...extra
 }) {
-    return {
+    return createBaseNode({
         id,
-        surveyId,
         owner,
+        surveyId, 
         sectionId,
+
         x,
         worldY,
         width,
         height,
         color,
         text,
+        padding,
+
+        interactive,
+        selected: false,
+
         kind,
         type: 'text',
         sectionType,
-        padding,
-        typography
+        
+        typography,
+        ...extra
+    })
     };
-}

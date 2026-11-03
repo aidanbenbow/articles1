@@ -6,15 +6,26 @@ export class AppController {
         this.engine = engine
     }
      navigate(screen, data = {}) {
+        
         this.appState.navigate(screen, data)
 
         this.engine.context.resetScroll()
 
         this.emitStateChanged()
     }
-    openPlayerSelect() {
-        this.navigate('playerSelect')
-    }
+    openPlayerSelect(name) {
+   
+    const user = this.appState.openPlayerSelect(name);
+
+    if (!user) return;
+
+    console.log('[AppController] Created user:', user);
+   
+    this.engine.context.resetScroll();
+    this.emitStateChanged();
+
+    return user;
+}
 
    openLesson(article) {
     const articleId = article.articleId || article.id

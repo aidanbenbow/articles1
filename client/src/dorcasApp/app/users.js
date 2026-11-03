@@ -23,6 +23,30 @@ export const users = [
     }
 ]
 
+export function createUser(name) {
+    const cleanName = name.trim();
+
+    if (!cleanName) {
+        throw new Error("Please enter your name");
+    }
+
+    const user = {
+        id: `user-${Date.now()}`,
+        name: cleanName,
+        avatar: null,
+        score: 0,
+        lessonsCompleted: 0,
+        completedLessons: [],
+        progress: {
+            currentLessonId: null
+        }
+    };
+
+    users.push(user);
+
+    return user;
+}
+
 export function updateUser(userId, updates) {
   const user = users.find(user => user.id === userId);
 

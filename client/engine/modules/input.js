@@ -141,16 +141,54 @@ _resetPointerState(){
     }
 }
     _onKeyDown = (event) => {
-        const state = this.engine.context.getInteractionState()
-        if(!state.focusedNodeId) return
+        const focusedNode = this.engine.context.getFocusedNode?.();
 
-        if(event.key === 'Backspace') {
-            this.interaction.removeSearchTerm()
+    if (!focusedNode) return;
+
+       if (focusedNode.type === "nameInput") {
+        const value = focusedNode.value ?? "";
+
+        if (event.key === "Backspace") {
+            event.preventDefault();
+            focusedNode.value = value.slice(0, -1);
+            focusedNode.text = focusedNode.value;
+            this.interaction.emitLayoutChanged();
+            return;
         }
 
-        if(event.key.length === 1) {
-            this.interaction.appendSearchTerm(event.key)
+        if (event.key === "Enter" || event.key === "Escape") {
+            this.engine.context.clearFocusedNode();
+            return;
         }
+
+        if (
+            event.key.length === 1 &&
+            !event.ctrlKey &&
+            !event.metaKey &&
+            !event.altKey
+        ) {
+            event.preventDefault();
+
+            focusedNode.value = value + event.key;
+            focusedNode.text = focusedNode.value;
+
+            this.interaction.emitLayoutChanged();
+        }
+
+        return;
+    }
+
+    // Existing search keyboard handling
+    if (event.key === "Backspace") {
+        this.interaction.removeSearchTerm();
+    } else if (
+        event.key.length === 1 &&
+        !event.ctrlKey &&
+        !event.metaKey &&
+        !event.altKey
+    ) {
+        this.interaction.appendSearchTerm(event.key);
+    }
     }
 
 _normalisePointerEvent(event) {

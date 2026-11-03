@@ -79,9 +79,6 @@ children: [
     typography: 'step',
     color: '#000',
     value: ({activity})=>{
-        console.log('FEEDBACK ACTIVITY:', activity)
-        console.log('FEEDBACK TEXT:', activity?.getFeedback?.())
-        console.log('FEEDBACK CHECKED:', activity?.getChecked?.())
         return activity?.getFeedback?.() ?? 'NO FEEDBACK'
     },
     visible:({activity})=>activity?.getChecked?.()===true,

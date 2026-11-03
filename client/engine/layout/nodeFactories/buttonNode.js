@@ -1,5 +1,9 @@
+import { createBaseNode } from "./baseNode.js"
+
 export function createButtonNode({
     id,
+    owner = null,
+    surveyId = null,
     sectionId = null,
     x,
     worldY,
@@ -14,22 +18,25 @@ export function createButtonNode({
     type = 'button',
     ...extra
 }) {
-    return {
+    return createBaseNode({
         id,
+        owner,
+        surveyId,
         sectionId,
         x,
-        interactive: true,
         worldY,
         width,
         height,
         color,
         text,
         padding,
+        interactive: true,
+        selected: false,
         action,
         kind,
         type,
         sectionType,
-        selected: false,
+      
         ...extra
-    };
+    })
 }

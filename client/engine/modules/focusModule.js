@@ -16,8 +16,10 @@ export class FocusModule extends baseModule {
             clearFocusedNode: this.clearFocusedNode.bind(this),
         }
     }
-    setFocusedNode(nodeId) {
-        if(this.focusedNodeId === nodeId) return // no change
+    setFocusedNode(nodeOrId) {
+        const nodeId = typeof nodeOrId === 'string' ? nodeOrId : nodeOrId?.id
+        console.log("Setting focus:", nodeId);
+        if (!nodeId || this.focusedNodeId === nodeId) return 
             const prevFocusedNodeId = this.focusedNodeId
             this.focusedNodeId = nodeId
         
@@ -26,8 +28,9 @@ export class FocusModule extends baseModule {
     }
     clearFocusedNode() {
        const prevFocusedNodeId = this.focusedNodeId
+       if (!prevFocusedNodeId) return;
         this.focusedNodeId = null
-        console.log(`[FocusModule] Focus cleared from ${prevFocusedNodeId}`)
+        
         this.engine.emit('focusChanged', { prevFocusedNodeId, nodeId: null })
     }
     getFocusedNode() {

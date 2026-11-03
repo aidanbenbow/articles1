@@ -51,6 +51,7 @@ const viewport = this.engine.context.getViewport()
 
         const layout = this.engine.context.getLayout()
         const interactionState = this.engine.context.getInteractionState()
+        const getFocusedNode = this.engine.context.getFocusedNode;
         const interactionManager = this.engine.context.getInteractionManager()
         const dragState = interactionManager.dragState
         const appState = this.engine.context.app.getState()
@@ -72,7 +73,8 @@ const viewport = this.engine.context.getViewport()
     view,
     layout: allNodes,
     typography: LAYOUT.typography,
-    responsive
+    responsive,
+    getFocusedNode,
 }
 
 this.ctx.save()
@@ -107,6 +109,9 @@ this.ctx.globalAlpha = screenOpacity
             this._unsubscribe.push(this.engine.on('dragChanged', () => this.requestRender()))
             this.animationManager = this.engine.context.getAnimationManager()
             this.animationManager.setRequestFrame(() => this.requestRender())
+            this._unsubscribe.push(
+    this.engine.on('focusChanged', this.requestRender.bind(this))
+);
              setTimeout(() =>{
             this.setCanvas()
             this.setScreen()

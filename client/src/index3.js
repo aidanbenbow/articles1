@@ -14,6 +14,7 @@ import { AppFeature } from "./dorcasApp/app/appFeature.js";
 import { bootstrapDorcas2App } from "./dorcasApp/main.js";
 import { AnimationManager } from "../engine/managers/animationManager.js";
 import { ScreenTransitionManager } from "../engine/managers/screenTransitionManager.js";
+import { FocusModule } from "../engine/modules/focusModule.js";
 
 
 
@@ -21,6 +22,7 @@ const eng = bootstrapDorcas2App({
     id: 'articles1',
 modules: [SceneModule,
 CanvasModule,
+FocusModule,
 AssetManager,
 Layout,
 Renderer,

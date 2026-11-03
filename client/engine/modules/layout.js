@@ -50,7 +50,8 @@ export class Layout {
             setScroll: this.scroll.setScroll.bind(this.scroll),
             getScroll: () => this.scroll.scrollY,
            getViewport: this.getViewPort.bind(this),
-           resetScroll: this.scroll.reset.bind(this.scroll)
+           resetScroll: this.scroll.reset.bind(this.scroll),
+           getNode: (nodeId) => this.getNode(nodeId),
         }
     }
     attach() {
@@ -60,6 +61,37 @@ this._unsubscribe.push(() => this.scrollController.detach())
 
       this._unsubscribe.push(this.engine.on('articlesDataReady', () => this.init()))
     }
+    getNode(nodeId) {
+    const findNode = (node) => {
+        if (!node) return null;
+
+        if (node.id === nodeId) {
+            return node;
+        }
+
+        if (node.children) {
+            const children = Array.isArray(node.children)
+                ? node.children
+                : Object.values(node.children).flat();
+
+            for (const child of children) {
+                const found = findNode(child);
+
+                if (found) return found;
+            }
+        }
+
+        return null;
+    };
+
+    for (const node of this.layoutNodes.values()) {
+        const found = findNode(node);
+
+        if (found) return found;
+    }
+
+    return null;
+}
     
 getViewPort() {
    

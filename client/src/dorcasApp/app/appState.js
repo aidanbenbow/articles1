@@ -1,5 +1,5 @@
 import { UserService } from "../../../engine/services/userServices.js"
-import { users } from "./users.js"
+import { createUser, users } from "./users.js"
 
 export class AppState {
 
@@ -9,10 +9,12 @@ export class AppState {
         this.activeLessonId = null
         this.user = null
         this.userService = new UserService()
-        this.login(users[0]) 
+       // this.login(users[0]) 
     }
     login(user) {
         this.user = user
+        console.log(`User ${user.name} logged in`)
+        console.log(`Current user:`, this.user)
     }
     logout() {
         this.user = null
@@ -24,8 +26,21 @@ export class AppState {
             this.articleId = data.articleId
         }
     }
-    openPlayerSelect() {
-        this.navigate('playerSelect')
+    openPlayerSelect(name) {
+        
+        if (!name?.trim()) {
+        console.warn("Please enter your name first");
+        return;
+    }
+
+    const user = createUser(name);
+
+    this.login(user);
+
+    this.navigate("playerSelect");
+
+    return user;
+    
     }
 
     openLesson(lessonId) {

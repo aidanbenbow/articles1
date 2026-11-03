@@ -7,6 +7,7 @@ import { buildDynamicSectionNode } from "../builders/dynamicSectionBuilder.js";
 import { buildLessonHeaderNode } from "../builders/lessonHeaderBuilder.js";
 
 import { buildLessonNavigationNode } from "../builders/lessonNavigationBuilder.js";
+import { buildNameInputNode } from "../builders/nameInputNodeBuilder.js";
 import { buildOrderingItemNode } from "../builders/orderingItemBuilder.js";
 import { buildOrderingNode } from "../builders/orderingNodeBuilder.js";
 import { buildQuizOptionNode } from "../builders/quizOptionBuilder.js";
@@ -19,6 +20,7 @@ export const nodeBuilders = {
     heading: buildTextNode,
     paragraph: buildTextNode,
     button: buildButtonNode,
+    nameInput: buildNameInputNode,
     card: buildCardNode,
     collection: buildCollectionNode,
 quizOption: buildQuizOptionNode,

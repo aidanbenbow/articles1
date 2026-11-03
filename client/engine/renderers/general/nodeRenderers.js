@@ -8,6 +8,7 @@ import { renderHome } from "../homeRenderer.js";
 import { renderHeading } from "../lesson/headerRenderer.js";
 import { renderLessonTitle } from "../lesson/lessonTitleRenderer.js";
 import { renderParagraph } from "../lesson/paragraphRenderer.js";
+import { renderNameInput } from "../nameInputRenderer.js";
 import { renderOrderingItem } from "../ordering/orderingListRenderer.js";
 import { renderOrdering } from "../ordering/orderingRenderer.js";
 import { renderQuizOption } from "../quiz/quizOption.js";
@@ -20,6 +21,7 @@ import { renderText } from "../TextRenderer.js";
 export const nodeRenderers = {
     text: renderText,
     button: renderButton,
+    nameInput: renderNameInput,
     heading: renderHeading,
     paragraph: renderParagraph,
     lessonTitle: renderLessonTitle,
