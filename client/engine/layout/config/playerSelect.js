@@ -8,17 +8,16 @@ export const PLAYER_SELECT_LAYOUT = {
 
     nodes: (context) => {
         const groupedArticles = context.groupedArticles || {};
-
-        const categoryNodes = Object.entries(groupedArticles).map(
-            ([category, articles]) => ({
-                id: `category-${category}`,
-                type: 'button',
-                kind: 'lessonOption',
-                action: 'openLesson',
-                text: category,
-                articleId: articles[2]?.articleId
-            })
-        );
+const categoryNodes = Object.entries(groupedArticles)
+    .filter(([category, articles]) => articles.length > 0)
+    .map(([category, articles]) => ({
+        id: `category-${category}`,
+        type: 'button',
+        kind: 'lessonOption',
+        action: 'openLesson',
+        text: category,
+        articleId: articles[0].articleId
+    }));
 
         return [
             {

@@ -8,8 +8,8 @@ export class AppState {
         this.articleId = null
         this.activeLessonId = null
         this.user = null
-        this.userService = new UserService()
-       // this.login(users[0]) 
+        this.userService = new UserService(users)
+       
     }
     login(user) {
         this.user = user
@@ -50,20 +50,20 @@ export class AppState {
 
     openLessonBrowser() {
         this.activeLessonId = null
-        this.screen = 'lessonBrowser'
+        this.screen = 'playerSelect'
     }
     goHome() {
         this.activeLessonId = null
         this.screen = 'home'
     }
     completeLesson(data) {
-        
+       if (!this.user) {
+        throw new Error('No user is currently logged in');
+    } 
         if (!data.lessonId) {
             throw new Error('No active lesson to complete')
         }
-        console.log(this.user)
      this.user =   this.userService.completeLesson(this.user.id, data.lessonId, data.score)
-     console.log(this.user)
-        this.goHome()
+   return this.user
     }
 }

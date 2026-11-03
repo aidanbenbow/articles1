@@ -9,9 +9,10 @@ export class PlayerSelectLayout extends BaseScreenLayout {
 
     build(context) {
         const {articleNodes, appState } = context
+        const completedLessons = appState.user?.completedLessons || []
  const availableLessons = articleNodes
             .map(node => node.props?.articleData)
-            .filter(article => article?.articleId)
+            .filter(article => article?.articleId && !completedLessons.includes(article.articleId))
 
         const groupedArticles = availableLessons.reduce((groups, article) => {
             const category = article.category || 'Uncategorized'

@@ -43,9 +43,7 @@ this.engine.context.getTransitionManager().transition(() => {
 })
 }
     openLessonBrowser() {
-        this.appState.openLessonBrowser()
-        this.engine.context.resetScroll()
-        this.emitStateChanged()
+        this.navigate('playerSelect')
     }
 
     goHome() {

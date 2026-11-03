@@ -7,6 +7,7 @@ export class LessonActions {
             finishLessonSection: () => this.finishLessonSection(),
             advanceLessonSection: () => this.advanceLessonSection(),
             startLessonPhase: () => this.startLessonPhase(),
+            openLessonBrowser: () => this.openLessonBrowser(),
         }
     }
 
@@ -26,6 +27,9 @@ export class LessonActions {
             'lessonStateChanged',
             this.engine.context.getLesson()
         )
+    }
+    openLessonBrowser() {
+        this.engine.context.app.openLessonBrowser()
     }
 
     emitLayoutChanged() {

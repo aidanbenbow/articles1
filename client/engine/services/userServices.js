@@ -1,9 +1,13 @@
-import { users } from '../../src/dorcasApp/app/users.js'
 
 export class UserService {
-
+constructor(users) {
+        this.users = users
+    }
     getUser(userId) {
-        const user = users.find(user => user.id === userId)
+         console.log('[UserService] Looking for:', userId);
+    console.log('[UserService] Available users:', this.users.map(u => u.id));
+
+        const user = this.users.find(user => user.id === userId)
 
         if (!user) {
             throw new Error(`User "${userId}" not found`)
@@ -19,7 +23,7 @@ completeLesson(userId, lessonId, points) {
  user.completedLessons.push(lessonId)
     user.score += points
     user.lessonsCompleted += 1
-console.log(`User "${userId}" completed lesson "${lessonId}" and earned ${points} points. Total score: ${user.score}, Lessons completed: ${user.lessonsCompleted}`)
+
     return user
 }
 }

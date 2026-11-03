@@ -24,7 +24,7 @@ export const lessonButtons = {
 
     back: {
         text: 'Back',
-        action: 'goHome',
+        action: 'openLessonBrowser',
         kind: 'lessonButton',
         sectionType: 'backButton'
     }

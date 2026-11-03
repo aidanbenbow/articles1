@@ -43,7 +43,7 @@ export function createUser(name) {
     };
 
     users.push(user);
-
+console.log('[createUser] Users:', users.map(u => u.id));
     return user;
 }
 
