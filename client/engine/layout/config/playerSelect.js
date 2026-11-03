@@ -16,7 +16,7 @@ export const PLAYER_SELECT_LAYOUT = {
                 kind: 'lessonOption',
                 action: 'openLesson',
                 text: category,
-                articleId: articles[0]?.articleId
+                articleId: articles[2]?.articleId
             })
         );
 

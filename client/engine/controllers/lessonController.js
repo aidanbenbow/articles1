@@ -58,11 +58,13 @@ startPhase() {
 }
    finishLesson() {
   const result=  this.lessonService.finishLesson()
+  const lesson = this.lessonService.getLesson()
+  if(lesson.completed) {
     this.engine.emit('lessonCompleted', result)
-
+  }
     this.engine.emit('lessonStateChanged', {
-        currentSectionId:
-            this.lessonService.getLesson().currentSectionId
+        phase: lesson.phase,
+        currentSectionId:lesson.currentSectionId
     })
 }
 moveOrderingItem(sectionId, itemIndex, direction) {

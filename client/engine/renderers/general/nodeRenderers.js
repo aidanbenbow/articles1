@@ -6,6 +6,7 @@ import { renderDragDrop } from "../dragDrop/dragDropRenderer.js";
 import { renderDragDropWord } from "../dragDrop/dragDropWordRenderer.js";
 import { renderHome } from "../homeRenderer.js";
 import { renderHeading } from "../lesson/headerRenderer.js";
+import { renderLessonResults } from "../lesson/lessonResultsRenderer.js";
 import { renderLessonTitle } from "../lesson/lessonTitleRenderer.js";
 import { renderParagraph } from "../lesson/paragraphRenderer.js";
 import { renderNameInput } from "../nameInputRenderer.js";
@@ -26,6 +27,7 @@ export const nodeRenderers = {
     paragraph: renderParagraph,
     lessonTitle: renderLessonTitle,
     lessonHeader: renderLessonHeader,
+    lessonResults: renderLessonResults,
     card: renderCard,
     homeWelcome: renderHome,
     ordering: renderOrdering,

@@ -34,11 +34,7 @@ console.log('Starting lesson with data:', lessonData)
     finishLesson() {
         this.lesson.end()
         this.syncProgress()
-        return {
-            lessonId: this.lesson.articleId,
-            score: this.lesson.getScoreTotal(),
-            completedAt: new Date().toISOString()
-        }
+        return this.lesson.getResults()
     }
     syncProgress() {
     if (!this.lesson?.articleId) {

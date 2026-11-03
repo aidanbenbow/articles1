@@ -18,13 +18,20 @@ export const LESSON_LAYOUT = {
         {
     id: 'lesson-section',
     type: 'dynamicSection',
-    visible: ({ lesson }) => lesson.phase !== 'intro'
+    visible: ({ lesson }) => lesson.phase === 'active'
 },
 
         {id: 'lesson-navigation',
             type: 'lessonNavigation',
             visible: ({ lesson }) =>
-                lesson.phase !== 'intro'
+                lesson.phase === 'active'
+        },
+
+        {
+            id: 'lesson-results',
+            type: 'lessonResults',
+            visible: ({ lesson }) =>
+                lesson.phase === 'results'
         }
     ]
 }

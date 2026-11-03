@@ -14,7 +14,8 @@ export function createCardNode({
     kind=null,
     sectionType = null,
     style ={},
-    children = []
+    children = [],
+    results=null,
 }) {
     return {
         id,
@@ -36,6 +37,7 @@ export function createCardNode({
         sectionType,
 
         style,
-        children
+        children,
+        results,
     };
 }

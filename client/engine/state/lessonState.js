@@ -47,10 +47,35 @@ this.score = Object.values(this.activities).reduce((total, activity) => {
     }
     startPhase() {
         this.phase = 'active'
+        this.startedAt = new Date().toISOString();
     }
     end() {
-        this.phase = 'completed'
+        this.completed = true;
+    this.completedAt = new Date().toISOString();
+    this.phase = "results";
     }
+    getDuration() {
+    if (!this.startedAt || !this.completedAt) return 0;
+
+    const start = new Date(this.startedAt).getTime();
+    const end = new Date(this.completedAt).getTime();
+
+    return Math.max(0, Math.floor((end - start) / 1000));
+}
+
+getResults() {
+    return {
+        lessonId: this.articleId,
+        title: this.title,
+        score: this.getScoreTotal(),
+        completedSections: this.completedSections.length,
+        totalSections: this.sections.length,
+        progress: this.getProgress(),
+        duration: this.getDuration(),
+        completed: this.completed,
+        completedAt: this.completedAt
+    };
+}
    setCurrentSection(sectionId) {
     this.currentSectionId = sectionId
         this.currentSectionIndex =
@@ -93,11 +118,7 @@ getCurrentSection() {
         return Math.round( ( this.getCompletedCount() /  this.sections.length) * 100)
     }
    advanceSection() {
- console.log(
-        'BEFORE ADVANCE:',
-        this.currentSectionId,
-        this.currentSectionIndex
-    )
+
     const current =  this.getCurrentSection()
 
     if (!current)     return false

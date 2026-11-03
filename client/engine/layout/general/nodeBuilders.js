@@ -7,6 +7,7 @@ import { buildDynamicSectionNode } from "../builders/dynamicSectionBuilder.js";
 import { buildLessonHeaderNode } from "../builders/lessonHeaderBuilder.js";
 
 import { buildLessonNavigationNode } from "../builders/lessonNavigationBuilder.js";
+import { buildLessonResultsNode } from "../builders/lessonResultsBuilder.js";
 import { buildNameInputNode } from "../builders/nameInputNodeBuilder.js";
 import { buildOrderingItemNode } from "../builders/orderingItemBuilder.js";
 import { buildOrderingNode } from "../builders/orderingNodeBuilder.js";
@@ -33,6 +34,8 @@ surveyOption: buildSurveyOptionNode,
     dragDropParagraph: buildDragDropParagraphNode,
 
     ordering: buildOrderingNode,
-    orderingItem: buildOrderingItemNode
+    orderingItem: buildOrderingItemNode,
+
+    lessonResults: buildLessonResultsNode
     
 }
