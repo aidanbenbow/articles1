@@ -11,6 +11,7 @@ export class InputActions {
     focusNameInput(node) {
         
         this.engine.context.setFocusedNode(node.id);
+        this.engine.emit("focusNameInput", node);
     }
     openPlayerSelect() {
         const interaction =
