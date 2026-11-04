@@ -1,3 +1,5 @@
+import { MobileTextInput } from "../input/mobileTextInput.js"
+
 export class Input {
     constructor(engine) {
         this.engine = engine
@@ -14,10 +16,21 @@ moved: false,
         }
         this.selectedNode = null
         this.interaction = null
+        this.mobileInput = new MobileTextInput(engine)
     }
 attach() {
         this.canvas = this.engine.context.canvas
         this.interaction = this.engine.context.getInteractionManager()
+        this.mobileInput.attach();
+
+this._onNameInputFocus = (node) => {
+    this.mobileInput.focus(node);
+};
+
+this.engine.on(
+    'focusNameInput',
+    this._onNameInputFocus
+);
         if (this.canvas) {
             this.canvas.addEventListener('pointerdown', this._onPointerDown)
             this.canvas.addEventListener('pointermove', this._onPointerMove)
@@ -27,6 +40,12 @@ attach() {
         window.addEventListener('keydown', this._onKeyDown)
     }
     detach() {
+        this.mobileInput.detach();
+
+this.engine.off?.(
+    'focusNameInput',
+    this._onNameInputFocus
+);
         if (this.canvas) {
             this.canvas.removeEventListener('pointerdown', this._onPointerDown)
             this.canvas.removeEventListener('pointermove', this._onPointerMove)

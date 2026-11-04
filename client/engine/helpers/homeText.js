@@ -12,12 +12,10 @@ export function getProgressText({
     const score = appState.user?.score || 0
     const lessonsCompleted =
         appState.user?.lessonsCompleted || 0
-
-    const lessonsAvailable =
-        articleNodes.filter(
-            node => node.props?.articleData?.articleId
-        ).length || 0
-
+const totalLessons = articleNodes.filter(
+        node => node.props?.articleData?.articleId
+    ).length || 0
+    const lessonsAvailable = totalLessons - lessonsCompleted
     return [
         'Your learning progress:',
         '',

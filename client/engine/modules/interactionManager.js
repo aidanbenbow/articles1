@@ -12,12 +12,13 @@ this.actionDispatcher = new ActionDispatcher(engine)
             selectedNodeId: null,
             searchTerm: '',
             focusedNodeId: null,
+            playerName: '',
         }
         this.dragState = null
     }
     contextExports() {
         return {
-            getInteractionState: () => this.state,
+            getInteractionState: () => this.getInteractionState(),
             getInteractionManager: () => this,
             appendSearchTerm: this.appendSearchTerm.bind(this),
             removeSearchTerm: this.removeSearchTerm.bind(this),
@@ -27,6 +28,19 @@ this.actionDispatcher = new ActionDispatcher(engine)
         if(!targetNode) return
         this.actionDispatcher.execute(targetNode)
     }
+    getInteractionState() {
+    return this.state;
+}
+
+setPlayerName(value = '') {
+    this.state = {
+        ...this.state,
+        playerName: value
+    };
+
+    this.engine.emit('playerNameChanged', value);
+    this.emitLayoutChanged();
+}
 getFocusedNode() {
     return this.engine.context.getFocusedNode?.() ?? null;
 }

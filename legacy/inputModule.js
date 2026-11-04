@@ -1,5 +1,5 @@
-import { baseModule } from "./baseModule.js";
-import { HitTestSystem } from "./hitTestSystem.js";
+import { baseModule } from "../client/engine/modules/baseModule.js";
+import { HitTestSystem } from "../client/engine/modules/hitTestSystem.js";
 
 export class InputModule extends baseModule{
     static moduleName = 'inputModule'
