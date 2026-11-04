@@ -155,7 +155,11 @@ canUnlockNextSection() {
 }
 
 isLastSection() {
-    return !this.hasNextSection()
+     if (!this.currentSectionId) {
+        return false
+    }
+
+    return ( this.currentSectionIndex === this.sections.length - 1 )
 }
 restoreProgress(progress) {
     if (!progress) {
