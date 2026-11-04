@@ -169,9 +169,10 @@ _resetPointerState(){
 
         if (event.key === "Backspace") {
             event.preventDefault();
-            focusedNode.value = value.slice(0, -1);
-            focusedNode.text = focusedNode.value;
-            this.interaction.emitLayoutChanged();
+            const newValue = value.slice(0, -1);
+            focusedNode.value = newValue;
+            focusedNode.text = newValue;
+            this.interaction.setPlayerName(newValue);
             return;
         }
 
@@ -188,10 +189,12 @@ _resetPointerState(){
         ) {
             event.preventDefault();
 
-            focusedNode.value = value + event.key;
-            focusedNode.text = focusedNode.value;
+            const newValue = value + event.key;
 
-            this.interaction.emitLayoutChanged();
+        focusedNode.value = newValue;
+        focusedNode.text = newValue;
+
+        this.interaction.setPlayerName(newValue);
         }
 
         return;

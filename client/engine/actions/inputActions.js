@@ -9,7 +9,7 @@ export class InputActions {
     }
 
     focusNameInput(node) {
-        console.log("Clicked input:", node.id);
+        
         this.engine.context.setFocusedNode(node.id);
     }
     openPlayerSelect() {

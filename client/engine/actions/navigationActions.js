@@ -14,8 +14,8 @@ export class NavigationActions {
     
 
     const nameNode = this.engine.context.getNode?.('name');
-    const playerName = nameNode?.value?.trim();
-
+    //const playerName = nameNode?.value?.trim();
+const playerName = this.engine.context.getInteractionManager()?.getInteractionState()?.playerName?.trim();
     
 
     const app = this.engine.context.app;

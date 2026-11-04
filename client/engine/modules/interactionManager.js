@@ -38,7 +38,7 @@ setPlayerName(value = '') {
         playerName: value
     };
 
-    this.engine.emit('playerNameChanged', value);
+   
     this.emitLayoutChanged();
 }
 getFocusedNode() {

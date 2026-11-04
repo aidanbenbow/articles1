@@ -1,3 +1,4 @@
+
 import { getInstructions, getProgressText, getPromptText, getWelcomeTitle } from "../../helpers/homeText.js";
 
 export const HOME_LAYOUT = {
@@ -39,7 +40,7 @@ export const HOME_LAYOUT = {
     id: 'name',
     type: 'nameInput',
     placeholder: 'Enter your name...',
-    
+    action: 'focusNameInput',
 },
                 {
                     id: 'start-button',
