@@ -17,6 +17,6 @@ export const LESSON_SECTION_LAYOUT = {
         value: ({ item }) => item.text,
         typography: ({ item }) =>
             item.type === "heading" ? "heading" : "body",
-        value: ({ item }) => item.text,
+   
     },
 }

@@ -1,9 +1,20 @@
 import { DRAWING_CONSTANTS } from "../constants/drawingConstants.js"
+import { getWrappedTextLines } from "./textWrapping.js"
 
-export function drawTextBlock(ctx, text, x, y, maxWidth, lineHeight) {
-    ctx.fillStyle = DRAWING_CONSTANTS.colors.text
-    ctx.font = `${DRAWING_CONSTANTS.fontSizes.body}px Arial`
-    wrapText(ctx, text || '', x + DRAWING_CONSTANTS.spacing.padding, y + DRAWING_CONSTANTS.spacing.padding, maxWidth - 20, lineHeight)
+export function drawTextBlock(ctx, text, x, y, maxWidth,lineHeight,font,color) {
+   ctx.save()
+
+    ctx.fillStyle = color
+    ctx.font = font
+    ctx.textAlign = 'left'
+    ctx.textBaseline = 'top'
+
+    const lines = getWrappedTextLines( ctx, text,maxWidth)
+
+    lines.forEach((line, index) => { ctx.fillText( line, x, y + index * lineHeight)
+    })
+
+    ctx.restore()
 }
 
 function wrapText(ctx, text, x, y, maxWidth, lineHeight) {

@@ -1,3 +1,5 @@
+import { getTextMeasurementContext } from "../../draw/textMeasurement.js"
+import { getWrappedTextLines } from "../../draw/textWrapping.js"
 import { resolveValue } from "./resolveValue.js"
 
 export function resolveTextHeight(config, context) {
@@ -7,21 +9,22 @@ export function resolveTextHeight(config, context) {
         return config.height
     }
 
-    const text = resolveValue(
-        config.value,
-        context
+    const text = String(config.value ?? config.text ?? '')
+    const typography = metrics.typography[config.typography ?? 'body']
+   
+        const lineHeight = typography.lineHeight
+    const width = config.width ?? metrics.contentWidth
+const font =
+        `${typography.weight} ${typography.size}px ${typography.family}`
+
+    const ctx = getTextMeasurementContext()
+      ctx.font = font
+
+    const lines = getWrappedTextLines(
+        ctx,
+        text,
+        width
     )
 
-    const typography = config.typography ?? 'body'
-    const typographyMetrics =
-        metrics.typography[typography] ?? {}
-
-    const lineHeight =
-        typographyMetrics.lineHeight ?? 20
-
-   
-    const lines =
-        String(text ?? '').split('\n').length
-
-    return lines * lineHeight
+    return Math.max(1, lines.length) * typography.lineHeight
 }

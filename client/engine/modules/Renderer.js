@@ -73,7 +73,8 @@ const viewport = this.engine.context.getViewport()
     view,
     layout: allNodes,
     typography: LAYOUT.typography,
-    responsive,
+   metrics: responsive,
+   responsive,
     getFocusedNode,
 }
 
