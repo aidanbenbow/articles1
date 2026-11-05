@@ -27,6 +27,7 @@ export function buildLessonResultsNode(config, context) {
     const button = createButtonNode({
         id: `${articleNode.id}-results-home-button`,
         x: x + padding,
+        owner: config.owner ?? 'lesson',
         worldY: currentY + contentHeight,
         width: width - padding * 2,
         height: buttonHeight,

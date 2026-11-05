@@ -19,7 +19,6 @@ export class AppController {
 
     if (!user) return;
 
-    console.log('[AppController] Created user:', user);
    
     this.engine.context.resetScroll();
     this.emitStateChanged();

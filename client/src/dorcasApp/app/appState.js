@@ -13,8 +13,7 @@ export class AppState {
     }
     login(user) {
         this.user = user
-        console.log(`User ${user.name} logged in`)
-        console.log(`Current user:`, this.user)
+       
     }
     logout() {
         this.user = null
@@ -63,7 +62,7 @@ export class AppState {
         if (!data.lessonId) {
             throw new Error('No active lesson to complete')
         }
-     this.user =   this.userService.completeLesson(this.user.id, data.lessonId, data.score)
+     this.user =   this.userService.completeLesson(this.user.id, data)
    return this.user
     }
 }

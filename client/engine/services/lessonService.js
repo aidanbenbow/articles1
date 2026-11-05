@@ -5,10 +5,11 @@ export class LessonService {
         this.surveyApi = surveyApi
         this.lessonProgressStore = lessonProgressStore
         this.lesson = new LessonState()
+        
     }
     startLesson(lessonData) {
         this.lesson = new LessonState(lessonData)
-console.log('Starting lesson with data:', lessonData)
+
         const savedProgress = this.lessonProgressStore.get( this.lesson.articleId)
       this.lesson.start()
 //         if( savedProgress) {
@@ -32,10 +33,28 @@ console.log('Starting lesson with data:', lessonData)
         this.syncProgress()
     }
     finishLesson() {
-        this.lesson.end()
-        this.syncProgress()
-        return this.lesson.getResults()
+        const current = this.lesson.getCurrentSection()
+
+    if (current) {
+        const activity = this.lesson.activities[current.id]
+
+        if (!activity?.isComplete()) {
+            console.warn('Cannot finish: current section is incomplete')
+            return false
+        }
+
+        this.lesson.completeSection(current.id)
     }
+
+    if (!this.lesson.completed) {
+        this.lesson.end()
+    }
+
+    this.syncProgress()
+
+    return this.lesson.getResults()
+    }
+   
     syncProgress() {
     if (!this.lesson?.articleId) {
         return
@@ -166,8 +185,24 @@ const quiz = this.lesson.activities[sectionId]
 }
 advanceSection() {
     const moved =this.lesson.advanceSection()
-    if (moved) this.syncProgress()
-    return moved
+    if (!moved)return {
+        success: true,
+        completed: false
+    }
+        this.syncProgress()
+    if (this.lesson.completed) {
+        const results = this.finishLesson()
+        return {
+            success: true,
+            completed: true,
+            results
+        }
+    }
+  return {
+        success: true,
+        completed: false
+    }
+  
 }
 moveOrderingItem( sectionId, itemIndex, direction
 ) {

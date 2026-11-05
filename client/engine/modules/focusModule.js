@@ -18,7 +18,7 @@ export class FocusModule extends baseModule {
     }
     setFocusedNode(nodeOrId) {
         const nodeId = typeof nodeOrId === 'string' ? nodeOrId : nodeOrId?.id
-        console.log("Setting focus:", nodeId);
+       
         if (!nodeId || this.focusedNodeId === nodeId) return 
             const prevFocusedNodeId = this.focusedNodeId
             this.focusedNodeId = nodeId

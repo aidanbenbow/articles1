@@ -12,12 +12,32 @@ export class LessonActions {
     }
 
     finishLessonSection() {
-        this.engine.context.finishLesson()
+      const result = this.engine.context.finishLesson()
+      const lesson = this.engine.context.getLesson()
+        this.engine.emit('lessonStateChanged', lesson)
         this.emitLayoutChanged()
+        return result
     }
 
     advanceLessonSection() {
-        this.engine.context.advanceLessonSection()
+        const moved = this.engine.context.advanceLessonSection()
+
+        if (!moved) {
+            console.warn('Could not advance lesson. Current section may be incomplete.')
+            return false
+        }
+
+        const lesson = this.engine.context.getLesson()
+
+        if (lesson?.completed) {
+            this.engine.context.finishLesson()
+        }
+
+        this.engine.emit('lessonStateChanged', lesson)
+
+        this.emitLayoutChanged()
+
+        return true
     }
 
     startLessonPhase() {

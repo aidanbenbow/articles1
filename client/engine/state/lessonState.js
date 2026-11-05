@@ -5,7 +5,7 @@ export class LessonState {
         this.articleId = lesson.id
         this.title = lesson.title
         this.sections = lesson.sections || []
-        
+       
         this.description = lesson.description || ''
         this.currentSectionIndex = 0
      
@@ -68,7 +68,7 @@ getResults() {
         lessonId: this.articleId,
         title: this.title,
         score: this.getScoreTotal(),
-        completedSections: this.completedSections.length,
+        completedSections: this.getCompletedCount(),
         totalSections: this.sections.length,
         progress: this.getProgress(),
         duration: this.getDuration(),
@@ -115,30 +115,37 @@ getCurrentSection() {
 }
     getProgress() {
         if (!this.sections.length)  return 0
-        return Math.round( ( this.getCompletedCount() /  this.sections.length) * 100)
+       const completedCount = this.sections.filter(section =>
+        this.completedSections.includes(section.id)
+    ).length
+
+    return Math.round(
+        (completedCount / this.sections.length) * 100
+    )
     }
    advanceSection() {
-
     const current =  this.getCurrentSection()
+    if (!current)return false
 
-    if (!current)     return false
-    
     if (!this.canUnlockNextSection())     return false
     
     this.completeSection(current.id)
 
     const next =this.getNextSection()
-
+      
     if (!next) {
-        this.completed = true
+         
         this.currentSectionId = null
+        this.currentSectionIndex = this.sections.length
+        this.end()
+       
         return true
     }
 
     this.currentSectionIndex++
 
     this.currentSectionId = next.id
-
+ 
     return true
 }
 canUnlockNextSection() {

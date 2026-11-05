@@ -6,6 +6,7 @@ export const users = [
         score: 0,
         lessonsCompleted: 0,
         completedLessons: [],
+         lessonAttempts: [],
         progress: {
             currentLessonId: 'lesson-3'
         }
@@ -17,6 +18,7 @@ export const users = [
         score: 0,
         lessonsCompleted: 0,
         completedLessons: [],
+            lessonAttempts: [],
         progress: {
             currentLessonId: 'lesson-7'
         }
@@ -37,6 +39,7 @@ export function createUser(name) {
         score: 0,
         lessonsCompleted: 0,
         completedLessons: [],
+        lessonAttempts: [],
         progress: {
             currentLessonId: null
         }

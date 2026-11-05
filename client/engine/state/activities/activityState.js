@@ -11,6 +11,6 @@ export class ActivityState {
     }
 
     isComplete() {
-        return false
+        return this.completed
     }
 }

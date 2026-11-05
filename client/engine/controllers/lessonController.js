@@ -42,30 +42,40 @@ export class LessonController {
     }
 
     advanceLesson() {    
-    const moved =
-        this.lessonService.advanceSection()
-        if(moved) {
-            this.engine.context.resetScroll()
-            this.engine.emit('lessonStateChanged', {
-                currentSectionId:
-                    this.lessonService.getLesson().currentSectionId
-            })
-        }
-    return moved
+    const result = this.lessonService.advanceSection()
+
+    if (!result.success) return false
+
+    if (result.completed) {this.engine.emit('lessonCompleted', result.results)
+    }
+
+    this.engine.context.resetScroll()
+
+    this.engine.emit('lessonStateChanged', {
+        phase: this.lessonService.getLesson().phase,
+        currentSectionId:
+            this.lessonService.getLesson().currentSectionId
+    })
+
+    return result
 }
 startPhase() {
     this.lessonService.startPhase()
 }
-   finishLesson() {
-  const result=  this.lessonService.finishLesson()
-  const lesson = this.lessonService.getLesson()
-  if(lesson.completed) {
-    this.engine.emit('lessonCompleted', result)
-  }
+  finishLesson() {
+    const results = this.lessonService.finishLesson()
+
+    if (!results) return null
+
+    this.engine.emit('lessonCompleted', results)
+
     this.engine.emit('lessonStateChanged', {
-        phase: lesson.phase,
-        currentSectionId:lesson.currentSectionId
+        phase: this.lessonService.getLesson().phase,
+        currentSectionId:
+            this.lessonService.getLesson().currentSectionId
     })
+
+    return results
 }
 moveOrderingItem(sectionId, itemIndex, direction) {
     const result = this.lessonService.moveOrderingItem(

@@ -10,6 +10,7 @@ export class BaseScreenLayout {
 
     clear() {
         for (const [id, node] of this.layout.layoutNodes) {
+             
             if (node.owner === this.owner) {
                 this.layout.layoutNodes.delete(id)
             }
