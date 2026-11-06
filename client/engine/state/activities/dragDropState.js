@@ -99,4 +99,21 @@ this.correct = complete && this.correctCount === totalCount
         this.wordbank = [...(this.section.wordbank || [])]
         this.shuffleWordbank()
     }
+    restoreState(saved = {}) {
+    this.answers = { ...(saved.answers ?? {}) }
+
+    if (Array.isArray(saved.wordbank)) {
+        this.wordbank = [...saved.wordbank]
+    }
+
+    this.checked = saved.checked ?? false
+    this.correct = saved.correct ?? false
+    this.feedback = saved.feedback ?? ''
+
+    this.correctCount = Object.keys(this.correctAnswers)
+        .filter(key => this.answers[key] === this.correctAnswers[key])
+        .length
+
+    this.scoreAwarded = saved.scoreAwarded ?? false
+}
 }

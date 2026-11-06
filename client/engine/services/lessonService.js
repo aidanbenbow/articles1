@@ -1,31 +1,34 @@
 import { LessonState } from "../state/lessonState.js"
-
+import { saveLessonProgress } from "../api/lessonProgressApi.js"
 export class LessonService {
-    constructor(surveyApi, lessonProgressStore) {
+    constructor(surveyApi, lessonProgressStore,getUserId) {
         this.surveyApi = surveyApi
         this.lessonProgressStore = lessonProgressStore
+        this.getUserId = getUserId
         this.lesson = new LessonState()
         
     }
     startLesson(lessonData) {
         this.lesson = new LessonState(lessonData)
-
-        const savedProgress = this.lessonProgressStore.get( this.lesson.articleId)
+const userId = this.getUserId()
+        const savedProgress = userId ? this.lessonProgressStore.get(userId, this.lesson.articleId) : null
       this.lesson.start()
-//         if( savedProgress) {
-//             this.lesson.restoreProgress(savedProgress)
-//         } else {
-// this.lesson.start()
-//   this.lessonProgressStore.update(
-//         this.lesson.articleId,
-//         {
-//             status: 'in_progress',
-//             progressPercent: 0,
-//             currentActivityId: this.lesson.currentSectionId,
-//             startedAt: this.lesson.startedAt
-//         }
-//     )
-// }
+if (savedProgress) {
+        this.lesson.restoreProgress(savedProgress)
+    } else if (userId) {
+        this.lessonProgressStore.update(
+            userId,
+            this.lesson.articleId,
+            {
+                status: 'in_progress',
+                progressPercent: 0,
+                currentActivityId: this.lesson.currentSectionId,
+                completedActivityIds: [],
+                startedAt: this.lesson.startedAt
+            }
+            
+        )
+    }this.syncProgress()
         return this.lesson
     }
     startPhase() {
@@ -56,6 +59,12 @@ export class LessonService {
     }
    
     syncProgress() {
+        const userId = this.getUserId()
+
+if (!userId) {
+    console.warn('Cannot save lesson progress: no logged-in user')
+    return
+}
     if (!this.lesson?.articleId) {
         return
     }
@@ -72,20 +81,21 @@ export class LessonService {
         this.lesson.activities
     )) {
         if (activity.type === 'quiz') {
-            Object.assign(
-                quizAnswers,
-                activity.getAnswers()
-            )
+            quizAnswers[sectionId] = activity.getAnswers()
 
             quizScore += activity.getScore()
         }
 
         if (activity.type === 'survey') {
-            const response = activity.getResponse()
-            if (response) {
-                surveyResponses[sectionId] = response
-            }
+    const response = activity.getResponse()
+
+    if (response) {
+        surveyResponses[sectionId] = {
+            response,
+            results: activity.getResults()
         }
+    }
+}
 
         if (activity.type === 'ordering') {
             orderingAnswers[sectionId] = {
@@ -95,9 +105,19 @@ export class LessonService {
                 feedback: activity.getFeedback()
             }
         }
+        if (activity.type === 'dragdrop') {
+    orderingAnswers[sectionId] = {
+        answers: activity.getAnswers(),
+        wordbank: activity.getWordbank(),
+        checked: activity.getChecked(),
+        correct: activity.isCorrect(),
+        feedback: activity.getFeedback(),
+        scoreAwarded: activity.scoreAwarded
+    }
+}
     }
 
- const result =   this.lessonProgressStore.update(
+ const result =   this.lessonProgressStore.update(userId,
         this.lesson.articleId,
         {
             status: this.lesson.completed? 'completed': 'in_progress',
@@ -116,6 +136,11 @@ export class LessonService {
             completedAt: this.lesson.completed? new Date().toISOString(): null
         }
     )
+    saveLessonProgress(result).catch(error => {
+    console.error('Failed to save lesson progress to the server:', error)
+})
+
+return result
 }
 
     getLesson() {

@@ -26,20 +26,21 @@ export class AppController {
     return user;
 }
 
-   openLesson(article) {
+  async openLesson(article) {
     const articleId = article.articleId || article.id
-       
-this.engine.context.getTransitionManager().transition(() => {
-    this.engine.context.startLessonFromArticle(article)
+
+    await this.engine.context.ensureProgressLoaded()
+
+    this.engine.context.getTransitionManager().transition(() => {
+        this.engine.context.startLessonFromArticle(article)
 
         this.engine.context.incrementArticleViews(articleId)
 
-    this.appState.openLesson( articleId)
-    this.engine.context.resetScroll()
+        this.appState.openLesson(articleId)
+        this.engine.context.resetScroll()
 
-    this.emitStateChanged()
-    
-})
+        this.emitStateChanged()
+    })
 }
     openLessonBrowser() {
         this.navigate('playerSelect')

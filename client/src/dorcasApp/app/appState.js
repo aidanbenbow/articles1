@@ -1,5 +1,5 @@
 import { UserService } from "../../../engine/services/userServices.js"
-import { createUser, users } from "./users.js"
+import { createUser, users, saveUsers} from "./users.js"
 
 export class AppState {
 
@@ -7,16 +7,19 @@ export class AppState {
         this.screen = 'home'
         this.articleId = null
         this.activeLessonId = null
-        this.user = null
-        this.userService = new UserService(users)
+        const savedUserId = localStorage.getItem('currentUserId')
+
+this.user = users.find(user => user.id === savedUserId) ?? null
+        this.userService = new UserService(users, saveUsers)
        
     }
     login(user) {
         this.user = user
-       
+        localStorage.setItem('currentUserId', user.id)
     }
     logout() {
         this.user = null
+        localStorage.removeItem('currentUserId')
     }
      navigate(screen, data = {}) {
         this.screen = screen

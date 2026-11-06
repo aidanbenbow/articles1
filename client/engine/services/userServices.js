@@ -1,7 +1,9 @@
 
+
 export class UserService {
-constructor(users) {
+constructor(users, saveUsers) {
         this.users = users
+        this.saveUsers = saveUsers
     }
     getUser(userId) {
         const user = this.users.find(user => user.id === userId)
@@ -12,18 +14,33 @@ constructor(users) {
     }
 completeLesson(userId, data) {
     const user = this.getUser(userId)
+
     const {  lessonId, score, duration, attemptId, completedAt = new Date().toISOString()} = data
 
-    if( attemptId && !user.lessonAttempts.some(attempt => attempt.attemptId === attemptId)) {return user}
+    if( attemptId && user.lessonAttempts.some(attempt => attempt.attemptId === attemptId)) {return user}
 
-    user.lessonAttempts.push({ attemptId, lessonId, score, duration, completedAt })
-
+    const lessonAttempts = [
+        ...user.lessonAttempts,
+        { attemptId, lessonId, score, duration, completedAt }
+    ]
+let completedLessons = [...user.completedLessons]
+    let lessonsCompleted = user.lessonsCompleted
+    let totalScore = user.score
     if( !user.completedLessons.includes(lessonId)) {
-        user.completedLessons.push(lessonId)
-        user.lessonsCompleted += 1
-        user.score += score
+        completedLessons.push(lessonId)
+        lessonsCompleted += 1
+        totalScore += score
     } 
-    return user
+    Object.assign(user, {
+    lessonAttempts,
+    completedLessons,
+    lessonsCompleted,
+    score: totalScore
+})
+
+this.saveUsers()
+
+return user
 }
 getLessonAttempts(lessonId) {
     return this.users.flatMap(user => (user.lessonAttempts??[]).filter(attempt => attempt.lessonId === lessonId))

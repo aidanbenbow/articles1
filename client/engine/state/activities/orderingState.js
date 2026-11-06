@@ -81,4 +81,13 @@ getFeedback() {
         this.feedback = ''
         this.shuffleItems()
     }
+    restoreState(saved = {}) {
+    if (Array.isArray(saved.items)) {
+        this.items = [...saved.items]
+    }
+
+    this.checked = saved.checked ?? false
+    this.correct = saved.correct ?? false
+    this.feedback = saved.feedback ?? ''
+}
 }

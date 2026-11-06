@@ -15,10 +15,12 @@ export class LessonProgressStore {
             const records = JSON.parse(raw)
             for (const record of records) {
                 const lessonProgress = new LessonProgress(record)
-                this.progress.set(
-                    lessonProgress.lessonId,
-                    lessonProgress
-                )
+                const key = this.getKey(
+    lessonProgress.userId,
+    lessonProgress.lessonId
+)
+
+this.progress.set(key, lessonProgress)
             }
           
         } catch (error) {
@@ -42,10 +44,10 @@ export class LessonProgressStore {
                     ? record
                     : new LessonProgress(record)
 
-            this.progress.set(
-                lessonProgress.lessonId,
-                lessonProgress
-            )
+            const key = this.getKey( lessonProgress.userId,lessonProgress.lessonId)
+
+            this.progress.set(key, lessonProgress)
+            this.save()
         }
     }
     set(record) {
@@ -53,27 +55,62 @@ export class LessonProgressStore {
             record instanceof LessonProgress
                 ? record
                 : new LessonProgress(record)
+const key = this.getKey(
+        lessonProgress.userId,
+        lessonProgress.lessonId)
 
-        this.progress.set(
-            lessonProgress.lessonId,
-            lessonProgress
-        )
+        this.progress.set( key, lessonProgress)
         this.save()
         return lessonProgress
     }
-     update(lessonId, changes = {}) {
-        const existing = this.progress.get(lessonId)
+     update(userId, lessonId, changes = {}) {
+        const key = this.getKey(userId, lessonId)
+        const existing = this.progress.get(key)
 
         return this.set({
             ...(existing ?? {}),
             ...changes,
-            lessonId
+            lessonId,
+            userId
         })
     }
-    get(lessonId) {
-        return this.progress.get(lessonId) ?? null
+    get(userId, lessonId) {
+        const key = this.getKey(userId, lessonId)
+        return this.progress.get(key) ?? null
     }
+    getKey(userId, lessonId) {
+    return `${userId}::${lessonId}`
+}
     clear() {
         this.progress.clear()
+        this.save()
     }
+    
+replaceForUser(userId, records = []) {
+    // Remove the old cached progress for this user only
+    for (const [key, record] of this.progress.entries()) {
+        if (record.userId === userId) {
+            this.progress.delete(key);
+        }
+    }
+
+    // Insert the records retrieved from DynamoDB
+    for (const record of records) {
+        const lessonProgress = new LessonProgress({
+            ...record,
+            userId
+        });
+
+        const key = this.getKey(
+            userId,
+            lessonProgress.lessonId
+        );
+
+        this.progress.set(key, lessonProgress);
+    }
+
+    // Save the updated local cache once
+    this.save();
+}
+
 }

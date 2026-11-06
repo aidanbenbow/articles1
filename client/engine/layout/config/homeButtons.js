@@ -4,7 +4,7 @@ import { getInstructions, getProgressText, getPromptText, getWelcomeTitle } from
 export const HOME_LAYOUT = {
     screen: 'home',
 
-    nodes: [
+    nodes:({ appState }) => [
         {
             id: 'welcome',
             type: 'card',
@@ -20,7 +20,24 @@ export const HOME_LAYOUT = {
                     color: 'heading',
                     value: 'Welcome to the Educational Lessons App'
                 },
-
+...(appState.user
+                    ? [
+                        {
+                            id: 'returning-user',
+                            type: 'text',
+                            typography: 'body',
+                            color: 'text',
+                            value: `Welcome back, ${appState.user.name}!`
+                        },
+                        {
+                            id: 'continue-button',
+                            type: 'button',
+                            kind: 'setPlayerState',
+                            action: 'browseLessons',
+                            text: 'Continue'
+                        }
+                    ]
+                    : [
                 {
                     id: 'prompt',
                     type: 'text',
@@ -50,7 +67,7 @@ export const HOME_LAYOUT = {
                     text: 'Get Started'
                 },
                 
-            ]
+            ])]
         },
 
     ]

@@ -35,43 +35,13 @@ export function registerArticlesHandlers(app, articlesService) {
         }
     });
 
-    app.get('/api/lesson-progress', async (req, res) => {
-        try {
-            const progressRecords = [
-//              {
-//         "lessonId": "tofu",
-//         "status": "in_progress",
-//         "progressPercent": 35,
-//         "currentActivityId": 
-// "coagulation",
-//         "completedActivityIds": [
-// "tried-tofu",
-// "section-0",
-// "tofu-intro",
-// "section-1",
-// "soymilk-process",
-// "section-2"],
-//     },  
-// {
-//         "lessonId": "english-buffalo-mozzarella-an-unexpected-delicacy",
-//         "status": "in_progress",
-//         "progressPercent": 30,
-//         "currentActivityId": "section-3",
-//         "completedActivityIds": []
-//     }, 
+    // app.get('/api/lesson-progress', async (req, res) => {
+    //     try {
    
-    // {
-    //     "lessonId": "st-patrick-general",
-    //     "status": "in_progress",
-    //     "progressPercent": 20,
-    //     "currentActivityId": "patrick-survey-1",
-    //     "completedActivityIds": []
-    // }
-]
-            res.json(progressRecords);
-        } catch (error) {
-            console.error('Error fetching lesson progress:', error);
-            res.status(500).json({ error: 'Failed to fetch lesson progress' });
-        }
-    });
+    //         res.json(progressRecords);
+    //     } catch (error) {
+    //         console.error('Error fetching lesson progress:', error);
+    //         res.status(500).json({ error: 'Failed to fetch lesson progress' });
+    //     }
+    // });
 }

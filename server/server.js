@@ -1,7 +1,8 @@
+import dotenv from 'dotenv';
 import express from 'express';
 import { setupStatic } from './src/http/static.js';
 import { registerBackend } from './src/app/registerBackend.js';
-import dotenv from 'dotenv';
+
 import { registerSurvey } from './src/app/registerSurvey.js';
 
 dotenv.config();

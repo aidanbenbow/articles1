@@ -1,6 +1,10 @@
-async function fetchLessonProgress() {
-    const response =
-        await fetch('/api/lesson-progress')
+async function fetchLessonProgress(userId) {
+    if (!userId) {
+        throw new Error('A userId is required');
+    }
+   const response = await fetch(
+        `/api/lesson-progress?userId=${encodeURIComponent(userId)}`
+    );
 
     if (!response.ok) {
         throw new Error(
@@ -12,14 +16,17 @@ async function fetchLessonProgress() {
 }
 
 export async function initializeLessonProgress(
-    progressStore
+    progressStore,
+    userId
 ) {
     try {
         const records =
-            await fetchLessonProgress()
+            await fetchLessonProgress(userId)
 
-        progressStore.setAll(records)
-
+        progressStore.replaceForUser(userId, records)
+console.log(
+            `Loaded ${records.length} lesson progress records for ${userId}`
+        );
         return progressStore
     } catch (error) {
         console.error(

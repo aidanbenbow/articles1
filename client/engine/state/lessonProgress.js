@@ -7,7 +7,7 @@ export const lessonProgressStatus = {
 export class LessonProgress {
 
     constructor(data = {}) {
-
+this.userId = data.userId ?? null
         this.lessonId = data.lessonId ?? null
 
         this.status =data.status ?? lessonProgressStatus.NOT_STARTED

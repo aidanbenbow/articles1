@@ -1,4 +1,4 @@
-export const users = [
+export const defaultUsers = [
     {
         id: 'aidan',
         name: 'Aidan',
@@ -25,6 +25,27 @@ export const users = [
     }
 ]
 
+function loadUsers() {
+    const savedUsers = localStorage.getItem('users')
+
+    if(savedUsers) {
+        try {
+            return JSON.parse(savedUsers)
+        } catch (error) {
+            console.error('Failed to parse saved users:', error)
+        }
+    }
+    localStorage.setItem('users', JSON.stringify(defaultUsers))
+    return [...defaultUsers]
+}
+
+export const users = loadUsers()
+
+export function saveUsers() {
+    localStorage.setItem('users', JSON.stringify(users))
+}
+
+
 export function createUser(name) {
     const cleanName = name.trim();
 
@@ -46,11 +67,13 @@ export function createUser(name) {
     };
 
     users.push(user);
-console.log('[createUser] Users:', users.map(u => u.id));
+    saveUsers();
     return user;
 }
 
 export function updateUser(userId, updates) {
+    console.log('Updating user:', userId, updates);
+    console.log('Current users:', users);
   const user = users.find(user => user.id === userId);
 
   if (!user) {
@@ -58,6 +81,7 @@ export function updateUser(userId, updates) {
   }
 
   Object.assign(user, updates);
-
+saveUsers();
   return user;
 }
+

@@ -7,12 +7,17 @@ import { LessonService } from "../services/lessonService.js"
 import { LessonProgressStore } from "../state/lessonProgressStore.js"
 
 
+
 export class LessonFeature {
 
     constructor(engine) {
         this.engine = engine
         this.lessonProgressStore = new LessonProgressStore()
-        this.lessonService = new LessonService(new SurveyApi(), this.lessonProgressStore)
+        this.lessonService = new LessonService(
+    new SurveyApi(),
+    this.lessonProgressStore,
+    () => this.engine.context.app?.getState()?.user?.id )
+
         this.lessonController = new LessonController(this.lessonService, engine) 
     }
     async attach() {
@@ -37,7 +42,8 @@ export class LessonFeature {
             moveOrderingItem: (sectionId, itemIndex,direction) =>
     this.lessonController.moveOrderingItem(sectionId,itemIndex,direction),
 checkOrdering: (sectionId) => this.lessonController.checkOrdering(sectionId),
-checkDragDrop: (sectionId) => this.lessonController.checkDragDrop(sectionId)
+checkDragDrop: (sectionId) => this.lessonController.checkDragDrop(sectionId),
+ensureProgressLoaded: () => this.ensureProgressLoaded()
         }
     }
     startLessonFromArticle(article) {
@@ -46,5 +52,14 @@ checkDragDrop: (sectionId) => this.lessonController.checkDragDrop(sectionId)
         this.lessonController.start(lesson)
         return lesson
     }
+async ensureProgressLoaded() {
+    const userId = this.engine.context.app?.getState()?.user?.id
 
+    if (!userId) {
+        console.warn('Cannot load lesson progress: no selected user')
+        return
+    }
+
+    await initializeLessonProgress(this.lessonProgressStore, userId)
+}
 }

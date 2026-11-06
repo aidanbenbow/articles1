@@ -169,45 +169,75 @@ isLastSection() {
     return ( this.currentSectionIndex === this.sections.length - 1 )
 }
 restoreProgress(progress) {
-    if (!progress) {
-        return
-    }
+    if (!progress) return
 
     this.completedSections = [
         ...(progress.completedActivityIds ?? [])
     ]
 
-    this.quizAnswers = {
-        ...(progress.quizAnswers ?? {})
-    }
+    this.currentSectionId =
+        progress.currentActivityId ??
+        this.sections[0]?.id ??
+        null
 
-    this.quizScore =  progress.quizScore ?? 0
-
-    this.surveyResponses = {
-        ...(progress.surveyResponses ?? {})
-    }
-    this.orderingAnswers = progress.orderingAnswers || {}
-
-    this.currentSectionId =  progress.currentActivityId ?? this.sections[0]?.id ?? null
-
-    this.currentSectionIndex =
-        this.sections.findIndex(
-            section => section.id === this.currentSectionId
-        )
+    this.currentSectionIndex = this.sections.findIndex(
+        section => section.id === this.currentSectionId
+    )
 
     if (this.currentSectionIndex < 0) {
         this.currentSectionIndex = 0
-        this.currentSectionId =
-            this.sections[0]?.id ?? null
+        this.currentSectionId = this.sections[0]?.id ?? null
     }
 
-    this.completed =  progress.status === 'completed'
+    this.quizScore = progress.quizScore ?? 0
+    this.startedAt = progress.startedAt ?? this.startedAt
+    this.completedAt = progress.completedAt ?? null
+
+    this.completed = progress.status === 'completed'
+
+    for (const [sectionId, activity] of Object.entries(this.activities)) {
+
+        activity.completed =
+    activity.type === 'lesson' ||
+    this.completedSections.includes(sectionId)
+
+        if (activity.type === 'quiz') {
+            activity.restoreAnswers?.(
+                progress.quizAnswers?.[sectionId] ?? {}
+            )
+        }
+
+        if (activity.type === 'survey') {
+            const saved = progress.surveyResponses?.[sectionId]
+
+            if (saved) {
+                if (saved.response !== undefined) {
+                    activity.restoreResponse(saved.response, saved.results)
+                } else {
+                    activity.restoreResponse(saved)
+                }
+            }
+        }
+
+        if (activity.type === 'ordering') {
+            activity.restoreState?.(
+                progress.orderingAnswers?.[sectionId] ?? {}
+            )
+        }
+
+        if (activity.type === 'dragdrop') {
+            activity.restoreState?.(
+                progress.orderingAnswers?.[sectionId] ?? {}
+            )
+        }
+    }
 
     if (this.completed) {
-        this.phase = 'completed'
+        this.phase = 'results'
     } else if (progress.status === 'in_progress') {
         this.phase = 'active'
+    } else {
+        this.phase = 'intro'
     }
 }
-
 }

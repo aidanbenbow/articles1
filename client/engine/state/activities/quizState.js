@@ -70,4 +70,14 @@ getAnswers() {
         this.score = 0
         this.completed = false
     }
+    restoreAnswers(answers = {}) {
+    this.answers = { ...answers }
+
+    this.score = Object.values(this.answers).reduce(
+        (total, answer) => total + (answer.isCorrect ? 10 : 0),
+        0
+    )
+
+    this.completed = Object.keys(this.answers).length > 0
+}
 }

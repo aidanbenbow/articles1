@@ -86,4 +86,9 @@ const majorityOptions = Object.keys(responses)
         this.results = null
         this.scoreAwarded = false
     }
+    restoreResponse(response, results = null) {
+    this.response = response ?? null
+    this.results = results
+    this.scoreAwarded = this.response !== null
+}
 }
