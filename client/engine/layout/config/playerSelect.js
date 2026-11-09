@@ -14,9 +14,9 @@ const categoryNodes = Object.entries(groupedArticles)
         id: `category-${category}`,
         type: 'button',
         kind: 'lessonOption',
-        action: 'openLesson',
+        action: 'openCategory',
         text: `${category} (${articles.length})`,
-        articleId: articles[0].articleId
+                category
     }));
 
         return [

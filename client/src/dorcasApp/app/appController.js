@@ -51,6 +51,17 @@ export class AppController {
         this.engine.context.resetScroll()
         this.emitStateChanged()
     }
+    openCategory(category) {
+        this.appState.openCategory(category)
+        this.engine.context.resetScroll()
+        this.emitStateChanged()
+    }
+
+    returnToCategory() {
+        this.appState.returnToCategory()
+        this.engine.context.resetScroll()
+        this.emitStateChanged()
+    }
 
     getState() {
         return this.appState

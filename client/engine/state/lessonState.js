@@ -2,7 +2,7 @@ import { createActivityState } from "./stateFactory.js"
 
 export class LessonState {
     constructor(lesson={}) {
-        this.articleId = lesson.id
+        this.articleId = lesson.id || lesson.articleId || null
         this.title = lesson.title
         this.sections = lesson.sections || []
        

@@ -15,6 +15,7 @@ import { createButtonNode } from "../layout/nodeFactories/buttonNode.js"
 import { createLessonHeaderNode } from "../layout/nodeFactories/lessonHeaderNode.js"
 
 import { layoutQuizSection } from "../layout/quizLayout.js"
+import { CategoryLessonsLayout } from "../layout/screens/categoryLessonsScreen.js"
 import { HomeLayout } from "../layout/screens/homeScreen.js"
 import { LessonLayout } from "../layout/screens/lessonScreenLayout.js"
 import { PlayerSelectLayout } from "../layout/screens/playerSelectLayout.js"
@@ -55,7 +56,7 @@ export class ArticleLayoutFeature {
             this.engine,
             this.layout
         ),
-
+category: new CategoryLessonsLayout(this.engine, this.layout),
         lesson: new LessonLayout(this.engine, this.layout),
     }
     }
@@ -130,19 +131,22 @@ const screen = this.screens[appState.screen]
     }
 }
 clearScreenLayout() {
-    for (const [id, node] of this.layout.layoutNodes) {
+    const screenOwners = [
+        'home',
+        'playerSelect',
+        'category',
+        'lessonBrowser',
+        'lesson'
+    ];
 
+    for (const [id, node] of this.layout.layoutNodes) {
         if (
-            node.owner === 'home' ||
-            node.owner === 'playerSelect' ||
-            node.owner === 'lessonBrowser' ||
-            node.owner === 'lesson' ||
+            screenOwners.includes(node.owner) ||
             node.type === 'dragDrop'
         ) {
-            this.layout.layoutNodes.delete(id)
+            this.layout.layoutNodes.delete(id);
         }
     }
-    
 }
 //    layoutArticlesDetail(articleNode, lesson, responsive) {
 

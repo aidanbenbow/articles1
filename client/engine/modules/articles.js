@@ -42,7 +42,7 @@ export class articlesModule {
         return {
             getArticles: () => this.dataStore.articles,
             getGroupedLessons: () => this.dataStore.groupedLessons,
-            getCAtegories: () => Object.keys(this.dataStore.groupedLessons),
+            getCategories: () => Object.keys(this.dataStore.groupedLessons),
             getArticleByCategory: (category) => this.dataStore.groupedLessons[category] || [],
 
             getArticleById: (articleId) =>
@@ -54,12 +54,7 @@ export class articlesModule {
     async attach() {
         this.dataStore = await initializeDataStore()
         this.currentArticles = this.dataStore.articles
-        console.table(
-    this.currentArticles.map(article => ({
-        title: article.title,
-        articleId: article.articleId
-    }))
-)
+
         this.currentArticles.forEach(article => this.createArticleNode(article))
         this.groupedLessons = this.dataStore.groupedLessons
         this.currentArticles.forEach(article => this.createArticleNode(article))

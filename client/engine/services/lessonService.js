@@ -6,7 +6,7 @@ export class LessonService {
         this.lessonProgressStore = lessonProgressStore
         this.getUserId = getUserId
         this.lesson = new LessonState()
-        
+        this.progressSaveQueue = Promise.resolve()
     }
     startLesson(lessonData) {
         this.lesson = new LessonState(lessonData)
@@ -136,9 +136,11 @@ if (!userId) {
             completedAt: this.lesson.completed? new Date().toISOString(): null
         }
     )
-    saveLessonProgress(result).catch(error => {
-    console.error('Failed to save lesson progress to the server:', error)
-})
+   this.progressSaveQueue = this.progressSaveQueue
+    .then(() => saveLessonProgress(result))
+    .catch(error => {
+        console.error('Failed to save lesson progress to the server:', error)
+    })
 
 return result
 }
@@ -150,6 +152,7 @@ return result
    setCurrentSection(sectionId) {
     if (!this.lesson)       return 
     this.lesson.setCurrentSection(sectionId)
+    this.syncProgress()
 }
  
     answerQuiz(sectionId, quizId, optionIndex, correctAnswerIndex) {
@@ -207,6 +210,7 @@ const quiz = this.lesson.activities[sectionId]
 }
     updateCurrentSection(sectionId) {
     this.lesson.setCurrentSection(sectionId)
+    this.syncProgress()
 }
 advanceSection() {
     const moved =this.lesson.advanceSection()
@@ -278,9 +282,7 @@ checkDragDrop(sectionId) {
     }
 
     const result = activity.checkAnswers()
-       console.log('CHECK ANSWERS RESULT:', result)
-    console.log('FEEDBACK AFTER:', activity.getFeedback())
-    console.log('CHECKED AFTER:', activity.getChecked())
+      
 
     this.syncProgress()
 

@@ -19,9 +19,10 @@ export class AppFeature {
             app: {
                 getState: () => this.appController.getState(),
                 openPlayerSelect: (name) => this.appController.openPlayerSelect(name),
+                openCategory: (category) => this.appController.openCategory(category),
                 openLesson: (articleId) =>this.appController.openLesson(   articleId ),
 openLessonBrowser: () => this.appController.openLessonBrowser(),
-
+returnToCategory: () => this.appController.returnToCategory(),
                 goHome: () => this.appController.goHome()
             }
         }

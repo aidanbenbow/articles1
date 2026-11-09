@@ -23,8 +23,8 @@ export const lessonButtons = {
     },
 
     back: {
-        text: 'Back',
-        action: 'openLessonBrowser',
+        text: 'Back to category',
+        action: 'returnToCategory',
         kind: 'lessonButton',
         sectionType: 'backButton'
     }

@@ -5,6 +5,8 @@ export class NavigationActions {
 
         this.handlers = {
             openLesson: node => this.openLesson(node),
+            openCategory: node => this.openCategory(node),
+            returnToCategory: () => this.returnToCategory(),
             browseLessons: () => this.browseLessons(),
             goHome: () => this.goHome(),
             openPlayerSelect: node => this.openPlayerSelect(node),
@@ -33,7 +35,14 @@ const playerName = this.engine.context.getInteractionManager()?.getInteractionSt
     app.openPlayerSelect(playerName);
 
 }
+openCategory(node) {
+   
+    this.engine.context.app.openCategory(node.category);
+}
 
+returnToCategory() {
+    this.engine.context.app.returnToCategory();
+}
     openLesson(node) {
         const article = this.engine.context.getArticleById(node.articleId) || node
         if (!article) {

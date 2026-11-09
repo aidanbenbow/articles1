@@ -7,6 +7,7 @@ export class AppState {
         this.screen = 'home'
         this.articleId = null
         this.activeLessonId = null
+        this.selectedCategory = null
         const savedUserId = localStorage.getItem('currentUserId')
 
 this.user = users.find(user => user.id === savedUserId) ?? null
@@ -54,8 +55,18 @@ this.user = users.find(user => user.id === savedUserId) ?? null
         this.activeLessonId = null
         this.screen = 'playerSelect'
     }
+    openCategory(category) {
+        this.activeLessonId = null
+        this.screen = 'category'
+        this.selectedCategory = category
+    }
+    returnToCategory() {
+        this.activeLessonId = null
+        this.screen = 'category'
+    }
     goHome() {
         this.activeLessonId = null
+        this.selectedCategory = null
         this.screen = 'home'
     }
     completeLesson(data) {

@@ -88,6 +88,14 @@ this.ctx.globalAlpha = screenOpacity
                 case 'playerSelect':
                 renderHome(this.ctx, view.playerSelectNodes, viewport, renderContext)
                 break
+                case 'category':
+    renderHome(
+        this.ctx,
+        allNodes.filter(node => node.owner === 'category'),
+        viewport,
+        renderContext
+    );
+    break;
                 case 'lesson':
                 renderLessonScreen(this.ctx, viewport, renderContext)
                 break

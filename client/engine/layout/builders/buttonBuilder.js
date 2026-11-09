@@ -53,6 +53,7 @@ disabled: resolveValue(
     config.disabled ?? (({ disabled }) => disabled),
     context
 ),
+category: config.category,
     })
 
    if (!parent) {
