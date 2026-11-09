@@ -1,25 +1,10 @@
 
-import { layoutDragDropSection } from "../layout/dragDropLayout.js"
 
-import { layoutBackButton } from "../layout/layoutBackButton.js"
-import { layoutContinueButton } from "../layout/layoutContinueButton.js"
-import { layoutFinishButton } from "../layout/layoutFinishButton.js"
-import { layoutHeadingBlock } from "../layout/layoutHeadingBlock.js"
-import { layoutOrderingSection } from "../layout/layoutOrderingSection.js"
-import { layoutParagraphBlock } from "../layout/layoutParagraphBlock.js"
-import { layoutLessonIntro } from "../layout/lessonIntroLayout.js"
-
-
-import { layoutLessonSection } from "../layout/lessonSectionLayout.js"
-import { createButtonNode } from "../layout/nodeFactories/buttonNode.js"
-import { createLessonHeaderNode } from "../layout/nodeFactories/lessonHeaderNode.js"
-
-import { layoutQuizSection } from "../layout/quizLayout.js"
 import { CategoryLessonsLayout } from "../layout/screens/categoryLessonsScreen.js"
 import { HomeLayout } from "../layout/screens/homeScreen.js"
 import { LessonLayout } from "../layout/screens/lessonScreenLayout.js"
 import { PlayerSelectLayout } from "../layout/screens/playerSelectLayout.js"
-import { layoutSurveySection } from "../layout/surveyLayout.js"
+
 
 import { matchesOrderedPrefix, normalize } from "./search.js"
 
@@ -148,141 +133,7 @@ clearScreenLayout() {
         }
     }
 }
-//    layoutArticlesDetail(articleNode, lesson, responsive) {
 
-//     if (!articleNode || !lesson)  return
-  
-
-//     const padding = responsive.padding 
-//     const width = responsive.contentWidth
-//     const x = (this.layout.width-width) / 8
-//     const worldY = this.layout.height / 8
-//     const header = responsive.lessonHeader
-//     const color = articleNode?.props?.color || '#ffffff'
-
-//     let currentY =0
-
-
-//     const headerNode =
-//         createLessonHeaderNode({
-//             id: `${articleNode.id}-lesson-header`,
-
-//             owner: articleNode.id,
-//             x: 0,
-//             worldY: currentY,
-
-//             width: this.layout.width,
-//             height: header.height
-//         })
-
-//     this.layout.layoutNodes.set(
-//         headerNode.id,
-//         headerNode
-//     )
-
-//     currentY += header.height + header.bottomGap
-
-//     if(lesson.phase === 'intro') {
-//         layoutLessonIntro(this.layout,articleNode,lesson, currentY, x, width, padding, color, responsive) 
-//         return
-//     }
-
-//     const section = lesson.getCurrentSection()
-
-//     if (section) {
-//         currentY = this.layoutSection(  articleNode,  section,  currentY,  x,  width,  padding,  color,  lesson, responsive)
-//     }
-
-//     if(!lesson.isLastSection()) {
-//    currentY = layoutContinueButton(articleNode,this.layout, currentY, x, width, padding, color)
-//     } else {
-//      currentY = layoutFinishButton(articleNode,this.layout, currentY, x, width, padding, color)
-//      currentY = layoutBackButton(articleNode,this.layout, currentY + 50, x, width, padding, color)
-//     }
-
-// this.layout.scroll.updateBounds(currentY + 50)
-// }
-
-
-
-// layoutSection( articleNode, currentSection, currentY, x, width, padding, color, lesson, responsive) {
-  
-//         switch(currentSection.type){
-            
-//                 case 'lesson':
-//                     return layoutLessonSection(  articleNode, this.layout, currentSection,  currentY,  x,  width,  padding,  color,  lesson, responsive
-// )
-//             case 'quiz':
-//                 return layoutQuizSection( this.layout,articleNode,currentSection,currentY,x,width,padding,color,lesson, responsive
-//                 )
-//             case 'survey':
-//                 return layoutSurveySection(this.layout, articleNode, currentSection, currentY, x,width, padding,color,  lesson, responsive)
-//                 case 'ordering':
-//             return layoutOrderingSection( articleNode,this.layout,currentSection,currentY,x,width,padding,color,lesson, responsive)
-//             case 'dragdrop':
-//                 return layoutDragDropSection(articleNode, this.layout, currentSection, currentY, x, width, padding, color, lesson, responsive)
-//         }
-//     }
-//     layoutLessonSection(  articleNode,  section,  currentY,  x,  width,  padding,  color, lesson,responsive
-// ) {
-//     const blocks = section.blocks || section.text ||[]
-
-//     for (const block of blocks) {
-
-//         if (block.type === 'heading') {
-//             currentY = layoutHeadingBlock(this.layout,articleNode, section, block, currentY,x,width,padding,color, responsive)
-
-//         } else if (block.type === 'paragraph') {
-//             currentY = layoutParagraphBlock(this.layout,articleNode,section,block,currentY,x,width,padding,color, responsive)
-//         }
-//     }
-
-//     return currentY + 20
-// }
-
-
-// layoutContinueButton(articleNode, currentY, x, width, padding, color) {
-//     const buttonHeight = 40
-//     const buttonRect = {
-//         id: `${articleNode.id}-continue-button`,
-//         sectionId: 'continue-button',
-//         x,
-//         worldY: currentY,
-//         width,
-//         height: buttonHeight,
-//         padding,
-//         color: '#23979d',
-//         selected: false,
-//         text: 'Continue',
-//         type: 'button',
-//         kind: 'lessonSection',
-//         sectionType: 'continueButton',
-//         action: 'advanceLessonSection'
-//     }
-//     this.layout.layoutNodes.set(buttonRect.id, buttonRect)
-//     return currentY + buttonHeight + 10
-// }
-
-// layoutStartButton(articleNode, currentY, x, width, padding, color, responsive) {
-//     const buttonHeight = responsive.button.height
-//     const buttonRect = createButtonNode({
-//         id: `${articleNode.id}-start-button`,
-//         sectionId: 'start-button',
-//         x,
-//         worldY: currentY,
-//         width,
-//         height: buttonHeight,
-//         padding,
-//         color: '#23979d',
-//         text: 'Start',
-//         type: 'button',
-//         kind: 'lessonStartButton',
-//         sectionType: 'startButton',
-//         action: 'startLessonPhase'
-//     })
-//     this.layout.layoutNodes.set(buttonRect.id, buttonRect)
-//     return currentY + buttonHeight + 10
-// }
 
     getArticleCardSize(node) {
     

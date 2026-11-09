@@ -31,6 +31,8 @@ this.userId = data.userId ?? null
         this.completedAt =data.completedAt ?? null
 
         this.lastAccessedAt = data.lastAccessedAt ?? null
+
+        this.activeTimeSeconds = data.activeTimeSeconds ?? 0
     }
 
     get completed() {

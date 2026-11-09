@@ -1,5 +1,9 @@
 import { LessonState } from "../state/lessonState.js"
 import { saveLessonProgress } from "../api/lessonProgressApi.js"
+import { progressConfig } from "../layout/config/progressConfig.js"
+
+
+
 export class LessonService {
     constructor(surveyApi, lessonProgressStore,getUserId) {
         this.surveyApi = surveyApi
@@ -15,6 +19,9 @@ const userId = this.getUserId()
       this.lesson.start()
 if (savedProgress) {
         this.lesson.restoreProgress(savedProgress)
+        if(this.lesson.phase === 'active'){
+            this.lesson.startActiveSession()
+        }
     } else if (userId) {
         this.lessonProgressStore.update(
             userId,
@@ -133,15 +140,17 @@ if (!userId) {
             surveyResponses,
             orderingAnswers,
 
-            completedAt: this.lesson.completed? new Date().toISOString(): null
+            completedAt: this.lesson.completed? new Date().toISOString(): null,
+            activeTimeSeconds: this.lesson.activeTimeSeconds,
         }
     )
+    if (progressConfig.enabled) {
    this.progressSaveQueue = this.progressSaveQueue
     .then(() => saveLessonProgress(result))
     .catch(error => {
         console.error('Failed to save lesson progress to the server:', error)
     })
-
+    }
 return result
 }
 

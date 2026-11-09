@@ -7,6 +7,8 @@ export class LessonState {
         this.sections = lesson.sections || []
        
         this.description = lesson.description || ''
+        this.difficulty = lesson.difficulty || 'medium'
+this.duration = lesson.duration || 0
         this.currentSectionIndex = 0
      
         this.quizScore = null
@@ -27,6 +29,8 @@ export class LessonState {
         this.completedSections = []
          this.startedAt = new Date().toISOString()
         this.completed = false
+        this.activeTimeSeconds = 0
+this.activeSessionStartedAt = null
     }
     getScoreTotal(){
 this.score = Object.values(this.activities).reduce((total, activity) => {
@@ -48,8 +52,26 @@ this.score = Object.values(this.activities).reduce((total, activity) => {
     startPhase() {
         this.phase = 'active'
         this.startedAt = new Date().toISOString();
+        this.startActiveSession()
     }
+    startActiveSession() {
+    if (this.activeSessionStartedAt) return
+
+    this.activeSessionStartedAt = Date.now()
+}
+
+stopActiveSession() {
+    if (!this.activeSessionStartedAt) return
+
+    const elapsedSeconds = Math.floor(
+        (Date.now() - this.activeSessionStartedAt) / 1000
+    )
+
+    this.activeTimeSeconds += Math.max(0, elapsedSeconds)
+    this.activeSessionStartedAt = null
+}
     end() {
+        this.stopActiveSession()
         this.completed = true;
     this.completedAt = new Date().toISOString();
     this.phase = "results";
@@ -192,6 +214,7 @@ restoreProgress(progress) {
     this.quizScore = progress.quizScore ?? 0
     this.startedAt = progress.startedAt ?? this.startedAt
     this.completedAt = progress.completedAt ?? null
+    this.activeTimeSeconds = progress.activeTimeSeconds ?? 0
 
     this.completed = progress.status === 'completed'
 

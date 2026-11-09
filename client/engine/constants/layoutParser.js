@@ -116,6 +116,8 @@ quizTotal++
         id: article.articleId || null,
         title: article.title || '',
         description: article.description || '',
+        difficulty: article.difficulty || 'medium',
+    duration: article.duration || 0,
         sections,
         lessonTotal,
         quizTotal,

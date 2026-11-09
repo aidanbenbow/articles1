@@ -98,33 +98,33 @@ heading: {
     }
 },
 
-    welcome: {
-        radius: 20,
-        accentWidth: 7,
+//     welcome: {
+//         radius: 20,
+//         accentWidth: 7,
 
-        padding: 28,
-        contentTop: 23,
-        titleTop: 45,
-        sectionGap: 27,
+//         padding: 28,
+//         contentTop: 23,
+//         titleTop: 45,
+//         sectionGap: 27,
 
-        statHeight: 29,
-        statGap: 3,
-        statPaddingX: 10,
-        statRadius: 6,
+//         statHeight: 29,
+//         statGap: 3,
+//         statPaddingX: 10,
+//         statRadius: 6,
 
-        promptGap: 8,
-        promptHeight: 29,
+//         promptGap: 8,
+//         promptHeight: 29,
 
-        stepCircleRadius: 10,
-        stepCircleOffsetX: 12,
-        stepTextOffsetX: 32,
-        stepHeight: 25,
-        shadowBlur: 16,
-shadowOffsetY: 5,
-borderWidth: 1,
-connectorColor: "#e5e7eb"
+//         stepCircleRadius: 10,
+//         stepCircleOffsetX: 12,
+//         stepTextOffsetX: 32,
+//         stepHeight: 25,
+//         shadowBlur: 16,
+// shadowOffsetY: 5,
+// borderWidth: 1,
+// connectorColor: "#e5e7eb"
 
-    },
+//     },
 }
 
 export function getResponsiveLayout(screenWidth, screenHeight) {

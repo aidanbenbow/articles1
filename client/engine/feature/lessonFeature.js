@@ -18,12 +18,19 @@ export class LessonFeature {
     this.lessonProgressStore,
     () => this.engine.context.app?.getState()?.user?.id )
 
-        this.lessonController = new LessonController(this.lessonService, engine) 
+        this.lessonController = new LessonController(this.lessonService, engine)
+        this.handleVisibilityChange = this.handleVisibilityChange.bind(this) 
     }
     async attach() {
-    //  await initializeLessonProgress(this.lessonProgressStore)
+   document.addEventListener('visibilitychange', this.handleVisibilityChange)
     
     }
+    detach() {
+    document.removeEventListener(
+        'visibilitychange',
+        this.handleVisibilityChange
+    )
+}
     contextExports() {
         return { 
             startLesson: (articleId, sections) => this.lessonController.start(articleId, sections),
@@ -61,5 +68,16 @@ async ensureProgressLoaded() {
     }
 
     await initializeLessonProgress(this.lessonProgressStore, userId)
+}
+handleVisibilityChange() {
+    const lesson = this.lessonService.lesson
+    if(!lesson||lesson.phase !== 'active') return
+
+if(document.visibilityState === 'hidden') {
+        lesson.stopActiveSession()
+        this.lessonService.syncProgress()
+    } else {
+        lesson.startActiveSession()
+    }
 }
 }

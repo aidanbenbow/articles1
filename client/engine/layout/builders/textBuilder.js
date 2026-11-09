@@ -20,7 +20,7 @@ const width = resolveValue(config.width, context) ?? contentWidth ?? metrics.con
 const typography = resolveValue(config.typography, context) ?? (type === "heading" ? "heading" : "body")
 
 const text = resolveValue(config.value ?? config.text, context)
-console.log('TEXT NODE:', config.id, text);
+
 const height = resolveValue(config.height, context) ?? resolveTextHeight({...config, width,typography, value:text, text}, context)
     const node = createTextNode({
         id: config.id,
@@ -47,6 +47,6 @@ node.type = resolveValue(config.type, context) ?? "text"
     }
     
     return {node,
-        currentY: node.worldY + node.height + metrics.padding
+        currentY: node.worldY + node.height + 6
     }
 }
