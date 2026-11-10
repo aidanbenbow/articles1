@@ -77,7 +77,7 @@ if (!userId) {
     }
 
     const progress = this.lesson.getProgress()
-
+const totalScore = this.lesson.getScoreTotal()
         const quizAnswers = {}
          let quizScore = 0
 
@@ -137,6 +137,7 @@ if (!userId) {
 
             quizAnswers,
             quizScore,
+            totalScore,
             surveyResponses,
             orderingAnswers,
 

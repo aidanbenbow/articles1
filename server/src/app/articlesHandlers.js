@@ -35,13 +35,4 @@ export function registerArticlesHandlers(app, articlesService) {
         }
     });
 
-    // app.get('/api/lesson-progress', async (req, res) => {
-    //     try {
-   
-    //         res.json(progressRecords);
-    //     } catch (error) {
-    //         console.error('Error fetching lesson progress:', error);
-    //         res.status(500).json({ error: 'Failed to fetch lesson progress' });
-    //     }
-    // });
 }

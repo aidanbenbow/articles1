@@ -1,8 +1,10 @@
 
 import {
     PutCommand,
+    ScanCommand,
     QueryCommand,
-    DeleteCommand
+    DeleteCommand,
+  GetCommand
 } from "@aws-sdk/lib-dynamodb";
 
 export class LessonProgressRepository {
@@ -45,7 +47,62 @@ export class LessonProgressRepository {
 
         return items;
     }
+    async getAllProgress() {
+    const items = [];
+    let ExclusiveStartKey;
 
+    do {
+        const result = await this.docClient.send(
+            new ScanCommand({
+                TableName: this.tableName,
+                FilterExpression: "begins_with(SK, :sk)",
+                ExpressionAttributeValues: {
+                    ":sk": "LESSON#"
+                },
+                ExclusiveStartKey
+            })
+        );
+
+        items.push(...(result.Items || []));
+        ExclusiveStartKey = result.LastEvaluatedKey;
+
+    } while (ExclusiveStartKey);
+
+    return items;
+}
+    async saveLeaderboard(leaderboard) {
+    const item = {
+        PK: 'LEADERBOARD',
+        SK: 'SNAPSHOT',
+        players: leaderboard.map((player, index) => ({
+            ...player,
+            rank: index + 1
+        })),
+        updatedAt: new Date().toISOString()
+    };
+
+    await this.docClient.send(
+        new PutCommand({
+            TableName: this.tableName,
+            Item: item
+        })
+    );
+
+    return item;
+}
+async getLeaderboardSnapshot() {
+    const result = await this.docClient.send(
+        new GetCommand({
+            TableName: this.tableName,
+            Key: {
+                PK: 'LEADERBOARD',
+                SK: 'SNAPSHOT'
+            }
+        })
+    );
+
+    return result.Item || null;
+}
     // Save or update one lesson's progress
     async saveProgress(progress) {
         if (!progress.userId || !progress.lessonId) {

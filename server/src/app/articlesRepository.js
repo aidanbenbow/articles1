@@ -10,6 +10,29 @@ export class ArticlesRepository {
     this.docClient = docClient;
     this.tableName = process.env.ARTICLES_TABLE || "articles_table";
   }
+  async getAllProgress() {
+    const items = [];
+    let ExclusiveStartKey;
+
+    do {
+        const result = await this.docClient.send(
+            new ScanCommand({
+                TableName: this.tableName,
+                FilterExpression: "begins_with(SK, :sk)",
+                ExpressionAttributeValues: {
+                    ":sk": "LESSON#"
+                },
+                ExclusiveStartKey
+            })
+        );
+
+        items.push(...(result.Items || []));
+        ExclusiveStartKey = result.LastEvaluatedKey;
+
+    } while (ExclusiveStartKey);
+
+    return items;
+}
 
   async saveArticle(article) {
     await this.docClient.send(

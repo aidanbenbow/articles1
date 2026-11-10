@@ -3,6 +3,21 @@ export function registerLessonProgressHandlers(
     app,
     lessonProgressService
 ) {
+    app.get('/api/leaderboard', async (req, res) => {
+    try {
+        const snapshot = await lessonProgressService.getLeaderboard();
+
+        res.json(snapshot || {
+            players: [],
+            updatedAt: null
+        });
+    } catch (error) {
+        console.error('Error fetching leaderboard:', error);
+        res.status(500).json({
+            error: 'Failed to fetch leaderboard'
+        });
+    }
+});
     // Get lesson progress
     app.get('/api/lesson-progress', async (req, res) => {
         try {

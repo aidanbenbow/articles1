@@ -1,5 +1,5 @@
 
-import { initializeLessonProgress } from "../api/initialiseLessonProgress.js"
+import { initializeLessonProgress, fetchLeaderboard } from "../api/initialiseLessonProgress.js"
 import { parseArticle } from "../constants/layoutParser.js"
 import { LessonController } from "../controllers/lessonController.js"
 import { SurveyApi } from "../api/surveyApi.js"
@@ -15,6 +15,7 @@ export class LessonFeature {
         this.engine = engine
         
         this.lessonProgressStore = new LessonProgressStore()
+        this.leaderboard = { players: [], updatedAt: null };
         this.lessonAnalyticsService = new LessonAnalyticsService(this.lessonProgressStore,{
 get articles() {
                 return engine.context.getArticles?.() ?? []
@@ -53,6 +54,7 @@ get articles() {
             finishLesson: () => this.lessonController.finishLesson(),
             getLessonProgressStore: () => this.lessonProgressStore,
             getLessonAnalyticsService: () => this.lessonAnalyticsService,
+            getLeaderboard: () => this.leaderboard,
             startLessonFromArticle: (article) => this.startLessonFromArticle(article),
             moveOrderingItem: (sectionId, itemIndex,direction) =>
     this.lessonController.moveOrderingItem(sectionId,itemIndex,direction),
@@ -76,6 +78,12 @@ async ensureProgressLoaded() {
     }
 
     await initializeLessonProgress(this.lessonProgressStore, userId)
+    try {
+    this.leaderboard = await fetchLeaderboard();
+    console.log('Leaderboard loaded successfully');
+} catch (error) {
+    console.error('Error loading leaderboard:', error);
+}
 }
 handleVisibilityChange() {
     const lesson = this.lessonService.lesson

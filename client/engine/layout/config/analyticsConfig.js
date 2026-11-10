@@ -10,6 +10,8 @@ const difficulty = analytics.getDifficultyDistribution()
 const completedLessons = analytics.getAllProgress().filter(
     record => record.status === 'completed'
 ).length
+const leaderboard =
+    context.engine.context.getLeaderboard?.() ?? { players: [] }
         return [
             {
                 id: 'analytics-title',
@@ -66,7 +68,21 @@ const completedLessons = analytics.getAllProgress().filter(
     typography: 'body',
     color: 'text',
     value: `Lessons Completed: ${completedLessons}`
-}
+},
+{
+    id: 'leaderboard-title',
+    type: 'text',
+    typography: 'title',
+    color: 'heading',
+    value: 'Global Leaderboard'
+},
+...leaderboard.players.map(player => ({
+    id: `leaderboard-${player.userId}`,
+    type: 'text',
+    typography: 'body',
+    color: 'text',
+    value: `${player.rank}. ${player.userId} — Completed: ${player.completedLessons}, Active Time: ${player.totalActiveTime}s, Score: ${player.totalScore}`
+}))
         ]
     }
 }

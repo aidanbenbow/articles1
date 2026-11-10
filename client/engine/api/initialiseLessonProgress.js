@@ -15,6 +15,18 @@ async function fetchLessonProgress(userId) {
     return response.json()
 }
 
+export async function fetchLeaderboard() {
+    const response = await fetch('/api/leaderboard');
+
+    if (!response.ok) {
+        throw new Error(
+            `Failed to load leaderboard: ${response.status}`
+        );
+    }
+
+    return response.json();
+}
+
 export async function initializeLessonProgress(
     progressStore,
     userId

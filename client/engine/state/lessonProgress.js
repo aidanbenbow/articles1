@@ -22,6 +22,7 @@ this.userId = data.userId ?? null
 
         this.quizScore = data.quizScore ?? 0
 
+        this.totalScore = data.totalScore ?? 0
         this.surveyResponses = data.surveyResponses ?? {}
 
             this.orderingAnswers = data.orderingAnswers ?? {}

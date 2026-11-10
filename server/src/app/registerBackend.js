@@ -20,4 +20,19 @@ registerArticlesHandlers(app, articlesService)
         new LessonProgressService(lessonProgressRepo);
 
     registerLessonProgressHandlers(app, lessonProgressService);
+
+        const refreshLeaderboard = async () => {
+        try {
+            await lessonProgressService.refreshLeaderboard();
+            console.log('Leaderboard refreshed successfully');
+        } catch (error) {
+            console.error('Failed to refresh leaderboard:', error);
+        }
+    };
+
+    // Create the first snapshot when the backend starts
+    refreshLeaderboard();
+
+    // Refresh once every hour
+    setInterval(refreshLeaderboard, 60 * 60 * 1000);
 }

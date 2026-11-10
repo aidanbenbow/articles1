@@ -22,7 +22,10 @@ export class AppFeature {
                 openCategory: (category) => this.appController.openCategory(category),
                 openLesson: (articleId) =>this.appController.openLesson(   articleId ),
 openLessonBrowser: () => this.appController.openLessonBrowser(),
-openAnalytics: () => this.appController.navigate('analytics'),
+openAnalytics: async () => {
+    await this.engine.context.ensureProgressLoaded();
+    this.appController.navigate('analytics');
+},
 returnToCategory: () => this.appController.returnToCategory(),
                 goHome: () => this.appController.goHome()
             }
