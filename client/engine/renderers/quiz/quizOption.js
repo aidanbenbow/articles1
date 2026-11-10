@@ -5,9 +5,6 @@ import { getScreenRect } from "../../modules/renderUtils.js"
 export function renderQuizOption(ctx, node, viewport, context) {
 
     const rect = getScreenRect(node, viewport)
-const lesson = context.lesson
-    const quiz = lesson.activities?.[node.sectionId]
-    const answer = quiz?.getAnswer(node.quizId)
 
 const answered = node.answered
 const isSelected = node.selected

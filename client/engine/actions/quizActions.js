@@ -38,6 +38,11 @@ export class QuizActions {
             node.answer
         )
 
+        if (!answer?.result || answer.result.invalid) {
+            this.emitLayoutChanged()
+            return
+        }
+
         if (answer.result.isCorrect) {
             const newScore = answer.score + prevScore
 

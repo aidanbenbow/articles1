@@ -10,7 +10,14 @@ export function renderText(ctx, node, viewport,context) {
 const typography = context?.typography
     const padding = node.padding ?? 10;
 const typo = typography[node.typography]
-const text =node.text ?? '';
+const text =
+    Array.isArray(node.text)
+        ? node.text.join(' • ')
+        : node.text == null
+            ? ''
+            : typeof node.text === 'string'
+                ? node.text
+                : String(node.text);
 
     ctx.save();
 

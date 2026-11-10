@@ -1,36 +1,52 @@
-import { LAYOUT } from "../constants/layoutConstants.js"
-import { getScreenRect, } from "../modules/renderUtils.js"
-import { renderButton } from "./buttons/buttonRenderer.js"
-import { renderLessonTitle } from "./lesson/lessonTitleRenderer.js"
-import { renderText } from "./TextRenderer.js"
+// import { LAYOUT } from "../constants/layoutConstants.js"
+
+// import { renderButton } from "./buttons/buttonRenderer.js"
+
+// import { renderText } from "./TextRenderer.js"
 
 
-export function renderLessonIntro(ctx, view, viewport) {
+// export function renderLessonIntro(ctx, view, viewport) {
 
-   const titleNode = view.lessonTitleNodes[0]
-   const descriptionNode = view.lessonDescriptionNodes[0]
-   const statsNode = view.lessonStatsNodes[0]
-   const buttonNode = view.buttonNodes.find(node => node.kind === 'lessonStartButton')
+//    const titleNode = view.lessonTitleNodes[0]
+//    const descriptionNode = view.lessonDescriptionNodes[0]
+//    const statsNode = view.lessonStatsNodes[0]
+//    const buttonNode = view.buttonNodes.find(node => node.kind === 'lessonStartButton')
 
-   if(titleNode) {
-       renderText(ctx, titleNode, viewport, LAYOUT.typography)
-   }
-    if(descriptionNode) {
-        renderText(ctx, descriptionNode, viewport, LAYOUT.typography)
-    }
-    if(statsNode) {
-        renderText(ctx, statsNode, viewport, LAYOUT.typography)
-    }
-    if(buttonNode) {
-        renderButton(ctx, buttonNode, viewport)
-    }
-}
+//    if(titleNode) {
+//        renderText(ctx, titleNode, viewport, LAYOUT.typography)
+//    }
+//     if(descriptionNode) {
+//         renderText(ctx, descriptionNode, viewport, LAYOUT.typography)
+//     }
+//     if(statsNode) {
+//         renderText(ctx, statsNode, viewport, LAYOUT.typography)
+//     }
+//     if(buttonNode) {
+//         renderButton(ctx, buttonNode, viewport)
+//     }
+// }
 
 
  
 export function getWrappedLines(ctx, text, maxWidth) {
+    const normalizedText =
+        Array.isArray(text)
+            ? text.join(' • ')
+            : text == null
+                ? ''
+                : typeof text === 'string'
+                    ? text
+                    : String(text)
 
-    const words = text.split(' ')
+    if (!normalizedText.trim()) {
+        return []
+    }
+
+    if (!Number.isFinite(maxWidth) || maxWidth <= 0) {
+        return [normalizedText]
+    }
+
+    const words = normalizedText.split(/\s+/)
     const lines = []
 
     let line = ''

@@ -168,21 +168,78 @@ return result
     answerQuiz(sectionId, quizId, optionIndex, correctAnswerIndex) {
 const quiz = this.lesson.activities[sectionId]
 
-    if (!quiz) {
-        console.warn( `No quiz found for sectionId: ${sectionId}`)
-        return
+    if (!quiz || quiz.type !== 'quiz') {
+       console.warn('[answerQuiz] No quiz state', {
+            sectionId,
+            quizId,
+            availableActivityKeys: Object.keys(this.lesson.activities || {}),
+            activityTypeAtKey: quiz?.type
+        })
+        return {
+            result: {
+                isCorrect: false,
+                invalid: true,
+                reason: 'quiz-not-found'
+            },
+            score: 0,
+            progress: this.lesson.getProgress(),
+            currentSection: this.lesson.currentSectionId,
+            total: 0,
+            complete: false
+        }
     }
-    const result = quiz.answerQuestion(quizId, optionIndex, correctAnswerIndex)
+
+    if (typeof quiz.answerQuestion !== 'function') {
+        console.warn(
+            `Invalid quiz state for sectionId: ${sectionId} (missing answerQuestion)`
+        )
+        return {
+            result: {
+                isCorrect: false,
+                invalid: true,
+                reason: 'invalid-quiz-state'
+            },
+            score:
+                typeof quiz.getScore === 'function'
+                    ? quiz.getScore()
+                    : Number(quiz.score ?? 0),
+            progress: this.lesson.getProgress(),
+            currentSection: this.lesson.currentSectionId,
+            total:
+                typeof quiz.getTotalQuestions === 'function'
+                    ? quiz.getTotalQuestions()
+                    : 0,
+            complete:
+                typeof quiz.isComplete === 'function'
+                    ? quiz.isComplete()
+                    : Boolean(quiz.completed)
+        }
+    }
+
+    const result = quiz.answerQuestion(
+        quizId,
+        optionIndex,
+        correctAnswerIndex
+    )
        
     this.syncProgress()
 
     return {
         result,
-        score: quiz.getScore(),
+        score:
+            typeof quiz.getScore === 'function'
+                ? quiz.getScore()
+                : Number(quiz.score ?? 0),
         progress: this.lesson.getProgress(),
         currentSection: this.lesson.currentSectionId,
-        total: quiz.getTotalQuestions(),
-        complete: quiz.isComplete()
+        total:
+            typeof quiz.getTotalQuestions === 'function'
+                ? quiz.getTotalQuestions()
+                : 0,
+        complete:
+            typeof quiz.isComplete === 'function'
+                ? quiz.isComplete()
+                : Boolean(quiz.completed)
     }
 }
       completeSection(sectionId) {
