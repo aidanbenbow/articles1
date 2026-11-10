@@ -96,6 +96,14 @@ this.ctx.globalAlpha = screenOpacity
         renderContext
     );
     break;
+    case 'analytics':
+    renderHome(
+        this.ctx,
+        allNodes.filter(node => node.owner === 'analytics'),
+        viewport,
+        renderContext
+    );
+    break;
                 case 'lesson':
                 renderLessonScreen(this.ctx, viewport, renderContext)
                 break

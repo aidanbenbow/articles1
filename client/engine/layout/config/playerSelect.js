@@ -34,6 +34,13 @@ const categoryNodes = Object.entries(groupedArticles)
                 color: 'text',
                 value: getProgressText
             },
+            {
+    id: 'analytics-button',
+    type: 'button',
+    kind: 'lessonOption',
+    action: 'openAnalytics',
+    text: 'View Learning Analytics'
+},
             ...categoryNodes
         ];
     }

@@ -7,6 +7,7 @@ export class NavigationActions {
             openLesson: node => this.openLesson(node),
             openCategory: node => this.openCategory(node),
             returnToCategory: () => this.returnToCategory(),
+            openAnalytics: () => this.openAnalytics(),
             browseLessons: () => this.browseLessons(),
             goHome: () => this.goHome(),
             openPlayerSelect: node => this.openPlayerSelect(node),
@@ -39,7 +40,9 @@ openCategory(node) {
    
     this.engine.context.app.openCategory(node.category);
 }
-
+openAnalytics() {
+    this.engine.context.app.openAnalytics();
+}
 returnToCategory() {
     this.engine.context.app.returnToCategory();
 }

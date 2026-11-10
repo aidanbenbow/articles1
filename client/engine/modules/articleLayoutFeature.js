@@ -4,6 +4,7 @@ import { CategoryLessonsLayout } from "../layout/screens/categoryLessonsScreen.j
 import { HomeLayout } from "../layout/screens/homeScreen.js"
 import { LessonLayout } from "../layout/screens/lessonScreenLayout.js"
 import { PlayerSelectLayout } from "../layout/screens/playerSelectLayout.js"
+import { AnalyticsScreen } from "../layout/screens/analyticsScreen.js"
 
 
 import { matchesOrderedPrefix, normalize } from "./search.js"
@@ -42,6 +43,7 @@ export class ArticleLayoutFeature {
             this.layout
         ),
 category: new CategoryLessonsLayout(this.engine, this.layout),
+analytics: new AnalyticsScreen(this.engine, this.layout),
         lesson: new LessonLayout(this.engine, this.layout),
     }
     }
@@ -121,7 +123,8 @@ clearScreenLayout() {
         'playerSelect',
         'category',
         'lessonBrowser',
-        'lesson'
+        'lesson',
+        'analytics'
     ];
 
     for (const [id, node] of this.layout.layoutNodes) {

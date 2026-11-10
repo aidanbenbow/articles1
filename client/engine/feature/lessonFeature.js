@@ -5,6 +5,7 @@ import { LessonController } from "../controllers/lessonController.js"
 import { SurveyApi } from "../api/surveyApi.js"
 import { LessonService } from "../services/lessonService.js"
 import { LessonProgressStore } from "../state/lessonProgressStore.js"
+import { LessonAnalyticsService } from "../services/lessonAnalyticsService.js"
 
 
 
@@ -12,7 +13,13 @@ export class LessonFeature {
 
     constructor(engine) {
         this.engine = engine
+        
         this.lessonProgressStore = new LessonProgressStore()
+        this.lessonAnalyticsService = new LessonAnalyticsService(this.lessonProgressStore,{
+get articles() {
+                return engine.context.getArticles?.() ?? []
+            }
+        } )
         this.lessonService = new LessonService(
     new SurveyApi(),
     this.lessonProgressStore,
@@ -45,6 +52,7 @@ export class LessonFeature {
             startLessonPhase: () => this.lessonController.startPhase(),
             finishLesson: () => this.lessonController.finishLesson(),
             getLessonProgressStore: () => this.lessonProgressStore,
+            getLessonAnalyticsService: () => this.lessonAnalyticsService,
             startLessonFromArticle: (article) => this.startLessonFromArticle(article),
             moveOrderingItem: (sectionId, itemIndex,direction) =>
     this.lessonController.moveOrderingItem(sectionId,itemIndex,direction),
