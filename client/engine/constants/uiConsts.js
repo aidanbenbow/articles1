@@ -12,3 +12,18 @@ const buttonStyles = {
   pressed: { fill: ui.color.primary, alpha: 0.84 },
   disabled:{ fill: '#A9B1C1', alpha: 0.7 }
 };
+
+// ...existing code...
+export const UI_TYPOGRAPHY = {
+  // ...existing styles...
+  body: {
+    fontSize: 17,
+    lineHeight: 1.5 // improve readability
+  }
+}
+
+export const UI_READING = {
+  maxReadableWidth: 680, // tighter line length
+  paragraphGap: 3        // less space between paragraphs
+}
+// ...existing code...

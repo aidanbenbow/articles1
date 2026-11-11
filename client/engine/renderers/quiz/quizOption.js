@@ -53,9 +53,24 @@ const isCorrect = node.correct
         ctx.fill()
     }
 
-    // text
-    const typo = context.typography?.[node.typography] || context.typography.body
-    ctx.font = `${typo.fontWeight} ${typo.fontSize}px ${typo.fontFamily}`
+    // Typography
+    const typography = context.metrics.typography;
+
+    const typo =
+        typography?.[node.typography] ??
+        typography?.body;
+
+    if (!typo) {
+        ctx.restore();
+        return;
+    }
+
+    const family =
+        typo.family ??
+        typography.family ??
+        "sans-serif";
+
+    ctx.font = `${typo.weight ?? 400} ${typo.size ?? 14}px ${family}`;
 ctx.fillStyle = typo.color
 ctx.textBaseline = 'middle'
 ctx.textAlign = 'left'

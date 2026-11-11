@@ -88,20 +88,6 @@ if(!lesson.isLastSection()) {
     children.finishButton = finishButton
     nextY += height + gap
 
-    // const backButton = createLessonButton(
-    //     lessonButtons.back,
-    //     {
-    //         id: `${articleNode.id}-back-button`,
-    //         x,
-    //         worldY: nextY,
-    //         width,
-    //         height,
-    //         padding,
-    //         color: config.color
-    //     }
-    // )
-    // children.backButton = backButton
-    // nextY = backButton.worldY+height + gap
 }
 
 const node = createCardNode({

@@ -10,6 +10,7 @@ export function renderText(ctx, node, viewport,context) {
 const typography = context?.typography
     const padding = node.padding ?? 10;
 const typo = typography[node.typography]
+console.log(typo)
 const text =
     Array.isArray(node.text)
         ? node.text.join(' • ')
@@ -22,8 +23,8 @@ const text =
     ctx.save();
 
     ctx.fillStyle = node.color;
-    ctx.font = `${typo.weight} ${typo.size}px ${typo.family}`;
-    
+    ctx.font = `${typo.weight} ${typo.size}px sans-serif`;
+   
     ctx.textBaseline = 'top';
 
     const lines = getWrappedLines(

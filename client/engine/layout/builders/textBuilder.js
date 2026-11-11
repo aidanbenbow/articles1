@@ -12,11 +12,16 @@ export function buildTextNode(config, context) {
         contentX,
         contentWidth
     } = context
+    const reading = metrics?.reading ?? {}
 const type = resolveValue(config.type, context) ?? "text"
 const x = resolveValue(config.x, context) ?? contentX ?? metrics.padding
 const worldY = resolveValue(config.worldY, context) ?? 
 currentY
-const width = resolveValue(config.width, context) ?? contentWidth ?? metrics.contentWidth
+const baseWidth =
+        resolveValue(config.width, context) ?? contentWidth ?? metrics.contentWidth
+    const maxReadableWidth =
+        resolveValue(config.maxReadableWidth, context) ?? reading.maxReadableWidth ?? baseWidth
+    const width = Math.min(baseWidth, maxReadableWidth)
 const typography = resolveValue(config.typography, context) ?? (type === "heading" ? "heading" : "body")
 
 const text = resolveValue(config.value ?? config.text, context)
@@ -26,27 +31,21 @@ const height = resolveValue(config.height, context) ?? resolveTextHeight({...con
         id: config.id,
         owner: config.owner ?? owner,
         kind: config.kind ?? 'text',
-
         x,
         worldY,
-
         width,
-        height,
-           
+        height,    
         color: resolveValue( config.color, context),
-
         text,
-
         typography
     })
 node.type = resolveValue(config.type, context) ?? "text"
- // Register standalone text nodes, just as standalone buttons are registered.
-    // Collection children are registered by their parent/layout compilation.
+ 
     if (!parent && layout?.layoutNodes instanceof Map) {
         layout.layoutNodes.set(node.id, node)
     }
-    
+    const paragraphGap = reading.paragraphGap ??resolveValue(config.paragraphGap, context) ?? 3
     return {node,
-        currentY: node.worldY + node.height + 6
+        currentY: node.worldY + node.height + paragraphGap
     }
 }

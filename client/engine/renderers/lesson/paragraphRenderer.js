@@ -9,7 +9,12 @@ const padding = node.padding || 0
     const typography =
         context.metrics.typography[node.typography] ??
         context.metrics.typography.body
-    const font = `${typography.fontWeight} ${typography.fontSize}px ${typography.fontFamily}`
+    const font = `${typography.weight} ${typography.size}px ${
+        typography.family ??
+        context.metrics.typography.family ??
+        "sans-serif"
+    }`;
+    
 ctx.save()
     drawTextBlock(ctx, node.text, rect.x + padding, rect.y, node.width, typography.lineHeight, font, typography.color)
 ctx.restore()

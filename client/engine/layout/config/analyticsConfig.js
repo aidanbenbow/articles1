@@ -70,6 +70,13 @@ const leaderboard =
     value: `Lessons Completed: ${completedLessons}`
 },
 {
+    id: 'back-to-category',
+    type: 'button',
+    text: 'Back to category',
+    action: 'returnToCategory',
+    kind: 'lessonButton'
+},
+{
     id: 'leaderboard-title',
     type: 'text',
     typography: 'title',

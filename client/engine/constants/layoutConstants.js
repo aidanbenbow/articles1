@@ -6,6 +6,7 @@ import { getLessonIntroLayout } from "./LAYOUTS/lessonIntroLayoutGet.js"
 import { getNameInputLayout } from "./LAYOUTS/nameInputLayout.js"
 import { getOrderingLayout } from "./LAYOUTS/orderingLayoutGet.js"
 import { getQuizLayout } from "./LAYOUTS/quizLayoutGet.js"
+import { getResponsiveReading } from "./LAYOUTS/readingWidth.js"
 import { getSurveyLayout } from "./LAYOUTS/surveyLayoutGet.js"
 import { getResponsiveTypography } from "./LAYOUTS/typographyLayoutGet.js"
 
@@ -125,6 +126,14 @@ export function getResponsiveLayout(screenWidth, screenHeight) {
     const optionWidth = 60
     const optionHeight = 30
 
+    const reading = getResponsiveReading(contentWidth)
+    const typography = getResponsiveTypography(compact)
+    typography.body = {
+        ...typography.body,
+        size: reading.bodySize,
+        lineHeight: Math.round(reading.bodySize * reading.lineHeight)
+    }
+
     return {
         screenWidth,
         screenHeight,
@@ -141,7 +150,8 @@ export function getResponsiveLayout(screenWidth, screenHeight) {
 
         gap: mobile ? 18 : 30,
 
-        typography: getResponsiveTypography(compact),
+        typography,
+        reading,
 
 lessonIntro: getLessonIntroLayout(compact),
 lessonHeader: getLessonHeaderLayout(compact, mobile),
