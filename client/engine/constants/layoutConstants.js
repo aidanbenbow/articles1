@@ -1,5 +1,6 @@
 // layoutConstants.js
 
+import { DESIGN_TOKENS } from "./designTokens.js"
 import { getDragDropLayout } from "./LAYOUTS/dragDropLayoutGet.js"
 import { getLessonHeaderLayout } from "./LAYOUTS/lessonHeaderLayoutGet.js"
 import { getLessonIntroLayout } from "./LAYOUTS/lessonIntroLayoutGet.js"
@@ -10,124 +11,30 @@ import { getResponsiveReading } from "./LAYOUTS/readingWidth.js"
 import { getSurveyLayout } from "./LAYOUTS/surveyLayoutGet.js"
 import { getResponsiveTypography } from "./LAYOUTS/typographyLayoutGet.js"
 
-export const LAYOUT = {
-    padding: 20,
-    
-    articleWidth: 600,
-    inputGap: 80,
-    buttonGap: 160,
-    
 
-    minPadding: 16,
-    maxPadding: 40,
-    minContentWidth: 280,
-    maxContentWidth: 760,
-    minContentHeight: 400,
-    maxContentHeight: 1200,
-    spacingY: 24,
-    marginTop: 24,
-    breakPoints: {
-        compact: 420,
-        mobile: 520,
-        tablet: 768,
-    },
-    colors: {
-        surface: "#ffffff",
-        border: "#e5e7eb",
-        accent: "#9481ed",
-        accentLight: "#f0eefc",
-        heading: "#171717",
-        text: "#4b5563",
-        muted: "#6b7280",
-        sectionHeading: "#374151",
-        statBackground: "#f9fafb",
-        shadow: "rgba(0, 0, 0, 0.08)",
-    },
 
-    typography: {
-    family: "sans-serif",
-
-    eyebrow: {
-        size: 11,
-        lineHeight: 16,
-        weight: 600,
-    },
-heading: {
-        size: 18,
-        lineHeight: 24,
-        weight: 600,
-    },
-    paragraph: {
-        size: 14,
-        lineHeight: 20,
-        weight: 400,
-    },
-    title: {
-        size: 26,
-        lineHeight: 32,
-        weight: 700,
-    },
-
-    sectionHeading: {
-        size: 14,
-        lineHeight: 20,
-        weight: 600,
-    },
-
-    body: {
-        size: 18,
-        lineHeight: 20,
-        weight: 500,
-    },
-
-    step: {
-        size: 12,
-        lineHeight: 18,
-        weight: 400,
-    },
-    question: {
-        size: 14,
-        lineHeight: 20,
-        weight: 400,
-        family: "sans-serif",
-    },
-
-    weights: {
-        regular: 400,
-        medium: 600,
-        bold: 700,
-    }
-},
-
-}
+export const LAYOUT =  DESIGN_TOKENS
 
 export function getResponsiveLayout(screenWidth, screenHeight) {
-    const compact = screenWidth < LAYOUT.breakPoints.compact
 
-    const mobile =screenWidth < LAYOUT.breakPoints.mobile
+    const {dimensions, typography: baseTypography} = DESIGN_TOKENS
 
-    const tablet = screenWidth < LAYOUT.breakPoints.tablet
+    const compact = screenWidth < dimensions.breakpoints.compact
+    const mobile =screenWidth < dimensions.breakpoints.mobile
+    const tablet = screenWidth < dimensions.breakpoints.tablet
 
-    const padding = Math.max(
-        LAYOUT.minPadding,
-        Math.min( LAYOUT.maxPadding, screenWidth * 0.05 )
-    )
+    const padding = compact
+    ? dimensions.minPadding
+    : dimensions.padding;
 
-    const contentWidth = Math.min(
-        LAYOUT.maxContentWidth,
-        screenWidth - padding * 2
-    )
-
-    const contentHeight = Math.min(
-        LAYOUT.maxContentHeight,
-        screenHeight - padding * 2
-    )
+   const contentWidth = screenWidth - padding * 2;
+  const contentHeight = screenHeight - padding * 2;
 
     const optionWidth = 60
     const optionHeight = 30
 
     const reading = getResponsiveReading(contentWidth)
-    const typography = getResponsiveTypography(compact)
+    const typography = getResponsiveTypography(compact, baseTypography)
     typography.body = {
         ...typography.body,
         size: reading.bodySize,
@@ -145,14 +52,16 @@ export function getResponsiveLayout(screenWidth, screenHeight) {
         padding,
         contentWidth,
         contentHeight,
+
+        colors: DESIGN_TOKENS.colors,
+    buttonStyles: DESIGN_TOKENS.buttonStyles,
+    typography,
+        reading,
         optionWidth,
         optionHeight,
-
         gap: mobile ? 18 : 30,
 
-        typography,
-        reading,
-
+        
 lessonIntro: getLessonIntroLayout(compact),
 lessonHeader: getLessonHeaderLayout(compact, mobile),
 button:{

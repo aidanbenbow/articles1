@@ -1,50 +1,54 @@
-import { LAYOUT } from "../layoutConstants.js";
+// typographyLayoutGet.js
 
-export function getResponsiveTypography(compact) {
-    return {
-        eyebrow: {
-            ...LAYOUT.typography.eyebrow,
-            size: compact
-                ? 10
-                : LAYOUT.typography.eyebrow.size
-        },
+export function getResponsiveTypography(compact, baseTypography) {
+  const typography = baseTypography;
 
-        heading: {
-            ...LAYOUT.typography.heading,
-            size: compact
-                ? 16
-                : LAYOUT.typography.heading.size
-        },
+  return {
+    family: typography.family,
 
-        paragraph: {
-            ...LAYOUT.typography.paragraph
-        },
+    eyebrow: {
+      ...typography.eyebrow,
+      size: compact ? 10 : typography.eyebrow.size,
+    },
 
-        title: {
-            ...LAYOUT.typography.title,
-            size: compact
-                ? 22
-                : LAYOUT.typography.title.size
-        },
+    heading: {
+      ...typography.heading,
+      size: compact ? 16 : typography.heading.size,
+    },
 
-        sectionHeading: {
-            ...LAYOUT.typography.sectionHeading
-        },
+    paragraph: {
+      ...typography.paragraph,
+    },
 
-        body: {
-            ...LAYOUT.typography.body
-        },
+    title: {
+      ...typography.title,
+      size: compact ? 22 : typography.title.size,
+    },
 
-        step: {
-            ...LAYOUT.typography.step,
-            size: compact
-                ? 11
-                : LAYOUT.typography.step.size
-        },
+    sectionHeading: {
+      ...typography.sectionHeading,
+    },
 
-        question: {
-            ...LAYOUT.typography.question
-            
-        }
-    }
+    body: {
+      ...typography.body,
+    },
+
+    step: {
+      ...typography.step,
+      size: compact ? 11 : typography.step.size,
+    },
+
+    question: {
+      ...typography.question,
+    },
+
+    button: {
+      ...typography.button,
+    },
+
+    weights: {
+      ...typography.weights,
+    },
+  };
 }
+

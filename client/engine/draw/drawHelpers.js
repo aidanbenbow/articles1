@@ -1,3 +1,4 @@
+import { DESIGN_TOKENS } from "../constants/designTokens.js"
 import { DRAWING_CONSTANTS } from "../constants/drawingConstants.js"
 import { getWrappedTextLines } from "./textWrapping.js"
 
@@ -45,42 +46,59 @@ export function drawText(ctx, text, x, y, font = DRAWING_CONSTANTS.fonts.body, c
     ctx.fillText(text, x, y)
 }
 
-export function drawRect( ctx, rect,
+export function drawRect(
+    ctx,
+    rect,
     { showSelection = false } = {}
 ) {
-    const { x, y, width, height } = rect
-    const radius = rect.borderRadius ?? 12
+    const {
+        x,
+        y,
+        width,
+        height,
+        color,
+        borderColor,
+        borderWidth = 1,
+        borderRadius = 12,
+        shadow,
+        selected
+    } = rect;
 
-    ctx.save()
+    const colors = DESIGN_TOKENS.colors;
 
-    if (rect.shadow) {
-        ctx.shadowColor = 'rgba(0,0,0,0.12)'
-        ctx.shadowBlur = 12
-        ctx.shadowOffsetY = 4
+    ctx.save();
+
+    try {
+        if (shadow) {
+            ctx.shadowColor = colors.shadow;
+            ctx.shadowBlur = 12;
+            ctx.shadowOffsetY = 4;
+        }
+
+        ctx.beginPath();
+        ctx.roundRect(x, y, width, height, borderRadius);
+
+        ctx.fillStyle = color ?? colors.surface;
+        ctx.fill();
+
+        const resolvedBorderColor = borderColor ?? colors.border;
+
+        if (resolvedBorderColor) {
+            ctx.shadowColor = "transparent";
+            ctx.strokeStyle = resolvedBorderColor;
+            ctx.lineWidth = borderWidth;
+            ctx.stroke();
+        }
+
+        if (showSelection && selected) {
+            ctx.shadowColor = "transparent";
+            ctx.strokeStyle = colors.primary;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+    } finally {
+        ctx.restore();
     }
-
-    ctx.beginPath()
-    ctx.roundRect(x,y,width,height,radius)
-
-    ctx.fillStyle = rect.color || DRAWING_CONSTANTS.colors.background
-    ctx.fill()
-
-     if (rect.borderColor) {
-        ctx.shadowColor = 'transparent'
-        ctx.strokeStyle = rect.borderColor
-
-        ctx.lineWidth = rect.borderWidth ?? 1
-        ctx.stroke()
-    }
-
-    if (showSelection && rect.selected) {
-        ctx.shadowColor = 'transparent'
-        ctx.strokeStyle = SELECTION_COLOR
-        ctx.lineWidth = 2
-        ctx.stroke()
-    }
-
-    ctx.restore()
 }
 
 export function drawButton(ctx, text,x,y,width,height) {

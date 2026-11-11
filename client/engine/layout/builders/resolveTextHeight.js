@@ -25,6 +25,7 @@ const font =
         text,
         width
     )
+ 
 
     return Math.max(1, lines.length) * typography.lineHeight
 }

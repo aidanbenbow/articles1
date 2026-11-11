@@ -26,6 +26,7 @@ const typography = resolveValue(config.typography, context) ?? (type === "headin
 
 const text = resolveValue(config.value ?? config.text, context)
 
+
 const height = resolveValue(config.height, context) ?? resolveTextHeight({...config, width,typography, value:text, text}, context)
     const node = createTextNode({
         id: config.id,

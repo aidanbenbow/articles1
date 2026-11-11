@@ -39,8 +39,7 @@ ScreenTransitionManager
 ]
 }
 )
-window.eng = eng
-console.log(window.eng)
+
 const articlesScreen = eng.context.createNode('articlesScreen', 'flexBar', null, { color: '#92e5eb',  direction: 'row' })
 
 const headerNode = eng.context.createNode('headerNode', 'header', articlesScreen.id, { text: 'Articles', height:80, color: '#82cbcf', flexGrow: 1 })

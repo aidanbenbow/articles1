@@ -1,4 +1,5 @@
 
+import { getCanvasFont, getTextColor, getTypography } from "../draw/typographyHelpers.js";
 import { getScreenPosition } from "../modules/renderUtils.js";
 import { getWrappedLines } from "./renderLessonIntro.js";
 
@@ -7,10 +8,13 @@ export function renderText(ctx, node, viewport,context) {
     const rect = getScreenPosition(node, viewport);
 
     if (!rect) return;
-const typography = context?.typography
+
+const role = node.typography ?? 'body'
     const padding = node.padding ?? 10;
-const typo = typography[node.typography]
-console.log(typo)
+const typo = getTypography(context, role);
+const font = getCanvasFont(context, role);
+
+const color= node.color ?? getTextColor(context, role);
 const text =
     Array.isArray(node.text)
         ? node.text.join(' • ')
@@ -22,8 +26,8 @@ const text =
 
     ctx.save();
 
-    ctx.fillStyle = node.color;
-    ctx.font = `${typo.weight} ${typo.size}px sans-serif`;
+    ctx.fillStyle = color;
+    ctx.font = font
    
     ctx.textBaseline = 'top';
 
@@ -50,7 +54,7 @@ const lineHeight =
             y
         );
 
-        y += node.lineHeight ?? 20;
+        y += lineHeight
     }
 
     ctx.restore();
