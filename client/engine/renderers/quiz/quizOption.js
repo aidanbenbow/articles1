@@ -9,7 +9,9 @@ export function renderQuizOption(ctx, node, viewport, context) {
 
 const answered = Boolean(node.answered);
   const isSelected = Boolean(node.selected);
+  
   const isCorrect = Boolean(node.correct);
+  
 const colors =
     context?.colors ??
     context?.responsive?.colors ??
@@ -26,6 +28,7 @@ const colors =
 if (answered && isCorrect) {
     background = colors.success ?? "#b8f5b8";
   } else if (answered && isSelected) {
+    
     background = colors.error ?? "#f5b8b8";
   }
 

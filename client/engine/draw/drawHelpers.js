@@ -1,6 +1,6 @@
 import { DESIGN_TOKENS } from "../constants/designTokens.js"
 import { DRAWING_CONSTANTS } from "../constants/drawingConstants.js"
-import { getWrappedTextLines } from "./textWrapping.js"
+import { getWrappedLines } from "./textWrapping.js"
 
 export function drawTextBlock(ctx, text, x, y, maxWidth,lineHeight,font,color) {
    ctx.save()
@@ -10,7 +10,7 @@ export function drawTextBlock(ctx, text, x, y, maxWidth,lineHeight,font,color) {
     ctx.textAlign = 'left'
     ctx.textBaseline = 'top'
 
-    const lines = getWrappedTextLines( ctx, text,maxWidth)
+    const lines = getWrappedLines( ctx, text,maxWidth)
 
     lines.forEach((line, index) => { ctx.fillText( line, x, y + index * lineHeight)
     })
@@ -18,25 +18,6 @@ export function drawTextBlock(ctx, text, x, y, maxWidth,lineHeight,font,color) {
     ctx.restore()
 }
 
-function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
-    const words = text.split(' ')
-    let line = ''
-
-    for (let n = 0; n < words.length; n++) {
-        const testLine = line + words[n] + ' '
-        const metrics = ctx.measureText(testLine)
-        const testWidth = metrics.width
-
-        if (testWidth > maxWidth && n > 0) {
-            ctx.fillText(line, x, y)
-            line = words[n] + ' '
-            y += lineHeight
-        } else {
-            line = testLine
-        }
-    }
-    ctx.fillText(line, x, y)
-}
 
 export function drawText(ctx, text, x, y, font = DRAWING_CONSTANTS.fonts.body, color = DRAWING_CONSTANTS.colors.text, align = 'center', baseline = 'middle') {
     ctx.fillStyle = color

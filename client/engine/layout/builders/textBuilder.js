@@ -1,3 +1,4 @@
+
 import { createTextNode } from "../nodeFactories/textNode.js"
 import { resolveTextHeight } from "./resolveTextHeight.js"
 import { resolveValue } from "./resolveValue.js"
@@ -28,6 +29,7 @@ const text = resolveValue(config.value ?? config.text, context)
 
 
 const height = resolveValue(config.height, context) ?? resolveTextHeight({...config, width,typography, value:text, text}, context)
+
     const node = createTextNode({
         id: config.id,
         owner: config.owner ?? owner,

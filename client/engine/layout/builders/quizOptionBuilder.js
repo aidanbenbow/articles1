@@ -12,6 +12,7 @@ export function buildQuizOptionNode(config, context) {
     } = context
 const optionIndex = resolveValue(config.optionIndex, context)
 const answer = activity?.getAnswer?.(section.id)
+
     const node = createQuizOptionNode({
         id: config.id,
         owner: config.owner ?? owner,

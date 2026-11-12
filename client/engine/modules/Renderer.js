@@ -59,8 +59,8 @@ const viewport = this.engine.context.getViewport()
         const allNodes = [...layout.values()]
         const assetManager = this.engine.context.getAssetManager()
         const responsive = getResponsiveLayout(
-            this.canvas.style.width,
-            this.canvas.style.height
+            this.canvas.width,
+            this.canvas.height
         )
     
         const view = createRendererViewModel(allNodes, interactionState, lessonState)

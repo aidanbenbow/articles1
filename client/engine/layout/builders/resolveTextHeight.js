@@ -1,5 +1,6 @@
 import { getTextMeasurementContext } from "../../draw/textMeasurement.js"
-import { getWrappedTextLines } from "../../draw/textWrapping.js"
+import { getWrappedLines} from "../../draw/textWrapping.js"
+import { getCanvasFont, getTypography } from "../../draw/typographyHelpers.js"
 import { resolveValue } from "./resolveValue.js"
 
 export function resolveTextHeight(config, context) {
@@ -8,24 +9,27 @@ export function resolveTextHeight(config, context) {
     if (config.height!=null) {
         return config.height
     }
+const role = config.typography ?? "body";
+    const typo = getTypography(context, role);
+    const font = getCanvasFont(context, role);
 
-    const text = String(config.value ?? config.text ?? '')
-    const typography = metrics.typography[config.typography ?? 'body']
-   
-        const lineHeight = typography.lineHeight
-    const width = config.width ?? metrics.contentWidth
-const font =
-        `${typography.weight} ${typography.size}px ${typography.family}`
+    const text = config.value ?? config.text ?? "";
+    const padding = config.padding ?? 0;
+    const width = Math.max(1, config.width - padding * 2);
 
     const ctx = getTextMeasurementContext()
       ctx.font = font
 
-    const lines = getWrappedTextLines(
+    const lines = getWrappedLines(
         ctx,
         text,
         width
     )
  
+const lineHeight =
+        config.lineHeight ??
+        typo.lineHeight ??
+        20;
 
-    return Math.max(1, lines.length) * typography.lineHeight
+    return Math.max(1, lines.length) * lineHeight + padding * 2;
 }

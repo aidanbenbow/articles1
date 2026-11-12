@@ -1,7 +1,8 @@
 
+import { getWrappedLines } from "../draw/textWrapping.js";
 import { getCanvasFont, getTextColor, getTypography } from "../draw/typographyHelpers.js";
 import { getScreenPosition } from "../modules/renderUtils.js";
-import { getWrappedLines } from "./renderLessonIntro.js";
+
 
 export function renderText(ctx, node, viewport,context) {
  
@@ -41,9 +42,9 @@ const text =
 const lineHeight =
     node.lineHeight ??
     typo.lineHeight ??
-    20
+    20;
+    console.log('y', y, 'lineHeight', lineHeight, 'rect.y', rect.y, 'node.height', node.height)
     for (const line of lines) {
-
         if (y + lineHeight > rect.y + node.height) {
             break;
         }

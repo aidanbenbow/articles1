@@ -26,6 +26,7 @@ correct = false,
     kind = 'lessonSection',
     sectionType = 'quizOption'
 }) {
+  
     return {
         id,
 
@@ -56,6 +57,5 @@ correct,
 
         typography,
 
-        selected: false
     }
 }

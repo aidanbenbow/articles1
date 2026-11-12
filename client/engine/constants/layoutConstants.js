@@ -38,7 +38,10 @@ export function getResponsiveLayout(screenWidth, screenHeight) {
     typography.body = {
         ...typography.body,
         size: reading.bodySize,
-        lineHeight: Math.round(reading.bodySize * reading.lineHeight)
+        lineHeight: Math.max(
+    Math.ceil(reading.bodySize * reading.lineHeight),
+    Math.ceil(reading.bodySize * 1.3)
+  )
     }
 
     return {

@@ -5,6 +5,7 @@ export function getTypography(context, role = "body") {
     const typography =
         context?.typography ??
         context?.responsive?.typography ??
+        context?.metrics?.typography ??
         {};
 
     return (
@@ -23,6 +24,7 @@ export function getCanvasFont(context, role = "body") {
     const typography =
         context?.typography ??
         context?.responsive?.typography ??
+        context?.metrics?.typography ??
         {};
 
     const style = getTypography(context, role);

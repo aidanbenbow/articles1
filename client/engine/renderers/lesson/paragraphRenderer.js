@@ -1,21 +1,25 @@
 
 import {  drawTextBlock } from "../../draw/drawHelpers.js"
+import { getCanvasFont, getTextColor, getTypography } from "../../draw/typographyHelpers.js";
 import { getScreenPosition } from "../../modules/renderUtils.js"
 
 export function renderParagraph(ctx, node, viewport, context) {
   
     const rect = getScreenPosition(node, viewport)
+    const role = node.typography ?? "body";
 const padding = node.padding || 0
-    const typography =
-        context.metrics.typography[node.typography] ??
-        context.metrics.typography.body
-    const font = `${typography.weight} ${typography.size}px ${
-        typography.family ??
-        context.metrics.typography.family ??
-        "sans-serif"
-    }`;
+    const typo = getTypography(context, role);
+    const font = getCanvasFont(context, role);
+    const color = node.color ?? getTextColor(context, role);
+
+    const textWidth = Math.max(1, rect.width - padding * 2);
+
+    const lineHeight =
+        node.lineHeight ??
+        typo.lineHeight ??
+        20;
     
 ctx.save()
-    drawTextBlock(ctx, node.text, rect.x + padding, rect.y, node.width, typography.lineHeight, font, typography.color)
+    drawTextBlock(ctx, node.text, rect.x + padding, rect.y + padding, textWidth, lineHeight, font, color)
 ctx.restore()
 }
