@@ -31,13 +31,6 @@ const lineHeight =
         config.lineHeight ??
         typo.lineHeight ??
         20;
-console.log("TEXT MEASUREMENT", {
-    text,
-    width,
-    font,
-    lineHeight,
-    lines: lines.length,
-    measuredLines: lines
-});
+
     return Math.max(1, lines.length) * lineHeight + padding * 2;
 }

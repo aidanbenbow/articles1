@@ -78,7 +78,7 @@ const context = {
     articleNodes,
     appState
 }
-
+console.log(this.layout)
 const screen = this.screens[appState.screen]
 
     if (!screen) {

@@ -13,6 +13,7 @@ export function buildTextNode(config, context) {
         contentX,
         contentWidth
     } = context
+   
     const reading = metrics?.reading ?? {}
 const type = resolveValue(config.type, context) ?? "text"
 const x = resolveValue(config.x, context) ?? contentX ?? metrics.padding
@@ -43,7 +44,8 @@ const height = resolveValue(config.height, context) ?? resolveTextHeight({...con
         typography
     })
 node.type = resolveValue(config.type, context) ?? "text"
- 
+
+
     if (!parent && layout?.layoutNodes instanceof Map) {
         layout.layoutNodes.set(node.id, node)
     }

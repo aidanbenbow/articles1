@@ -94,7 +94,7 @@ export const DESIGN_TOKENS = {
     },
 
     step: {
-      size: 12,
+      size: 16,
       lineHeight: 18,
       weight: 400,
     },

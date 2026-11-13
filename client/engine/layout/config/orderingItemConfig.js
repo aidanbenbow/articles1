@@ -5,7 +5,7 @@ export const ORDERING_ITEM_LAYOUT = {
     kind: 'orderingItem',
     sectionType: 'orderingItem',
 
-    padding: 10,
+    padding: 5,
 
     style: {
         radius: 8,

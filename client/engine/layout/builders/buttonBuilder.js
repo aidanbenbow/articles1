@@ -7,6 +7,7 @@ export function buildButtonNode(config, context) {
         metrics,
         owner,
         currentY,
+        contentX,
         parent
     } = context
     const node = createButtonNode({
@@ -19,7 +20,7 @@ articleData: resolveValue(
         context
     ),
         kind: config.kind ?? 'button',
-        x: config.x ?? metrics.padding,
+        x: config.x ?? contentX?? metrics.padding,
         worldY: config.worldY ?? context.currentY,
         width: 
             config.width ??

@@ -4,15 +4,7 @@ import { getCanvasFont, getTextColor, getTypography } from "../../draw/typograph
 import { getScreenPosition } from "../../modules/renderUtils.js"
 
 export function renderParagraph(ctx, node, viewport, context) {
-  console.log("DRAW NODE", {
-    id: node.id,
-    type: node.type,
-    x: node.x,
-    worldY: node.worldY,
-    width: node.width,
-    height: node.height,
-    scrollY: viewport?.y
-});
+
     const rect = getScreenPosition(node, viewport)
     const role = node.typography ?? "body";
 const padding = node.padding || 0
@@ -27,14 +19,7 @@ const padding = node.padding || 0
         node.lineHeight ??
         typo.lineHeight ??
         20;
-    console.log("TEXT RENDER", {
-    text: node.text,
-    width: node.width - padding * 2,
-    height: node.height,
-    font,
-    lineHeight,
-   
-});
+ 
 ctx.save()
     drawTextBlock(ctx, node.text, rect.x + padding, rect.y + padding, textWidth, lineHeight, font, color)
 ctx.restore()

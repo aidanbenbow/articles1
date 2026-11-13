@@ -2,7 +2,7 @@ export function getOrderingLayout(compact) {
     return {
         questionHeight: compact ? 32 : 36,
 
-        itemHeight: compact ? 48 : 56,
+        itemHeight: compact ? 42 : 52,
         itemGap: compact ? 8 : 10,
         itemPaddingX: compact ? 12 : 16,
         itemPaddingY: compact ? 8 : 10,

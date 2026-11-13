@@ -71,13 +71,13 @@ export function buildOrderingItemNode(config, context) {
 
     const upButtonNodes = createControl(
         'up',
-        x + width - buttonWidth * 2 - buttonGap,
+        x + width/2 - buttonWidth * 2 - buttonGap,
         itemIndex === 0
     )
 
     const downButtonNodes = createControl(
         'down',
-        x + width - buttonWidth,
+        x + width/2 - buttonWidth,
         itemIndex === items.length - 1
     )
 

@@ -34,7 +34,8 @@ export const HOME_LAYOUT = {
                             type: 'button',
                             kind: 'setPlayerState',
                             action: 'browseLessons',
-                            text: 'Continue'
+                            text: 'Continue',
+                            width: 200,
                         }
                     ]
                     : [

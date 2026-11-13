@@ -41,7 +41,7 @@ const gap = resolveValue(
     })
    
 
-   const contentX = node.x + padding
+   const contentX = node.x + padding + gap
     const contentWidth = node.width - (padding * 2)
     let childY = node.worldY + padding
      
@@ -65,7 +65,7 @@ childY = result.currentY
     }
      
 if(config.height == null){
-        node.height = Math.max(0, childY - node.worldY-gap + padding)
+        node.height = Math.max(0, childY - node.worldY + padding)
     }
 
     layout.layoutNodes.set(
