@@ -12,6 +12,7 @@ export function renderText(ctx, node, viewport,context) {
 
 const role = node.typography ?? 'body'
     const padding = node.padding ?? 10;
+    console.log('padding', padding, 'text', node.text, 'width', node.width, 'height', node.height, 'rect', rect)
 const typo = getTypography(context, role);
 const font = getCanvasFont(context, role);
 
@@ -43,7 +44,7 @@ const lineHeight =
     node.lineHeight ??
     typo.lineHeight ??
     20;
-    console.log('y', y, 'lineHeight', lineHeight, 'rect.y', rect.y, 'node.height', node.height)
+    
     for (const line of lines) {
         if (y + lineHeight > rect.y + node.height) {
             break;

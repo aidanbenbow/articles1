@@ -1,24 +1,4 @@
 
-import { getSurveyResult } from "../helpers/surveyResults.js";
-import { renderDragDrop} from "../renderers/dragDrop/dragDropRenderer.js";
-import { renderContinueButton } from "../renderers/buttons/continueButton.js";
-import { renderFinishButton } from "../renderers/buttons/finishButton.js";
-import { renderDragDropCheck } from "../renderers/dragDrop/dragDropCheckRenderer.js";
-import { renderDragDropFeedback } from "../renderers/dragDrop/dragDropFeedbackRenderer.js";
-import { renderDragDropGap } from "../renderers/dragDrop/dragDropGapRenderer.js";
-import { renderDragDropInstruction } from "../renderers/dragDrop/dragDropInstructionRenderer.js";
-import { renderDragDropText } from "../renderers/dragDrop/dragDropTextRenderer.js";
-import { renderDragDropWord } from "../renderers/dragDrop/dragDropWordRenderer.js";
-import { renderHeading } from "../renderers/lesson/headerRenderer.js";
-import { renderOrderingButton } from "../renderers/ordering/orderingButton.js";
-import { renderOrderingCheck } from "../renderers/ordering/orderingCheck.js";
-import { renderOrderingItem } from "../renderers/ordering/orderingListRenderer.js";
-import { renderOrdering } from "../renderers/ordering/orderingRenderer.js";
-import { renderQuizOption } from "../renderers/quiz/quizOption.js";
-import { renderQuiz } from "../renderers/quiz/quizRenderer.js";
-import { renderSurveyOption } from "../renderers/survey/surveyOption.js";
-import { renderSurvey } from "../renderers/survey/surveyRenderer.js";
-import { renderParagraph } from "../renderers/lesson/paragraphRenderer.js";
 import { renderNode } from "../renderers/general/renderNode.js";
 import { LAYOUT } from "../constants/layoutConstants.js";
 
@@ -177,71 +157,6 @@ for(const node of view.lessonSectionNodes) {
    renderNode(ctx, node, viewport, context)
 }
     }
-
-    function renderLessonSection( ctx, section, state, viewport, lesson, assetManager, animations, dragState, view) {
-
-    switch (section.sectionType) {
-        case 'lessonHeading':
-            renderHeading(ctx,section, state, viewport)
-            break
-
-        case 'lessonParagraph':
-            renderParagraph( ctx,  section,  state,  viewport,  lesson)
-            break
-
-        case 'quiz':
-            renderQuiz(   ctx,   section,  state,  viewport,  lesson, assetManager, animations)
-            break
-
-            case 'quizOption':
-            renderQuizOption(ctx,section,viewport,lesson)
-            break
-
-        case 'survey':
-            renderSurvey( ctx, section, state, viewport, lesson, assetManager, animations, view.surveys)
-            
-            break
-             case 'ordering':
-            renderOrdering( ctx, section, state, viewport, lesson)
-            break
-
-            case 'continueButton':
-            renderContinueButton(  ctx,  section,  viewport)
-            break
-            case 'finishButton':
-            renderFinishButton( ctx, section, viewport)
-            break
-            case 'dragdrop':
-    renderDragDrop(ctx, section, state, viewport, lesson)
-    break
-
-case 'dragDropInstruction':
-    renderDragDropInstruction(ctx, section, viewport)
-    break
-
-case 'dragDropWord':
-    renderDragDropWord(ctx, section, state, viewport, lesson, assetManager, animations, dragState)
-    break
-
-case 'dragDropText':
-    renderDragDropText(ctx, section, viewport)
-    break
-
-case 'dragDropGap':
-    renderDragDropGap(ctx, section, state, viewport, lesson)
-    break
-
-case 'dragDropCheck':
-    renderDragDropCheck(ctx, section, state, viewport, lesson)
-    break
-
-case 'dragDropFeedback':
-    renderDragDropFeedback(ctx, section, viewport, lesson)
-    break
-            
-    }
-
-}
 
 
 function drawThumbnail(ctx, node,pos, assetManager) {

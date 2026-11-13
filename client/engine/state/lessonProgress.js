@@ -9,7 +9,7 @@ export class LessonProgress {
     constructor(data = {}) {
 this.userId = data.userId ?? null
         this.lessonId = data.lessonId ?? null
-
+this.displayName = data.displayName ?? "Learner"
         this.status =data.status ?? lessonProgressStatus.NOT_STARTED
 
         this.progressPercent = data.progressPercent ?? 0

@@ -12,6 +12,7 @@ const completedLessons = analytics.getAllProgress().filter(
 ).length
 const leaderboard =
     context.engine.context.getLeaderboard?.() ?? { players: [] }
+    console.log(leaderboard)
         return [
             {
                 id: 'analytics-title',
@@ -88,7 +89,7 @@ const leaderboard =
     type: 'text',
     typography: 'body',
     color: 'text',
-    value: `${player.rank}. ${player.userId} — Completed: ${player.completedLessons}, Active Time: ${player.totalActiveTime}s, Score: ${player.totalScore}`
+    value: `${player.rank}. ${player.displayName || 'Learner'} — Completed: ${player.completedLessons}, Active Time: ${player.totalActiveTime}s, Score: ${player.totalScore}`
 }))
         ]
     }

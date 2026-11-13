@@ -1,5 +1,6 @@
 export function buildLessonProgress({
     userId,
+    displayName = "Learner",
     lessonId,
     status = 'not_started',
     progressPercent = 0,
@@ -26,6 +27,7 @@ export function buildLessonProgress({
         GSI1SK: `USER#${userId}`,
 
         userId,
+        displayName,
         lessonId,
 
         status: resolvedStatus,

@@ -20,6 +20,7 @@ async refreshLeaderboard() {
         if (!users.has(userId)) {
             users.set(userId, {
                 userId,
+                displayName: record.displayName || "Learner",
                 completedLessons: 0,
                 totalActiveTime: 0,
                 totalScore: 0
