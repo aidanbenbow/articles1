@@ -78,10 +78,19 @@ children: [
     sectionType: 'dragDrop',
     typography: 'step',
     color: '#000',
-    value: ({activity})=>{
-        return activity?.getFeedback?.() ?? 'NO FEEDBACK'
-    },
-    visible:({activity})=>activity?.getChecked?.()===true,
+   value: ({activity}) => {
+    const checked = activity?.getChecked?.()
+    const feedback = activity?.getFeedback?.()
+
+    console.log('FEEDBACK BUILD:', {
+        activity,
+        checked,
+        feedback
+    })
+
+    return feedback ?? ''
+},
+   // visible:({activity})=>activity?.getChecked?.()===true,
     height: ({metrics})=>metrics.dragDrop.feedbackHeight,
 }
 ]

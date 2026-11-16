@@ -1,16 +1,16 @@
-import { getScreenPosition } from "../../modules/renderUtils.js"
+// import { getScreenPosition } from "../../modules/renderUtils.js"
 
-export function renderDragDropInstruction(ctx, node, viewport) {
-    const rect = getScreenPosition(node, viewport)
-    const { x, y } = rect
+// export function renderDragDropInstruction(ctx, node, viewport) {
+//     const rect = getScreenPosition(node, viewport)
+//     const { x, y } = rect
 
-    ctx.fillStyle = '#222'
-    ctx.font = '16px sans-serif'
-    ctx.textBaseline = 'middle'
+//     ctx.fillStyle = '#222'
+//     ctx.font = '16px sans-serif'
+//     ctx.textBaseline = 'middle'
 
-    ctx.fillText(
-        node.text || '',
-        x,
-        y + node.height / 2
-    )
-}
+//     ctx.fillText(
+//         node.text || '',
+//         x,
+//         y + node.height / 2
+//     )
+// }

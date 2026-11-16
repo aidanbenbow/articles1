@@ -33,18 +33,22 @@ const text =
    
     ctx.textBaseline = 'top';
 
-    const lines = getWrappedLines(
+    const isDragDropParagraphText =
+    node.sectionType === 'dragDropParagraphText';
+
+const lines = isDragDropParagraphText
+    ? [text]
+    : getWrappedLines(
         ctx,
         text,
-        node.width - padding * 2
+        rect.width - padding * 2
     );
 
     let y = rect.y + padding;
-const lineHeight =
-    node.lineHeight ??
-    typo.lineHeight ??
-    20;
-  
+const lineHeight = isDragDropParagraphText
+    ? node.height
+    : node.lineHeight ?? typo.lineHeight ?? 20;
+
     for (const line of lines) {
         if (y + lineHeight > rect.y + node.height) {
             break;

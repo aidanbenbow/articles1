@@ -74,6 +74,14 @@ for(let i=0; i<section.options.length; i++) {
         sectionType: 'quizOption',
         typography: 'body',
     })
+    console.log('QUIZ OPTION DIMENSIONS', {
+    screenWidth: metrics.screenWidth,
+    cardX: x,
+    cardWidth: width,
+    optionX: x + padding,
+    optionWidth: width - padding * 2,
+    optionRight: x + padding + width - padding * 2
+})
     children.options.push(option)
     optionY += optionHeight + optionGap
 }

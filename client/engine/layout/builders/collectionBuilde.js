@@ -26,6 +26,7 @@ export function buildCollectionNode(config, context) {
             {
                 ...context,
                 currentY:  nextY,
+                
                  item,
                 index: i
             } )

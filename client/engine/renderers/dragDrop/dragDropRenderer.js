@@ -14,7 +14,7 @@ export function renderDragDrop(
 
     ctx.fillStyle =
         node.color || '#e0e0e0'
-
+console.log(rect)
     ctx.fillRect(
         rect.x,
         rect.y,
