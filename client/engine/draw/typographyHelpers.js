@@ -3,7 +3,7 @@ export function getTypography(context, role = "body") {
 
     // Support both the direct layout and legacy context structure
     const typography =
-        context?.typography ??
+      //  context?.typography ??
         context?.responsive?.typography ??
         context?.metrics?.typography ??
         {};
@@ -22,7 +22,7 @@ export function getTypography(context, role = "body") {
 export function getCanvasFont(context, role = "body") {
 
     const typography =
-        context?.typography ??
+      //  context?.typography ??
         context?.responsive?.typography ??
         context?.metrics?.typography ??
         {};

@@ -31,6 +31,11 @@ const lineHeight =
         config.lineHeight ??
         typo.lineHeight ??
         20;
-
+console.log("LAYOUT TYPOGRAPHY", {
+    typography: context?.typography,
+    responsive: context?.responsive?.typography,
+    metrics: context?.metrics?.typography,
+    resolved: getTypography(context, role)
+});
     return Math.max(1, lines.length) * lineHeight + padding * 2;
 }

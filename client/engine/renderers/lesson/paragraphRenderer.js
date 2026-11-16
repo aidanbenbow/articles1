@@ -19,8 +19,14 @@ const padding = node.padding || 0
         node.lineHeight ??
         typo.lineHeight ??
         20;
- 
+console.log("RENDER TYPOGRAPHY", {
+    typography: context?.typography,
+    responsive: context?.responsive?.typography,
+    metrics: context?.metrics?.typography,
+    resolved: getTypography(context, role)
+});
 ctx.save()
+ctx.font = font
     drawTextBlock(ctx, node.text, rect.x + padding, rect.y + padding, textWidth, lineHeight, font, color)
 ctx.restore()
 }
