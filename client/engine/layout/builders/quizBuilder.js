@@ -5,7 +5,7 @@ import { createTextNode } from "../nodeFactories/textNode.js"
 
 export function buildQuizSectionNode( context) {
 const {
-    layout,
+   
     metrics,
     articleNode,
     section,
@@ -139,10 +139,6 @@ let quizHeight = padding * 2 + questionHeight +
             }
         })
 
-        layout.layoutNodes.set(
-            quizNode.id,
-            quizNode
-        )
 const nextY = quizTop + quizHeight + metrics.gap
         return {
             node: quizNode,

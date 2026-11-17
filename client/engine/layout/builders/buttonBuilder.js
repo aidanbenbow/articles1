@@ -3,7 +3,7 @@ import { resolveValue } from "./resolveValue.js"
 
 export function buildButtonNode(config, context) {
     const {
-        layout,
+       
         metrics,
         owner,
         currentY,
@@ -57,12 +57,6 @@ disabled: resolveValue(
 category: config.category,
     })
 
-   if (!parent) {
-        layout.layoutNodes.set(
-            node.id,
-            node
-        )
-    }
 
     return {node,
         currentY: node.worldY + node.height + metrics.padding

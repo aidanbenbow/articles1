@@ -5,7 +5,7 @@ import { resolveValue } from "./resolveValue.js";
 
 export function buildNameInputNode(config, context) {
     const {
-        layout,
+        
         metrics,
         owner,
         currentY,
@@ -56,9 +56,6 @@ const inputLayout = metrics.nameInput;
         disabled: resolve(config.disabled, false)
     });
 
-    if (!parent && layout?.layoutNodes instanceof Map) {
-        layout.layoutNodes.set(node.id, node);
-    }
 
     return {
         node,

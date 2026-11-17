@@ -1,8 +1,5 @@
 export function createRendererViewModel( allnodes,state, lesson) {
 
-    const homeNodes = allnodes.filter(node => node.owner === 'home')
-
-    const playerSelectNodes = allnodes.filter(node => node.owner === 'playerSelect')
     
     const lessonSectionNodes = allnodes.filter(node => node.kind === 'lessonSection')
   
@@ -45,9 +42,7 @@ const orderingTotal =
     const surveys = allnodes.filter(node => node.kind === 'lessonSection' && node.sectionType === 'survey')
     
     return {
-     
-        homeNodes,
-        playerSelectNodes,
+    
        
         currentLessonSection,
         currentSection,

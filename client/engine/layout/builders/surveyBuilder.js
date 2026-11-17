@@ -6,7 +6,7 @@ import { createTextNode } from "../nodeFactories/textNode.js"
 
 export function buildSurveySectionNode(context) {
 const {
-        layout,
+        
         metrics,
         articleNode,
         lesson,
@@ -163,10 +163,6 @@ const {
         })
     }
 
-    layout.layoutNodes.set(
-        surveyNode.id,
-        surveyNode
-    )
     const nexty= surveyNode.worldY + surveyNode.height + r.sectionGap
     return {
         node: surveyNode,

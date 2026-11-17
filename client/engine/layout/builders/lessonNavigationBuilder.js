@@ -42,7 +42,7 @@ function createLessonButton(
 
 export function buildLessonNavigationNode(config, context) {
     const {
-        layout,
+        
         metrics,
         articleNode,
         lesson,
@@ -104,10 +104,6 @@ const node = createCardNode({
     children
 })
 
-layout.layoutNodes.set(
-    node.id,
-    node
-)
 
     return {
         node,

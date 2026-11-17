@@ -3,7 +3,7 @@ import { createCardNode } from "../nodeFactories/cardNode.js"
 
 export function buildLessonIntroNode(config, context) {
 const {
-        layout,
+       
         metrics,
         lesson,
         articleNode,
@@ -54,11 +54,7 @@ const x = config.x ?? metrics.padding
     if(config.height == null){
         node.height = childY - node.worldY 
     }
-    
-    layout.layoutNodes.set(
-        node.id,
-        node
-    )
+   
 
     return {
         node,

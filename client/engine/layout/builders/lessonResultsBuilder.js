@@ -4,7 +4,7 @@ import { createCardNode } from "../nodeFactories/cardNode.js";
 
 export function buildLessonResultsNode(config, context) {
     const {
-        layout,
+       
         metrics,
         lesson,
         articleNode,
@@ -59,9 +59,6 @@ export function buildLessonResultsNode(config, context) {
         children,
         results
     });
-
-    layout.layoutNodes.set(node.id, node);
-    layout.layoutNodes.set(button.id, button);
 
     return {
         node,
