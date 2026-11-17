@@ -1,4 +1,5 @@
 
+import { calculateTextLayout } from "../engineLayout/calculateTextLayout.js"
 import { createTextNode } from "../nodeFactories/textNode.js"
 import { resolveTextHeight } from "./resolveTextHeight.js"
 import { resolveValue } from "./resolveValue.js"
@@ -28,9 +29,13 @@ const typography = resolveValue(config.typography, context) ?? (type === "headin
 
 const text = resolveValue(config.value ?? config.text, context)
 
+const textLayout = calculateTextLayout({...config, width, typography, value:text, text}, context, width)
+const configuredHeight = resolveValue(config.height, context);
 
-const height = resolveValue(config.height, context) ?? resolveTextHeight({...config, width,typography, value:text, text}, context)
-
+    const height = configuredHeight == null
+        ? textLayout.height
+        : Math.max(configuredHeight, textLayout.height);
+console.log('textLayout', {textLayout})
     const node = createTextNode({
         id: config.id,
         owner: config.owner ?? owner,
@@ -41,7 +46,10 @@ const height = resolveValue(config.height, context) ?? resolveTextHeight({...con
         height,    
         color: resolveValue( config.color, context),
         text,
-        typography
+        typography,
+        lines: textLayout.lines,
+        lineHeight: textLayout.lineHeight,
+        font: textLayout.font,
     })
 node.type = resolveValue(config.type, context) ?? "text"
 

@@ -1,6 +1,5 @@
 
-import { getWrappedLines } from "../draw/textWrapping.js";
-import { getCanvasFont, getTextColor, getTypography } from "../draw/typographyHelpers.js";
+import { getCanvasFont, getTypography, resolveNodeColor } from "../draw/typographyHelpers.js";
 import { getScreenPosition } from "../modules/renderUtils.js";
 
 
@@ -11,12 +10,13 @@ export function renderText(ctx, node, viewport,context) {
     if (!rect) return;
 
 const role = node.typography ?? 'body'
-    const padding = node.padding ?? 10;
+    const padding = node.padding ?? 0;
   
 const typo = getTypography(context, role);
-const font = getCanvasFont(context, role);
+const font = node.font ?? getCanvasFont(context, role);
 
-const color= node.color ?? getTextColor(context, role);
+const color= resolveNodeColor(node.color, context, role) 
+
 const text =
     Array.isArray(node.text)
         ? node.text.join(' • ')
@@ -38,11 +38,7 @@ const text =
 
 const lines = isDragDropParagraphText
     ? [text]
-    : getWrappedLines(
-        ctx,
-        text,
-        rect.width - padding * 2
-    );
+    : node.lines
 
     let y = rect.y + padding;
 const lineHeight = isDragDropParagraphText

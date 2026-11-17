@@ -38,10 +38,25 @@ export function getCanvasFont(context, role = "body") {
 }
 
 export function getTextColor(context, role = "body") {
-
     const style = getTypography(context, role);
+    const colors = context?.responsive?.colors ?? {};
 
-    return style.color ?? 
-    context?.responsive?.colors?.text ??
-    "#4b5563";
+    return style.color ??
+        colors[role] ??
+        colors.text ??
+        "#4b5563";
+}
+
+export function resolveNodeColor(nodeColor, context, role = "body") {
+    const colors = context?.responsive?.colors ?? {};
+
+    if (!nodeColor) {
+        return getTextColor(context, role);
+    }
+
+    if (Object.hasOwn(colors, nodeColor)) {
+        return colors[nodeColor];
+    }
+
+    return nodeColor;
 }
