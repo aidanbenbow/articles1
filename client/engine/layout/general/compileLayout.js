@@ -3,10 +3,7 @@ import { compileNode } from "./nodeComplier.js"
 
 export function compileLayout(config, context) {
     
-    const metrics = getResponsiveLayout(
-        context.layout.width,
-        context.layout.height
-    )
+    const metrics = context.engine.context.getResponsiveMetrics()
 
     const compileContext = {
         ...context,
@@ -16,6 +13,7 @@ export function compileLayout(config, context) {
     const nodes = typeof config.nodes === 'function'
         ? config.nodes(compileContext)
         : config.nodes || []
+        const rootNodes = []
     let currentY = Math.max(  40, metrics.screenHeight * 0.05)
 
     for (const child of nodes) {
@@ -25,10 +23,15 @@ export function compileLayout(config, context) {
         )
 
         if (!result) continue
-        currentY = result.currentY
+        rootNodes.push(...result.nodes)
+
+        if (result.currentY != null) {
+            currentY = result.currentY
+        }
     }
 
     return {
+        nodes: rootNodes,
         currentY
     }
 }

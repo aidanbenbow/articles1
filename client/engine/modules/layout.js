@@ -1,5 +1,6 @@
 
 
+import { getResponsiveLayout } from "../constants/layoutConstants.js"
 import { NodeQuery } from "./nodeQuery.js"
 import { ReportLayoutFeature } from "./reportLayoutFeature.js"
 
@@ -52,6 +53,7 @@ export class Layout {
            getViewport: this.getViewPort.bind(this),
            resetScroll: this.scroll.reset.bind(this.scroll),
            getNode: (nodeId) => this.getNode(nodeId),
+           getResponsiveMetrics: this.getResponsiveMetrics.bind(this)
         }
     }
     attach() {
@@ -60,6 +62,12 @@ this.scrollController.attach()
 this._unsubscribe.push(() => this.scrollController.detach())
 
       this._unsubscribe.push(this.engine.on('articlesDataReady', () => this.init()))
+    }
+    getResponsiveMetrics() {
+        return getResponsiveLayout(
+            this.engine.context.canvasWidth,
+            this.engine.context.canvasHeight
+        )
     }
     getNode(nodeId) {
     const findNode = (node) => {

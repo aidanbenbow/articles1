@@ -1,10 +1,10 @@
 
 import {  drawTextBlock } from "../../draw/drawHelpers.js"
-import { getCanvasFont, getTextColor, getTypography } from "../../draw/typographyHelpers.js";
+import {  getTextColor, getTypography } from "../../draw/typographyHelpers.js";
 import { getScreenPosition } from "../../modules/renderUtils.js"
 
 export function renderParagraph(ctx, node, viewport, context) {
-console.log('renderParagraph', {node})
+
     const rect = getScreenPosition(node, viewport)
     const role = node.typography ?? "body";
 const padding = node.padding || 0

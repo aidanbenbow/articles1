@@ -153,9 +153,9 @@ export function renderLesson(ctx, view, viewport, lesson, assetManager, animatio
         view,
         typography: LAYOUT.typography
     }
-for(const node of view.lessonSectionNodes) {
-   renderNode(ctx, node, viewport, context)
-}
+// for(const node of view.lessonSectionNodes) {
+//    renderNode(ctx, node, viewport, context)
+// }
     }
 
 

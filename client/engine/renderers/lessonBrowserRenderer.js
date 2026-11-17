@@ -1,19 +1,19 @@
-import { renderLessonListCard } from "./lessonListCardRenderer.js";
+// import { renderLessonListCard } from "./lessonListCardRenderer.js";
 
-export function renderLessonBrowser(
-    ctx,
-    nodes,
-    viewport,
-    assetManager
-) {
-  for (const node of nodes) {
+// export function renderLessonBrowser(
+//     ctx,
+//     nodes,
+//     viewport,
+//     assetManager
+// ) {
+//   for (const node of nodes) {
 
-        renderLessonListCard(
-            ctx,
-            node,
-            viewport,
-            assetManager
-        )
-    }
+//         renderLessonListCard(
+//             ctx,
+//             node,
+//             viewport,
+//             assetManager
+//         )
+//     }
    
-}
+// }

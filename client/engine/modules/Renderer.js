@@ -1,9 +1,9 @@
-import { createRendererViewModel } from './rendererViewModel.js'
-import { renderBackground, } from './renderUtils.js'
+
 import { renderHome } from '../renderers/homeRenderer.js'
 import { renderLessonScreen } from '../renderers/lessonScreenRenderer.js'
-import { renderLessonBrowser } from '../renderers/lessonBrowserRenderer.js'
-import { getResponsiveLayout, LAYOUT } from '../constants/layoutConstants.js'
+
+import { buildRenderModel } from '../renderers/general/renderModelBuilder.js'
+import { renderNode } from '../renderers/general/renderNode.js'
 
 export class Renderer {
     constructor(engine) {
@@ -23,11 +23,11 @@ export class Renderer {
             render: this.render.bind(this),
         }
     }
-    setScreen(){
-this.screen = this.engine.context.getLayout().get('articlesScreen')
+//     setScreen(){
+// this.screen = this.engine.context.getLayout().get('articlesScreen')
 
-this.bgColor = this.screen?.color || '#ffffff'
-    }
+// this.bgColor = this.screen?.color || '#ffffff'
+//     }
     setCanvas() {
         if (!this.engine.context.canvas) {
             console.warn('No canvas provided to Renderer')
@@ -40,79 +40,33 @@ this.bgColor = this.screen?.color || '#ffffff'
     
     render() {
    
+   
         const animations = this.engine.context.getAnimationManager()
 
     animations?.update()
 
     const transitionManager = this.engine.context.getTransitionManager()
     const screenOpacity = transitionManager?.getOpacity() ?? 1
+    const renderModel = buildRenderModel(this.engine)
 this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
-const viewport = this.engine.context.getViewport()
-
-        const layout = this.engine.context.getLayout()
-        const interactionState = this.engine.context.getInteractionState()
-        const getFocusedNode = this.engine.context.getFocusedNode;
-        const interactionManager = this.engine.context.getInteractionManager()
-        const dragState = interactionManager.dragState
-        const appState = this.engine.context.app.getState()
-        const lessonState = this.engine.context.getLesson()
-        const allNodes = [...layout.values()]
-        const assetManager = this.engine.context.getAssetManager()
-        const responsive = getResponsiveLayout(
-            this.canvas.width,
-            this.canvas.height
-        )
-    
-        const view = createRendererViewModel(allNodes, interactionState, lessonState)
-        const renderContext = {
-    lesson: lessonState,
-    assetManager,
-    animations,
-    dragState,
-    interactionState,
-    view,
-    layout: allNodes,
-    typography: LAYOUT.typography,
-   metrics: responsive,
-   responsive,
-    getFocusedNode,
-}
+const {viewport, rootNodes,context} = renderModel
 
 this.ctx.save()
-this.ctx.globalAlpha = screenOpacity
+try {
+    this.ctx.globalAlpha = screenOpacity
 
-        switch (appState.screen) {
-            case 'home':
-                renderHome(this.ctx, view.homeNodes, viewport, renderContext)
-                break
-                case 'playerSelect':
-                renderHome(this.ctx, view.playerSelectNodes, viewport, renderContext)
-                break
-                case 'category':
-    renderHome(
-        this.ctx,
-        allNodes.filter(node => node.owner === 'category'),
-        viewport,
-        renderContext
-    );
-    break;
-    case 'analytics':
-    renderHome(
-        this.ctx,
-        allNodes.filter(node => node.owner === 'analytics'),
-        viewport,
-        renderContext
-    );
-    break;
-                case 'lesson':
-                renderLessonScreen(this.ctx, viewport, renderContext)
-                break
-                case 'lessonBrowser':
-                renderLessonBrowser(this.ctx, view.lessonBrowserNodes, viewport,  assetManager) 
-                break
-        }
-        this.ctx.restore()
-    
+    for (const node of rootNodes) {
+        renderNode(
+            this.ctx,
+            node,
+            viewport,
+            context
+        )
+    }
+} finally {
+    this.ctx.restore()
+}
+
     }
     attach() {
        
@@ -131,7 +85,7 @@ this.ctx.globalAlpha = screenOpacity
 );
              setTimeout(() =>{
             this.setCanvas()
-            this.setScreen()
+           // this.setScreen()
              
             this.requestRender()
         }, 0)

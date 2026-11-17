@@ -3,23 +3,15 @@ import { compileNode } from "../general/nodeComplier.js"
 import { resolveValue } from "./resolveValue.js"
 
 export function buildCardNode(config, context) {
-    const {
-        layout,
+    const { 
         metrics,
         owner,
         currentY
     } = context
 
-const gap = resolveValue(
-        config.layout?.gap,
-        context
-    ) ?? metrics.gap
+const gap = resolveValue(  config.layout?.gap,  context) ?? metrics.gap
 
-    const padding = resolveValue(
-        config.padding,
-        context
-    ) ?? 0
-
+    const padding = resolveValue(config.padding, context) ?? 0
 
     const x =config.x ?? metrics.padding
     const width = config.width ?? metrics.contentWidth
@@ -68,14 +60,8 @@ if(config.height == null){
         node.height = Math.max(0, childY - node.worldY + padding)
     }
 
-    layout.layoutNodes.set(
-        node.id,
-        node
-    )
-
     return {
         node,
-
         currentY:
             node.worldY +
             node.height +

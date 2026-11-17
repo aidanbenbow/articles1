@@ -1,12 +1,12 @@
 
 import { calculateTextLayout } from "../engineLayout/calculateTextLayout.js"
 import { createTextNode } from "../nodeFactories/textNode.js"
-import { resolveTextHeight } from "./resolveTextHeight.js"
+
 import { resolveValue } from "./resolveValue.js"
 
 export function buildTextNode(config, context) {
     const {
-        layout,
+   
         metrics,
         owner,
         currentY,
@@ -35,7 +35,7 @@ const configuredHeight = resolveValue(config.height, context);
     const height = configuredHeight == null
         ? textLayout.height
         : Math.max(configuredHeight, textLayout.height);
-console.log('textLayout', {textLayout})
+
     const node = createTextNode({
         id: config.id,
         owner: config.owner ?? owner,
@@ -54,9 +54,6 @@ console.log('textLayout', {textLayout})
 node.type = resolveValue(config.type, context) ?? "text"
 
 
-    if (!parent && layout?.layoutNodes instanceof Map) {
-        layout.layoutNodes.set(node.id, node)
-    }
     const paragraphGap = reading.paragraphGap ??resolveValue(config.paragraphGap, context) ?? 3
     return {node,
         currentY: node.worldY + node.height + paragraphGap

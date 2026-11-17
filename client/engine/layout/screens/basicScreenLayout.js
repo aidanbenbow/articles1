@@ -20,13 +20,15 @@ export class BaseScreenLayout {
     compile(config, context) {
         this.clear()
 
-        compileLayout(config, {
+      const result =  compileLayout(config, {
             ...context,
             layout: this.layout,
             engine: this.engine,
             owner: this.owner
         })
-
+ for (const node of result.nodes) {
+        this.layout.layoutNodes.set(node.id, node)
+    }
         this.layout.computeScrollBounds(
             this.layout.layoutNodes
         )

@@ -1,21 +1,11 @@
 export function createRendererViewModel( allnodes,state, lesson) {
 
-    const inputNodes = allnodes.filter(node => node.type === 'input')
-    const buttonNodes = allnodes.filter(node => node.type === 'button')
-    const headerNode = allnodes.find(node => node.type === 'header')
-    const textNodes = allnodes.filter(node => node.type === 'text' && node.props?.text !== 'Reports To Do')
-  
     const homeNodes = allnodes.filter(node => node.owner === 'home')
 
     const playerSelectNodes = allnodes.filter(node => node.owner === 'playerSelect')
     
-    const lessonBrowserNodes = allnodes.filter(node => node.owner === 'lessonBrowser')
-    
     const lessonSectionNodes = allnodes.filter(node => node.kind === 'lessonSection')
-    const lessonTitleNodes = allnodes.filter(node =>  node.kind === 'lessonTitle')
-    const lessonDescriptionNodes = allnodes.filter(node =>  node.kind === 'lessonDescription')
-    const lessonStatsNodes = allnodes.filter(node =>  node.kind === 'lessonStats')
-
+  
     const currentSection = lesson?.currentSectionIndex ?? 0
     const currentLessonSection = lessonSectionNodes.find(node => node.props?.sectionIndex === currentSection) || null
 
@@ -55,18 +45,10 @@ const orderingTotal =
     const surveys = allnodes.filter(node => node.kind === 'lessonSection' && node.sectionType === 'survey')
     
     return {
-        inputNodes,
-        buttonNodes,
-        headerNode,
-        textNodes,
+     
         homeNodes,
         playerSelectNodes,
-       // reportsToDoNode,
-        lessonBrowserNodes,
-        lessonSectionNodes,
-        lessonTitleNodes,
-        lessonDescriptionNodes,
-        lessonStatsNodes,
+       
         currentLessonSection,
         currentSection,
         searchTerm: state.searchTerm,
