@@ -11,8 +11,9 @@ export const CATEGORY_LESSONS_LAYOUT = {
             type: 'button',
             kind: 'lessonOption',
             action: 'openLesson',
-            text: article.title,
-            articleId: article.articleId
+            text: article.completed ? `${article.title} (Completed)` : article.title,
+            articleId: article.articleId,
+            completed: article.completed,
         }))
 
         return [

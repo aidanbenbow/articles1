@@ -52,6 +52,16 @@ export const DESIGN_TOKENS = {
       text: "#6b7280",
       radius: 8,
     },
+    hover: {
+      background: "#7c5de0",
+      text: "#ffffff",
+      radius: 8,
+    },
+     completed: {
+        background: "#dc2626",
+        text: "#ffffff",
+        radius: 8,
+    },
   },
 
   typography: {

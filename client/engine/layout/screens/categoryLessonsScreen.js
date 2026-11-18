@@ -19,9 +19,11 @@ export class CategoryLessonsLayout extends BaseScreenLayout {
             .map(node => node.props?.articleData)
             .filter(article =>
                 article?.articleId &&
-                article.category === selectedCategory &&
-                !completedLessons.includes(article.articleId)
-            )
+                article.category === selectedCategory 
+            ).map(article => ({
+                ...article,
+                completed: completedLessons.includes(article.articleId)
+            }))
 
         this.compile(CATEGORY_LESSONS_LAYOUT, {
             ...context,

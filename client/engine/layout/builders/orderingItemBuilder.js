@@ -14,7 +14,7 @@ export function buildOrderingItemNode(config, context) {
     const items = context.activity?.getItems?.() ?? []
 
     const width = resolveValue(config.width, context)
-        ?? context.contentWidth
+        ?? context.contentWidth/2
 
     const height = resolveValue(config.height, context)
         ?? ordering.itemHeight
@@ -71,13 +71,13 @@ export function buildOrderingItemNode(config, context) {
 
     const upButtonNodes = createControl(
         'up',
-        x + width/2 - buttonWidth * 2 - buttonGap,
+        x + width - buttonWidth * 2 - buttonGap,
         itemIndex === 0
     )
 
     const downButtonNodes = createControl(
         'down',
-        x + width/2 - buttonWidth,
+        x + width - buttonWidth,
         itemIndex === items.length - 1
     )
 

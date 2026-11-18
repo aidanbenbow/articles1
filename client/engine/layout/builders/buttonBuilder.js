@@ -10,6 +10,13 @@ export function buildButtonNode(config, context) {
         contentX,
         parent
     } = context
+
+const completed = resolveValue(config.completed, context)
+
+const buttonStyle = completed
+    ? metrics.buttonStyles.completed
+    : metrics.buttonStyles.default
+
     const node = createButtonNode({
         id: config.id,
         owner: config.owner?? owner,
@@ -26,11 +33,7 @@ articleData: resolveValue(
             config.width ??
             metrics.contentWidth,
         height: resolveValue(config.height, context) ?? metrics.button.height,
-        color:
-            resolveValue(
-                config.color,
-                context
-            ),
+        color:  buttonStyle.background,
         text: 
             resolveValue(
                 config.text,
@@ -56,7 +59,7 @@ disabled: resolveValue(
 ),
 category: config.category,
     })
-
+console.log(node, 'button node')
 
     return {node,
         currentY: node.worldY + node.height + metrics.padding

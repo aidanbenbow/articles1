@@ -23,7 +23,7 @@ const answer = activity?.getAnswer?.(section.id)
         
         x: config.x ?? context.contentX,
         worldY: config.worldY ?? currentY,
-        width: config.width ?? context.contentWidth,
+        width: config.width ?? context.contentWidth/2,
         height: config.height ?? metrics.quiz.optionHeight,
 
         text: resolveValue(config.text, context),
