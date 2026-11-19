@@ -1,6 +1,7 @@
 
 import { drawRect, drawText } from "../../draw/drawHelpers.js"
 import { getCanvasFont } from "../../draw/typographyHelpers.js"
+import { getButtonStyle } from "../../helpers/getButtonStyle.js"
 import { getScreenPosition } from "../../modules/renderUtils.js"
 
 export function renderButton(ctx, node, viewport,context) {
@@ -13,13 +14,13 @@ const width = node.width || 120
 const height = node.height || 40
 const colors = context?.responsive?.colors
 
-const buttonStyle = context?.responsive?.buttonStyles?.[node.disabled ? 'disabled' : 'default']
+const buttonStyle = getButtonStyle(node, context)
 
  // Resolve button appearance.
     const background =
         node.background ??
-        node.color ??
         buttonStyle.background ??
+        node.color ??
         colors.primary ??
         "#9481ed";
 

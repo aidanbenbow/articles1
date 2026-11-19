@@ -16,6 +16,8 @@ export function buildRenderModel(engine) {
     const assetManager = context.getAssetManager()
     const animations = context.getAnimationManager()
 
+    const uiState = interactionManager?.getUIState?.()
+
     // Must be the same metrics used during layout compilation.
     const metrics = context.getResponsiveMetrics()
 
@@ -56,6 +58,7 @@ switch (appState.screen) {
         assetManager,
         animations,
         interactionState,
+        uiState,
         dragState: interactionManager.dragState,
         view,
         layout: rootNodes,

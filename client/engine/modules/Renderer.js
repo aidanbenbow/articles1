@@ -1,6 +1,4 @@
 
-import { renderHome } from '../renderers/homeRenderer.js'
-import { renderLessonScreen } from '../renderers/lessonScreenRenderer.js'
 
 import { buildRenderModel } from '../renderers/general/renderModelBuilder.js'
 import { renderNode } from '../renderers/general/renderNode.js'
@@ -23,11 +21,7 @@ export class Renderer {
             render: this.render.bind(this),
         }
     }
-//     setScreen(){
-// this.screen = this.engine.context.getLayout().get('articlesScreen')
 
-// this.bgColor = this.screen?.color || '#ffffff'
-//     }
     setCanvas() {
         if (!this.engine.context.canvas) {
             console.warn('No canvas provided to Renderer')
@@ -77,6 +71,9 @@ try {
              this._unsubscribe.push(this.engine.on('lessonStateChanged', this.requestRender.bind(this)))
            
             this._unsubscribe.push(  this.engine.on('appStateChanged', () => this.requestRender()))
+            this._unsubscribe.push(
+    this.engine.on('uiStateChanged', this.requestRender.bind(this))
+)
             this._unsubscribe.push(this.engine.on('dragChanged', () => this.requestRender()))
             this.animationManager = this.engine.context.getAnimationManager()
             this.animationManager.setRequestFrame(() => this.requestRender())
@@ -92,6 +89,10 @@ try {
     }
     detach() {
         console.log('Renderer detached')
+        
+    this._unsubscribe.forEach(unsubscribe => unsubscribe?.())
+    this._unsubscribe = []
+
     }
     destroy() {
         this.detach()

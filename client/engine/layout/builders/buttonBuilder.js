@@ -2,20 +2,23 @@ import { createButtonNode } from "../nodeFactories/buttonNode.js"
 import { resolveValue } from "./resolveValue.js"
 
 export function buildButtonNode(config, context) {
-    const {
-       
+    const {  
         metrics,
         owner,
-        currentY,
         contentX,
-        parent
     } = context
 
 const completed = resolveValue(config.completed, context)
+const disabled = resolveValue(
+        config.disabled ?? (({ disabled }) => disabled),
+        context
+    )
 
 const buttonStyle = completed
-    ? metrics.buttonStyles.completed
-    : metrics.buttonStyles.default
+        ? metrics.buttonStyles.completed
+        : disabled
+            ? metrics.buttonStyles.disabled
+            : metrics.buttonStyles.default
 
     const node = createButtonNode({
         id: config.id,
@@ -57,6 +60,8 @@ disabled: resolveValue(
     config.disabled ?? (({ disabled }) => disabled),
     context
 ),
+disabled,
+completed,
 category: config.category,
     })
 console.log(node, 'button node')

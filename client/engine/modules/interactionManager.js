@@ -1,4 +1,5 @@
 import { ActionDispatcher } from "../actions/actionDispatcher.js"
+import { UIState } from "../state/UI/uiState.js"
 
 
 export class InteractionManager {
@@ -6,6 +7,8 @@ export class InteractionManager {
     constructor(engine) {
         this.engine = engine
         this.id = 'interactionState'
+        this.uiState = new UIState(engine)
+       
 this.actionDispatcher = new ActionDispatcher(engine)
         this.state = {
             view: 'list',
@@ -22,7 +25,11 @@ this.actionDispatcher = new ActionDispatcher(engine)
             getInteractionManager: () => this,
             appendSearchTerm: this.appendSearchTerm.bind(this),
             removeSearchTerm: this.removeSearchTerm.bind(this),
+            getUIState: () => this.getUIState(),
         }
+    }
+    getUIState() {
+        return this.uiState
     }
     handleTargetNode(targetNode) {
         if(!targetNode) return

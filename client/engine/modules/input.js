@@ -5,6 +5,7 @@ export class Input {
         this.engine = engine
         this.id = 'input'
         this.canvas = null
+        this.hoveredNodeId = null
         this.pointerState = {
             isDown: false,
             target: null,
@@ -36,6 +37,7 @@ this.engine.on(
             this.canvas.addEventListener('pointermove', this._onPointerMove)
             this.canvas.addEventListener('pointerup', this._onPointerUp)
             this.canvas.addEventListener('pointercancel', this._onPointerCancel)
+            this.canvas.addEventListener('pointerleave', this._onPointerLeave)
         }
         window.addEventListener('keydown', this._onKeyDown)
     }
@@ -51,6 +53,7 @@ this.engine.off?.(
             this.canvas.removeEventListener('pointermove', this._onPointerMove)
             this.canvas.removeEventListener('pointerup', this._onPointerUp)
             this.canvas.removeEventListener('pointercancel', this._onPointerCancel)
+            this.canvas.removeEventListener('pointerleave', this._onPointerLeave)
             this.interaction?.cancelDrag?.()
             window.removeEventListener('keydown', this._onKeyDown)
         }
@@ -66,7 +69,12 @@ this.engine.off?.(
         x,
         y
     )
-
+if (targetNode?.type === 'button') {
+    this.engine.context.getInteractionManager()?.getUIState()?.setPressed(
+        targetNode.id,
+        true
+    )
+}
     this.pointerState = {
         isDown: true,
         target: targetNode,
@@ -85,10 +93,12 @@ this.engine.off?.(
 
 _onPointerMove = (event) => {
 
-    if (!this.pointerState.isDown) return
-
     const {x,y} = this._normalisePointerEvent(event)
-
+ // Normal mouse movement: detect hover
+    if (!this.pointerState.isDown) {
+        this._updateHover(x, y)
+        return
+    }
     const dx = x - this.pointerState.startX
     const dy = y - this.pointerState.startY
 
@@ -106,6 +116,18 @@ _onPointerMove = (event) => {
         this.interaction.updateDrag({x,y})
     }
 
+}
+_onPointerLeave = () => {
+    if (this.pointerState.isDown) return
+
+    if (this.hoveredNodeId) {
+        this.engine.uiState?.setHover(
+            this.hoveredNodeId,
+            false
+        )
+
+        this.hoveredNodeId = null
+    }
 }
 _onPointerUp = (event) => {
 
@@ -141,10 +163,25 @@ if(drag) {
     } catch(e) {
         console.warn('Failed to release pointer capture', e)
     }
+const pressedNode = this.pointerState.target
 
+if (pressedNode?.type === 'button') {
+    this.engine.context.getInteractionManager()?.getUIState()?.setPressed(
+        pressedNode.id,
+        false
+    )
+}
     this._resetPointerState()
 }
 _onPointerCancel = () => {
+    const target = this.pointerState.target
+
+    if (target?.type === 'button') {
+        this.engine.uiState?.setPressed(
+            target.id,
+            false
+        )
+    }
     this.interaction?.cancelDrag?.()
     this._resetPointerState()
 }
@@ -432,6 +469,33 @@ findDropTarget(
 
         return dropTarget
     }
+    _updateHover(x, y) {
+    const nodes = this.engine.context.getLayout()
+
+    const target = this.hitTest(nodes, x, y)
+
+    const uiState = this.engine.context.getInteractionManager()?.getUIState?.()
+
+    if (!uiState) return
+
+    const previousId = this.hoveredNodeId
+    const nextId =
+        target?.type === 'button'
+            ? target.id
+            : null
+
+    if (previousId === nextId) return
+
+    if (previousId) {
+        uiState.setHover(previousId, false)
+    }
+
+    if (nextId) {
+        uiState.setHover(nextId, true)
+    }
+
+    this.hoveredNodeId = nextId
+}
 }
 
 function getCanvasColorAtPoint(ctx, x, y) {

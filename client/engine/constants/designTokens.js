@@ -62,6 +62,11 @@ export const DESIGN_TOKENS = {
         text: "#ffffff",
         radius: 8,
     },
+    active: {
+    background: "#6b4fc7",
+    text: "#ffffff",
+    radius: 8,
+},
   },
 
   typography: {
