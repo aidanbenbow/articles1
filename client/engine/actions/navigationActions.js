@@ -10,32 +10,113 @@ export class NavigationActions {
             openAnalytics: () => this.openAnalytics(),
             browseLessons: () => this.browseLessons(),
             goHome: () => this.goHome(),
-            openPlayerSelect: node => this.openPlayerSelect(node),
+            // Authentication navigation
+            showRegister: () => this.showRegister(),
+            showLogin: () => this.showLogin(),
+
+            // Cognito authentication
+            register: () => this.register(),
+            verifyEmail: () => this.verifyEmail(),
+            login: () => this.login(),
+            logout: () => this.logout(),
         }
     }
-    openPlayerSelect(node) {
-    
-
-    const nameNode = this.engine.context.getNode?.('name');
-    //const playerName = nameNode?.value?.trim();
-const playerName = this.engine.context.getInteractionManager()?.getInteractionState()?.playerName?.trim();
-    
-
-    const app = this.engine.context.app;
-
-    if (!playerName) {
-        console.warn('Please enter your name first');
-        return;
+   getInteractionState() {
+        return this.engine.context
+            .getInteractionManager()
+            ?.getInteractionState() ?? {};
     }
 
-    if (typeof app?.openPlayerSelect !== 'function') {
-        console.error('openPlayerSelect is not available on app');
-        return;
+    getApp() {
+        return this.engine.context.app;
     }
 
-    app.openPlayerSelect(playerName);
+    showRegister() {
+        this.getApp()?.navigate('register');
+    }
 
-}
+    showLogin() {
+        this.getApp()?.navigate('login');
+    }
+
+    async register() {
+        const { email, password } = this.getInteractionState();
+        const app = this.getApp();
+
+        if (!email?.trim() || !password) {
+            console.warn('Please enter your email and password.');
+            return;
+        }
+
+        try {
+            const result = await app.register(email, password);
+
+            if (result?.nextStep?.signUpStep === 'CONFIRM_SIGN_UP') {
+                app.navigate('verifyEmail');
+            } else {
+                console.log('Registration result:', result);
+            }
+
+            return result;
+        } catch (error) {
+            console.error('Registration failed:', error);
+        }
+    }
+
+    async verifyEmail() {
+        const { email, confirmationCode } = this.getInteractionState();
+        const app = this.getApp();
+
+        if (!email?.trim() || !confirmationCode?.trim()) {
+            console.warn('Please enter your email and verification code.');
+            return;
+        }
+
+        try {
+            const result = await app.verifyEmail(email, confirmationCode);
+
+            if (result?.isSignUpComplete) {
+                app.navigate('login');
+            }
+
+            return result;
+        } catch (error) {
+            console.error('Email verification failed:', error);
+        }
+    }
+
+    async login() {
+        const { email, password } = this.getInteractionState();
+        const app = this.getApp();
+
+        if (!email?.trim() || !password) {
+            console.warn('Please enter your email and password.');
+            return;
+        }
+
+        try {
+            const result = await app.login(email, password);
+
+            if (result?.isSignedIn) {
+                app.goHome();
+            } else {
+                console.log('Additional sign-in step required:', result?.nextStep);
+            }
+
+            return result;
+        } catch (error) {
+            console.error('Login failed:', error);
+        }
+    }
+
+    async logout() {
+        try {
+            await this.getApp()?.logout();
+            this.goHome();
+        } catch (error) {
+            console.error('Logout failed:', error);
+        }
+    }
 openCategory(node) {
    
     this.engine.context.app.openCategory(node.category);

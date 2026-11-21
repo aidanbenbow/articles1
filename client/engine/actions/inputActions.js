@@ -3,16 +3,18 @@ export class InputActions {
         this.engine = engine;
 
         this.handlers = {
-            focusNameInput: node => this.focusNameInput(node),
-            openPlayerSelect: () => this.openPlayerSelect()
+            focusNameInput: node => this.focusInput(node),
+            openPlayerSelect: () => this.openPlayerSelect(),
+            focusInput: node => this.focusInput(node),
         };
     }
+focusInput(node) {
+        if (!node) return;
 
-    focusNameInput(node) {
-        
         this.engine.context.setFocusedNode(node.id);
-        this.engine.emit("focusNameInput", node);
+        this.engine.emit('focusInput', node);
     }
+   
     openPlayerSelect() {
         const interaction =
             this.engine.context.getInteractionManager();

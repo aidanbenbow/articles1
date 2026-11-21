@@ -64,7 +64,7 @@ disabled,
 completed,
 category: config.category,
     })
-console.log(node, 'button node')
+
 
     return {node,
         currentY: node.worldY + node.height + metrics.padding

@@ -5,19 +5,25 @@ import { ArticlesService } from "./articlesService.js";
 import { registerLessonProgressHandlers } from "./lessonProgressHandlers.js";
 import { LessonProgressRepository } from "./lessonProgressRepository.js";
 import { LessonProgressService } from "./lessonProgressService.js";
+import { registerUserHandlers } from "./userHandlers.js";
+import { UserRepository } from "./userRepository.js";
+import { UserService } from "./userService.js";
 
 export function registerBackend(app) {
 const articlesRepo = new ArticlesRepository(docClient)
 const articlesService = new ArticlesService(articlesRepo)
 
 registerArticlesHandlers(app, articlesService)
-
+ // User
+    const userRepo = new UserRepository(docClient);
+    const userService = new UserService(userRepo);
+    registerUserHandlers(app, userService);
  // Lesson progress
     const lessonProgressRepo =
         new LessonProgressRepository(docClient);
 
     const lessonProgressService =
-        new LessonProgressService(lessonProgressRepo);
+        new LessonProgressService(lessonProgressRepo, userRepo);
 
     registerLessonProgressHandlers(app, lessonProgressService);
 
@@ -35,4 +41,6 @@ registerArticlesHandlers(app, articlesService)
 
     // Refresh once every hour
     setInterval(refreshLeaderboard, 60 * 60 * 1000);
+
+   
 }

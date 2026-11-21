@@ -1,5 +1,5 @@
-import { UserService } from "../../../engine/services/userServices.js"
-import { createUser, users, saveUsers} from "./users.js"
+
+import { AuthService } from "../../services/authServices.js"
 
 export class AppState {
 
@@ -8,19 +8,127 @@ export class AppState {
         this.articleId = null
         this.activeLessonId = null
         this.selectedCategory = null
-        const savedUserId = localStorage.getItem('currentUserId')
 
-this.user = users.find(user => user.id === savedUserId) ?? null
-        this.userService = new UserService(users, saveUsers)
+        this.user = null
+       this.authLoading = false;
+        this.authError = null;
+
+        this.authService = new AuthService();
        
     }
-    login(user) {
-        this.user = user
-        localStorage.setItem('currentUserId', user.id)
+    async loadProfile() {
+        const token = await this.authService.getAccessToken();
+
+        if (!token) {
+            throw new Error("No authenticated session found");
+        }
+
+        const response = await fetch('/api/users/me', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(
+                `Failed to load learner profile: ${response.status}`
+            );
+        }
+
+        const profile = await response.json();
+
+        // Keep the existing app's user.id convention.
+        this.user = {
+            ...profile,
+            id: profile.userId
+        };
+
+        return this.user;
     }
-    logout() {
-        this.user = null
-        localStorage.removeItem('currentUserId')
+
+    async initializeAuth() {
+        this.authLoading = true;
+        this.authError = null;
+
+        try {
+            const authenticated =
+                await this.authService.isAuthenticated();
+
+            if (!authenticated) {
+                this.user = null;
+                return null;
+            }
+
+            return await this.loadProfile();
+        } catch (error) {
+            this.user = null;
+            this.authError = error.message;
+            throw error;
+        } finally {
+            this.authLoading = false;
+        }
+    }
+
+    async register(email, password) {
+        this.authError = null;
+
+        try {
+            return await this.authService.register(email, password);
+        } catch (error) {
+            this.authError = error.message;
+            throw error;
+        }
+    }
+
+    async verifyEmail(email, confirmationCode) {
+        this.authError = null;
+
+        try {
+            return await this.authService.verifyEmail(
+                email,
+                confirmationCode
+            );
+        } catch (error) {
+            this.authError = error.message;
+            throw error;
+        }
+    }
+
+    async login(email, password) {
+        this.authError = null;
+
+        try {
+            const result = await this.authService.login(email, password);
+
+            // Cognito may require another step before sign-in completes.
+            if (!result.isSignedIn) {
+                return result;
+            }
+
+            await this.loadProfile();
+
+            return {
+                ...result,
+                user: this.user
+            };
+        } catch (error) {
+            this.user = null;
+            this.authError = error.message;
+            throw error;
+        }
+    }
+
+    async logout() {
+        try {
+            await this.authService.logout();
+        } finally {
+            this.user = null;
+            this.activeLessonId = null;
+            this.articleId = null;
+            this.selectedCategory = null;
+            this.authError = null;
+            this.screen = 'home';
+        }
     }
      navigate(screen, data = {}) {
         this.screen = screen
@@ -29,22 +137,7 @@ this.user = users.find(user => user.id === savedUserId) ?? null
             this.articleId = data.articleId
         }
     }
-    openPlayerSelect(name) {
-        
-        if (!name?.trim()) {
-        console.warn("Please enter your name first");
-        return;
-    }
-
-    const user = createUser(name);
-
-    this.login(user);
-
-    this.navigate("playerSelect");
-
-    return user;
-    
-    }
+   
 
     openLesson(lessonId) {
         this.activeLessonId = lessonId
@@ -69,14 +162,14 @@ this.user = users.find(user => user.id === savedUserId) ?? null
         this.selectedCategory = null
         this.screen = 'home'
     }
-    completeLesson(data) {
-       if (!this.user) {
-        throw new Error('No user is currently logged in');
-    } 
-        if (!data.lessonId) {
-            throw new Error('No active lesson to complete')
-        }
-     this.user =   this.userService.completeLesson(this.user.id, data)
-   return this.user
-    }
+//     completeLesson(data) {
+//        if (!this.user) {
+//         throw new Error('No user is currently logged in');
+//     } 
+//         if (!data.lessonId) {
+//             throw new Error('No active lesson to complete')
+//         }
+//      this.user =   this.userService.completeLesson(this.user.id, data)
+//    return this.user
+//     }
 }

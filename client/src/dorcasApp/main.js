@@ -1,4 +1,5 @@
 import { Engine } from '../../engine/core/Engine.js'
+import '../config/amplifyConfig.js'
 
 
 export function bootstrapDorcas2App(options = {}) {
@@ -8,5 +9,17 @@ export function bootstrapDorcas2App(options = {}) {
 		...options,
 	})
 	engine.mount()
-	return engine
+
+	// Restore an existing Cognito session and learner profile.
+    Promise.resolve().then(async () => {
+        try {
+            await engine.context.app.initializeAuth();
+        } catch (error) {
+            console.error('Could not initialize authentication:', error);
+        }
+    });
+
+    return engine;
 }
+	
+

@@ -1,10 +1,14 @@
 
 export class LessonProgressService {
-    constructor(lessonProgressRepo) {
+    constructor(lessonProgressRepo, userRepository=null) {
         this.lessonProgressRepo = lessonProgressRepo;
+        this.userRepository = userRepository;
     }
 
     getProgress(userId) {
+         if (!userId) {
+            throw new Error("A userId is required");
+        }
         return this.lessonProgressRepo.getProgress(userId);
     }
 async refreshLeaderboard() {
@@ -20,7 +24,6 @@ async refreshLeaderboard() {
         if (!users.has(userId)) {
             users.set(userId, {
                 userId,
-                displayName: record.displayName || "Learner",
                 completedLessons: 0,
                 totalActiveTime: 0,
                 totalScore: 0
@@ -37,10 +40,40 @@ async refreshLeaderboard() {
         user.totalScore += Number(record.totalScore) || 0;
     }
 
-    const leaderboard = [...users.values()].sort((a, b) =>
-        b.completedLessons - a.completedLessons ||
-        b.totalActiveTime - a.totalActiveTime
-    );
+    // Add display names from learner profiles, if available.
+        const leaderboard = await Promise.all(
+            [...users.values()].map(async user => {
+                let displayName = "Learner";
+
+                if (this.userRepository) {
+                    try {
+                        const profile =
+                            await this.userRepository.getProfile(user.userId);
+
+                        displayName =
+                            profile?.displayName || "Learner";
+                    } catch (error) {
+                        console.error(
+                            "Could not retrieve leaderboard profile:",
+                            error.message
+                        );
+                    }
+                }
+
+                return {
+                    displayName,
+                    completedLessons: user.completedLessons,
+                    totalActiveTime: user.totalActiveTime,
+                    totalScore: user.totalScore
+                };
+            })
+        );
+
+        leaderboard.sort((a, b) =>
+            b.completedLessons - a.completedLessons ||
+            b.totalScore - a.totalScore ||
+            b.totalActiveTime - a.totalActiveTime
+        );
 
     return this.lessonProgressRepo.saveLeaderboard(leaderboard);
 }
@@ -49,10 +82,20 @@ async getLeaderboard() {
     return this.lessonProgressRepo.getLeaderboardSnapshot();
 }
     saveProgress(progress) {
+        if (!progress?.userId || !progress?.lessonId) {
+            throw new Error(
+                "Both userId and lessonId are required"
+            );
+        }
         return this.lessonProgressRepo.saveProgress(progress);
     }
 
     deleteProgress(userId, lessonId) {
+        if (!progress?.userId || !progress?.lessonId) {
+            throw new Error(
+                "Both userId and lessonId are required"
+            );
+        }
         return this.lessonProgressRepo.deleteProgress(
             userId,
             lessonId

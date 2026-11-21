@@ -51,7 +51,9 @@ this.score = Object.values(this.activities).reduce((total, activity) => {
     }
     startPhase() {
         this.phase = 'active'
+        if (!this.startedAt) {
         this.startedAt = new Date().toISOString();
+    }
         this.startActiveSession()
     }
     startActiveSession() {
@@ -256,7 +258,9 @@ restoreProgress(progress) {
     }
 
     if (this.completed) {
-        this.phase = 'results'
+        this.currentSectionId = null;
+    this.currentSectionIndex = this.sections.length;
+    this.phase = 'results';
     } else if (progress.status === 'in_progress') {
         this.phase = 'active'
     } else {

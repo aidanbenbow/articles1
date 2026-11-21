@@ -13,12 +13,28 @@ export class LessonProgressRepository {
         this.tableName =
             process.env.DYNAMODB_TABLE || "LearningApp";
     }
+validateIds(userId, lessonId = null) {
+        if (
+            typeof userId !== "string" ||
+            !userId.trim()
+        ) {
+            throw new Error("A valid userId is required");
+        }
 
+        if (
+            lessonId !== null &&
+            (
+                typeof lessonId !== "string" ||
+                !lessonId.trim() ||
+                lessonId.length > 200
+            )
+        ) {
+            throw new Error("A valid lessonId is required");
+        }
+    }
     // Retrieve all lesson progress for one learner
     async getProgress(userId) {
-        if (!userId) {
-            throw new Error("A userId is required");
-        }
+        this.validateIds(userId);
 
         const items = [];
         let ExclusiveStartKey;
@@ -105,18 +121,57 @@ async getLeaderboardSnapshot() {
 }
     // Save or update one lesson's progress
     async saveProgress(progress) {
-        if (!progress.userId || !progress.lessonId) {
-            throw new Error(
-                "Both userId and lessonId are required"
-            );
+       if (!progress || typeof progress !== "object") {
+            throw new Error("Progress data is required");
         }
 
+        this.validateIds(progress.userId, progress.lessonId);
+
+        const {
+            userId,
+            lessonId,
+            status,
+            progressPercent,
+            currentActivityId,
+            completedActivityIds,
+            quizAnswers,
+            quizScore,
+            totalScore,
+            surveyResponses,
+            orderingAnswers,
+            completedAt,
+            startedAt,
+            activeTimeSeconds
+        } = progress;
+
         const item = {
-            ...progress,
-            PK: `USER#${progress.userId}`,
-            SK: `LESSON#${progress.lessonId}`,
+            PK: `USER#${userId}`,
+            SK: `LESSON#${lessonId}`,
+            userId,
+            lessonId,
             updatedAt: new Date().toISOString()
         };
+
+        const fields = {
+            status,
+            progressPercent,
+            currentActivityId,
+            completedActivityIds,
+            quizAnswers,
+            quizScore,
+            totalScore,
+            surveyResponses,
+            orderingAnswers,
+            completedAt,
+            startedAt,
+            activeTimeSeconds
+        };
+
+        for (const [key, value] of Object.entries(fields)) {
+            if (value !== undefined) {
+                item[key] = value;
+            }
+        }
 
         await this.docClient.send(
             new PutCommand({
@@ -130,11 +185,7 @@ async getLeaderboardSnapshot() {
 
     // Delete one lesson's progress
     async deleteProgress(userId, lessonId) {
-        if (!userId || !lessonId) {
-            throw new Error(
-                "Both userId and lessonId are required"
-            );
-        }
+        this.validateIds(userId, lessonId);
 
         await this.docClient.send(
             new DeleteCommand({

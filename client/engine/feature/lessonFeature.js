@@ -16,6 +16,8 @@ export class LessonFeature {
         
         this.lessonProgressStore = new LessonProgressStore()
         this.leaderboard = { players: [], updatedAt: null };
+        this.loadedProgressUsers = new Set();
+this.progressLoadPromises = new Map();
         this.lessonAnalyticsService = new LessonAnalyticsService(this.lessonProgressStore,{
 get articles() {
                 return engine.context.getArticles?.() ?? []
@@ -41,7 +43,7 @@ get articles() {
 }
     contextExports() {
         return { 
-            startLesson: (articleId, sections) => this.lessonController.start(articleId, sections),
+            startLesson: (articleId) => this.lessonController.start(articleId),
             getLesson: () => this.lessonController.getState(),
             answerQuiz: (sectionId, quizId, optionIndex, answer) => this.lessonController.answerQuiz(sectionId, quizId, optionIndex, answer),
             answerSurvey: (surveyId, optionIndex) => this.lessonController.answerSurvey(surveyId, optionIndex),
@@ -60,7 +62,9 @@ get articles() {
     this.lessonController.moveOrderingItem(sectionId,itemIndex,direction),
 checkOrdering: (sectionId) => this.lessonController.checkOrdering(sectionId),
 checkDragDrop: (sectionId) => this.lessonController.checkDragDrop(sectionId),
-ensureProgressLoaded: () => this.ensureProgressLoaded()
+ensureProgressLoaded: () => this.ensureProgressLoaded(),
+saveAndPauseLesson: () => this.saveAndPauseLesson(),
+invalidateProgressForUser: (userId) => this.invalidateProgressForUser(userId),
         }
     }
     startLessonFromArticle(article) {
@@ -69,31 +73,100 @@ ensureProgressLoaded: () => this.ensureProgressLoaded()
         this.lessonController.start(lesson)
         return lesson
     }
+
 async ensureProgressLoaded() {
-    const userId = this.engine.context.app?.getState()?.user?.id
+    const userId =
+        this.engine.context.app?.getState()?.user?.id;
 
     if (!userId) {
-        console.warn('Cannot load lesson progress: no selected user')
-        return
+        console.warn(
+            'Cannot load lesson progress: no authenticated learner'
+        );
+        return;
     }
 
-    await initializeLessonProgress(this.lessonProgressStore, userId)
-    try {
-    this.leaderboard = await fetchLeaderboard();
-    console.log('Leaderboard loaded successfully');
-} catch (error) {
-    console.error('Error loading leaderboard:', error);
+    // This learner's progress has already been loaded.
+    if (this.loadedProgressUsers.has(userId)) {
+        return;
+    }
+
+    // Avoid duplicate requests for the same learner.
+    const existingRequest = this.progressLoadPromises.get(userId);
+
+    if (existingRequest) {
+        return existingRequest;
+    }
+
+    const loadPromise = (async () => {
+        try {
+            await initializeLessonProgress(
+                this.lessonProgressStore,
+                userId
+            );
+const currentUserId =
+    this.engine.context.app?.getState()?.user?.id;
+
+if (currentUserId !== userId) {
+    throw new Error(
+        "Learner changed while progress was loading"
+    );
 }
+            this.loadedProgressUsers.add(userId);
+
+            try {
+                this.leaderboard = await fetchLeaderboard();
+                console.log('Leaderboard loaded successfully');
+            } catch (error) {
+                console.error(
+                    'Error loading leaderboard:',
+                    error
+                );
+            }
+
+            console.log(
+                `Progress ready for learner ${userId}`
+            );
+        } catch (error) {
+            console.error(
+                `Failed to load progress for ${userId}:`,
+                error
+            );
+
+            // Don't mark this learner as loaded.
+            // A later attempt can retry.
+            throw error;
+        } finally {
+            this.progressLoadPromises.delete(userId);
+        }
+    })();
+
+    this.progressLoadPromises.set(userId, loadPromise);
+
+    return loadPromise;
+}
+async saveAndPauseLesson() {
+    await this.lessonService.saveAndPauseLesson();
+}
+invalidateProgressForUser(userId) {
+    if (!userId) return;
+
+    this.loadedProgressUsers.delete(userId);
 }
 handleVisibilityChange() {
-    const lesson = this.lessonService.lesson
-    if(!lesson||lesson.phase !== 'active') return
+    const lesson = this.lessonService.lesson;
 
-if(document.visibilityState === 'hidden') {
-        lesson.stopActiveSession()
-        this.lessonService.syncProgress()
-    } else {
-        lesson.startActiveSession()
+    if (!lesson || lesson.phase !== 'active') {
+        return;
+    }
+
+    if (document.visibilityState === 'hidden') {
+        lesson.stopActiveSession();
+        this.lessonService.syncProgress();
+        return;
+    }
+
+    if (document.visibilityState === 'visible') {
+        lesson.startActiveSession();
     }
 }
 }

@@ -24,14 +24,12 @@ attach() {
         this.interaction = this.engine.context.getInteractionManager()
         this.mobileInput.attach();
 
-this._onNameInputFocus = (node) => {
+this._onInputFocus = node => {
     this.mobileInput.focus(node);
 };
 
-this.engine.on(
-    'focusNameInput',
-    this._onNameInputFocus
-);
+this.engine.on('focusInput', this._onInputFocus);
+this.engine.on('focusNameInput', this._onInputFocus);
         if (this.canvas) {
             this.canvas.addEventListener('pointerdown', this._onPointerDown)
             this.canvas.addEventListener('pointermove', this._onPointerMove)
@@ -44,10 +42,8 @@ this.engine.on(
     detach() {
         this.mobileInput.detach();
 
-this.engine.off?.(
-    'focusNameInput',
-    this._onNameInputFocus
-);
+this.engine.off?.('focusInput', this._onInputFocus);
+this.engine.off?.('focusNameInput', this._onInputFocus);
         if (this.canvas) {
             this.canvas.removeEventListener('pointerdown', this._onPointerDown)
             this.canvas.removeEventListener('pointermove', this._onPointerMove)
@@ -197,42 +193,55 @@ _resetPointerState(){
     }
 }
     _onKeyDown = (event) => {
+        if (event.target === this.mobileInput.element) return;
         const focusedNode = this.engine.context.getFocusedNode?.();
 
     if (!focusedNode) return;
-
-       if (focusedNode.type === "nameInput") {
-        const value = focusedNode.value ?? "";
-
-        if (event.key === "Backspace") {
-            event.preventDefault();
-            const newValue = value.slice(0, -1);
-            focusedNode.value = newValue;
-            focusedNode.text = newValue;
-            this.interaction.setPlayerName(newValue);
-            return;
+const inputTypes = {
+        nameInput: {
+            setter: value => this.interaction.setPlayerName(value),
+            display: value => value
+        },
+        emailInput: {
+            setter: value => this.interaction.setEmail(value),
+            display: value => value
+        },
+        passwordInput: {
+            setter: value => this.interaction.setPassword(value),
+            display: value => '•'.repeat(value.length)
+        },
+        confirmationCodeInput: {
+            setter: value => this.interaction.setConfirmationCode(value),
+            display: value => value
         }
+    };
 
-        if (event.key === "Enter" || event.key === "Escape") {
+    const config = inputTypes[focusedNode.type];
+       if (config) {
+        event.preventDefault();
+
+        let value = focusedNode.value ?? '';
+
+        if (event.key === 'Backspace') {
+            value = value.slice(0, -1);
+        } else if (event.key === 'Enter' || event.key === 'Escape') {
             this.engine.context.clearFocusedNode();
+            this.mobileInput.blur();
             return;
-        }
-
-        if (
+        } else if (
             event.key.length === 1 &&
             !event.ctrlKey &&
             !event.metaKey &&
             !event.altKey
         ) {
-            event.preventDefault();
-
-            const newValue = value + event.key;
-
-        focusedNode.value = newValue;
-        focusedNode.text = newValue;
-
-        this.interaction.setPlayerName(newValue);
+            value += event.key;
+        } else {
+            return;
         }
+
+        focusedNode.value = value;
+        focusedNode.text = config.display(value);
+        config.setter(value);
 
         return;
     }

@@ -8,6 +8,9 @@ import { AnalyticsScreen } from "../layout/screens/analyticsScreen.js"
 
 
 import { matchesOrderedPrefix, normalize } from "./search.js"
+import { LoginScreen } from "../layout/screens/logInScreen.js"
+import { RegisterScreen } from "../layout/screens/registrationScreen.js"
+import { VerifyEmailScreen } from "../layout/screens/verifyEmailScreen.js"
 
 export class ArticleLayoutFeature {
     constructor(engine) {
@@ -45,6 +48,9 @@ export class ArticleLayoutFeature {
 category: new CategoryLessonsLayout(this.engine, this.layout),
 analytics: new AnalyticsScreen(this.engine, this.layout),
         lesson: new LessonLayout(this.engine, this.layout),
+        login: new LoginScreen(this.engine, this.layout),
+        register: new RegisterScreen(this.engine, this.layout),
+        verifyEmail: new VerifyEmailScreen(this.engine, this.layout)
     }
     }
 
@@ -124,7 +130,10 @@ clearScreenLayout() {
         'category',
         'lessonBrowser',
         'lesson',
-        'analytics'
+        'analytics',
+        'login',
+        'register',
+        'verifyEmail'
     ];
 
     for (const [id, node] of this.layout.layoutNodes) {

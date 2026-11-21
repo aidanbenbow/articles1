@@ -34,22 +34,24 @@ this.progress.set(key, lessonProgress)
     }
 
     setAll(records = []) {
+    this.progress.clear();
 
-        this.progress.clear()
+    for (const record of records) {
+        const lessonProgress =
+            record instanceof LessonProgress
+                ? record
+                : new LessonProgress(record);
 
-        for (const record of records) {
+        const key = this.getKey(
+            lessonProgress.userId,
+            lessonProgress.lessonId
+        );
 
-            const lessonProgress =
-                record instanceof LessonProgress
-                    ? record
-                    : new LessonProgress(record)
-
-            const key = this.getKey( lessonProgress.userId,lessonProgress.lessonId)
-
-            this.progress.set(key, lessonProgress)
-            this.save()
-        }
+        this.progress.set(key, lessonProgress);
     }
+
+    this.save();
+}
     set(record) {
         const lessonProgress =
             record instanceof LessonProgress

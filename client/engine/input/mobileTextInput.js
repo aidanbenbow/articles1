@@ -12,8 +12,8 @@ export class MobileTextInput {
         const input = document.createElement('input');
 
         input.type = 'text';
-        input.autocomplete = 'name';
-        input.autocapitalize = 'words';
+        input.autocomplete = 'off';
+        input.autocapitalize = 'none';
         input.spellcheck = false;
         input.enterKeyHint = 'done';
 
@@ -21,11 +21,11 @@ export class MobileTextInput {
             position: 'fixed',
             left: '0',
             top: '0',
-            width: '1px',
-            height: '1px',
+            width: '100px',
+            height: '40px',
             opacity: '0.01',
             fontSize: '16px',
-            zIndex: '1',
+            zIndex: '9999',
             pointerEvents: 'auto',
         });
 
@@ -35,13 +35,26 @@ export class MobileTextInput {
             if (!this.activeNode) return;
 
             const value = input.value;
+const node = this.activeNode;
+const interaction = this.engine.context.getInteractionManager();
+            node.value = value;
+            if (node.type === 'passwordInput') {
+                node.text = '•'.repeat(value.length);
+            } else {
+                node.text = value;
+            }
+const setters = {
+                nameInput: 'setPlayerName',
+                emailInput: 'setEmail',
+                passwordInput: 'setPassword',
+                confirmationCodeInput: 'setConfirmationCode',
+            };
 
-            this.activeNode.value = value;
-            this.activeNode.text = value;
+            const setter = setters[node.type];
 
-            this.engine.context
-                .getInteractionManager()
-                ?.setPlayerName(value);
+            if (setter) {
+                interaction?.[setter]?.(value);
+            }
         });
 
         input.addEventListener('keydown', (event) => {
@@ -58,14 +71,25 @@ export class MobileTextInput {
         if (!this.element || !node || node.disabled) return;
 
         this.activeNode = node;
+const state = this.engine.context.getInteractionState?.() ?? {};
+const values = {
+            nameInput: state.playerName,
+            emailInput: state.email,
+            passwordInput: state.password,
+            confirmationCodeInput: state.confirmationCode,
+        };
+        const inputTypes = {
+        nameInput: 'text',
+        emailInput: 'email',
+        passwordInput: 'password',
+        confirmationCodeInput: 'text',
+    };
+    this.element.type = inputTypes[node.type] ?? 'text';
+    this.element.inputMode =
+        node.type === 'confirmationCodeInput' ? 'numeric' : 'text';
+         this.element.value = values[node.type] ?? node.value ?? '';
 
-        const savedName =
-            this.engine.context.getInteractionState()
-                ?.playerName ?? '';
-
-        this.element.value = savedName;
-
-        // Call focus directly from the user's tap action.
+        // Keep focus directly inside the user's tap interaction.
         this.element.focus({ preventScroll: true });
     }
 

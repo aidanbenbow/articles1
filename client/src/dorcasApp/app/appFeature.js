@@ -18,9 +18,26 @@ export class AppFeature {
         return {
             app: {
                 getState: () => this.appController.getState(),
-                openPlayerSelect: (name) => this.appController.openPlayerSelect(name),
+                navigate: (screen,data) => this.appController.navigate(screen,data),
+                 initializeAuth: () =>
+                this.appController.initializeAuth(),
+
+            register: (email, password) =>
+                this.appController.register(email, password),
+
+            verifyEmail: (email, code) =>
+                this.appController.verifyEmail(email, code),
+
+            login: (email, password) =>
+                this.appController.login(email, password),
+
+            logout: () =>
+                this.appController.logout(),
+
                 openCategory: (category) => this.appController.openCategory(category),
-                openLesson: (articleId) =>this.appController.openLesson(   articleId ),
+                openLesson: article =>
+                this.appController.openLesson(article),
+
 openLessonBrowser: () => this.appController.openLessonBrowser(),
 openAnalytics: async () => {
     await this.engine.context.ensureProgressLoaded();

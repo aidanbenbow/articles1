@@ -16,6 +16,9 @@ this.actionDispatcher = new ActionDispatcher(engine)
             searchTerm: '',
             focusedNodeId: null,
             playerName: '',
+            email: '',
+    password: '',
+    confirmationCode: '',
         }
         this.dragState = null
     }
@@ -26,6 +29,9 @@ this.actionDispatcher = new ActionDispatcher(engine)
             appendSearchTerm: this.appendSearchTerm.bind(this),
             removeSearchTerm: this.removeSearchTerm.bind(this),
             getUIState: () => this.getUIState(),
+            setEmail: this.setEmail.bind(this),
+            setPassword: this.setPassword.bind(this),
+            setConfirmationCode: this.setConfirmationCode.bind(this),
         }
     }
     getUIState() {
@@ -46,6 +52,20 @@ setPlayerName(value = '') {
     };
 
    
+    this.emitLayoutChanged();
+}
+setEmail(value = '') {
+    this.state = { ...this.state, email: value };
+    this.emitLayoutChanged();
+}
+
+setPassword(value = '') {
+    this.state = { ...this.state, password: value };
+    this.emitLayoutChanged();
+}
+
+setConfirmationCode(value = '') {
+    this.state = { ...this.state, confirmationCode: value };
     this.emitLayoutChanged();
 }
 getFocusedNode() {

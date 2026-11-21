@@ -4,26 +4,41 @@ import { createNameInputNode } from "../nodeFactories/inputNode.js";
 import { resolveValue } from "./resolveValue.js";
 
 export function buildNameInputNode(config, context) {
-    const {
-        
+    const {  
         metrics,
         owner,
         currentY,
-        parent,
         contentX,
         contentWidth
     } = context;
 
     const resolve = (value, fallback = null) =>
         resolveValue(value, context) ?? fallback;
-
+const type = config.type ?? "nameInput";
     const interaction = context.getInteractionState?.();
 
-    const value = interaction?.playerName || "";
+    const stateKeys = {
+        nameInput: "playerName",
+        emailInput: "email",
+        passwordInput: "password",
+        confirmationCodeInput: "confirmationCode"
+    };
+
+    const stateKey = stateKeys[type];
+    const value = stateKey
+        ? interaction?.[stateKey] ?? ""
+        : "";
+
+    const defaultPlaceholders = {
+        nameInput: "Enter your name...",
+        emailInput: "Enter your email...",
+        passwordInput: "Enter your password...",
+        confirmationCodeInput: "Enter verification code..."
+    };
 
     const placeholder = resolve(
         config.placeholder,
-        "Enter your name..."
+        defaultPlaceholders[type] ?? "Enter text..."
     );
 const inputLayout = metrics.nameInput;
     const node = createNameInputNode({
@@ -45,14 +60,17 @@ const inputLayout = metrics.nameInput;
 
         color: resolve(config.color, "#ffffff"),
 
-        text: value || placeholder,
+        text: type === "passwordInput"
+            ? "•".repeat(value.length)
+            : value || placeholder,
         value,
         placeholder,
 
        padding: resolve(config.padding, inputLayout.padding),
 
-        action: config.action ?? "focusNameInput",
-
+        action: config.action ?? "focusInput",
+type,
+        kind: type,
         disabled: resolve(config.disabled, false)
     });
 

@@ -13,6 +13,11 @@ export class LessonController {
     this.lessonService.setCurrentSection(
         sectionId
     )
+    this.engine.emit('lessonStateChanged', {
+        phase: this.lessonService.getLesson().phase,
+        currentSectionId:
+            this.lessonService.getLesson().currentSectionId
+    });
 
     }
     answerQuiz( sectionId,quizId,optionIndex,answer
@@ -61,6 +66,11 @@ export class LessonController {
 }
 startPhase() {
     this.lessonService.startPhase()
+    this.engine.emit('lessonStateChanged', {
+        phase: this.lessonService.getLesson().phase,
+        currentSectionId:
+            this.lessonService.getLesson().currentSectionId
+    });
 }
   finishLesson() {
     const results = this.lessonService.finishLesson()
@@ -113,5 +123,22 @@ checkDragDrop(sectionId) {
     })
 
     return result
+}
+completeSection(sectionId) {
+    this.lessonService.completeSection(sectionId);
+
+    this.engine.emit("lessonStateChanged", {
+        phase: this.lessonService.lesson.phase,
+        currentSectionId: this.lessonService.lesson.currentSectionId
+    });
+}
+
+updateProgress() {
+    return this.lessonService.syncProgress();
+}
+
+onViewPortChanged() {
+    // Keep this if your canvas engine expects this callback.
+    // Add viewport-specific behavior here if required.
 }
 }

@@ -5,6 +5,63 @@ export class AppController {
    
         this.engine = engine
     }
+    async initializeAuth() {
+        try {
+            const user = await this.appState.initializeAuth();
+
+            if (user) {
+                await this.engine.context.ensureProgressLoaded();
+            }
+
+            this.emitStateChanged();
+            return user;
+        } catch (error) {
+            console.error('Authentication initialization failed:', error);
+            this.emitStateChanged();
+            return null;
+        }
+    }
+
+    async register(email, password) {
+        const result = await this.appState.register(email, password);
+        this.emitStateChanged();
+        return result;
+    }
+
+    async verifyEmail(email, code) {
+        const result = await this.appState.verifyEmail(email, code);
+        this.emitStateChanged();
+        return result;
+    }
+
+    async login(email, password) {
+        const result = await this.appState.login(email, password);
+
+        if (result.isSignedIn && this.appState.user) {
+            await this.engine.context.ensureProgressLoaded();
+        }
+
+        this.emitStateChanged();
+        return result;
+    }
+
+    async logout() {
+        const userId = this.appState.user?.id;
+         try {
+        // Save the current learner's lesson before signing out.
+        await this.engine.context.saveAndPauseLesson();
+
+        // Only sign out after the save succeeds.
+        await this.appState.logout();
+this.engine.context.invalidateProgressForUser(userId);
+        this.emitStateChanged();
+    } catch (error) {
+        console.error('Logout could not complete:', error);
+
+        // Keep the learner signed in if saving failed.
+        throw error;
+    }
+    }
      navigate(screen, data = {}) {
         
         this.appState.navigate(screen, data)
@@ -13,24 +70,13 @@ export class AppController {
 
         this.emitStateChanged()
     }
-    openPlayerSelect(name) {
-   
-    const user = this.appState.openPlayerSelect(name);
 
-    if (!user) return;
-
-   
-    this.engine.context.resetScroll();
-    this.emitStateChanged();
-
-    return user;
-}
 
   async openLesson(article) {
     const articleId = article.articleId || article.id
 
     await this.engine.context.ensureProgressLoaded()
-
+await this.engine.context.saveAndPauseLesson();
     this.engine.context.getTransitionManager().transition(() => {
         this.engine.context.startLessonFromArticle(article)
 

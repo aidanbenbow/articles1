@@ -10,19 +10,45 @@ export class LessonService {
         this.lessonProgressStore = lessonProgressStore
         this.getUserId = getUserId
         this.lesson = new LessonState()
+        this.lessonUserId = null;
+    this.completedAt = null;
+    this.lastSaveError = null;
         this.progressSaveQueue = Promise.resolve()
     }
     startLesson(lessonData) {
-        this.lesson = new LessonState(lessonData)
-const userId = this.getUserId()
-        const savedProgress = userId ? this.lessonProgressStore.get(userId, this.lesson.articleId) : null
-      this.lesson.start()
-if (savedProgress) {
-        this.lesson.restoreProgress(savedProgress)
-        if(this.lesson.phase === 'active'){
-            this.lesson.startActiveSession()
+    const userId = this.getUserId();
+
+    if (!userId) {
+        throw new Error(
+            'A learner must be signed in before starting a lesson'
+        );
+    }
+if (this.lessonUserId && this.lessonUserId !== userId) {
+    throw new Error(
+        "The previous learner's lesson must be saved before switching accounts"
+    );
+}
+    this.lessonUserId = userId;
+    this.completedAt = null;
+
+    this.lesson = new LessonState(lessonData);
+
+    const savedProgress = this.lessonProgressStore.get(
+        userId,
+        this.lesson.articleId
+    );
+
+    this.lesson.start();
+
+    if (savedProgress) {
+        this.completedAt = savedProgress.completedAt ?? null;
+
+        this.lesson.restoreProgress(savedProgress);
+
+        if (this.lesson.phase === 'active') {
+            this.lesson.startActiveSession();
         }
-    } else if (userId) {
+    } else {
         this.lessonProgressStore.update(
             userId,
             this.lesson.articleId,
@@ -33,11 +59,13 @@ if (savedProgress) {
                 completedActivityIds: [],
                 startedAt: this.lesson.startedAt
             }
-            
-        )
-    }this.syncProgress()
-        return this.lesson
+        );
     }
+
+    this.syncProgress();
+
+    return this.lesson;
+}
     startPhase() {
         this.lesson.startPhase()
         this.syncProgress()
@@ -64,14 +92,48 @@ if (savedProgress) {
 
     return this.lesson.getResults()
     }
-   
+   async flushProgressSaves() {
+    await this.progressSaveQueue;
+
+    if (this.lastSaveError) {
+        const error = this.lastSaveError;
+        this.lastSaveError = null;
+        throw error;
+    }
+}
+
+async saveAndPauseLesson() {
+    const lesson = this.lesson;
+
+    if (!lesson || !this.lessonUserId) {
+        return;
+    }
+
+    // Stop counting active learning time.
+    lesson.stopActiveSession();
+
+    // Save the final state.
+    this.syncProgress();
+
+    // Wait for the backend write.
+    await this.flushProgressSaves();
+}
     syncProgress() {
-        const userId = this.getUserId()
+        const userId = this.lessonUserId 
 
 if (!userId) {
     console.warn('Cannot save lesson progress: no logged-in user')
     return
 }
+// Prevent an old lesson from saving after another learner signs in.
+    const currentUserId = this.getUserId();
+
+    if (currentUserId !== userId) {
+        console.warn(
+            'Lesson save blocked: the authenticated learner has changed'
+        );
+        return;
+    }
     if (!this.lesson?.articleId) {
         return
     }
@@ -123,7 +185,10 @@ const totalScore = this.lesson.getScoreTotal()
     }
 }
     }
-
+if (this.lesson.completed && !this.completedAt) {
+    this.completedAt =
+        this.lesson.completedAt ?? new Date().toISOString();
+}
  const result =   this.lessonProgressStore.update(userId,
         this.lesson.articleId,
         {
@@ -141,16 +206,32 @@ const totalScore = this.lesson.getScoreTotal()
             surveyResponses,
             orderingAnswers,
 
-            completedAt: this.lesson.completed? new Date().toISOString(): null,
+            completedAt: this.completedAt,
             activeTimeSeconds: this.lesson.activeTimeSeconds,
         }
     )
     if (progressConfig.enabled) {
-   this.progressSaveQueue = this.progressSaveQueue
-    .then(() => saveLessonProgress(result))
-    .catch(error => {
-        console.error('Failed to save lesson progress to the server:', error)
-    })
+        // Queue writes in order and allow later writes after a failure.
+        this.progressSaveQueue = this.progressSaveQueue
+            .catch(() => {})
+            .then(async () => {
+                // Check ownership again when the queued write executes.
+                if (this.getUserId() !== userId) {
+                    console.warn(
+                        'Queued lesson save cancelled: learner changed'
+                    );
+                    return;
+                }
+
+                await saveLessonProgress(result);
+            })
+            .catch(error => {
+                console.error(
+                    'Failed to save lesson progress to the server:',
+                    error
+                );
+                this.lastSaveError = error;
+            });
     }
 return result
 }

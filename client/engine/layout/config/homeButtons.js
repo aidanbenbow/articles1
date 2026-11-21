@@ -1,5 +1,5 @@
 
-import { getInstructions, getProgressText, getPromptText, getWelcomeTitle } from "../../helpers/homeText.js";
+
 
 export const HOME_LAYOUT = {
     screen: 'home',
@@ -14,62 +14,54 @@ export const HOME_LAYOUT = {
             children: [
                 {
                     id: 'title',
-                    type: 'text',
-                    
+                    type: 'text',       
                     typography: 'title',
                     color: 'heading',
                     value: 'Welcome to the Educational Lessons App'
                 },
-...(appState.user
-                    ? [
-                        {
-                            id: 'returning-user',
-                            type: 'text',
-                            typography: 'body',
-                            color: 'text',
-                            value: `Welcome back, ${appState.user.name}!`
-                        },
-                        {
-                            id: 'continue-button',
-                            type: 'button',
-                            kind: 'setPlayerState',
-                            action: 'browseLessons',
-                            text: 'Continue',
-                            width: 200,
-                        }
-                    ]
-                    : [
                 {
                     id: 'prompt',
                     type: 'text',
                     typography: 'body',
                     color: 'text',
-                    value: getPromptText,
+                    value: appState.user
+                        ? `Welcome back, ${appState.user.name || appState.user.email || ''}!`
+                        : 'Create an account or log in to continue.'
                 },
-
-                {
-                    id: 'instructions',
-                    type: 'text',
-                    typography: 'step',
-                    color: 'text',
-                    value: getInstructions
-                },
-                {
-    id: 'name',
-    type: 'nameInput',
-    placeholder: 'Enter your name...',
-    action: 'focusNameInput',
-},
-                {
-                    id: 'start-button',
-                    type: 'button',
-                    kind: 'setPlayerState',
-                    action: 'openPlayerSelect',
-                    text: 'Get Started'
-                },
-                
-            ])]
-        },
-
+...(appState.user
+                    ? [
+                        {
+                            id: 'continue-button',
+                            type: 'button',
+                            action: 'browseLessons',
+                            text: 'Continue',
+                            width: 200
+                        },
+                        {
+                            id: 'logout-button',
+                            type: 'button',
+                            action: 'logout',
+                            text: 'Log Out',
+                            width: 200
+                        }
+                    ]
+                    : [
+                        {
+                            id: 'register-button',
+                            type: 'button',
+                            action: 'showRegister',
+                            text: 'Create Account',
+                            width: 200
+                        },
+                        {
+                            id: 'login-button',
+                            type: 'button',
+                            action: 'showLogin',
+                            text: 'Log In',
+                            width: 200
+                        }
+                    ])
+            ]
+        }
     ]
 }
