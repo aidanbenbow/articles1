@@ -1,251 +1,251 @@
-import { getResponsiveLayout } from "../constants/layoutConstants.js"
-import { drawContinueContent, drawImage, drawWrappedText } from "../draw/drawHelpers.js"
-import { getScreenPosition } from "../modules/renderUtils.js"
+// import { getResponsiveLayout } from "../constants/layoutConstants.js"
+// import { drawContinueContent, drawImage, drawWrappedText } from "../draw/drawHelpers.js"
+// import { getScreenPosition } from "../modules/renderUtils.js"
 
-export function renderContinueLessonCard(ctx, node, viewport, assetManager) {
+// export function renderContinueLessonCard(ctx, node, viewport, assetManager) {
 
-    const rect =
-        getScreenPosition(node, viewport)
+//     const rect =
+//         getScreenPosition(node, viewport)
 
-    const {x, y,} = rect
-    const width = node.width || 600
-    const height = node.height || 160
- const radius = 18
+//     const {x, y,} = rect
+//     const width = node.width || 600
+//     const height = node.height || 160
+//  const radius = 18
 
- const metrics = getResponsiveLayout(viewport.width, viewport.height)
- const compact = metrics.compact
- const mobile = metrics.mobile
+//  const metrics = getResponsiveLayout(viewport.width, viewport.height)
+//  const compact = metrics.compact
+//  const mobile = metrics.mobile
 
-    ctx.save()
+//     ctx.save()
 
-    // CARD
-    ctx.beginPath()
+//     // CARD
+//     ctx.beginPath()
 
-    ctx.roundRect( x,y,width,height,radius)
+//     ctx.roundRect( x,y,width,height,radius)
 
-    // Shadow
-    ctx.shadowColor ='rgba(0, 0, 0, 0.10)'
+//     // Shadow
+//     ctx.shadowColor ='rgba(0, 0, 0, 0.10)'
 
-    ctx.shadowBlur = 14
-    ctx.shadowOffsetY = 5
+//     ctx.shadowBlur = 14
+//     ctx.shadowOffsetY = 5
 
-    ctx.fillStyle = '#ffffff'
+//     ctx.fillStyle = '#ffffff'
 
-    ctx.fill()
+//     ctx.fill()
 
-    // Remove shadow before border
-    ctx.shadowColor = 'transparent'
-    ctx.shadowBlur = 0
-    ctx.shadowOffsetY = 0
+//     // Remove shadow before border
+//     ctx.shadowColor = 'transparent'
+//     ctx.shadowBlur = 0
+//     ctx.shadowOffsetY = 0
 
-    ctx.strokeStyle = '#e5e7eb'
-    ctx.lineWidth = 1
+//     ctx.strokeStyle = '#e5e7eb'
+//     ctx.lineWidth = 1
 
-    ctx.stroke()
+//     ctx.stroke()
 
-    if (compact||mobile) {
-        renderCompactCard(ctx,node, x,y,width,height,radius,assetManager, metrics)
-    } else {
-        renderWideCard(ctx,node,x,y,width,height,radius,assetManager, metrics)
-    }
+//     if (compact||mobile) {
+//         renderCompactCard(ctx,node, x,y,width,height,radius,assetManager, metrics)
+//     } else {
+//         renderWideCard(ctx,node,x,y,width,height,radius,assetManager, metrics)
+//     }
 
-    ctx.restore()
-}
-
-
-function renderWideCard(
-    ctx,
-    node,
-    x,
-    y,
-    width,
-    height,
-    radius,
-    assetManager,
-    metrics
-) {
-
-    const imageWidth = Math.min(190,Math.max(0.25 * width, 120))
-    const gap = 28
-
-    const contentX =
-        x + imageWidth + gap
-
-    const contentWidth =
-        width - imageWidth - gap-24
-
-    const image =
-        assetManager?.getImage(node.thumbnail)
-
-    /*
-     * IMAGE
-     */
-
-    if (
-        image &&
-        image.complete &&
-        image.naturalWidth > 0
-    ) {
-
-        drawImage(ctx,image,x,y,imageWidth,height,radius)
-
-    } else {
-
-        ctx.beginPath()
-
-        ctx.roundRect( x,y,imageWidth,height,radius)
-
-        ctx.fillStyle =
-            '#f1f3f5'
-
-        ctx.fill()
-    }
-
-    /*
-     * CONTENT
-     */
-    const contentY = y + 20
-
-    drawContinueContent(ctx,node,contentX,contentY,contentWidth,height)
-}
+//     ctx.restore()
+// }
 
 
-/*
- * ====================================================
- * COMPACT CARD
- * ====================================================
- */
+// function renderWideCard(
+//     ctx,
+//     node,
+//     x,
+//     y,
+//     width,
+//     height,
+//     radius,
+//     assetManager,
+//     metrics
+// ) {
 
-function renderCompactCard(ctx,node,x,y,width,height,radius,assetManager, metrics) {
+//     const imageWidth = Math.min(190,Math.max(0.25 * width, 120))
+//     const gap = 28
 
-    const padding = metrics.compact?16:20
+//     const contentX =
+//         x + imageWidth + gap
 
-    /*
-     * Smaller image at the top.
-     *
-     * This is intentionally NOT full card height.
-     */
+//     const contentWidth =
+//         width - imageWidth - gap-24
 
-    const imageHeight = metrics.continueCard?.imageHeight || 90
+//     const image =
+//         assetManager?.getImage(node.thumbnail)
 
-    const image =
-        assetManager?.getImage(node.thumbnail)
+//     /*
+//      * IMAGE
+//      */
 
-    /*
-     * IMAGE
-     */
+//     if (
+//         image &&
+//         image.complete &&
+//         image.naturalWidth > 0
+//     ) {
 
-    if (image && image.complete &&image.naturalWidth > 0) {
+//         drawImage(ctx,image,x,y,imageWidth,height,radius)
 
-        drawImage(ctx,image,x,y,width,imageHeight,radius)
+//     } else {
 
-    } else {
+//         ctx.beginPath()
 
-        ctx.beginPath()
-        ctx.roundRect(x,y,width,imageHeight,radius)
-        ctx.fillStyle =
-            '#f1f3f5'
-        ctx.fill()
-    }
+//         ctx.roundRect( x,y,imageWidth,height,radius)
 
-    /*
-     * CONTENT
-     */
+//         ctx.fillStyle =
+//             '#f1f3f5'
 
-    const contentX = x + padding
+//         ctx.fill()
+//     }
 
-    const contentY = y + imageHeight + 15
+//     /*
+//      * CONTENT
+//      */
+//     const contentY = y + 20
 
-    const contentWidth =width - padding * 2
+//     drawContinueContent(ctx,node,contentX,contentY,contentWidth,height)
+// }
 
-    const contentHeight = height - imageHeight - 15
 
-    ctx.font = metrics.compact
-        ? '600 9px sans-serif'
-        : '600 10px sans-serif'
-    ctx.fillStyle = '#9481ed'
-    ctx.textAlign = 'left'
-    ctx.textBaseline = 'top'
-    ctx.fillText(
-        'CONTINUE LEARNING',
-        contentX,
-        contentY
-    )
+// /*
+//  * ====================================================
+//  * COMPACT CARD
+//  * ====================================================
+//  */
 
-    ctx.font = metrics.compact
-        ? '700 17px sans-serif'
-        : '700 19px sans-serif'
-    ctx.fillStyle = '#171717'
+// function renderCompactCard(ctx,node,x,y,width,height,radius,assetManager, metrics) {
 
-    drawWrappedText(
-        ctx,
-        node.title,
-        contentX,
-        contentY + 18,
-        contentWidth,
-        23,
-        2
-    )
+//     const padding = metrics.compact?16:20
 
-    ctx.font = metrics.compact
-        ? '400 11px sans-serif'
-        : '400 12px sans-serif'
-    ctx.fillStyle = '#6b7280'
+//     /*
+//      * Smaller image at the top.
+//      *
+//      * This is intentionally NOT full card height.
+//      */
 
-    drawWrappedText(
-        ctx,
-        node.description,
-        contentX,
-        contentY + 18 + 23 + 8,
-        contentWidth,
-        18,
-        2
-    )
+//     const imageHeight = metrics.continueCard?.imageHeight || 90
 
-    const progress = Math.max(0,Math.min(100,node.progressPercent || 0))
+//     const image =
+//         assetManager?.getImage(node.thumbnail)
 
-    const progressHeight = 6
+//     /*
+//      * IMAGE
+//      */
 
-    const progressY = y + height - 30
+//     if (image && image.complete &&image.naturalWidth > 0) {
 
-    ctx.beginPath()
-    ctx.roundRect(
-        contentX,
-        progressY,
-        contentWidth,
-        progressHeight,
-        3
-    )
-    ctx.fillStyle = '#e5e7eb'
-    ctx.fill()
+//         drawImage(ctx,image,x,y,width,imageHeight,radius)
 
-    const filledWidth = (progress / 100) * contentWidth
+//     } else {
 
-    if(filledWidth > 0) {
+//         ctx.beginPath()
+//         ctx.roundRect(x,y,width,imageHeight,radius)
+//         ctx.fillStyle =
+//             '#f1f3f5'
+//         ctx.fill()
+//     }
 
-        ctx.beginPath()
-        ctx.roundRect(
-            contentX,
-            progressY,
-            filledWidth,
-            progressHeight,
-            3
-        )
-        ctx.fillStyle = '#9481ed'
-        ctx.fill()
-    }
+//     /*
+//      * CONTENT
+//      */
 
-    ctx.font = metrics.compact
-        ? '600 9px sans-serif'
-        : '600 10px sans-serif'
-    ctx.fillStyle = '#6b7280'
-    ctx.textAlign = 'right'
-    ctx.textBaseline = 'bottom'
-    ctx.fillText(
-        `${progress}% completed`,
-        contentX + contentWidth,
-        progressY - 4
-    )
-}
+//     const contentX = x + padding
+
+//     const contentY = y + imageHeight + 15
+
+//     const contentWidth =width - padding * 2
+
+//     const contentHeight = height - imageHeight - 15
+
+//     ctx.font = metrics.compact
+//         ? '600 9px sans-serif'
+//         : '600 10px sans-serif'
+//     ctx.fillStyle = '#9481ed'
+//     ctx.textAlign = 'left'
+//     ctx.textBaseline = 'top'
+//     ctx.fillText(
+//         'CONTINUE LEARNING',
+//         contentX,
+//         contentY
+//     )
+
+//     ctx.font = metrics.compact
+//         ? '700 17px sans-serif'
+//         : '700 19px sans-serif'
+//     ctx.fillStyle = '#171717'
+
+//     drawWrappedText(
+//         ctx,
+//         node.title,
+//         contentX,
+//         contentY + 18,
+//         contentWidth,
+//         23,
+//         2
+//     )
+
+//     ctx.font = metrics.compact
+//         ? '400 11px sans-serif'
+//         : '400 12px sans-serif'
+//     ctx.fillStyle = '#6b7280'
+
+//     drawWrappedText(
+//         ctx,
+//         node.description,
+//         contentX,
+//         contentY + 18 + 23 + 8,
+//         contentWidth,
+//         18,
+//         2
+//     )
+
+//     const progress = Math.max(0,Math.min(100,node.progressPercent || 0))
+
+//     const progressHeight = 6
+
+//     const progressY = y + height - 30
+
+//     ctx.beginPath()
+//     ctx.roundRect(
+//         contentX,
+//         progressY,
+//         contentWidth,
+//         progressHeight,
+//         3
+//     )
+//     ctx.fillStyle = '#e5e7eb'
+//     ctx.fill()
+
+//     const filledWidth = (progress / 100) * contentWidth
+
+//     if(filledWidth > 0) {
+
+//         ctx.beginPath()
+//         ctx.roundRect(
+//             contentX,
+//             progressY,
+//             filledWidth,
+//             progressHeight,
+//             3
+//         )
+//         ctx.fillStyle = '#9481ed'
+//         ctx.fill()
+//     }
+
+//     ctx.font = metrics.compact
+//         ? '600 9px sans-serif'
+//         : '600 10px sans-serif'
+//     ctx.fillStyle = '#6b7280'
+//     ctx.textAlign = 'right'
+//     ctx.textBaseline = 'bottom'
+//     ctx.fillText(
+//         `${progress}% completed`,
+//         contentX + contentWidth,
+//         progressY - 4
+//     )
+// }
 
  

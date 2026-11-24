@@ -11,6 +11,7 @@ import { buildLessonResultsNode } from "../builders/lessonResultsBuilder.js";
 import { buildNameInputNode } from "../builders/nameInputNodeBuilder.js";
 import { buildOrderingItemNode } from "../builders/orderingItemBuilder.js";
 import { buildOrderingNode } from "../builders/orderingNodeBuilder.js";
+import { buildProgressNode } from "../builders/progressNodeBuilder.js";
 import { buildQuizOptionNode } from "../builders/quizOptionBuilder.js";
 import { buildSurveyOptionNode } from "../builders/surveyOptionBuilder.js";
 
@@ -21,6 +22,7 @@ export const nodeBuilders = {
     heading: buildTextNode,
     paragraph: buildTextNode,
     button: buildButtonNode,
+    progress: buildProgressNode,
     nameInput: buildNameInputNode,
     emailInput: buildNameInputNode,
 passwordInput: buildNameInputNode,

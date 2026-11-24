@@ -1,5 +1,6 @@
 import { renderHeader } from "../../modules/renderUtils.js";
 import { renderButton } from "../buttons/buttonRenderer.js";
+import { renderProgress } from "../buttons/progressRenderer.js";
 import { renderCard } from "../CardRenderer.js";
 import { renderDragDropGap } from "../dragDrop/dragDropGapRenderer.js";
 import { renderDragDrop } from "../dragDrop/dragDropRenderer.js";
@@ -22,6 +23,7 @@ import { renderText } from "../TextRenderer.js";
 export const nodeRenderers = {
     text: renderText,
     button: renderButton,
+    progress: renderProgress,
     nameInput: renderNameInput,
     emailInput: renderNameInput,
     passwordInput: renderNameInput,
