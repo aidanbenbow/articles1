@@ -34,6 +34,13 @@ export const VERIFY_EMAIL_LAYOUT = {
                     text: 'Verify Email',
                     width: 200
                 },
+                 {
+                    id: 'resend-code',
+                    type: 'button',
+                    action: 'resendVerificationCode',
+                    text: 'Resend Verification Code',
+                    width: 200
+                },
                 {
                     id: 'verify-back',
                     type: 'button',

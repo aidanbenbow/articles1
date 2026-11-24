@@ -4,7 +4,7 @@
 export const HOME_LAYOUT = {
     screen: 'home',
 
-    nodes:({ appState }) => [
+    nodes:({ appState, weeklyLeaderboard }) => [
         {
             id: 'welcome',
             type: 'card',
@@ -25,7 +25,7 @@ export const HOME_LAYOUT = {
                     typography: 'body',
                     color: 'text',
                     value: appState.user
-                        ? `Welcome back, ${appState.user.name || appState.user.email || ''}!`
+                        ? `Welcome back, ${appState.user.displayName || appState.user.email || ''}!`
                         : 'Create an account or log in to continue.'
                 },
 ...(appState.user
@@ -62,6 +62,44 @@ export const HOME_LAYOUT = {
                         }
                     ])
             ]
+        },
+        {
+            id: 'weekly-leaderboard',
+                type: 'card',
+                owner: 'home',
+                layout: 'content',
+                children: [
+                     {
+                        id: 'weekly-title',
+                        type: 'text',
+                        typography: 'title',
+                        color: 'heading',
+                        value: '🏆 Weekly Leaderboard'
+                    },
+                    {
+            id: 'weekly-week',
+            type: 'text',
+            typography: 'body',
+            color: 'text',
+            value: `Week ${weeklyLeaderboard?.weekKey || ''}`
+        },
+             ...(weeklyLeaderboard?.players?.length
+            ? weeklyLeaderboard.players.slice(0, 5).map((player, index) => ({
+                id: `weekly-player-${player.userId}`,
+                type: 'text',
+                typography: 'body',
+                color: 'text',
+                value: `${player.rank || index + 1}. ${player.displayName || 'Learner'} — ${player.weeklyScore} points`
+            }))
+            : [{
+                id: 'weekly-empty',
+                type: 'text',
+                typography: 'body',
+                color: 'text',
+                value: 'No weekly rankings yet. Complete a lesson to appear here!'
+            }])   ]   
+
+
         }
     ]
 }

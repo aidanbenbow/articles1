@@ -1,5 +1,5 @@
 
-export async function saveLessonProgress(progress) {
+export async function saveLessonProgress(progress, accessToken) {
     if (!progress.userId || !progress.lessonId) {
         throw new Error('userId and lessonId are required');
     }
@@ -7,7 +7,8 @@ export async function saveLessonProgress(progress) {
     const response = await fetch('/api/lesson-progress', {
         method: 'PUT',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`
         },
         body: JSON.stringify(progress)
     });
@@ -22,3 +23,4 @@ export async function saveLessonProgress(progress) {
 
     return true;
 }
+

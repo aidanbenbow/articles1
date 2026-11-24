@@ -12,7 +12,7 @@ export class AppState {
         this.user = null
        this.authLoading = false;
         this.authError = null;
-
+this.registrationEmail = null;
         this.authService = new AuthService();
        
     }
@@ -36,7 +36,7 @@ export class AppState {
         }
 
         const profile = await response.json();
-
+console.log('PROFILE FROM API:', profile);
         // Keep the existing app's user.id convention.
         this.user = {
             ...profile,
@@ -73,7 +73,9 @@ export class AppState {
         this.authError = null;
 
         try {
-            return await this.authService.register(email, password);
+            const result = await this.authService.register(email, password);
+            this.registrationEmail = email;
+            return result;
         } catch (error) {
             this.authError = error.message;
             throw error;
@@ -93,7 +95,16 @@ export class AppState {
             throw error;
         }
     }
+async resendVerificationCode(email) {
+    this.authError = null;
 
+    try {
+        return await this.authService.resendVerificationCode(email);
+    } catch (error) {
+        this.authError = error.message;
+        throw error;
+    }
+}
     async login(email, password) {
         this.authError = null;
 

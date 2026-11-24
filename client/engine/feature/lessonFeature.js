@@ -1,5 +1,5 @@
 
-import { initializeLessonProgress, fetchLeaderboard } from "../api/initialiseLessonProgress.js"
+import { initializeLessonProgress, fetchLeaderboard, fetchWeeklyLeaderboard } from "../api/initialiseLessonProgress.js"
 import { parseArticle } from "../constants/layoutParser.js"
 import { LessonController } from "../controllers/lessonController.js"
 import { SurveyApi } from "../api/surveyApi.js"
@@ -16,6 +16,7 @@ export class LessonFeature {
         
         this.lessonProgressStore = new LessonProgressStore()
         this.leaderboard = { players: [], updatedAt: null };
+        this.weeklyLeaderboard = { players: [], weekKey: null, updatedAt: null };
         this.loadedProgressUsers = new Set();
 this.progressLoadPromises = new Map();
         this.lessonAnalyticsService = new LessonAnalyticsService(this.lessonProgressStore,{
@@ -26,7 +27,8 @@ get articles() {
         this.lessonService = new LessonService(
     new SurveyApi(),
     this.lessonProgressStore,
-    () => this.engine.context.app?.getState()?.user?.id )
+    () => this.engine.context.app?.getState()?.user?.id, () => this.engine.context.app?.getState()?.authService?.getAccessToken()
+ )
 
         this.lessonController = new LessonController(this.lessonService, engine)
         this.handleVisibilityChange = this.handleVisibilityChange.bind(this) 
@@ -57,6 +59,8 @@ get articles() {
             getLessonProgressStore: () => this.lessonProgressStore,
             getLessonAnalyticsService: () => this.lessonAnalyticsService,
             getLeaderboard: () => this.leaderboard,
+            getWeeklyLeaderboard: () => this.weeklyLeaderboard,
+            loadWeeklyLeaderBoard: () => this.loadWeeklyLeaderboard(),
             startLessonFromArticle: (article) => this.startLessonFromArticle(article),
             moveOrderingItem: (sectionId, itemIndex,direction) =>
     this.lessonController.moveOrderingItem(sectionId,itemIndex,direction),
@@ -122,7 +126,7 @@ if (currentUserId !== userId) {
                     error
                 );
             }
-
+await this.loadWeeklyLeaderboard();
             console.log(
                 `Progress ready for learner ${userId}`
             );
@@ -167,6 +171,28 @@ handleVisibilityChange() {
 
     if (document.visibilityState === 'visible') {
         lesson.startActiveSession();
+    }
+}
+async loadWeeklyLeaderboard() {
+    try {
+        this.weeklyLeaderboard = await fetchWeeklyLeaderboard();
+
+        this.engine.emit(
+            'appStateChanged',
+            this.engine.context.app?.getState()
+        );
+
+        return this.weeklyLeaderboard;
+    } catch (error) {
+        console.error('Failed to load weekly leaderboard:', error);
+
+        this.weeklyLeaderboard = {
+            players: [],
+            weekKey: null,
+            updatedAt: null
+        };
+
+        return this.weeklyLeaderboard;
     }
 }
 }

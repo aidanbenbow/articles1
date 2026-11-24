@@ -5,7 +5,8 @@ import {
     signIn,
     signOut,
     getCurrentUser,
-    fetchAuthSession
+    fetchAuthSession,
+    resendSignUpCode
 } from 'aws-amplify/auth';
 
 export class AuthService {
@@ -24,6 +25,20 @@ export class AuthService {
         return result;
     }
 
+    async resendVerificationCode(email) {
+    try {
+        const result = await resendSignUpCode({
+            username: email.trim().toLowerCase()
+        });
+
+        console.log('Verification code resend result:', result);
+
+        return result;
+    } catch (error) {
+        console.error('Resend verification error:', error);
+        throw error;
+    }
+}
     async verifyEmail(email, confirmationCode) {
         const result = await confirmSignUp({
             username: email.trim().toLowerCase(),

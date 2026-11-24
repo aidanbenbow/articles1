@@ -9,7 +9,8 @@ export class HomeLayout extends BaseScreenLayout {
 
     build(context) {
         const { articleNodes, appState } = context
-
+const weeklyLeaderboard = this.engine.context.getWeeklyLeaderboard();
+console.log('Weekly Leaderboard:', weeklyLeaderboard);
         const availableLessons = articleNodes
             .map(node => node.props?.articleData)
             .filter(article => article?.articleId)
@@ -17,7 +18,8 @@ export class HomeLayout extends BaseScreenLayout {
         this.compile(HOME_LAYOUT, {
             ...context,
             availableLessons,
-            appState
+            appState,
+            weeklyLeaderboard
         })
     }
 }

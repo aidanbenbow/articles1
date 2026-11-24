@@ -43,7 +43,7 @@ async refreshLeaderboard() {
     // Add display names from learner profiles, if available.
         const leaderboard = await Promise.all(
             [...users.values()].map(async user => {
-                let displayName = "Learner";
+                let displayName = user.name || user.displayName || "Learner";
 
                 if (this.userRepository) {
                     try {
@@ -81,6 +81,65 @@ async refreshLeaderboard() {
 async getLeaderboard() {
     return this.lessonProgressRepo.getLeaderboardSnapshot();
 }
+
+async refreshWeeklyLeaderboard() {
+        // Calculate this week's scores
+        const weeklyData =
+            await this.lessonProgressRepo
+                .calculateWeeklyLeaderboard();
+
+        // Add learner display names
+        const players = await Promise.all(
+            weeklyData.players.map(async player => {
+                let displayName = "Learner";
+
+                if (this.userRepository) {
+                    try {
+                        const profile =
+                            await this.userRepository.getProfile(
+                                player.userId
+                            );
+
+                        displayName =
+                            profile?.displayName || "Learner";
+                    } catch (error) {
+                        console.error(
+                            "Could not retrieve weekly leaderboard profile:",
+                            error.message
+                        );
+                    }
+                }
+
+                return {
+                    ...player,
+                    displayName
+                };
+            })
+        );
+
+        // Save weekly rankings
+        return this.lessonProgressRepo.saveWeeklyLeaderboard({
+            ...weeklyData,
+            players
+        });
+    }
+
+    async getWeeklyLeaderboard() {
+        const week =
+            this.lessonProgressRepo.getWeekInfo();
+
+        // Retrieve saved rankings for this week
+        const snapshot =
+            await this.lessonProgressRepo
+                .getWeeklyLeaderboardSnapshot(week.weekKey);
+
+        // Create the first snapshot if one doesn't exist
+        if (snapshot) {
+            return snapshot;
+        }
+
+        return this.refreshWeeklyLeaderboard();
+    }
     saveProgress(progress) {
         if (!progress?.userId || !progress?.lessonId) {
             throw new Error(

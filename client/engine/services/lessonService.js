@@ -5,10 +5,11 @@ import { progressConfig } from "../layout/config/progressConfig.js"
 
 
 export class LessonService {
-    constructor(surveyApi, lessonProgressStore,getUserId) {
+    constructor(surveyApi, lessonProgressStore,getUserId, getAccessToken) {
         this.surveyApi = surveyApi
         this.lessonProgressStore = lessonProgressStore
         this.getUserId = getUserId
+        this.getAccessToken = getAccessToken
         this.lesson = new LessonState()
         this.lessonUserId = null;
     this.completedAt = null;
@@ -210,29 +211,50 @@ if (this.lesson.completed && !this.completedAt) {
             activeTimeSeconds: this.lesson.activeTimeSeconds,
         }
     )
-    if (progressConfig.enabled) {
-        // Queue writes in order and allow later writes after a failure.
-        this.progressSaveQueue = this.progressSaveQueue
-            .catch(() => {})
-            .then(async () => {
-                // Check ownership again when the queued write executes.
-                if (this.getUserId() !== userId) {
-                    console.warn(
-                        'Queued lesson save cancelled: learner changed'
-                    );
-                    return;
-                }
+   
+if (progressConfig.enabled) {
+    this.progressSaveQueue = this.progressSaveQueue
+        .catch(() => {})
+        .then(async () => {
 
-                await saveLessonProgress(result);
-            })
-            .catch(error => {
-                console.error(
-                    'Failed to save lesson progress to the server:',
-                    error
+            // Check learner ownership before requesting token.
+            if (this.getUserId() !== userId) {
+                console.warn(
+                    'Queued lesson save cancelled: learner changed'
                 );
-                this.lastSaveError = error;
-            });
-    }
+                return;
+            }
+
+            // Retrieve Cognito access token.
+            const accessToken = await this.getAccessToken();
+
+            if (!accessToken) {
+                throw new Error(
+                    'Cannot save lesson progress: authentication token missing.'
+                );
+            }
+
+            // Check ownership again before sending request.
+            if (this.getUserId() !== userId) {
+                console.warn(
+                    'Queued lesson save cancelled: learner changed'
+                );
+                return;
+            }
+
+            // Send progress with authentication.
+            await saveLessonProgress(result, accessToken);
+        })
+        .catch(error => {
+            console.error(
+                'Failed to save lesson progress to the server:',
+                error
+            );
+
+            this.lastSaveError = error;
+        });
+}
+
 return result
 }
 

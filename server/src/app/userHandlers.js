@@ -1,11 +1,23 @@
 
 import { requireAuth } from "../http/authMiddleware.js";
+import { getCognitoUserAttributes } from "../http/cognitoUserService.js";
 
 export function registerUserHandlers(app, userService) {
 
     app.get("/api/users/me", requireAuth, async (req, res) => {
         try {
-            const profile = await userService.getOrCreateProfile(req.user.id);
+         const attributes = await getCognitoUserAttributes(req.user.accessToken);
+         
+          const displayName =
+                attributes.name ||
+                attributes.given_name ||
+                attributes.preferred_username ||
+                "Learner";
+              
+            const profile = await userService.getOrCreateProfile(req.user.id, {
+                    displayName,
+                    email: attributes.email
+                });
 
             res.json(profile);
 

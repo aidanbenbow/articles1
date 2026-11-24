@@ -1,8 +1,14 @@
 
 export function getWelcomeTitle({ appState }) {
-    const user = appState.user?.name || 'Guest'
+    const user = appState.user;
 
-    return `Welcome ${user}`
+    const displayName =
+        user?.displayName ||
+        user?.name ||
+        user?.givenName ||
+        'Guest';
+
+    return `Welcome, ${displayName}`;
 }
 
 export function getProgressText({

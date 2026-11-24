@@ -5,7 +5,7 @@ export class UserService {
         this.userRepository = userRepository;
     }
 
-    async getOrCreateProfile(userId) {
+    async getOrCreateProfile(userId, attributes) {
        if (!userId) {
             throw new Error("A userId is required");
         }
@@ -18,7 +18,8 @@ export class UserService {
         }
 
         return this.userRepository.createProfile(userId, {
-            displayName: "Learner"
+            displayName: attributes.name || attributes.givenName || attributes.displayName || "Learner",
+            email: attributes.email || null,
         });
     }
 

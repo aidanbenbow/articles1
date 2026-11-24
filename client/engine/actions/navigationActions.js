@@ -17,6 +17,7 @@ export class NavigationActions {
             // Cognito authentication
             register: () => this.register(),
             verifyEmail: () => this.verifyEmail(),
+            resendVerificationCode: () => this.resendVerificationCode(),
             login: () => this.login(),
             logout: () => this.logout(),
         }
@@ -63,10 +64,37 @@ export class NavigationActions {
         }
     }
 
-    async verifyEmail() {
-        const { email, confirmationCode } = this.getInteractionState();
-        const app = this.getApp();
+async resendVerificationCode() {
+    const app = this.getApp();
 
+    const { email } = this.getInteractionState();
+
+    const registrationEmail =
+        email || app.registrationEmail;
+
+    if (!registrationEmail?.trim()) {
+        console.warn('No registration email found.');
+        return;
+    }
+
+    try {
+        const result = await app.resendVerificationCode(
+            registrationEmail
+        );
+
+        console.log('Verification code sent successfully.');
+
+        return result;
+
+    } catch (error) {
+        console.error('Resend verification failed:', error);
+    }
+}
+
+    async verifyEmail() {
+        const { confirmationCode } = this.getInteractionState();
+        const app = this.getApp();
+const email = this.getInteractionState().email || app.registrationEmail;
         if (!email?.trim() || !confirmationCode?.trim()) {
             console.warn('Please enter your email and verification code.');
             return;

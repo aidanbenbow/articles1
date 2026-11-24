@@ -72,6 +72,35 @@ export function registerLessonProgressHandlers(
         });
     }
 });
+
+    // Get current weekly leaderboard
+    app.get(
+        '/api/weekly-leaderboard',
+        requireAuth,
+        async (req, res) => {
+            try {
+                const snapshot =
+                    await lessonProgressService.getWeeklyLeaderboard();
+
+                res.json(snapshot || {
+                    weekKey: null,
+                    players: [],
+                    updatedAt: null
+                });
+
+            } catch (error) {
+                console.error(
+                    'Error fetching weekly leaderboard:',
+                    error
+                );
+
+                res.status(500).json({
+                    error: 'Failed to fetch weekly leaderboard'
+                });
+            }
+        }
+    );
+
  // Get authenticated learner's progress
     app.get('/api/lesson-progress', requireAuth, async (req, res) => {
         try {

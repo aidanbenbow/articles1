@@ -23,7 +23,8 @@ export async function requireAuth(req, res, next) {
 
         req.user = {
             id: payload.sub,
-            username: payload.username
+            username: payload.username,
+             accessToken: token
         };
 
         next();
