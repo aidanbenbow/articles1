@@ -6,6 +6,7 @@ export class NavigationActions {
         this.handlers = {
             openLesson: node => this.openLesson(node),
             openCategory: node => this.openCategory(node),
+            openPlayerProfile: () => this.openPlayerProfile(),
             returnToCategory: () => this.returnToCategory(),
             openAnalytics: () => this.openAnalytics(),
             browseLessons: () => this.browseLessons(),
@@ -146,11 +147,13 @@ const email = this.getInteractionState().email || app.registrationEmail;
         }
     }
 openCategory(node) {
-   
     this.engine.context.app.openCategory(node.category);
 }
 openAnalytics() {
     this.engine.context.app.openAnalytics();
+}
+openPlayerProfile() {
+    this.getApp()?.navigate('playerProfile');
 }
 returnToCategory() {
     this.engine.context.app.returnToCategory();

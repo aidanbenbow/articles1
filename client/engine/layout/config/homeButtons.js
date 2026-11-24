@@ -31,12 +31,19 @@ export const HOME_LAYOUT = {
 ...(appState.user
                     ? [
                         {
-                            id: 'continue-button',
-                            type: 'button',
-                            action: 'browseLessons',
-                            text: 'Continue',
-                            width: 200
-                        },
+    id: 'profile-button',
+    type: 'button',
+    action: 'openPlayerProfile',
+    text: 'My Profile',
+    width: 200
+},
+{
+    id: 'continue-button',
+    type: 'button',
+    action: 'browseLessons',
+    text: 'Continue Learning',
+    width: 200
+},
                         {
                             id: 'logout-button',
                             type: 'button',

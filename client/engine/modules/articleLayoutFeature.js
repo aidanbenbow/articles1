@@ -11,6 +11,7 @@ import { matchesOrderedPrefix, normalize } from "./search.js"
 import { LoginScreen } from "../layout/screens/logInScreen.js"
 import { RegisterScreen } from "../layout/screens/registrationScreen.js"
 import { VerifyEmailScreen } from "../layout/screens/verifyEmailScreen.js"
+import { PlayerProfileLayout } from "../layout/screens/playerProfileScreen.js"
 
 export class ArticleLayoutFeature {
     constructor(engine) {
@@ -45,6 +46,7 @@ export class ArticleLayoutFeature {
             this.engine,
             this.layout
         ),
+        playerProfile: new PlayerProfileLayout(this.engine, this.layout),
 category: new CategoryLessonsLayout(this.engine, this.layout),
 analytics: new AnalyticsScreen(this.engine, this.layout),
         lesson: new LessonLayout(this.engine, this.layout),
@@ -127,6 +129,7 @@ clearScreenLayout() {
     const screenOwners = [
         'home',
         'playerSelect',
+        'playerProfile',
         'category',
         'lessonBrowser',
         'lesson',

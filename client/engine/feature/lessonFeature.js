@@ -61,6 +61,13 @@ get articles() {
             getLeaderboard: () => this.leaderboard,
             getWeeklyLeaderboard: () => this.weeklyLeaderboard,
             loadWeeklyLeaderBoard: () => this.loadWeeklyLeaderboard(),
+
+getPlayerProgress: (userId) =>
+    this.lessonProgressStore.getAllForUser(userId),
+
+getPlayerStats: (userId) =>
+    this.lessonProgressStore.getPlayerStats(userId),
+
             startLessonFromArticle: (article) => this.startLessonFromArticle(article),
             moveOrderingItem: (sectionId, itemIndex,direction) =>
     this.lessonController.moveOrderingItem(sectionId,itemIndex,direction),

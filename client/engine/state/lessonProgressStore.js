@@ -80,9 +80,71 @@ const key = this.getKey(
         const key = this.getKey(userId, lessonId)
         return this.progress.get(key) ?? null
     }
+
+getAllForUser(userId) {
+    if (!userId) return []
+
+    return [...this.progress.values()]
+        .filter(record => record.userId === userId)
+}
+
     getKey(userId, lessonId) {
     return `${userId}::${lessonId}`
 }
+
+getPlayerStats(userId) {
+    const records = this.getAllForUser(userId)
+
+    const completed = records.filter(record => record.completed)
+
+    const inProgress = records.filter(record => record.inProgress)
+
+    const totalXP = completed.reduce(
+        (total, record) =>
+            total + Number(record.totalScore || 0),
+        0
+    )
+
+    const totalActiveTime = records.reduce(
+        (total, record) =>
+            total + Number(record.activeTimeSeconds || 0),
+        0
+    )
+
+    const completedCount = completed.length
+
+    return {
+        totalLessons: completed.length + inProgress.length,
+        completedLessons: completedCount,
+        inProgressLessons: inProgress.length,
+        totalXP,
+        totalActiveTime,
+        achievements: [
+            {
+                id: "first-lesson",
+                title: "First Steps",
+                description: "Complete your first lesson",
+                icon: "🌱",
+                unlocked: completedCount >= 1
+            },
+            {
+                id: "five-lessons",
+                title: "Learning Explorer",
+                description: "Complete five lessons",
+                icon: "🧭",
+                unlocked: completedCount >= 5
+            },
+            {
+                id: "ten-lessons",
+                title: "Knowledge Builder",
+                description: "Complete ten lessons",
+                icon: "🏆",
+                unlocked: completedCount >= 10
+            }
+        ]
+    }
+}
+
     clear() {
         this.progress.clear()
         this.save()
