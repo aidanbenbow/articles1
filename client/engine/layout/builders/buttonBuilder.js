@@ -6,6 +6,7 @@ export function buildButtonNode(config, context) {
         metrics,
         owner,
         contentX,
+        contentWidth
     } = context
 
 const completed = resolveValue(config.completed, context)
@@ -33,7 +34,7 @@ articleData: resolveValue(
         x: config.x ?? contentX?? metrics.padding,
         worldY: config.worldY ?? context.currentY,
         width: 
-            config.width ??
+            config.width ?? contentWidth ??
             metrics.contentWidth,
         height: resolveValue(config.height, context) ?? metrics.button.height,
         color:  buttonStyle.background,

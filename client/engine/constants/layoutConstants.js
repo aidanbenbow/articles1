@@ -58,6 +58,9 @@ export function getResponsiveLayout(screenWidth, screenHeight) {
 
         colors: DESIGN_TOKENS.colors,
     buttonStyles: DESIGN_TOKENS.buttonStyles,
+    categoryCardPadding: DESIGN_TOKENS.dimensions.categoryCardPadding,
+    categoryCardGap: DESIGN_TOKENS.dimensions.categoryCardGap,
+    categoryCardSpacingY: DESIGN_TOKENS.dimensions.categoryCardSpacingY,
     typography,
         reading,
         optionWidth,

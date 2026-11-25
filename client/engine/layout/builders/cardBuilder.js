@@ -9,9 +9,17 @@ export function buildCardNode(config, context) {
         currentY
     } = context
 
-const gap = resolveValue(  config.layout?.gap,  context) ?? metrics.gap
+const gap =
+    resolveValue(config.layout?.gap, context) ??
+    (config.kind === 'categoryCard'
+        ? metrics.categoryCardGap
+        : metrics.gap)
 
-    const padding = resolveValue(config.padding, context) ?? 0
+    const padding =
+    resolveValue(config.padding, context) ??
+    (config.kind === 'categoryCard'
+        ? metrics.categoryCardPadding
+        : 0)
 
     const x =config.x ?? metrics.padding
     const width = config.width ?? metrics.contentWidth
@@ -34,7 +42,7 @@ const gap = resolveValue(  config.layout?.gap,  context) ?? metrics.gap
    
 
    const contentX = node.x + padding + gap
-    const contentWidth = node.width - (padding * 2)
+    const contentWidth = Math.max(0,node.width - (padding * 2) - gap)
     let childY = node.worldY + padding
      
     for (const childConfig of config.children ?? []) {
@@ -59,12 +67,15 @@ childY = result.currentY
 if(config.height == null){
         node.height = Math.max(0, childY - node.worldY + padding)
     }
-
+const cardSpacing =
+    config.kind === 'categoryCard'
+        ? metrics.categoryCardSpacingY
+        : metrics.gap
     return {
         node,
         currentY:
             node.worldY +
             node.height +
-            metrics.gap
+            cardSpacing
     }
 }

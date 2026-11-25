@@ -11,6 +11,12 @@ export const DESIGN_TOKENS = {
     minContentWidth: 280,
     spacingY: 20,
     marginTop: 20,
+    cardPadding: 12,
+    cardGap: 8,
+    cardSpacingY: 12,
+    categoryCardPadding: 12,
+categoryCardGap: 8,
+categoryCardSpacingY: 12,
 
     breakpoints: {
       compact: 420,
@@ -130,6 +136,23 @@ export const DESIGN_TOKENS = {
       regular: 400,
       medium: 600,
       bold: 700,
+    },
+    categoryTitle: {
+        size: 16,
+        lineHeight: 21,
+        weight: 600,
+    },
+
+    categoryDescription: {
+        size: 12,
+        lineHeight: 16,
+        weight: 400,
+    },
+
+    categoryMeta: {
+        size: 12,
+        lineHeight: 16,
+        weight: 600,
     },
   },
 };

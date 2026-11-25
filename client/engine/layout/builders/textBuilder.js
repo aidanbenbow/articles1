@@ -10,7 +10,7 @@ export function buildTextNode(config, context) {
         metrics,
         owner,
         currentY,
-        parent,
+        
         contentX,
         contentWidth
     } = context
@@ -54,7 +54,7 @@ const configuredHeight = resolveValue(config.height, context);
 node.type = resolveValue(config.type, context) ?? "text"
 
 
-    const paragraphGap = reading.paragraphGap ??resolveValue(config.paragraphGap, context) ?? 3
+    const paragraphGap = resolveValue(config.paragraphGap, context) ??reading.paragraphGap ?? 3
     return {node,
         currentY: node.worldY + node.height + paragraphGap
     }

@@ -45,7 +45,20 @@ export function getResponsiveTypography(compact, baseTypography) {
     button: {
       ...typography.button,
     },
+categoryTitle: {
+  ...typography.categoryTitle,
+  size: compact ? 14 : typography.categoryTitle.size,
+},
 
+categoryDescription: {
+  ...typography.categoryDescription,
+  size: compact ? 11 : typography.categoryDescription.size,
+},
+
+categoryMeta: {
+  ...typography.categoryMeta,
+  size: compact ? 10 : typography.categoryMeta.size,
+},
     weights: {
       ...typography.weights,
     },

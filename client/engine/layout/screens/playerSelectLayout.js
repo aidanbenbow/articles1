@@ -1,3 +1,4 @@
+import { CATEGORY_METADATA, DEFAULT_CATEGORY_METADATA } from "../config/categoryMetadata.js"
 import { PLAYER_SELECT_LAYOUT } from "../config/playerSelect.js"
 import { BaseScreenLayout } from "./basicScreenLayout.js"
 
@@ -25,10 +26,13 @@ export class PlayerSelectLayout extends BaseScreenLayout {
 
             return groups
         }, {})
+        
         this.compile(PLAYER_SELECT_LAYOUT, {
             ...context,
             availableLessons,
             groupedArticles,
+          categoryMetadata:  CATEGORY_METADATA,
+            defaultCategoryMetadata: DEFAULT_CATEGORY_METADATA,
             appState
         })
     }
