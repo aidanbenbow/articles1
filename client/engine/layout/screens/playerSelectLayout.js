@@ -26,14 +26,17 @@ export class PlayerSelectLayout extends BaseScreenLayout {
 
             return groups
         }, {})
-        
+        const userId = appState?.user?.id
+        const playerStats = this.engine.context.getPlayerStats(userId) || {}
+    
         this.compile(PLAYER_SELECT_LAYOUT, {
             ...context,
             availableLessons,
             groupedArticles,
           categoryMetadata:  CATEGORY_METADATA,
             defaultCategoryMetadata: DEFAULT_CATEGORY_METADATA,
-            appState
+            appState,
+            playerStats
         })
     }
 }

@@ -62,4 +62,12 @@ getDifficultyDistribution() {
         return distribution
     }, {})
 }
+getCompletedLessonIds(userId) {
+    if (!userId) return []
+
+    return this.lessonProgressStore
+        .getAllForUser(userId)
+        .filter(record => record.completed)
+        .map(record => record.lessonId)
+}
 }

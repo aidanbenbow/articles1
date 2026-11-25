@@ -13,8 +13,17 @@ export class CategoryLessonsLayout extends BaseScreenLayout {
 
         const selectedCategory = appState.selectedCategory
        
-        const completedLessons = appState.user?.completedLessons || []
+const userId = appState?.user?.userId
+        const progressStore =
+    this.engine.context.getLessonProgressStore?.()
 
+const completedLessonIds = new Set(
+    progressStore
+        ?.getAllForUser(userId)
+        .filter(record => record.completed)
+        .map(record => record.lessonId) ?? []
+)
+    
         const availableLessons = articleNodes
             .map(node => node.props?.articleData)
             .filter(article =>
@@ -22,7 +31,7 @@ export class CategoryLessonsLayout extends BaseScreenLayout {
                 article.category === selectedCategory 
             ).map(article => ({
                 ...article,
-                completed: completedLessons.includes(article.articleId)
+                completed: completedLessonIds.has(article.articleId)
             }))
 
         this.compile(CATEGORY_LESSONS_LAYOUT, {

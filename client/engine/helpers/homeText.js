@@ -13,10 +13,12 @@ export function getWelcomeTitle({ appState }) {
 
 export function getProgressText({
     appState,
+    playerStats,
     articleNodes = []
 }) {
-    const score = appState.user?.score || 0
-    const lessonsCompleted =appState.user?.lessonsCompleted || 0
+    
+    const score = playerStats?.totalXP || 0
+    const lessonsCompleted =playerStats?.completedLessons || 0
 const totalLessons = articleNodes.filter(node => node.props?.articleData?.articleId).length || 0
     const lessonsAvailable = totalLessons - lessonsCompleted
     return [

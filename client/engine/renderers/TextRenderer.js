@@ -4,7 +4,7 @@ import { getScreenPosition } from "../modules/renderUtils.js";
 
 
 export function renderText(ctx, node, viewport,context) {
- 
+
     const rect = getScreenPosition(node, viewport);
 
     if (!rect) return;

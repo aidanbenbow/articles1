@@ -84,29 +84,3 @@ export async function initializeLessonProgress(
     return progressStore;
 }
 
-// export async function saveLessonProgress(progress) {
-//     if (!progress.lessonId) {
-//         throw new Error('lessonId is required');
-//     }
-
-//     const headers = await getAuthHeaders(true);
-
-//     // Remove the old browser-supplied identity field.
-//     const { userId, ...progressData } = progress;
-
-//     const response = await fetch('/api/lesson-progress', {
-//         method: 'PUT',
-//         headers,
-//         body: JSON.stringify(progressData)
-//     });
-
-//     if (!response.ok) {
-//         const errorDetails = await response.text();
-
-//         throw new Error(
-//             `Failed to save lesson progress: ${response.status} ${errorDetails}`
-//         );
-//     }
-
-//     return response.json();
-// }

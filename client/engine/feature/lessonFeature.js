@@ -27,7 +27,7 @@ get articles() {
         this.lessonService = new LessonService(
     new SurveyApi(),
     this.lessonProgressStore,
-    () => this.engine.context.app?.getState()?.user?.id, () => this.engine.context.app?.getState()?.authService?.getAccessToken()
+    () => this.engine.context.app?.getState()?.user?.userId, () => this.engine.context.app?.getState()?.authService?.getAccessToken()
  )
 
         this.lessonController = new LessonController(this.lessonService, engine)
@@ -87,7 +87,7 @@ invalidateProgressForUser: (userId) => this.invalidateProgressForUser(userId),
 
 async ensureProgressLoaded() {
     const userId =
-        this.engine.context.app?.getState()?.user?.id;
+        this.engine.context.app?.getState()?.user?.userId;
 
     if (!userId) {
         console.warn(
@@ -115,7 +115,7 @@ async ensureProgressLoaded() {
                 userId
             );
 const currentUserId =
-    this.engine.context.app?.getState()?.user?.id;
+    this.engine.context.app?.getState()?.user?.userId;
 
 if (currentUserId !== userId) {
     throw new Error(

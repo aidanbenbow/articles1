@@ -1,4 +1,4 @@
-import { getProgressText, getWelcomeTitle } from "../../helpers/homeText.js"
+
 
 export const CATEGORY_LESSONS_LAYOUT = {
     screen: 'category',
@@ -8,7 +8,7 @@ export const CATEGORY_LESSONS_LAYOUT = {
   const completedLessons = availableLessons.filter(
             article => article.completed
         );
-
+        
         const nextLesson = availableLessons.find(
             article => !article.completed
         );
