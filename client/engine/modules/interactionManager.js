@@ -37,12 +37,9 @@ this.actionDispatcher = new ActionDispatcher(engine)
     getUIState() {
         return this.uiState
     }
-    handleTargetNode(targetNode) {
-        if(!targetNode) return
-        this.actionDispatcher.execute(targetNode)
-    }
-    getInteractionState() {
-    return this.state;
+  handleTargetNode(targetNode) {
+    if (!targetNode) return
+    return this.actionDispatcher.execute(targetNode)
 }
 
 setPlayerName(value = '') {

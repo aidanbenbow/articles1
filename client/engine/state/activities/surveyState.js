@@ -7,7 +7,7 @@ export class SurveyState extends ActivityState {
         super(section)
         this.response = null
         this.results = null
-        this.scoreValue = 5
+        this.scoreValue = 0
         this.scoreAwarded = false
         this.feedback = section.feedback || {}
     }

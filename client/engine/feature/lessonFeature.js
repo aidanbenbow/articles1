@@ -55,7 +55,7 @@ get articles() {
             onViewPortChanged: () => this.lessonController.onViewPortChanged(), 
             advanceLessonSection: () => this.lessonController.advanceLesson(),
             startLessonPhase: () => this.lessonController.startPhase(),
-            finishLesson: () => this.lessonController.finishLesson(),
+            finishLesson:async () =>await this.lessonController.finishLesson(),
             getLessonProgressStore: () => this.lessonProgressStore,
             getLessonAnalyticsService: () => this.lessonAnalyticsService,
             getLeaderboard: () => this.leaderboard,

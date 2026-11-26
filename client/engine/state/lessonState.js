@@ -1,3 +1,4 @@
+import { getActivityMaxScore } from "../layout/config/scoringConfig.js"
 import { createActivityState } from "./stateFactory.js"
 
 export class LessonState {
@@ -32,13 +33,49 @@ this.duration = lesson.duration || 0
         this.activeTimeSeconds = 0
 this.activeSessionStartedAt = null
     }
-    getScoreTotal(){
-this.score = Object.values(this.activities).reduce((total, activity) => {
-            
-            return total+(activity.getScore ? activity.getScore() : 0)
-        }, 0)
-        return this.score
-    }
+   getScoreTotal() {
+    return Object.values(this.activities).reduce(
+        (total, activity) => {
+            return total + (
+                activity.getScore ? activity.getScore() : 0
+            )
+        },
+        0
+    )
+}
+    getMaxPossibleScore() {
+    return this.sections.reduce((total, section) => {
+        switch (section.type) {
+            case 'quiz':
+                return total + getActivityMaxScore('quiz', 1)
+
+            case 'dragdrop':
+                return total + getActivityMaxScore(
+                    'dragdrop',
+                    Object.keys(section.answers || {}).length
+                )
+
+            case 'ordering':
+                return total + getActivityMaxScore(
+                    'ordering',
+                    section.items?.length || 0
+                )
+
+            default:
+                return total
+        }
+    }, 0)
+}
+
+getScorePercentage() {
+    const maximum = this.getMaxPossibleScore()
+
+    if (!maximum) return 0
+
+    return Math.round(
+        (this.getScoreTotal() / maximum) * 100
+    )
+}
     getCurrentSectionState() {
     if (!this.currentSectionId) {
         return null
@@ -92,6 +129,8 @@ getResults() {
         lessonId: this.articleId,
         title: this.title,
         score: this.getScoreTotal(),
+        maxPossibleScore: this.getMaxPossibleScore(),
+        scorePercentage: this.getScorePercentage(),
         completedSections: this.getCompletedCount(),
         totalSections: this.sections.length,
         progress: this.getProgress(),
@@ -251,10 +290,10 @@ restoreProgress(progress) {
         }
 
         if (activity.type === 'dragdrop') {
-            activity.restoreState?.(
-                progress.orderingAnswers?.[sectionId] ?? {}
-            )
-        }
+    activity.restoreState?.(
+        progress.dragDropAnswers?.[sectionId] ?? {}
+    )
+}
     }
 
     if (this.completed) {

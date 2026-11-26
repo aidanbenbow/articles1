@@ -195,11 +195,11 @@ async getLessonAnalytics(lessonId) {
     const medianDurationSeconds =
         this.getMedian(durations);
 
-    const completionRate = records.length
-        ? Math.round(
-            (completed.length / records.length) * 100
-        )
-        : 0;
+    const completionRate = participants.length
+    ? Math.round(
+        (completed.length / participants.length) * 100
+    )
+    : 0
 
     return {
         lessonId,
@@ -229,11 +229,11 @@ async getLessonAnalytics(lessonId) {
     }
 
     deleteProgress(userId, lessonId) {
-        if (!progress?.userId || !progress?.lessonId) {
-            throw new Error(
-                "Both userId and lessonId are required"
-            );
-        }
+        if (!userId || !lessonId) {
+        throw new Error(
+            'Both userId and lessonId are required'
+        )
+    }
         return this.lessonProgressRepo.deleteProgress(
             userId,
             lessonId

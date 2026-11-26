@@ -2,21 +2,33 @@ import { requireAuth } from "../http/authMiddleware.js";
 
 
 const allowedProgressFields = [
+    'displayName',
     'status',
     'progressPercent',
     'currentActivityId',
     'completedActivityIds',
     'quizAnswers',
     'quizScore',
-    'totalScore',
+    'dragDropAnswers',
     'surveyResponses',
     'orderingAnswers',
+
+    'totalScore',
+    'maxPossibleScore',
+    'scorePercentage',
+    'scoringVersion',
     'completedAt',
     'startedAt',
-    'activeTimeSeconds'
+    'activeTimeSeconds',
+    'lastAccessedAt'
 ];
 
+
 function validateProgress(progress) {
+    if (!progress || typeof progress !== 'object' || Array.isArray(progress)) {
+        return 'Progress must be an object';
+    }
+
     if (
         typeof progress.lessonId !== 'string' ||
         !progress.lessonId.trim() ||
@@ -25,33 +37,133 @@ function validateProgress(progress) {
         return 'A valid lessonId is required';
     }
 
+    const validStatuses = [
+        'not_started',
+        'in_progress',
+        'completed'
+    ];
+
+    if (
+        progress.status !== undefined &&
+        !validStatuses.includes(progress.status)
+    ) {
+        return 'Invalid progress status';
+    }
+
     if (
         progress.progressPercent !== undefined &&
-        (!Number.isFinite(progress.progressPercent) ||
+        (
+            !Number.isFinite(progress.progressPercent) ||
             progress.progressPercent < 0 ||
-            progress.progressPercent > 100)
+            progress.progressPercent > 100
+        )
     ) {
         return 'progressPercent must be between 0 and 100';
     }
 
-    for (const field of ['quizScore', 'totalScore', 'activeTimeSeconds']) {
+    const numericFields = [
+        'quizScore',
+        'totalScore',
+        'maxPossibleScore',
+        'activeTimeSeconds'
+    ];
+
+    for (const field of numericFields) {
         if (
             progress[field] !== undefined &&
-            (!Number.isFinite(progress[field]) || progress[field] < 0)
+            (
+                !Number.isFinite(progress[field]) ||
+                progress[field] < 0
+            )
         ) {
             return `${field} must be a non-negative number`;
         }
     }
 
     if (
-        progress.completedActivityIds !== undefined &&
-        !Array.isArray(progress.completedActivityIds)
+        progress.scorePercentage !== undefined &&
+        progress.scorePercentage !== null &&
+        (
+            !Number.isFinite(progress.scorePercentage) ||
+            progress.scorePercentage < 0 ||
+            progress.scorePercentage > 100
+        )
     ) {
-        return 'completedActivityIds must be an array';
+        return 'scorePercentage must be between 0 and 100';
+    }
+
+    if (
+        progress.scoringVersion !== undefined &&
+        (
+            !Number.isInteger(progress.scoringVersion) ||
+            progress.scoringVersion < 1
+        )
+    ) {
+        return 'scoringVersion must be a positive integer';
+    }
+
+    if (
+        progress.completedActivityIds !== undefined &&
+        (
+            !Array.isArray(progress.completedActivityIds) ||
+            !progress.completedActivityIds.every(
+                id => typeof id === 'string'
+            )
+        )
+    ) {
+        return 'completedActivityIds must be an array of strings';
+    }
+
+    if (
+        progress.currentActivityId !== undefined &&
+        progress.currentActivityId !== null &&
+        typeof progress.currentActivityId !== 'string'
+    ) {
+        return 'currentActivityId must be a string or null';
+    }
+
+    const objectFields = [
+        'quizAnswers',
+        'surveyResponses',
+        'orderingAnswers',
+        'dragDropAnswers'
+    ];
+
+    for (const field of objectFields) {
+        if (
+            progress[field] !== undefined &&
+            (
+                progress[field] === null ||
+                typeof progress[field] !== 'object' ||
+                Array.isArray(progress[field])
+            )
+        ) {
+            return `${field} must be an object`;
+        }
+    }
+
+    const timestampFields = [
+        'startedAt',
+        'completedAt',
+        'lastAccessedAt'
+    ];
+
+    for (const field of timestampFields) {
+        if (
+            progress[field] !== undefined &&
+            progress[field] !== null &&
+            (
+                typeof progress[field] !== 'string' ||
+                Number.isNaN(Date.parse(progress[field]))
+            )
+        ) {
+            return `${field} must be a valid timestamp or null`;
+        }
     }
 
     return null;
 }
+
 
 export function registerLessonProgressHandlers(
     app,

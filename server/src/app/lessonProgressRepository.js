@@ -124,12 +124,13 @@ async getLeaderboardSnapshot() {
        if (!progress || typeof progress !== "object") {
             throw new Error("Progress data is required");
         }
-
+const now = new Date().toISOString();
         this.validateIds(progress.userId, progress.lessonId);
 
         const {
             userId,
             lessonId,
+            displayName,
             status,
             progressPercent,
             currentActivityId,
@@ -137,19 +138,27 @@ async getLeaderboardSnapshot() {
             quizAnswers,
             quizScore,
             totalScore,
+            maxPossibleScore,
+        scorePercentage,
+        scoringVersion,
             surveyResponses,
             orderingAnswers,
+            dragDropAnswers,
             completedAt,
             startedAt,
-            activeTimeSeconds
+            activeTimeSeconds,
+            lastAccessedAt
         } = progress;
 
         const item = {
             PK: `USER#${userId}`,
             SK: `LESSON#${lessonId}`,
+            GSI1PK: `LESSON#${lessonId}`,
+    GSI1SK: `USER#${userId}`,
             userId,
             lessonId,
-            updatedAt: new Date().toISOString()
+            displayName,
+            updatedAt: now
         };
 
         const fields = {
@@ -159,12 +168,19 @@ async getLeaderboardSnapshot() {
             completedActivityIds,
             quizAnswers,
             quizScore,
-            totalScore,
             surveyResponses,
             orderingAnswers,
+            dragDropAnswers,
+            totalScore,
+            maxPossibleScore,
+            scorePercentage,
+            scoringVersion,
+            
+            
             completedAt,
             startedAt,
-            activeTimeSeconds
+            activeTimeSeconds,
+            lastAccessedAt: lastAccessedAt ?? now
         };
 
         for (const [key, value] of Object.entries(fields)) {

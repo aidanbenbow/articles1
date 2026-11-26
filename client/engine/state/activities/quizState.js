@@ -1,3 +1,4 @@
+import { SCORING_CONFIG } from '../../layout/config/scoringConfig.js'
 import { ActivityState } from './activityState.js'
 
 // filepath: d:\articles1\client\engine\state\activities\quizState.js
@@ -26,7 +27,7 @@ export class QuizState extends ActivityState {
         }
 
         if (isCorrect) {
-            this.score+=10
+            this.score+= SCORING_CONFIG.activities.quiz.pointsPerCorrectAnswer
         }
 this.completed = true
         return this.answers[questionId]
@@ -40,7 +41,7 @@ isComplete() {
 
     getTotalQuestions() {
         
-        return this.section?.question?.length || 0
+        return this.section?.question?.length ? 1 : 0
     }
 
     getAnsweredQuestions() {

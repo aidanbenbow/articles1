@@ -1,3 +1,4 @@
+
 export function buildLessonProgress({
     userId,
     displayName = "Learner",
@@ -9,15 +10,31 @@ export function buildLessonProgress({
     quizAnswers = {},
     quizScore = 0,
     surveyResponses = {},
+    orderingAnswers = {},
+    dragDropAnswers = {},
+    totalScore = 0,
+    maxPossibleScore = 0,
+    scorePercentage = null,
+    scoringVersion = 1,
+    activeTimeSeconds = 0,
     startedAt = null,
     completedAt = null,
     lastAccessedAt = new Date().toISOString(),
 }) {
     const now = new Date().toISOString()
 
-    const progress = Math.max( 0, Math.min(100, Math.round(progressPercent)) )
+    const progress = Math.max(
+        0,
+        Math.min(100, Math.round(progressPercent))
+    )
 
-    const resolvedStatus = progress >= 100 ? 'completed': progress > 0? 'in_progress': 'not_started'
+    // Preserve explicit completion status.
+    const resolvedStatus =
+        status === 'completed' || progress >= 100
+            ? 'completed'
+            : status === 'in_progress' || progress > 0
+                ? 'in_progress'
+                : 'not_started'
 
     return {
         PK: `USER#${userId}`,
@@ -39,10 +56,23 @@ export function buildLessonProgress({
         quizAnswers,
         quizScore,
         surveyResponses,
+        orderingAnswers,
+        dragDropAnswers,
 
-        startedAt: startedAt ?? (progress > 0 ? now : null),
+        totalScore,
+        maxPossibleScore,
+        scorePercentage,
+        scoringVersion,
 
-        completedAt:completedAt ??(resolvedStatus === 'completed' ? now: null),
+        activeTimeSeconds,
+
+        startedAt: startedAt ?? (
+            progress > 0 ? now : null
+        ),
+
+        completedAt: completedAt ?? (
+            resolvedStatus === 'completed' ? now : null
+        ),
 
         lastAccessedAt,
         updatedAt: now,

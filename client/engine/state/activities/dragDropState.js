@@ -1,3 +1,4 @@
+import { SCORING_CONFIG } from "../../layout/config/scoringConfig.js";
 import { ActivityState } from "./activityState.js";
 
 export class DragDropState extends ActivityState{
@@ -11,8 +12,8 @@ export class DragDropState extends ActivityState{
         this.correctAnswers ={ ...(section.answers || {}) }
         this.correctCount = 0
         
-            this.pointsPerWord = 2
-            this.scoreValue= Object.keys(this.correctAnswers).length * this.pointsPerWord
+            // this.pointsPerWord = 2
+            // this.scoreValue= Object.keys(this.correctAnswers).length * this.pointsPerWord
             this.scoreAwarded = false
             this.shuffleWordbank()
     }  
@@ -80,7 +81,7 @@ this.correct = complete && this.correctCount === totalCount
     getScore() {
         const correctKeys = Object.keys(this.correctAnswers)
         const correctCount = correctKeys.filter( key => this.answers[key] === this.correctAnswers[key] ).length
-        return correctCount * this.pointsPerWord
+        return correctCount * SCORING_CONFIG.activities.dragdrop.pointsPerCorrectAnswer
     }
     isCorrect() {
         return this.correct

@@ -125,7 +125,7 @@ _onPointerLeave = () => {
         this.hoveredNodeId = null
     }
 }
-_onPointerUp = (event) => {
+_onPointerUp = async (event) => {
 
     if (!this.pointerState.isDown) return
 const drag = this.interaction?.dragState
@@ -134,40 +134,46 @@ const {x,y} = this._normalisePointerEvent(event)
 this.pointerState.x = x
 this.pointerState.y = y
 
-if(drag) {
- const dropTarget = this.findDropTarget(drag,x,y)
+try {
+        if (drag) {
+            const dropTarget = this.findDropTarget(drag, x, y)
 
-        if (dropTarget) {
-            this.interaction.completeDrop(
-                drag,
-                dropTarget
-            )
-        } else {
-            this.interaction.cancelDrag()
-        }
-} else if (
-        !this.pointerState.moved &&
-        this.pointerState.target
-    ) {
-   
-        this.interaction.handleTargetNode(
+            if (dropTarget) {
+                await this.interaction.completeDrop(
+                    drag,
+                    dropTarget
+                )
+            } else {
+                this.interaction.cancelDrag()
+            }
+        } else if (
+            !this.pointerState.moved &&
             this.pointerState.target
-        )
-    }
-    try{
-        this.canvas?.releasePointerCapture(event.pointerId)
-    } catch(e) {
-        console.warn('Failed to release pointer capture', e)
-    }
-const pressedNode = this.pointerState.target
+        ) {
+            await this.interaction.handleTargetNode(
+                this.pointerState.target
+            )
+        }
+    } catch (error) {
+        console.error('Pointer action failed:', error)
+    } finally {
+        try {
+            this.canvas?.releasePointerCapture(event.pointerId)
+        } catch (e) {
+            console.warn('Failed to release pointer capture', e)
+        }
 
-if (pressedNode?.type === 'button') {
-    this.engine.context.getInteractionManager()?.getUIState()?.setPressed(
-        pressedNode.id,
-        false
-    )
-}
-    this._resetPointerState()
+        const pressedNode = this.pointerState.target
+
+        if (pressedNode?.type === 'button') {
+            this.engine.context
+                .getInteractionManager()
+                ?.getUIState()
+                ?.setPressed(pressedNode.id, false)
+        }
+
+        this._resetPointerState()
+    }
 }
 _onPointerCancel = () => {
     const target = this.pointerState.target

@@ -71,7 +71,7 @@ if (this.lessonUserId && this.lessonUserId !== userId) {
         this.lesson.startPhase()
         this.syncProgress()
     }
-    finishLesson() {
+  async  finishLesson() {
         const current = this.lesson.getCurrentSection()
 
     if (current) {
@@ -90,7 +90,7 @@ if (this.lessonUserId && this.lessonUserId !== userId) {
     }
 
     this.syncProgress()
-
+await this.flushProgressSaves()
     return this.lesson.getResults()
     }
    async flushProgressSaves() {
@@ -141,12 +141,16 @@ if (!userId) {
 
     const progress = this.lesson.getProgress()
 const totalScore = this.lesson.getScoreTotal()
+const maxPossibleScore = this.lesson.getMaxPossibleScore()
+const scorePercentage = maxPossibleScore > 0
+    ? Math.round((totalScore / maxPossibleScore) * 100)
+    : null
         const quizAnswers = {}
          let quizScore = 0
 
     const surveyResponses = {}
     const orderingAnswers = {}
-
+const dragDropAnswers = {}
     for (const [sectionId, activity] of Object.entries(
         this.lesson.activities
     )) {
@@ -172,24 +176,26 @@ const totalScore = this.lesson.getScoreTotal()
                 items: activity.getItems(),
                 checked: activity.getChecked(),
                 correct: activity.isCorrect(),
+                correctCount: activity.correctCount,
+    totalCount: activity.getItems().length,
                 feedback: activity.getFeedback()
             }
         }
-        if (activity.type === 'dragdrop') {
-    orderingAnswers[sectionId] = {
+       if (activity.type === 'dragdrop') {
+    dragDropAnswers[sectionId] = {
         answers: activity.getAnswers(),
         wordbank: activity.getWordbank(),
         checked: activity.getChecked(),
         correct: activity.isCorrect(),
+        correctCount: activity.correctCount,
         feedback: activity.getFeedback(),
         scoreAwarded: activity.scoreAwarded
     }
 }
     }
-if (this.lesson.completed && !this.completedAt) {
-    this.completedAt =
-        this.lesson.completedAt ?? new Date().toISOString();
-}
+const completedAt = this.lesson.completed
+    ? (this.lesson.completedAt ?? new Date().toISOString())
+    : null
  const result =   this.lessonProgressStore.update(userId,
         this.lesson.articleId,
         {
@@ -204,11 +210,16 @@ if (this.lesson.completed && !this.completedAt) {
             quizAnswers,
             quizScore,
             totalScore,
+            maxPossibleScore,
+            scorePercentage,
+            scoringVersion: SCORING_CONFIG.version,
             surveyResponses,
             orderingAnswers,
-
-            completedAt: this.completedAt,
+dragDropAnswers,
+            completedAt,
             activeTimeSeconds: this.lesson.activeTimeSeconds,
+            startedAt: this.lesson.startedAt ?? null,
+lastAccessedAt: new Date().toISOString(),
         }
     )
    

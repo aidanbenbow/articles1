@@ -18,21 +18,23 @@ this.displayName = data.displayName ?? "Learner"
 
         this.completedActivityIds = data.completedActivityIds ?? []
 
+           // Activity answers
         this.quizAnswers = data.quizAnswers ?? {}
-
-        this.quizScore = data.quizScore ?? 0
-
-        this.totalScore = data.totalScore ?? 0
         this.surveyResponses = data.surveyResponses ?? {}
+        this.orderingAnswers = data.orderingAnswers ?? {}
+        this.dragDropAnswers = data.dragDropAnswers ?? {}
 
-            this.orderingAnswers = data.orderingAnswers ?? {}
+        // Scoring
+        this.quizScore = data.quizScore ?? 0
+        this.totalScore = data.totalScore ?? 0
+        this.maxPossibleScore = data.maxPossibleScore ?? 0
+        this.scorePercentage = data.scorePercentage ?? null
+        this.scoringVersion = data.scoringVersion ?? 1
 
+        // Timing
         this.startedAt = data.startedAt ?? null
-
-        this.completedAt =data.completedAt ?? null
-
+        this.completedAt = data.completedAt ?? null
         this.lastAccessedAt = data.lastAccessedAt ?? null
-
         this.activeTimeSeconds = data.activeTimeSeconds ?? 0
     }
 

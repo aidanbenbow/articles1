@@ -72,8 +72,8 @@ startPhase() {
             this.lessonService.getLesson().currentSectionId
     });
 }
-  finishLesson() {
-    const results = this.lessonService.finishLesson()
+  async finishLesson() {
+    const results = await this.lessonService.finishLesson()
 
     if (!results) return null
 

@@ -114,7 +114,7 @@ getPlayerStats(userId) {
     const completedCount = completed.length
 
     return {
-        totalLessons: completed.length + inProgress.length,
+        totalLessons: completedCount + inProgress.length,
         completedLessons: completedCount,
         inProgressLessons: inProgress.length,
         totalXP,

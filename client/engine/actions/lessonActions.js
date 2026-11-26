@@ -11,15 +11,15 @@ export class LessonActions {
         }
     }
 
-    finishLessonSection() {
-      const result = this.engine.context.finishLesson()
+   async finishLessonSection() {
+      const result = await this.engine.context.finishLesson()
       const lesson = this.engine.context.getLesson()
         this.engine.emit('lessonStateChanged', lesson)
         this.emitLayoutChanged()
         return result
     }
 
-    advanceLessonSection() {
+  async  advanceLessonSection() {
         const moved = this.engine.context.advanceLessonSection()
 
         if (!moved) {
@@ -30,7 +30,8 @@ export class LessonActions {
         const lesson = this.engine.context.getLesson()
 
         if (lesson?.completed) {
-            this.engine.context.finishLesson()
+             const results = await this.engine.context.finishLesson()
+        return Boolean(results)
         }
 
         this.engine.emit('lessonStateChanged', lesson)

@@ -9,6 +9,7 @@ export class OrderingState extends ActivityState {
         this.shuffleItems()
         this.checked = false
         this.correct = false
+        this.correctCount = 0
          this.correctFeedback =
             section.feedback ||
             "Great job! You've reconstructed the process."
@@ -36,18 +37,28 @@ export class OrderingState extends ActivityState {
     }
 
     checkAnswer(correctItems) {
-        this.correct =
-            this.items.length === correctItems.length &&
-            this.items.every((item, index) => item === correctItems[index])
+    this.correctCount = this.items.filter(
+        (item, index) => item === correctItems[index]
+    ).length
 
-        this.checked = true
-        this.feedback = this.correct
-            ? this.correctFeedback
-            : 'Not quite. Try rearranging the steps.'
+    this.correct =
+        this.items.length === correctItems.length &&
+        this.correctCount === correctItems.length
 
-        return this.correct
-    }
+    this.checked = true
 
+    this.feedback = this.correct
+        ? this.correctFeedback
+        : 'Not quite. Try rearranging the steps.'
+
+    return this.correct
+}
+getScore() {
+    if (!this.checked) return 0
+
+    return this.correctCount *
+        SCORING_CONFIG.activities.ordering.pointsPerCorrectPosition
+}
     shuffleItems() {
         for (let i = this.items.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1))
@@ -79,6 +90,7 @@ getFeedback() {
         this.checked = false
         this.correct = false
         this.feedback = ''
+        this.correctCount = 0
         this.shuffleItems()
     }
     restoreState(saved = {}) {
