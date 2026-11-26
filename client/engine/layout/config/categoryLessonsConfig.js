@@ -19,15 +19,7 @@ export const CATEGORY_LESSONS_LAYOUT = {
         const percentage = total > 0
             ? Math.round((completed / total) * 100)
             : 0;
-        // const lessonNodes = availableLessons.map(article => ({
-        //     id: `lesson-${article.articleId}`,
-        //     type: 'button',
-        //     kind: 'lessonOption',
-        //     action: 'openLesson',
-        //     text: article.completed ? `${article.title} (Completed)` : article.title,
-        //     articleId: article.articleId,
-        //     completed: article.completed,
-        // }))
+        
 
         return [
             {

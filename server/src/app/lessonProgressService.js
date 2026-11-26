@@ -140,6 +140,85 @@ async refreshWeeklyLeaderboard() {
 
         return this.refreshWeeklyLeaderboard();
     }
+
+getMedian(values) {
+    if (!values.length) return 0;
+
+    const sorted = [...values].sort((a, b) => a - b);
+    const middle = Math.floor(sorted.length / 2);
+
+    return sorted.length % 2
+        ? sorted[middle]
+        : Math.round(
+            (sorted[middle - 1] + sorted[middle]) / 2
+        );
+}
+
+async getLessonAnalytics(lessonId) {
+    if (
+        typeof lessonId !== "string" ||
+        !lessonId.trim() ||
+        lessonId.length > 200
+    ) {
+        throw new Error("A valid lessonId is required");
+    }
+
+    const allRecords =
+        await this.lessonProgressRepo.getAllProgress();
+
+    // Only records belonging to this lesson.
+    const records = allRecords.filter(
+        record => record.lessonId === lessonId
+    );
+ // Learners who actually participated.
+    const participants = records.filter(
+        record =>
+            record.status === "in_progress" ||
+            record.status === "completed"
+    );
+     // Learners who completed the lesson.
+    const completed = participants.filter(
+        record => record.status === "completed"
+    );
+
+    // Completed records with valid recorded active time.
+    const timedRecords = completed.filter(
+        record =>
+            Number.isFinite(Number(record.activeTimeSeconds)) &&
+            Number(record.activeTimeSeconds) > 0
+    );
+
+    const durations = timedRecords.map(
+        record => Number(record.activeTimeSeconds)
+    );
+
+    const medianDurationSeconds =
+        this.getMedian(durations);
+
+    const completionRate = records.length
+        ? Math.round(
+            (completed.length / records.length) * 100
+        )
+        : 0;
+
+    return {
+        lessonId,
+         participantCount: participants.length,
+        completedCount: completed.length,
+        sampleSize: timedRecords.length,
+        completionRate,
+        medianDurationSeconds,
+        estimatedDurationMinutes:
+            medianDurationSeconds
+                ? Math.max(
+                    1,
+                    Math.round(medianDurationSeconds / 60)
+                )
+                : 0,
+        updatedAt: new Date().toISOString()
+    };
+}
+
     saveProgress(progress) {
         if (!progress?.userId || !progress?.lessonId) {
             throw new Error(

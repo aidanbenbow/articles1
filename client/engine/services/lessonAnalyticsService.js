@@ -1,8 +1,14 @@
+import { fetchLessonAnalytics } from "../api/lessonAnalyticsApi"
+
 export class LessonAnalyticsService {
 
     constructor(lessonProgressStore, dataStore) {
         this.lessonProgressStore = lessonProgressStore
         this.dataStore = dataStore
+
+        // Backend cohort analytics cache
+        this.lessonAnalyticsCache = new Map()
+        this.analyticsRequests = new Map()
     }
 
     getAllProgress() {
@@ -70,4 +76,59 @@ getCompletedLessonIds(userId) {
         .filter(record => record.completed)
         .map(record => record.lessonId)
 }
+getCachedAnalytics(lessonId) {
+        return this.lessonAnalyticsCache.get(lessonId) ?? null
+    }
+    async loadLessonAnalytics(lessonId) {
+        if (!lessonId) return null
+
+        // Return cached data if already loaded
+        if (this.lessonAnalyticsCache.has(lessonId)) {
+            return this.lessonAnalyticsCache.get(lessonId)
+        }
+
+        // Avoid duplicate requests
+        if (this.analyticsRequests.has(lessonId)) {
+            return this.analyticsRequests.get(lessonId)
+        }
+
+        const request = this.fetchLessonAnalytics(lessonId)
+
+        this.analyticsRequests.set(lessonId, request)
+
+        try {
+            return await request
+        } finally {
+            this.analyticsRequests.delete(lessonId)
+        }
+    }
+
+async fetchLessonAnalytics(lessonId) {
+    try {
+        const analytics = await fetchLessonAnalytics(lessonId)
+
+        this.lessonAnalyticsCache.set(
+            lessonId,
+            analytics
+        )
+
+        return analytics
+    } catch (error) {
+        console.error(
+            'Lesson analytics fetch failed:',
+            error
+        )
+
+        return null
+    }
+}
+
+
+    invalidateAnalytics(lessonId) {
+        this.lessonAnalyticsCache.delete(lessonId)
+    }
+
+    clearAnalyticsCache() {
+        this.lessonAnalyticsCache.clear()
+    }
 }

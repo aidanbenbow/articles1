@@ -181,4 +181,41 @@ export function registerLessonProgressHandlers(
             }
         }
     );
+
+    // Get aggregated analytics for a lesson
+app.get(
+    '/api/lesson-analytics/:lessonId',
+    requireAuth,
+    async (req, res) => {
+        try {
+            const analytics =
+                await lessonProgressService.getLessonAnalytics(
+                    req.params.lessonId
+                );
+
+            // Avoid exposing statistics from very small cohorts.
+            if (analytics.completedCount < 10) {
+                return res.json({
+                    lessonId: analytics.lessonId,
+                    available: false,
+                    message: 'Insufficient learner data'
+                });
+            }
+
+            res.json({
+                ...analytics,
+                available: true
+            });
+        } catch (error) {
+            console.error(
+                'Error fetching lesson analytics:',
+                error
+            );
+
+            res.status(500).json({
+                error: 'Failed to fetch lesson analytics'
+            });
+        }
+    }
+);
 }
