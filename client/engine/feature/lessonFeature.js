@@ -61,7 +61,7 @@ get articles() {
             getLeaderboard: () => this.leaderboard,
             getWeeklyLeaderboard: () => this.weeklyLeaderboard,
             loadWeeklyLeaderBoard: () => this.loadWeeklyLeaderboard(),
-
+loadLessonAnalytics: (lessonIds) => this.lessonAnalyticsService.loadLessonAnalytics(lessonIds),
 getPlayerProgress: (userId) =>
     this.lessonProgressStore.getAllForUser(userId),
 

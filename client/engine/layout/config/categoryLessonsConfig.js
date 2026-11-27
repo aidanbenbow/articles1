@@ -1,3 +1,4 @@
+import { createActivityAnalyticsNodes } from "../../helpers/ativitiesAnalyticsNode";
 
 
 export const CATEGORY_LESSONS_LAYOUT = {
@@ -5,9 +6,7 @@ export const CATEGORY_LESSONS_LAYOUT = {
 
     nodes: (context) => {
         const { selectedCategory, availableLessons, appState } = context
-  const completedLessons = availableLessons.filter(
-            article => article.completed
-        );
+  const completedLessons = availableLessons.filter(       article => article.completed );
         
         const nextLesson = availableLessons.find(
             article => !article.completed
@@ -19,7 +18,41 @@ export const CATEGORY_LESSONS_LAYOUT = {
         const percentage = total > 0
             ? Math.round((completed / total) * 100)
             : 0;
-        
+        const lessonNodes = availableLessons.flatMap(article => {
+            const analytics = article.analytics
+            const hasAnalytics = analytics?.available === true
+
+           const summaryNodes = hasAnalytics ? [
+        {
+            id: `lesson-analytics-${article.articleId}`,
+            type: 'text',
+            typography: 'caption',
+            color: 'muted',
+            value:
+                `Cohort completion: ${analytics.completionRate}% · ` +
+                `Difficulty: ${analytics.empiricalDifficulty?.label ?? 'Unknown'} · ` +
+                `Median duration: ${analytics.duration?.medianSeconds != null
+                    ? `${analytics.duration.medianSeconds}s`
+                    : 'Unknown'}`
+        },
+        ...createActivityAnalyticsNodes(article)
+    ] : []
+
+    return [
+        {
+            id: `lesson-${article.articleId}`,
+            type: 'button',
+            kind: 'lessonOption',
+            action: 'openLesson',
+            text: article.completed
+                ? `✓ ${article.title} — Review`
+                : article.title,
+            articleId: article.articleId,
+            completed: article.completed
+        },
+        ...summaryNodes
+    ]
+        })
 
         return [
             {
@@ -89,18 +122,7 @@ export const CATEGORY_LESSONS_LAYOUT = {
                 value: 'Explore your lessons'
             },
 
-            ...availableLessons.map(article => ({
-                id: `lesson-${article.articleId}`,
-                type: 'button',
-                kind: 'lessonOption',
-                action: 'openLesson',
-                text: article.completed
-                    ? `✓ ${article.title} — Review`
-                    : article.title,
-                articleId: article.articleId,
-                completed: article.completed
-            })),
-
+...lessonNodes,
             ...(total > 0 && completed === total ? [
                 {
                     id: 'category-complete',

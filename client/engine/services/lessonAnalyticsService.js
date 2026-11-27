@@ -123,7 +123,22 @@ async fetchLessonAnalytics(lessonId) {
     }
 }
 
+// Load analytics for multiple lessons.
+    // Individual requests are deduplicated by loadLessonAnalytics().
+    async loadAnalytics(lessonIds = []) {
+        const uniqueIds = [...new Set(
+            lessonIds.filter(Boolean)
+        )]
 
+        const results = await Promise.all(
+            uniqueIds.map(async lessonId => [
+                lessonId,
+                await this.loadLessonAnalytics(lessonId)
+            ])
+        )
+
+        return Object.fromEntries(results)
+    }
     invalidateAnalytics(lessonId) {
         this.lessonAnalyticsCache.delete(lessonId)
     }

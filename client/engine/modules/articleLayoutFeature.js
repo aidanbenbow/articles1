@@ -19,7 +19,8 @@ export class ArticleLayoutFeature {
         this.engine = engine
         this._unsubscribe = []
        // this._lastFilter = ''
-
+this.analyticsLoadPromises = new Map()
+this.analyticsLoadedFor = new Set()
    
         this.engine.on('lessonStateChanged', () => {    
             this.layoutArticles()
@@ -98,6 +99,15 @@ const screen = this.screens[appState.screen]
 
 
         this.engine.emit('layoutChanged', { layout: this.layout.layoutNodes })
+
+        // Load cohort analytics in the background.
+    // Only load when the learner is viewing the browser.
+    if (
+        appState.screen === 'playerSelect' ||
+        appState.screen === 'category'
+    ) {
+        this.ensureLessonAnalyticsLoaded(articleNodes)
+    }
     }
 
     clearLessonLayout(articleNode) {
@@ -235,4 +245,68 @@ measureParagraphText(text, width) {
 const {lines} = this.measureArticleText(text, width)
 return lines * 20 + 20
 }
+
+async ensureLessonAnalyticsLoaded(articleNodes) {
+    const userId =
+        this.engine.context.app?.getState()?.user?.userId
+
+    if (!userId) return
+
+    const analyticsService =
+        this.engine.context.getLessonAnalyticsService?.()
+
+    if (!analyticsService) return
+
+    const articles = articleNodes
+        .map(node => node.props?.articleData)
+        .filter(article => article?.articleId)
+
+    const lessonIds = [...new Set(
+        articles.map(article => article.articleId)
+    )]
+
+    // Include the user in the key so one user's session
+    // doesn't suppress another user's analytics loading.
+    const cacheKey = userId
+
+    if (this.analyticsLoadedFor.has(cacheKey)) {
+        return
+    }
+
+    if (this.analyticsLoadPromises.has(cacheKey)) {
+        return this.analyticsLoadPromises.get(cacheKey)
+    }
+
+    const request = (async () => {
+        try {
+            await analyticsService.loadAnalytics(lessonIds)
+
+            // Check that the same learner is still signed in.
+            const currentUserId =
+                this.engine.context.app?.getState()?.user?.userId
+
+            if (currentUserId !== userId) return
+
+            this.analyticsLoadedFor.add(cacheKey)
+
+            // Rebuild using the newly cached analytics.
+            this.engine.emit(
+                'appStateChanged',
+                this.engine.context.app?.getState()
+            )
+        } catch (error) {
+            console.error(
+                'Failed to load lesson analytics:',
+                error
+            )
+        } finally {
+            this.analyticsLoadPromises.delete(cacheKey)
+        }
+    })()
+
+    this.analyticsLoadPromises.set(cacheKey, request)
+
+    return request
+}
+
 }

@@ -1,3 +1,4 @@
+import { enrichLessonsWithAnalytics } from "../../helpers/enrichLessonsWithAnalytics.js"
 import { CATEGORY_METADATA, DEFAULT_CATEGORY_METADATA } from "../config/categoryMetadata.js"
 import { PLAYER_SELECT_LAYOUT } from "../config/playerSelect.js"
 import { BaseScreenLayout } from "./basicScreenLayout.js"
@@ -10,12 +11,34 @@ export class PlayerSelectLayout extends BaseScreenLayout {
 
     build(context) {
         const {articleNodes, appState } = context
-        const completedLessons = appState.user?.completedLessons || []
- const availableLessons = articleNodes
+        const completedLessons = new Set(
+            appState.user?.completedLessons || []
+        )
+        // Get all valid articles.
+        const availableLessons = articleNodes
             .map(node => node.props?.articleData)
-            .filter(article => article?.articleId && !completedLessons.includes(article.articleId))
-
-        const groupedArticles = availableLessons.reduce((groups, article) => {
+            .filter(article => article?.articleId)
+            .map(article => ({
+                ...article,
+                completed: completedLessons.has(article.articleId)
+            }))
+ const analyticsService =
+    this.engine.context.getLessonAnalyticsService?.()
+const analyticsByLessonId = Object.fromEntries(
+            availableLessons.map(article => [
+                article.articleId,
+                analyticsService?.getCachedAnalytics(article.articleId) ?? {
+                    available: false
+                }
+            ])
+        )
+const availableLessonsWithAnalytics =
+    enrichLessonsWithAnalytics(
+        availableLessons,
+        analyticsByLessonId
+    )
+      
+        const groupedArticles = availableLessonsWithAnalytics.reduce((groups, article) => {
             const category = article.category || 'Uncategorized'
 
             if (!groups[category]) {
@@ -31,7 +54,7 @@ export class PlayerSelectLayout extends BaseScreenLayout {
     
         this.compile(PLAYER_SELECT_LAYOUT, {
             ...context,
-            availableLessons,
+          availableLessons: availableLessonsWithAnalytics,
             groupedArticles,
           categoryMetadata:  CATEGORY_METADATA,
             defaultCategoryMetadata: DEFAULT_CATEGORY_METADATA,
