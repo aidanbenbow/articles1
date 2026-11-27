@@ -1,6 +1,7 @@
 import { LessonState } from "../state/lessonState.js"
 import { saveLessonProgress } from "../api/lessonProgressApi.js"
 import { progressConfig } from "../layout/config/progressConfig.js"
+import { SCORING_CONFIG } from "../layout/config/scoringConfig.js"
 
 
 
@@ -188,6 +189,7 @@ const dragDropAnswers = {}
         checked: activity.getChecked(),
         correct: activity.isCorrect(),
         correctCount: activity.correctCount,
+        totalCount: Object.keys(activity.correctAnswers).length,
         feedback: activity.getFeedback(),
         scoreAwarded: activity.scoreAwarded
     }

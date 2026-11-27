@@ -384,5 +384,34 @@ const now = new Date().toISOString();
 
         return await this.refreshWeeklyLeaderboard();
     }
+async getProgressByLesson(lessonId) {
+    this.validateIds("analytics", lessonId);
 
+    const items = [];
+    let ExclusiveStartKey;
+
+    do {
+        const result = await this.docClient.send(
+            new QueryCommand({
+                TableName: this.tableName,
+                IndexName: "GSI1",
+
+                KeyConditionExpression:
+                    "GSI1PK = :pk",
+
+                ExpressionAttributeValues: {
+                    ":pk": `LESSON#${lessonId}`
+                },
+
+                ExclusiveStartKey
+            })
+        );
+
+        items.push(...(result.Items || []));
+        ExclusiveStartKey = result.LastEvaluatedKey;
+
+    } while (ExclusiveStartKey);
+
+    return items;
+}
 }

@@ -63,7 +63,7 @@ export function getActivityMaxScore(type, questionCount) {
         rule.pointsPerCorrectPosition ??
         0
 
-    return Math.max(0, count) * points
+    return Math.max(0, questionCount) * points
 }
 
 /**

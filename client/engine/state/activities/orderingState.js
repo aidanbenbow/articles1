@@ -1,3 +1,4 @@
+import { SCORING_CONFIG } from '../../layout/config/scoringConfig.js'
 import { ActivityState } from './activityState.js'
 
 // filepath: d:\articles1\client\engine\state\activities\orderingState.js

@@ -37,6 +37,9 @@ this.actionDispatcher = new ActionDispatcher(engine)
     getUIState() {
         return this.uiState
     }
+    getInteractionState() {
+    return this.state;
+}
   handleTargetNode(targetNode) {
     if (!targetNode) return
     return this.actionDispatcher.execute(targetNode)

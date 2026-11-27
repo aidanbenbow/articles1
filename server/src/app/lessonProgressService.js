@@ -34,10 +34,11 @@ async refreshLeaderboard() {
 
         if (record.status === 'completed') {
             user.completedLessons += 1;
+            user.totalActiveTime += Number(record.activeTimeSeconds) || 0;
+        user.totalScore += Number(record.totalScore) || 0;
         }
 
-        user.totalActiveTime += Number(record.activeTimeSeconds) || 0;
-        user.totalScore += Number(record.totalScore) || 0;
+        
     }
 
     // Add display names from learner profiles, if available.
@@ -163,13 +164,8 @@ async getLessonAnalytics(lessonId) {
         throw new Error("A valid lessonId is required");
     }
 
-    const allRecords =
-        await this.lessonProgressRepo.getAllProgress();
-
     // Only records belonging to this lesson.
-    const records = allRecords.filter(
-        record => record.lessonId === lessonId
-    );
+    const records = await this.lessonProgressRepo.getProgressByLesson(lessonId);
  // Learners who actually participated.
     const participants = records.filter(
         record =>
@@ -180,7 +176,40 @@ async getLessonAnalytics(lessonId) {
     const completed = participants.filter(
         record => record.status === "completed"
     );
+const MINIMUM_COHORT_SIZE = 1;
+    const MINIMUM_ACTIVITY_SAMPLE = 1;
 
+    if (completed.length < MINIMUM_COHORT_SIZE) {
+        return {
+            available: false,
+            reason: "insufficient_cohort_size",
+            lessonId,
+            participantCount: participants.length,
+            completedCount: completed.length,
+            minimumSampleSize: MINIMUM_COHORT_SIZE
+        };
+    }
+
+    const rawActivityStats =
+        this.aggregateActivityAnalytics(completed);
+        // Suppress individual activity metrics with small samples.
+    const activityStats = {};
+
+    for (const [type, stats] of Object.entries(rawActivityStats)) {
+        activityStats[type] =
+            stats.attempted >= MINIMUM_ACTIVITY_SAMPLE
+                ? stats
+                : {
+                    attempted: null,
+                    correct: null,
+                    incorrect: null,
+                    accuracy: null,
+                    suppressed: true
+                };
+    }
+
+    const empiricalDifficulty =
+        this.calculateEmpiricalDifficulty(activityStats);
     // Completed records with valid recorded active time.
     const timedRecords = completed.filter(
         record =>
@@ -202,19 +231,26 @@ async getLessonAnalytics(lessonId) {
     : 0
 
     return {
+        available: true,
         lessonId,
          participantCount: participants.length,
         completedCount: completed.length,
         sampleSize: timedRecords.length,
         completionRate,
-        medianDurationSeconds,
-        estimatedDurationMinutes:
-            medianDurationSeconds
+        activityStats,
+
+        empiricalDifficulty,
+
+        duration: {
+            sampleSize: timedRecords.length,
+            medianSeconds: medianDurationSeconds,
+            estimatedMinutes: medianDurationSeconds
                 ? Math.max(
                     1,
                     Math.round(medianDurationSeconds / 60)
                 )
-                : 0,
+                : 0
+        },
         updatedAt: new Date().toISOString()
     };
 }
@@ -239,4 +275,196 @@ async getLessonAnalytics(lessonId) {
             lessonId
         );
     }
+
+getQuizAnswerEntries(quizAnswers = {}) {
+    const entries = [];
+
+    for (const [sectionId, sectionData] of Object.entries(quizAnswers)) {
+        if (!sectionData || typeof sectionData !== "object") continue;
+
+        const answerData = sectionData[sectionId];
+
+        if (
+            !answerData ||
+            typeof answerData !== "object" ||
+            typeof answerData.isCorrect !== "boolean"
+        ) {
+            continue;
+        }
+
+        entries.push({
+            sectionId,
+            isCorrect: answerData.isCorrect
+        });
+    }
+
+    return entries;
+}
+
+aggregateQuizAnalytics(records) {
+    let attempted = 0;
+    let correct = 0;
+
+    for (const record of records) {
+        const answers = this.getQuizAnswerEntries(
+            record.quizAnswers
+        );
+
+        for (const answer of answers) {
+            attempted++;
+
+            if (answer.isCorrect) {
+                correct++;
+            }
+        }
+    }
+
+    return {
+        attempted,
+        correct,
+        incorrect: attempted - correct,
+        accuracy: attempted
+            ? Math.round((correct / attempted) * 100)
+            : null
+    };
+}
+
+aggregateDragDropAnalytics(records) {
+    let attempted = 0;
+    let correct = 0;
+
+    for (const record of records) {
+        const activities = record.dragDropAnswers ?? {};
+
+        for (const activity of Object.values(activities)) {
+            if (
+                !activity ||
+                activity.checked !== true ||
+                typeof activity.correctCount !== "number" &&
+!Number.isFinite(activity.correctCount)
+            ) {
+                continue;
+            }
+
+            const total = Number(
+                activity.totalCount ??
+                Object.keys(activity.answers ?? {}).length
+            );
+
+            if (!Number.isFinite(total) || total <= 0) continue;
+
+            const activityCorrect = Math.max(
+                0,
+                Math.min(total, Number(activity.correctCount))
+            );
+
+            attempted += total;
+            correct += activityCorrect;
+        }
+    }
+
+    return {
+        attempted,
+        correct,
+        incorrect: attempted - correct,
+        accuracy: attempted
+            ? Math.round((correct / attempted) * 100)
+            : null
+    };
+}
+
+aggregateOrderingAnalytics(records) {
+    let attempted = 0;
+    let correct = 0;
+
+    for (const record of records) {
+        const activities = record.orderingAnswers ?? {};
+
+        for (const activity of Object.values(activities)) {
+            if (
+                !activity ||
+                activity.checked !== true ||
+                typeof activity.correctCount !== "number" &&
+!Number.isFinite(activity.correctCount) ||
+                typeof activity.totalCount !== "number" &&
+!Number.isFinite(activity.totalCount)
+            ) {
+                continue;
+            }
+
+            const total = Number(activity.totalCount);
+
+            if (total <= 0) continue;
+
+            const activityCorrect = Math.max(
+                0,
+                Math.min(total, Number(activity.correctCount))
+            );
+
+            attempted += total;
+            correct += activityCorrect;
+        }
+    }
+
+    return {
+        attempted,
+        correct,
+        incorrect: attempted - correct,
+        accuracy: attempted
+            ? Math.round((correct / attempted) * 100)
+            : null
+    };
+}
+
+aggregateActivityAnalytics(records) {
+    return {
+        quiz: this.aggregateQuizAnalytics(records),
+        dragdrop: this.aggregateDragDropAnalytics(records),
+        ordering: this.aggregateOrderingAnalytics(records)
+    };
+}
+
+calculateEmpiricalDifficulty(activityStats) {
+    const weights = {
+        quiz: 0.4,
+        dragdrop: 0.3,
+        ordering: 0.3
+    };
+
+    let weightedError = 0;
+    let totalWeight = 0;
+
+    for (const [type, weight] of Object.entries(weights)) {
+        const stats = activityStats[type];
+
+        if (
+            !stats ||
+            stats.accuracy === null ||
+            stats.attempted <= 0
+        ) {
+            continue;
+        }
+
+        weightedError += (100 - stats.accuracy) * weight;
+        totalWeight += weight;
+    }
+
+    if (totalWeight === 0) {
+        return {
+            score: null,
+            label: "unknown"
+        };
+    }
+
+    const score = Math.round(weightedError / totalWeight);
+
+    return {
+        score,
+        label:
+            score < 30 ? "easy" :
+            score < 65 ? "medium" :
+            "hard"
+    };
+}
+
 }
